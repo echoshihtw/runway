@@ -77,3 +77,4 @@ _bmad/render/
 /.codex/
 .claude/settings.local.json
 .claude/skills/
+.claude/settings.json
