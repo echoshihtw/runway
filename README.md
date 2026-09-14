@@ -5,6 +5,17 @@
 
 Runway is a personal financial runway app built for people navigating a defined financial chapter — studying abroad, between jobs, bootstrapping a project, or living off savings. It answers one question at all times: **how long can your money last?**
 
+## Screens
+
+<p align="center">
+  <img src="docs/screenshots/dashboard.png" width="30%" alt="Runway dashboard — months remaining, cash, run-out date">
+  <img src="docs/screenshots/ledger.png" width="30%" alt="Ledger — income, expenses and opening balance by month">
+  <img src="docs/screenshots/subscriptions.png" width="30%" alt="Subscriptions — monthly and yearly totals, per-item cadence">
+</p>
+
+Demo data. The runway reads 12 months because 718,760 in cash divided by a
+61,289 monthly burn is 11.7 — the number is computed, not mocked.
+
 ## Status
 
 **In development.** Runs on Android. iOS distribution is in progress — the
