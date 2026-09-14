@@ -279,3 +279,5 @@ Answer these questions:
 | 2026-04 | Runway as hero metric | App purpose = survival timer |
 | 2026-04 | No portfolio tracking | Out of scope, different mental model |
 | 2026-04 | Subscription normalized to monthly | Apples-to-apples comparison |
+| 2026-06 | SQLite DB encrypted with AES-256 via SQLCipher (`PRAGMA key`) | User financial data is sensitive; key generated with `Random.secure()` and stored in iOS Keychain / Android Keystore via `flutter_secure_storage`. Wiring requires `sqlcipher_flutter_libs: ^0.6.0` (NOT `^0.7.0+eol` which is a no-op stub) and `open.overrideFor(...)` calls in `app_database.dart` — without both, `PRAGMA key` silently no-ops on plain sqlite3 |
+| 2026-06 | App Store export compliance: standard encryption (EAR 740.17(b)(1)) | SQLCipher counts as standard encryption — select "Standard algorithms" in App Store Connect compliance prompt, then claim exemption as local data protection only |

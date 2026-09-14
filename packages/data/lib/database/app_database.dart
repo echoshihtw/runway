@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 import 'dart:convert';
@@ -6,6 +7,8 @@ import 'package:drift/native.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
+import 'package:sqlcipher_flutter_libs/sqlcipher_flutter_libs.dart';
+import 'package:sqlite3/open.dart';
 import '../tables/transactions_table.dart';
 import '../tables/loans_table.dart';
 import '../tables/subscriptions_table.dart';
@@ -76,13 +79,20 @@ Future<String> _getOrCreateKey() async {
 
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
+    if (Platform.isAndroid) {
+      await applyWorkaroundToOpenSqlCipherOnOldAndroidVersions();
+    }
+
     final dir  = await getApplicationDocumentsDirectory();
     final file = File(p.join(dir.path, 'survival.db'));
-    // ignore: unused_local_variable
-    final dbKey    = await _getOrCreateKey();
+    final dbKey = await _getOrCreateKey();
     final pragmaKey = "PRAGMA key = '$dbKey';";
     return NativeDatabase.createInBackground(
       file,
+      isolateSetup: () async {
+        open.overrideFor(OperatingSystem.android, openCipherOnAndroid);
+        open.overrideFor(OperatingSystem.iOS, () => DynamicLibrary.process());
+      },
       setup: (db) {
         db.execute(pragmaKey);
         db.execute('PRAGMA journal_mode=WAL;');
