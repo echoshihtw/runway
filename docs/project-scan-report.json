@@ -1,0 +1,91 @@
+{
+  "workflow_version": "1.2.0",
+  "timestamps": {
+    "started": "2026-08-04T00:00:00Z",
+    "last_updated": "2026-08-04T00:00:00Z",
+    "completed": "2026-08-04T00:00:00Z"
+  },
+  "mode": "initial_scan",
+  "scan_level": "deep",
+  "project_root": "/Users/echo/survival_optimizer",
+  "project_knowledge": "/Users/echo/survival_optimizer/docs",
+  "repository_type": "monorepo",
+  "project_types": [
+    { "part_id": "app", "project_type_id": "mobile", "display_name": "Flutter Application (composition root)" },
+    { "part_id": "domain", "project_type_id": "library", "display_name": "Pure Dart Domain Library" },
+    { "part_id": "data", "project_type_id": "library", "display_name": "Drift/SQLCipher Data Library" },
+    { "part_id": "application", "project_type_id": "library", "display_name": "Riverpod Application Library" },
+    { "part_id": "design_system", "project_type_id": "library", "display_name": "Design System + l10n Library" },
+    { "part_id": "presentation", "project_type_id": "library", "display_name": "Flutter Presentation Library" }
+  ],
+  "completed_steps": [
+    { "step": "step_1", "status": "completed", "summary": "Classified as monorepo (melos + pub workspace) with 6 parts: app (mobile) + 5 libraries. Layer rule presentation->application->domain<-data confirmed from pubspec dependency graph." },
+    { "step": "step_2", "status": "completed", "summary": "Existing docs inventoried: README.md, CONTRACTS.md (283 lines, binding rules), .github/SECRETS.md, design-artifacts/ (A-E WDS stages), _bmad-output/planning-artifacts/research (1 market research file). docs/ was empty." },
+    { "step": "step_3", "status": "completed", "summary": "Tech stack extracted from 7 pubspec.yaml files: Flutter 3.41.7 / Dart 3.11.5, Melos 7.5.1, Riverpod 3.0.3, Drift 2.26 + SQLCipher, go_router 14.6, fl_chart 0.68, Firebase Analytics, purchases_flutter 10 (uncommitted)." },
+    { "step": "step_4", "status": "completed", "summary": "Deep scan per part. domain: read all entities/enums/logic/repositories/value_objects. data: read tables, app_database (schemaVersion 5, 4 migration steps, SQLCipher key mgmt), DAOs, mappers, repositories. application: read all 14 provider files, ports, entitlement/purchase, use cases. design_system: tokens, SC semantic layer, theme, l10n.yaml (7 arb x 230 keys). presentation: router, 8 screens, ~20 widgets; measured 287 AppColors vs 38 SC refs (CONTRACTS 4.1 violation). app: main.dart DI wiring, revenuecat_service/config, Makefile, both GH workflows." },
+    { "step": "step_5", "status": "completed", "summary": "source-tree-analysis.md written: annotated tree, 9 entry points, critical-directory lookup table." },
+    { "step": "step_6", "status": "completed", "summary": "Dev/deploy info extracted from Makefile (40+ targets), melos.yaml scripts, ci.yml, cd.yml, .github/SECRETS.md. No CONTRIBUTING.md found; CONTRACTS.md fills that role." },
+    { "step": "step_7", "status": "completed", "summary": "integration-architecture.md written: 6 integration points, DI port table, reactive Drift->provider->UI loop, cross-cutting concerns." },
+    { "step": "step_8", "status": "completed", "summary": "6 per-part architecture docs written (domain, data, application, design_system, presentation, app)." },
+    { "step": "step_9", "status": "completed", "summary": "Supporting docs written: project-overview, api-contracts-domain, data-models-data, 2 component inventories, development-guide, deployment-guide." },
+    { "step": "step_10", "status": "completed", "summary": "index.md written with per-part navigation, existing-doc inventory, getting started, and explicit not-applicable notes (contribution guide, non-UI component inventories, network API)." },
+    { "step": "step_11", "status": "completed", "summary": "Validation pass against checklist.md. Corrections applied after verifying claims that had rested on truncated reads: (1) read CONTRACTS.md lines 120-283 (sections 4.3-10, previously unread) and folded 4.3/4.4/4.5, 5.1-5.3, 6.1-6.4, 7.1-7.3, 8.1-8.3, 9.1-9.3, 10 into the relevant docs; (2) verified all 7 arb files carry exactly 230 keys (parity holds); (3) confirmed no font size above 42 exists in app_text_styles.dart, so the 72px hero of 4.2 is genuinely untokenized; (4) discovered melos.yaml is dead config -- melos resolves scripts from the root pubspec.yaml melos block (test/analyze/gen only), so test:all and test:integration:* do not exist; corrected 4 docs. Added project-parts.json (checklist requires it for multi-part). Link-integrity check over all 17 md files: no broken internal links." }
+  ],
+  "current_step": "completed",
+  "findings": {
+    "project_classification": "monorepo, 6 parts, Flutter/Dart Clean Architecture",
+    "technology_stack": "Flutter 3.41.7 + Riverpod + Drift/SQLCipher, offline-only, no backend",
+    "counts": {
+      "tables": 3,
+      "schema_version": 5,
+      "providers": 30,
+      "use_cases": 9,
+      "screens": 8,
+      "design_system_components": 15,
+      "locales": 6,
+      "l10n_keys": 230,
+      "routes": 4
+    },
+    "known_gaps": [
+      "CONTRACTS 4.1/4.4 color contract: 287 raw AppColors refs vs 38 SC refs in presentation",
+      "CONTRACTS 5.1 declares schema version 4; the code is at 5 (transactions.category)",
+      "CONTRACTS 3.4/5.3 say investment is excluded from burn rate, but in code it lands in grossOutflow and does feed burn",
+      "CONTRACTS 3.3 investable/safety-fund model specified but not implemented in domain/lib/logic",
+      "CONTRACTS 4.2 specifies a 72px hero; no style above 42px exists in app_text_styles.dart",
+      "melos.yaml is dead config: melos reads scripts from the root pubspec.yaml melos block (test/analyze/gen only), so test:all and test:integration:* do not exist",
+      "design_system and presentation have zero tests; CI runs domain suite only, so data and application tests never run in CI",
+      "CONTRACTS 6.3 forbids hardcoded user-facing strings; app_router.dart action sheet uses literal ENTRY/LOAN/SUBSCRIPTIONS",
+      "iOS bundle id com.silverfern.survivaloptimizer vs Android applicationId com.survival.app; make db-reset-android targets wrong package",
+      "_computeBurnRate duplicated in survival_engine.dart and model_provider.dart",
+      "app_input_formatters.dart duplicated in components/ and utils/",
+      "no Drift migration verification tests; make l10n-check validates arb JSON but not key-set parity",
+      "kRevenueCatGoogleKey is a placeholder, so isRevenueCatConfigured is false and purchases are disabled on both platforms"
+    ],
+    "verification_performed": "Link-integrity check across all 17 markdown files (no broken internal links); JSON validity of both report files; arb key-count parity across all 7 locales (230 each); melos script resolution confirmed empirically via `melos run`. NOT run: flutter analyze, any test suite, any build.",
+    "working_tree_state": "Substantial uncommitted changes on top of ac4738e: RevenueCat integration, regenerated app icons, Info.plist, CONTRACTS.md, main.dart, app_database.dart, several pubspec.yaml files. Docs describe the working tree, not HEAD."
+  },
+  "outputs_generated": [
+    "project-scan-report.json",
+    "project-parts.json",
+    "index.md",
+    "project-overview.md",
+    "source-tree-analysis.md",
+    "integration-architecture.md",
+    "architecture-domain.md",
+    "architecture-data.md",
+    "architecture-application.md",
+    "architecture-design_system.md",
+    "architecture-presentation.md",
+    "architecture-app.md",
+    "api-contracts-domain.md",
+    "data-models-data.md",
+    "component-inventory-design_system.md",
+    "component-inventory-presentation.md",
+    "development-guide.md",
+    "deployment-guide.md"
+  ],
+  "incomplete_docs": [
+    { "title": "Contribution Guide", "file_path": "./contribution-guide.md", "doc_type": "contribution-guide", "reason": "No CONTRIBUTING.md exists in the repo; CONTRACTS.md currently serves this purpose." }
+  ],
+  "resume_instructions": "Workflow complete through step 12. Re-run the skill and choose full_rescan or deep_dive to extend."
+}
