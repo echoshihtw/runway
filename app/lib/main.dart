@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'package:flutter_windowmanager_plus/flutter_windowmanager_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -17,7 +17,7 @@ void main() async {
 
   // Screen security — prevent screenshots and app switcher preview
   if (Platform.isAndroid) {
-    await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    await FlutterWindowManagerPlus.addFlags(FlutterWindowManagerPlus.FLAG_SECURE);
   }
 
   // Firebase init — non-blocking, app works without it

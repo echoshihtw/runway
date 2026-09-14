@@ -31,7 +31,7 @@ dependencies:
   screenshot: ^3.0.0
   path_provider: ^2.1.5
   sqlcipher_flutter_libs: ^0.6.0
-  flutter_windowmanager: ^0.2.0
+  flutter_windowmanager_plus: ^1.0.1
   purchases_flutter: ^10.0.0
 
 dev_dependencies:
