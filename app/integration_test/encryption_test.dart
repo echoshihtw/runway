@@ -14,36 +14,21 @@ import 'package:path_provider/path_provider.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
+  late File file;
+
   Future<void> deleteAll() => deleteEncryptedDatabase(
     // deleteEncryptedDatabase closes the database it is given; nothing real
     // is open here, so hand it a throwaway one.
     database: AppDatabase.forTesting(NativeDatabase.memory()),
   );
 
-  testWidgets('the database file on disk is encrypted with SQLCipher', (
-    tester,
-  ) async {
-    final dir = await getApplicationDocumentsDirectory();
-    final file = File('${dir.path}/$kDatabaseFileName');
-    await deleteAll();
-    addTearDown(deleteAll);
-
-    final db = AppDatabase();
-    await DriftFinancialSettingsRepository(
-      db,
-    ).saveBudget(const domain.Budget(rent: 123456, living: 7890));
-    final cipherVersion = await readCipherVersion(db);
-    await db.close();
-
+  Future<void> expectEncryptedOnDisk() async {
     final headerBytes = (await file.readAsBytes()).take(16).toList();
-    final header = String.fromCharCodes(headerBytes);
-    debugPrint('cipher_version: $cipherVersion');
     debugPrint(
-      'file header: ${headerBytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join(' ')}',
+      'file header: '
+      '${headerBytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join(' ')}',
     );
-
-    expect(cipherVersion, isNotNull);
-    expect(header, isNot(startsWith('SQLite format 3')));
+    expect(await isPlaintextSqliteFile(file), isFalse);
 
     // Opening the same file without the key must fail.
     final keyless = AppDatabase.forTesting(NativeDatabase(file));
@@ -57,5 +42,48 @@ void main() {
     }
     debugPrint('open without key: $keylessError');
     expect(keylessError, isNotNull);
+  }
+
+  setUp(() async {
+    final dir = await getApplicationDocumentsDirectory();
+    file = File('${dir.path}/$kDatabaseFileName');
+    await deleteAll();
+    addTearDown(deleteAll);
+  });
+
+  testWidgets('a new database is encrypted with SQLCipher', (tester) async {
+    final db = AppDatabase();
+    await DriftFinancialSettingsRepository(
+      db,
+    ).saveBudget(const domain.Budget(rent: 123456, living: 7890));
+    final cipherVersion = await readCipherVersion(db);
+    await db.close();
+
+    debugPrint('cipher_version: $cipherVersion');
+    expect(cipherVersion, isNotNull);
+    await expectEncryptedOnDisk();
+  });
+
+  testWidgets('a plaintext database from an older build is encrypted in place', (
+    tester,
+  ) async {
+    // Older iOS builds loaded the system sqlite3, so PRAGMA key did nothing.
+    // Opening without a key reproduces that file.
+    final legacy = AppDatabase.forTesting(NativeDatabase(file));
+    await DriftFinancialSettingsRepository(
+      legacy,
+    ).saveBudget(const domain.Budget(rent: 4321, living: 1234));
+    await legacy.close();
+    expect(await isPlaintextSqliteFile(file), isTrue);
+
+    final db = AppDatabase();
+    final budget = await DriftFinancialSettingsRepository(db).getBudget();
+    final cipherVersion = await readCipherVersion(db);
+    await db.close();
+
+    expect(budget.rent, 4321);
+    expect(budget.living, 1234);
+    expect(cipherVersion, isNotNull);
+    await expectEncryptedOnDisk();
   });
 }
