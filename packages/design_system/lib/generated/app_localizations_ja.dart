@@ -33,9 +33,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get cash => '現金';
 
   @override
-  String get burnPerMonth => '月間支出';
-
-  @override
   String get loanPerMonth => '月間債務';
 
   @override
@@ -631,16 +628,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get bootIncomeStopped => '> 今日、収入が止まったら...';
 
   @override
-  String get bootCountingCashDays => '> 現金で生きられる日数を計算中...';
+  String get bootCountingCashDays => '> お金で何か月まかなえるか計算中...';
 
   @override
   String get bootRemovingComfortFilter => '> 安心フィルターを解除中...';
 
   @override
   String get bootRealityCheckReady => '> 現実チェック準備完了。';
-
-  @override
-  String get ifIncomeStoppedToday => 'If inflow stopped today';
 
   @override
   String get ifIncomePausedToday => '今日、収入が止まったら';
@@ -665,13 +659,7 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get monthlyBurn => '月間支出';
-
-  @override
   String get availableCash => '利用可能な現金';
-
-  @override
-  String get historicalBurn => '平均支出';
 
   @override
   String get notEnoughHistory => '履歴が不足しています';
@@ -684,12 +672,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get fixedPressure => '固定費';
-
-  @override
-  String get actualBurn => '実際の支出';
-
-  @override
-  String get actualBurnHigh => '実際の支出 ▲';
 
   @override
   String get plannedEssentials => '計画上の必需支出';
@@ -707,13 +689,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get yourRunway => 'あなたのランウェイ';
 
   @override
-  String get loseIncome => 'Inflow stops';
-
-  @override
   String get higherExpenses => '支出増加';
-
-  @override
-  String get incomeSetToZero => 'Inflow set to 0';
 
   @override
   String deltaDays(int days) {

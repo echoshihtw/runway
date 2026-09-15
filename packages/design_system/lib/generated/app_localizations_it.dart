@@ -33,9 +33,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get cash => 'CONTANTI';
 
   @override
-  String get burnPerMonth => 'SPESA/MESE';
-
-  @override
   String get loanPerMonth => 'DEBITO/MESE';
 
   @override
@@ -649,9 +646,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get bootRealityCheckReady => '> CONTROLLO REALTÀ PRONTO.';
 
   @override
-  String get ifIncomeStoppedToday => 'If inflow stopped today';
-
-  @override
   String get ifIncomePausedToday => 'Se il reddito si fermasse oggi';
 
   @override
@@ -675,13 +669,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get monthlyBurn => 'Spesa mensile';
-
-  @override
   String get availableCash => 'Liquidità disponibile';
-
-  @override
-  String get historicalBurn => 'Spesa media';
 
   @override
   String get notEnoughHistory => 'Storico insufficiente';
@@ -694,12 +682,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get fixedPressure => 'Costi fissi';
-
-  @override
-  String get actualBurn => 'Spesa reale';
-
-  @override
-  String get actualBurnHigh => 'Spesa reale ▲';
 
   @override
   String get plannedEssentials => 'Essenziali pianificati';
@@ -717,13 +699,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get yourRunway => 'Il tuo runway';
 
   @override
-  String get loseIncome => 'Inflow stops';
-
-  @override
   String get higherExpenses => 'Spese più alte';
-
-  @override
-  String get incomeSetToZero => 'Inflow set to 0';
 
   @override
   String deltaDays(int days) {

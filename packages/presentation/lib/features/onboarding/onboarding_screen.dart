@@ -161,7 +161,7 @@ class _PageWelcome extends StatelessWidget {
       iconColor: AppColors.neonGreen,
       title: 'Know your\nrunway.',
       subtitle:
-          'One number tells you everything.\nHow long can you survive financially?',
+          'One number shows where you stand.\nHow many months does your money cover?',
       cta: 'GET STARTED',
       onNext: onNext,
     );
