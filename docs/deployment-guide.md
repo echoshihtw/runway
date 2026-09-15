@@ -13,8 +13,9 @@ Two GitHub Actions workflows, both pinned to **Flutter 3.41.7 / Java 17**.
 
 | Trigger | Jobs |
 |---|---|
-| PR to `main`/`develop` | `quality` only |
-| Push to `main`/`develop` | `quality` → `build-ios` + `build-android` |
+| PR to `staging`/`main` | `quality` only |
+| Push to `staging` | `quality` → `build-ios` + `build-android` |
+| Called by `release.yml` on `main` | `quality` → `build-ios` + `build-android` |
 
 Concurrency is grouped per workflow+ref with `cancel-in-progress: true`.
 
@@ -28,7 +29,7 @@ Concurrency is grouped per workflow+ref with `cancel-in-progress: true`.
 
 ### CD — `.github/workflows/cd.yml`
 
-Triggered **only** by a tag matching `v*.*.*`. Two independent jobs:
+Called by `release.yml` with the new tag, or run by hand from the Actions tab with an existing tag. Build name comes from the tag (`v1.0.1` → `1.0.1`), build number from `git rev-list --count HEAD`. Two independent jobs:
 
 **`release-ios` → TestFlight**
 1. Bootstrap + codegen + pod install.
@@ -44,12 +45,11 @@ Triggered **only** by a tag matching `v*.*.*`. Two independent jobs:
 3. `r0adkll/upload-google-play@v1` → `packageName: com.survival.app`, `track: internal`, `status: completed`.
 4. Upload the AAB artifact (30-day retention).
 
-Cutting a release:
-
-```bash
-git tag v1.0.0
-git push origin v1.0.0
-```
+Cutting a release: merge the open `chore(release): …` PR from `staging` into
+`main` with a merge commit. `release-pr.yml` keeps that PR open and titled with
+the version; `release.yml` verifies the merge, runs semantic-release to cut the
+tag and GitHub Release, then calls `cd.yml`. Never squash it: the guard job
+refuses a non-merge commit.
 
 ## Required GitHub Secrets
 
@@ -110,7 +110,7 @@ There is no `.env` mechanism. Configuration is compile-time:
 | RevenueCat keys + entitlement id | `app/lib/revenuecat_config.dart` (source-committed constants) |
 | Firebase | `app/lib/firebase_options.dart` (flutterfire-generated) |
 | Dev Pro unlock | `--dart-define=DEV_PRO_ENTITLEMENT=true` (non-release builds only) |
-| Version / build number | CD passes `--build-name` from the tag (`v1.0.1` → `1.0.1`) and `--build-number=github.run_number`; local builds use `BUILD_NAME`/`BUILD_NUMBER` via the Makefile |
+| Version / build number | CD passes `--build-name` from the tag (`v1.0.1` → `1.0.1`) and `--build-number` as the commit count; local builds use `BUILD_NAME`/`BUILD_NUMBER` via the Makefile |
 
 The RevenueCat keys in `revenuecat_config.dart` are *public SDK keys*, which are designed to be shipped in the client — but they are committed to the repo rather than injected, so rotating one requires a code change and release.
 

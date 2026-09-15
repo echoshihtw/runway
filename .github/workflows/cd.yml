@@ -1,11 +1,27 @@
 name: CD
 
+# Deploys an existing release tag. release.yml calls it after cutting a tag;
+# run it by hand from the Actions tab to redeploy one.
+#
+# No "push: tags" trigger: tags cut by release.yml use GITHUB_TOKEN, which never
+# starts another workflow. The build number is the commit count, so it only
+# grows along main.
+
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  workflow_call:
+    inputs:
+      tag:
+        type: string
+        required: true
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to deploy, such as v1.0.0
+        type: string
+        required: true
 
 env:
+  TAG: ${{ inputs.tag }}
   FLUTTER_VERSION: '3.41.7'
   JAVA_VERSION: '17'
 
@@ -20,6 +36,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+          fetch-depth: 0 # the build number counts commits
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -74,8 +93,8 @@ jobs:
           cd app && flutter build ipa \
             --release \
             --export-options-plist=ios/ExportOptions.plist \
-            --build-name="${GITHUB_REF_NAME#v}" \
-            --build-number=${{ github.run_number }}
+            --build-name="${TAG#v}" \
+            --build-number="$(git rev-list --count HEAD)"
 
       - name: Upload to TestFlight
         env:
@@ -93,7 +112,7 @@ jobs:
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ios-ipa-${{ github.ref_name }}
+          name: ios-ipa-${{ inputs.tag }}
           path: app/build/ios/ipa/*.ipa
           retention-days: 30
 
@@ -107,6 +126,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+          fetch-depth: 0 # the build number counts commits
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -151,8 +173,8 @@ jobs:
         run: |
           cd app && flutter build appbundle \
             --release \
-            --build-name="${GITHUB_REF_NAME#v}" \
-            --build-number=${{ github.run_number }}
+            --build-name="${TAG#v}" \
+            --build-number="$(git rev-list --count HEAD)"
 
       - name: Upload to Play Store
         uses: r0adkll/upload-google-play@v1
@@ -166,6 +188,6 @@ jobs:
       - name: Upload AAB artifact
         uses: actions/upload-artifact@v4
         with:
-          name: android-aab-${{ github.ref_name }}
+          name: android-aab-${{ inputs.tag }}
           path: app/build/app/outputs/bundle/release/app-release.aab
           retention-days: 30

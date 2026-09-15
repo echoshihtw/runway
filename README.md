@@ -21,9 +21,9 @@ Demo data. The runway reads 12 months because 718,760 in cash divided by a
 **In development.** Runs on Android. iOS distribution is in progress — the
 TestFlight path is not working end to end yet.
 
-The release workflows in `.github/workflows/cd.yml` build signed iOS and Android
-artefacts on a `v*.*.*` tag, but no tag has been cut, so nothing has been
-published to TestFlight or Play. RevenueCat is scaffolded, not wired end to end.
+The release workflows build signed iOS and Android artefacts when a release PR
+merges into `main`, but no release has been cut, so nothing has been published
+to TestFlight or Play. RevenueCat is scaffolded, not wired end to end.
 
 Not yet true, and not claimed anywhere: app-store availability, in-app purchases.
 
@@ -172,9 +172,12 @@ make precommit    # lint + test
 
 | Trigger | Pipeline |
 |---|---|
-| Push to `main`/`develop` | Quality (analyze + test) + Build iOS + Build Android |
-| PR to `main`/`develop` | Quality only |
-| Tag `v*.*.*` | Release to TestFlight + Play Store internal track |
+| PR to `staging`/`main` | Quality only |
+| Push to `staging` | Quality + Build iOS + Build Android, and open or update the release PR |
+| Merge into `main` | Quality + builds, then tag, GitHub Release, TestFlight + Play Store internal track |
+
+To release: test staging, then merge the open `chore(release): …` PR with a
+merge commit. Its title shows the version it will release.
 
 ---
 
