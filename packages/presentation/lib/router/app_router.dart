@@ -15,6 +15,7 @@ import '../features/transactions/widgets/loan_wizard.dart';
 import '../features/subscriptions/subscription_form.dart';
 import '../features/paywall/paywall_screen.dart';
 import '../features/scenarios/scenarios_screen.dart';
+import 'page_indicator.dart';
 
 // Global keys for coach mark tour
 final hudNavKey = GlobalKey();
@@ -326,29 +327,14 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
               ),
             ),
 
-            // Page indicator dots
+            // Labelled page indicator: tap a label or swipe
             Positioned(
               left: 0,
               right: 0,
-              bottom: bottomSafe + AppSpacing.sm,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(3, (i) {
-                  final active = i == currentIndex;
-                  return AnimatedContainer(
-                    duration: const Duration(milliseconds: 250),
-                    curve: Curves.easeOut,
-                    margin: const EdgeInsets.symmetric(horizontal: 3),
-                    width: active ? 18 : 4,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: active
-                          ? AppColors.neonGreen
-                          : AppColors.textDim.withAlpha(100),
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  );
-                }),
+              bottom: bottomSafe,
+              child: PageIndicator(
+                currentIndex: currentIndex,
+                onSelect: widget.shell.goBranch,
               ),
             ),
           ],
