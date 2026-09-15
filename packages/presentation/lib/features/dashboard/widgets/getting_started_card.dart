@@ -62,6 +62,7 @@ class _GettingStartedCardState extends ConsumerState<GettingStartedCard> {
         done: hasBudget,
         onTap: () => showModalBottomSheet(
           context: context,
+          useRootNavigator: true,
           isScrollControlled: true,
           useSafeArea: true,
           backgroundColor: Colors.transparent,

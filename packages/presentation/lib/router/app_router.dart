@@ -68,6 +68,7 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
   void _showActionSheet() {
     showModalBottomSheet(
       context: context,
+      useRootNavigator: true,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (ctx) {
@@ -104,7 +105,7 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
                     ),
                     const Divider(color: AppColors.cardBorder, height: 1),
                     _ActionRow(
-                      label: 'LOAN',
+                      label: 'NEW LOAN',
                       icon: Icons.credit_score_rounded,
                       color: AppColors.gold,
                       onTap: () {
@@ -140,6 +141,7 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
     final loans = _loanChoices(existing: existing);
     showModalBottomSheet(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(
@@ -192,14 +194,16 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
         (ref.read(entitlementProvider).value?.isPro ?? false);
     if (!isPro) {
       final loans = await ref.read(loansProvider.future);
+      final transactions = await ref.read(transactionsProvider.future);
       if (!mounted) return;
-      if (loans.isNotEmpty) {
+      if (hasActiveLoan(loans: loans, transactions: transactions)) {
         showPaywall(context, trigger: 'loan_limit');
         return;
       }
     }
     showModalBottomSheet(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(
@@ -248,6 +252,7 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
   void _showSubscriptionForm() {
     showModalBottomSheet(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(

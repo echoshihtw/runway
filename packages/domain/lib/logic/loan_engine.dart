@@ -44,6 +44,15 @@ double totalMonthlyPayment(List<Loan> loans) {
       .fold(0.0, (sum, l) => sum + l.monthlyPayment);
 }
 
+/// Whether the user has a loan that is still active and not paid off. The free
+/// plan allows one such loan at a time, so paying a loan off frees the slot.
+bool hasActiveLoan({
+  required List<Loan> loans,
+  required List<Transaction> transactions,
+}) => activeLoanSummaries(
+  computeLoanSummaries(loans: loans, transactions: transactions),
+).isNotEmpty;
+
 List<LoanSummary> activeLoanSummaries(List<LoanSummary> summaries) {
   return summaries
       .where((summary) => summary.loan.isActive && !summary.isFullyPaid)

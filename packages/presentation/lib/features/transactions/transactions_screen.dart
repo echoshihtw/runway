@@ -196,14 +196,16 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
         (ref.read(entitlementProvider).value?.isPro ?? false);
     if (!isPro) {
       final loans = await ref.read(loansProvider.future);
+      final transactions = await ref.read(transactionsProvider.future);
       if (!context.mounted) return;
-      if (loans.isNotEmpty) {
+      if (hasActiveLoan(loans: loans, transactions: transactions)) {
         showPaywall(context, trigger: 'loan_limit');
         return;
       }
     }
     showModalBottomSheet(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(
@@ -253,6 +255,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
   void _showSubscriptionForm(BuildContext context, WidgetRef ref) {
     showModalBottomSheet(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(
@@ -293,6 +296,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
     final loans = _loanChoices(ref);
     showModalBottomSheet(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(
@@ -327,6 +331,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
     final loans = _loanChoices(ref, existing: existing);
     showModalBottomSheet(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(
