@@ -11,7 +11,7 @@ dependencies:
   domain:
     path: ../domain
   drift: ^2.26.1
-  sqlcipher_flutter_libs: ^0.7.0+eol
+  sqlcipher_flutter_libs: ^0.6.0
   flutter_secure_storage: ^10.0.0
   path_provider: ^2.0.0
   path: ^1.8.0
