@@ -50,6 +50,7 @@ class _GettingStartedCardState extends ConsumerState<GettingStartedCard> {
       _Step(
         icon: Icons.account_balance_wallet_rounded,
         label: 'Add your cash balance',
+        shortLabel: 'Cash balance',
         hint: 'How much do you have right now?',
         done: hasBalance,
         onTap: () => context.go('/transactions'),
@@ -57,6 +58,7 @@ class _GettingStartedCardState extends ConsumerState<GettingStartedCard> {
       _Step(
         icon: Icons.tune_rounded,
         label: 'Set your monthly budget',
+        shortLabel: 'Budget',
         hint: 'Rent + living expenses',
         done: hasBudget,
         onTap: () => showModalBottomSheet(
@@ -88,6 +90,7 @@ class _GettingStartedCardState extends ConsumerState<GettingStartedCard> {
       _Step(
         icon: Icons.receipt_long_rounded,
         label: 'Log your first expense',
+        shortLabel: 'First expense',
         hint: 'Track where your money goes',
         done: hasExpense,
         onTap: () => context.go('/transactions'),
@@ -95,6 +98,7 @@ class _GettingStartedCardState extends ConsumerState<GettingStartedCard> {
       _Step(
         icon: Icons.science_rounded,
         label: 'Try the simulator',
+        shortLabel: 'Simulator',
         hint: 'What if you cut expenses?',
         done: hasSim,
         isOptional: true,
@@ -102,7 +106,9 @@ class _GettingStartedCardState extends ConsumerState<GettingStartedCard> {
       ),
     ];
 
-    final completedCount = steps.where((s) => s.done).length;
+    final completed = steps.where((s) => s.done).toList();
+    final pending = steps.where((s) => !s.done).toList();
+    final completedCount = completed.length;
 
     return Container(
       margin: const EdgeInsets.only(bottom: AppSpacing.cardGap),
@@ -175,7 +181,9 @@ class _GettingStartedCardState extends ConsumerState<GettingStartedCard> {
           ),
           const SizedBox(height: AppSpacing.sm),
 
-          ...steps.map((s) => _StepRow(step: s)),
+          // Completed tasks share one line so the card stays short.
+          if (completed.isNotEmpty) _CompletedSummary(steps: completed),
+          ...pending.map((s) => _StepRow(step: s)),
           const SizedBox(height: AppSpacing.sm),
         ],
       ),
@@ -186,6 +194,7 @@ class _GettingStartedCardState extends ConsumerState<GettingStartedCard> {
 class _Step {
   final IconData icon;
   final String label;
+  final String shortLabel;
   final String hint;
   final bool done;
   final bool isOptional;
@@ -194,11 +203,53 @@ class _Step {
   const _Step({
     required this.icon,
     required this.label,
+    required this.shortLabel,
     required this.hint,
     required this.done,
     required this.onTap,
     this.isOptional = false,
   });
+}
+
+/// One line listing every completed task, e.g. "Done: Cash balance · Budget".
+class _CompletedSummary extends StatelessWidget {
+  final List<_Step> steps;
+  const _CompletedSummary({required this.steps});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.cardPadding,
+        vertical: AppSpacing.xs,
+      ),
+      decoration: const BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: AppColors.cardBorder, width: 0.5),
+        ),
+      ),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.check_circle_rounded,
+            color: AppColors.neonGreen,
+            size: 16,
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Text(
+              'Done: ${steps.map((s) => s.shortLabel).join(' · ')}',
+              style: AppTextStyles.caption.copyWith(
+                color: AppColors.textSecondary,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _StepRow extends StatelessWidget {
@@ -249,15 +300,17 @@ class _StepRow extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text(
-                        step.label,
-                        style: AppTextStyles.body.copyWith(
-                          color: step.done
-                              ? AppColors.textSecondary
-                              : AppColors.textPrimary,
-                          decoration: step.done
-                              ? TextDecoration.lineThrough
-                              : null,
+                      Flexible(
+                        child: Text(
+                          step.label,
+                          style: AppTextStyles.body.copyWith(
+                            color: step.done
+                                ? AppColors.textSecondary
+                                : AppColors.textPrimary,
+                            decoration: step.done
+                                ? TextDecoration.lineThrough
+                                : null,
+                          ),
                         ),
                       ),
                       if (step.isOptional) ...[
