@@ -59,9 +59,11 @@ class DashboardScreen extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
               child: Column(
                 children: [
-                  const GettingStartedCard(),
+                  // Runway is always the hero, center-top (CONTRACTS.md §4.3).
                   RunwayCard(model: model),
                   const SizedBox(height: AppSpacing.cardGap),
+                  // Adds its own bottom gap, and none once dismissed.
+                  const GettingStartedCard(),
                   GoalCard(model: model),
                   const SizedBox(height: AppSpacing.cardGap),
                   const ThisMonthCard(),
