@@ -713,4 +713,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get noActivityThisMonth => '今月はまだ活動がありません';
+
+  @override
+  String get paywallTermsOfUse => '利用規約';
+
+  @override
+  String get paywallPrivacyPolicy => 'プライバシーポリシー';
 }

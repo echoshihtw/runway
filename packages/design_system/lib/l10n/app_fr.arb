@@ -235,5 +235,7 @@
   "cashIn": "ENTRÉE",
   "cashOut": "SORTIE",
   "netLabel": "NET",
-  "noActivityThisMonth": "Aucune activité ce mois-ci"
+  "noActivityThisMonth": "Aucune activité ce mois-ci",
+  "paywallTermsOfUse": "Conditions d’utilisation",
+  "paywallPrivacyPolicy": "Politique de confidentialité"
 }

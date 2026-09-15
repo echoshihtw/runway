@@ -713,6 +713,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get noActivityThisMonth => '本月暂无活动';
+
+  @override
+  String get paywallTermsOfUse => '使用条款';
+
+  @override
+  String get paywallPrivacyPolicy => '隐私政策';
 }
 
 /// The translations for Chinese, as used in Taiwan (`zh_TW`).
@@ -1424,4 +1430,10 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get noActivityThisMonth => '本月暫無活動';
+
+  @override
+  String get paywallTermsOfUse => '使用條款';
+
+  @override
+  String get paywallPrivacyPolicy => '隱私權政策';
 }

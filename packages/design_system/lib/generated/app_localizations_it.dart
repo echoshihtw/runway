@@ -724,4 +724,10 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get noActivityThisMonth => 'Nessuna attività questo mese';
+
+  @override
+  String get paywallTermsOfUse => 'Termini di utilizzo';
+
+  @override
+  String get paywallPrivacyPolicy => 'Informativa sulla privacy';
 }
