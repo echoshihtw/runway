@@ -4,6 +4,7 @@ import 'package:design_system/design_system.dart';
 import 'package:application/application.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
+import 'living_sheet.dart';
 
 class ThisMonthCard extends ConsumerWidget {
   const ThisMonthCard({super.key});
@@ -43,12 +44,15 @@ class ThisMonthCard extends ConsumerWidget {
     final summary = Column(
       children: [
         flowSummary,
-        for (final (label, bucket) in [
-          (l10n.rentFixed, burn.rent),
-          (l10n.livingExpenses, burn.living),
-        ])
-          if (bucket.budget > 0)
-            _BudgetRow(label: label, bucket: bucket, fmt: fmt),
+        if (burn.rent.budget > 0)
+          _BudgetRow(label: l10n.rentFixed, bucket: burn.rent, fmt: fmt),
+        if (burn.living.budget > 0)
+          _BudgetRow(
+            label: l10n.livingExpenses,
+            bucket: burn.living,
+            fmt: fmt,
+            onTap: () => showLivingSheet(context),
+          ),
       ],
     );
 
@@ -97,43 +101,55 @@ class _BudgetRow extends StatelessWidget {
   final String label;
   final BudgetBucket bucket;
   final String Function(double) fmt;
+  final VoidCallback? onTap;
 
   const _BudgetRow({
     required this.label,
     required this.bucket,
     required this.fmt,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final over = bucket.spentThisMonth - bucket.budget;
-    return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.sm),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(child: Text(label, style: AppTextStyles.label)),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                '${fmt(bucket.spentThisMonth)} / ${fmt(bucket.budget)}',
-                style: AppTextStyles.metricSmall.copyWith(
-                  color: AppColors.textPrimary,
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Padding(
+        padding: const EdgeInsets.only(top: AppSpacing.sm),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: Text(label, style: AppTextStyles.label)),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  '${fmt(bucket.spentThisMonth)} / ${fmt(bucket.budget)}',
+                  style: AppTextStyles.metricSmall.copyWith(
+                    color: AppColors.textPrimary,
+                  ),
                 ),
-              ),
-              Text(
-                over > 0
-                    ? l10n.budgetOver(fmt(over))
-                    : l10n.budgetLeft(fmt(bucket.leftThisMonth)),
-                style: AppTextStyles.caption.copyWith(
-                  color: over > 0 ? SC.cost : SC.life,
+                Text(
+                  over > 0
+                      ? l10n.budgetOver(fmt(over))
+                      : l10n.budgetLeft(fmt(bucket.leftThisMonth)),
+                  style: AppTextStyles.caption.copyWith(
+                    color: over > 0 ? SC.cost : SC.life,
+                  ),
                 ),
+              ],
+            ),
+            if (onTap != null)
+              const Icon(
+                Icons.chevron_right_rounded,
+                color: AppColors.textDim,
+                size: 18,
               ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

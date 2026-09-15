@@ -73,6 +73,12 @@ class MonthlyBurn {
 
   double get total => variableBurn + subscriptions + loanPayments;
 
+  /// Days left in [month], counting today.
+  int get daysLeftThisMonth {
+    final daysInMonth = DateTime(month.value.year, month.value.month + 1, 0).day;
+    return (fractionOfMonthLeft * daysInMonth).round();
+  }
+
   /// What the rest of this month still costs. Spending already logged is
   /// already out of cash, so only the unused part of each budget counts.
   double get dueThisMonth =>
@@ -81,6 +87,15 @@ class MonthlyBurn {
       subscriptions * fractionOfMonthLeft +
       loanPaymentsLeftThisMonth;
 }
+
+/// Whether [t] uses up the rent budget.
+bool countsAsRent(Transaction t) =>
+    t.type == TransactionType.expense && t.category == ExpenseCategory.rent;
+
+/// Whether [t] uses up the living budget: every expense that is not rent,
+/// including uncategorized ones.
+bool countsAsLiving(Transaction t) =>
+    t.type == TransactionType.expense && t.category != ExpenseCategory.rent;
 
 /// Splits spending into the rent and living budgets.
 ///
@@ -96,14 +111,12 @@ MonthlyBurn computeMonthlyBurn({
   required DateTime now,
 }) {
   final month = SurvivalMonth(now);
-  final expenses = transactions
-      .where((t) => t.type == TransactionType.expense)
-      .toList();
 
-  BudgetBucket bucket({required bool rent, required double budgetAmount}) {
-    final spending = expenses.where(
-      (t) => (t.category == ExpenseCategory.rent) == rent,
-    );
+  BudgetBucket bucket({
+    required bool Function(Transaction) counts,
+    required double budgetAmount,
+  }) {
+    final spending = transactions.where(counts);
     var spentThisMonth = 0.0;
     final completedMonths = <SurvivalMonth, double>{};
     for (final t in spending) {
@@ -134,8 +147,8 @@ MonthlyBurn computeMonthlyBurn({
   return MonthlyBurn(
     month: month,
     fractionOfMonthLeft: (daysInMonth - now.day + 1) / daysInMonth,
-    rent: bucket(rent: true, budgetAmount: budget.rent),
-    living: bucket(rent: false, budgetAmount: budget.living),
+    rent: bucket(counts: countsAsRent, budgetAmount: budget.rent),
+    living: bucket(counts: countsAsLiving, budgetAmount: budget.living),
     subscriptions: totalSubscriptionMonthlyCost(subscriptions),
     loanPayments: activeLoans.fold(0.0, (sum, l) => sum + l.loan.monthlyPayment),
     loanPaymentsLeftThisMonth: activeLoans.fold(

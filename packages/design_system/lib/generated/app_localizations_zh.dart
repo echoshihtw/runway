@@ -502,6 +502,20 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String dailyAllowance(String amount, int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '每天 $amount，還有 $days 天',
+      one: '今天可用 $amount',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noLivingExpensesThisMonth => '本月還沒有生活費紀錄';
+
+  @override
   String get totalBudgetPerMonth => '總預算/月';
 
   @override
@@ -1227,6 +1241,20 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String budgetOver(String amount) {
     return '超出預算 $amount';
   }
+
+  @override
+  String dailyAllowance(String amount, int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '每天 $amount，還有 $days 天',
+      one: '今天可用 $amount',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noLivingExpensesThisMonth => '本月還沒有生活費紀錄';
 
   @override
   String get totalBudgetPerMonth => '每月總預算';

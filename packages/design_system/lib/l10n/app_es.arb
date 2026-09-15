@@ -167,6 +167,8 @@
   "subtotal": "SUBTOTAL",
   "budgetLeft": "quedan {amount}",
   "budgetOver": "{amount} por encima del presupuesto",
+  "dailyAllowance": "{days, plural, =1{{amount} para hoy} other{{amount} al día durante {days} días}}",
+  "noLivingExpensesThisMonth": "Aún no hay gastos de vida este mes",
   "totalBudgetPerMonth": "PRESUPUESTO TOTAL/MES",
   "setBudget": "ESTABLECER PRESUPUESTO",
   "rentFixedCosts": "ALQUILER / COSTOS FIJOS",
