@@ -516,6 +516,30 @@ class AppLocalizationsFr extends AppLocalizations {
   String get subtotal => 'SOUS-TOTAL';
 
   @override
+  String budgetLeft(String amount) {
+    return 'reste $amount';
+  }
+
+  @override
+  String budgetOver(String amount) {
+    return '$amount au-dessus du budget';
+  }
+
+  @override
+  String dailyAllowance(String amount, int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$amount par jour pendant $days jours',
+      one: '$amount pour aujourd’hui',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noLivingExpensesThisMonth => 'Aucune dépense de vie ce mois-ci';
+
+  @override
   String get totalBudgetPerMonth => 'BUDGET TOTAL/MOIS';
 
   @override
@@ -744,4 +768,10 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get noActivityThisMonth => 'Aucune activité ce mois-ci';
+
+  @override
+  String get paywallTermsOfUse => 'Conditions d’utilisation';
+
+  @override
+  String get paywallPrivacyPolicy => 'Politique de confidentialité';
 }

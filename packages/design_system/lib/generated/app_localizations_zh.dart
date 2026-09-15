@@ -510,6 +510,30 @@ class AppLocalizationsZh extends AppLocalizations {
   String get subtotal => '小計';
 
   @override
+  String budgetLeft(String amount) {
+    return '剩餘 $amount';
+  }
+
+  @override
+  String budgetOver(String amount) {
+    return '超出預算 $amount';
+  }
+
+  @override
+  String dailyAllowance(String amount, int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '每天 $amount，還有 $days 天',
+      one: '今天可用 $amount',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noLivingExpensesThisMonth => '本月還沒有生活費紀錄';
+
+  @override
   String get totalBudgetPerMonth => '總預算/月';
 
   @override
@@ -731,6 +755,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get noActivityThisMonth => '本月暂无活动';
+
+  @override
+  String get paywallTermsOfUse => '使用条款';
+
+  @override
+  String get paywallPrivacyPolicy => '隐私政策';
 }
 
 /// The translations for Chinese, as used in Taiwan (`zh_TW`).
@@ -1239,6 +1269,30 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get subtotal => '小計';
 
   @override
+  String budgetLeft(String amount) {
+    return '剩餘 $amount';
+  }
+
+  @override
+  String budgetOver(String amount) {
+    return '超出預算 $amount';
+  }
+
+  @override
+  String dailyAllowance(String amount, int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '每天 $amount，還有 $days 天',
+      one: '今天可用 $amount',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noLivingExpensesThisMonth => '本月還沒有生活費紀錄';
+
+  @override
   String get totalBudgetPerMonth => '每月總預算';
 
   @override
@@ -1460,4 +1514,10 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get noActivityThisMonth => '本月暫無活動';
+
+  @override
+  String get paywallTermsOfUse => '使用條款';
+
+  @override
+  String get paywallPrivacyPolicy => '隱私權政策';
 }

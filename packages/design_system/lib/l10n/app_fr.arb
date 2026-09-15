@@ -171,6 +171,10 @@
   "rentFixed": "LOYER / FIXE",
   "livingExpenses": "DÉPENSES DE VIE",
   "subtotal": "SOUS-TOTAL",
+  "budgetLeft": "reste {amount}",
+  "budgetOver": "{amount} au-dessus du budget",
+  "dailyAllowance": "{days, plural, =1{{amount} pour aujourd’hui} other{{amount} par jour pendant {days} jours}}",
+  "noLivingExpensesThisMonth": "Aucune dépense de vie ce mois-ci",
   "totalBudgetPerMonth": "BUDGET TOTAL/MOIS",
   "setBudget": "DÉFINIR LE BUDGET",
   "rentFixedCosts": "LOYER / COÛTS FIXES",
@@ -241,5 +245,7 @@
   "cashIn": "ENTRÉE",
   "cashOut": "SORTIE",
   "netLabel": "NET",
-  "noActivityThisMonth": "Aucune activité ce mois-ci"
+  "noActivityThisMonth": "Aucune activité ce mois-ci",
+  "paywallTermsOfUse": "Conditions d’utilisation",
+  "paywallPrivacyPolicy": "Politique de confidentialité"
 }

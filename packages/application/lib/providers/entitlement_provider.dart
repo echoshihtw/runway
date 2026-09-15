@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../feature_flags.dart';
 import 'purchase_provider.dart';
+import '../services/purchase_service.dart';
 
 /// SharedPreferences key caching the Pro unlock for offline use.
 const kIsProPreferenceKey = 'is_pro';
@@ -21,11 +22,28 @@ class EntitlementNotifier extends AsyncNotifier<EntitlementState> {
     try {
       final service = ref.read(purchaseServiceProvider);
       final serverPro = await service.checkProEntitlement();
-      if (serverPro) await prefs.setBool(_kIsPro, true);
+      if (serverPro) {
+        await prefs.setBool(_kIsPro, true);
+      } else {
+        _unlockOnExternalPurchase(service);
+      }
       return EntitlementState(isPro: _effectiveIsPro(serverPro));
     } catch (_) {
       return EntitlementState(isPro: _effectiveIsPro(cached));
     }
+  }
+
+  /// A purchase can complete outside the paywall, for example when an offer
+  /// code is redeemed from its URL. Unlock as soon as RevenueCat reports it,
+  /// without waiting for the app to relaunch.
+  ///
+  /// This only ever unlocks. An update without the entitlement, such as one
+  /// received while offline, never revokes a cached Pro unlock.
+  void _unlockOnExternalPurchase(PurchaseService service) {
+    final subscription = service.proEntitlementUpdates.listen((isPro) {
+      if (isPro) unlockPro();
+    });
+    ref.onDispose(subscription.cancel);
   }
 
   Future<void> unlockPro() async {
@@ -50,9 +68,7 @@ class EntitlementState {
   const EntitlementState({required this.isPro});
 
   // Feature gates — what's free vs pro
-  bool get canUseSubscriptions => isPro;
   bool get canAddMultipleLoans => isPro;
-  bool get canUseTimeline => isPro;
   bool get canUseUnlimitedSims => isPro;
 
   // Always free

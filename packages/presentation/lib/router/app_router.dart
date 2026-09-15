@@ -256,13 +256,6 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
       ),
       builder: (_) => SubscriptionForm(
         onSubmit: (name, category, amount, cycle, startDate, note) async {
-          final isPro =
-              FeatureFlags.devProEntitlement ||
-              (ref.read(entitlementProvider).value?.isPro ?? false);
-          if (!isPro) {
-            showPaywall(context, trigger: 'subscriptions');
-            return false;
-          }
           final now = DateTime.now();
           await ref.read(addSubscriptionUseCaseProvider).execute(
             Subscription(
