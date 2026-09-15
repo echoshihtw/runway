@@ -165,6 +165,8 @@
   "rentFixed": "LOYER / FIXE",
   "livingExpenses": "DÉPENSES DE VIE",
   "subtotal": "SOUS-TOTAL",
+  "budgetLeft": "reste {amount}",
+  "budgetOver": "{amount} au-dessus du budget",
   "totalBudgetPerMonth": "BUDGET TOTAL/MOIS",
   "setBudget": "DÉFINIR LE BUDGET",
   "rentFixedCosts": "LOYER / COÛTS FIXES",

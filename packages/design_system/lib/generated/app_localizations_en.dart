@@ -496,6 +496,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get subtotal => 'SUBTOTAL';
 
   @override
+  String budgetLeft(String amount) {
+    return '$amount left';
+  }
+
+  @override
+  String budgetOver(String amount) {
+    return '$amount over budget';
+  }
+
+  @override
   String get totalBudgetPerMonth => 'TOTAL BUDGET/MO';
 
   @override

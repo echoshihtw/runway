@@ -37,6 +37,7 @@ class _TransactionFormState extends State<TransactionForm> {
   late DateTime _date;
   bool _linkToLoan = false;
   String? _selectedLoanId;
+  late bool _isRent;
 
   bool get _isOpeningBalance =>
       widget.existing?.type == TransactionType.openingBalance ||
@@ -61,6 +62,7 @@ class _TransactionFormState extends State<TransactionForm> {
     _noteCtrl.text = widget.existing?.note ?? '';
     _selectedLoanId = widget.existing?.loanId;
     _linkToLoan = widget.existing?.type == TransactionType.repayment;
+    _isRent = widget.existing?.category == ExpenseCategory.rent;
     if (_linkToLoan && _selectedLoanId == null) {
       _selectedLoanId = _defaultLoanId();
     }
@@ -86,6 +88,15 @@ class _TransactionFormState extends State<TransactionForm> {
     if (_isInflow) return TransactionType.income;
     if (_linkToLoan) return TransactionType.repayment;
     return TransactionType.expense;
+  }
+
+  /// An expense uses up the rent or the living budget. Editing a living
+  /// expense keeps the category it already has.
+  ExpenseCategory? get _resolvedCategory {
+    if (_resolvedType != TransactionType.expense) return null;
+    if (_isRent) return ExpenseCategory.rent;
+    final existing = widget.existing?.category;
+    return existing == ExpenseCategory.rent ? null : existing;
   }
 
   String? _defaultLoanId() {
@@ -127,7 +138,7 @@ class _TransactionFormState extends State<TransactionForm> {
       amount,
       _date,
       _noteCtrl.text.trim().isEmpty ? null : _noteCtrl.text.trim(),
-      null,
+      _resolvedCategory,
       _linkToLoan ? _selectedLoanId : null,
     );
     Navigator.of(context).pop();
@@ -144,6 +155,8 @@ class _TransactionFormState extends State<TransactionForm> {
         !_isOpeningBalance &&
         !_isLockedType &&
         widget.loans.isNotEmpty;
+    final showBudgetChoice =
+        !_isInflow && !_isOpeningBalance && !_isLockedType && !_linkToLoan;
 
     return Container(
       decoration: const BoxDecoration(
@@ -223,6 +236,15 @@ class _TransactionFormState extends State<TransactionForm> {
             ),
             const SizedBox(height: AppSpacing.md),
 
+            // Which budget an expense uses up
+            if (showBudgetChoice) ...[
+              _BudgetToggle(
+                isRent: _isRent,
+                onChanged: (v) => setState(() => _isRent = v),
+              ),
+              const SizedBox(height: AppSpacing.md),
+            ],
+
             // Loan repayment link (progressive disclosure)
             if (showLoanLink) ...[
               _LoanLinkRow(
@@ -295,6 +317,42 @@ class _InOutToggle extends StatelessWidget {
             color: SC.txExpense,
             active: !isInflow,
             onTap: () => onChanged(false),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ── LIVING / RENT toggle ─────────────────────────────────────────────────────
+
+class _BudgetToggle extends StatelessWidget {
+  final bool isRent;
+  final ValueChanged<bool> onChanged;
+
+  const _BudgetToggle({required this.isRent, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: _ToggleTile(
+            label: 'LIVING',
+            icon: Icons.shopping_bag_rounded,
+            color: SC.txExpense,
+            active: !isRent,
+            onTap: () => onChanged(false),
+          ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        Expanded(
+          child: _ToggleTile(
+            label: 'RENT',
+            icon: Icons.home_rounded,
+            color: SC.txExpense,
+            active: isRent,
+            onTap: () => onChanged(true),
           ),
         ),
       ],
