@@ -10,6 +10,12 @@ abstract class PurchaseService {
 
   /// Check if the Pro entitlement is currently active server-side.
   Future<bool> checkProEntitlement();
+
+  /// Emits whether the Pro entitlement is active each time purchase data
+  /// changes, including purchases completed outside the paywall such as an
+  /// offer code redeemed from its URL. Emits nothing when purchases are not
+  /// configured on this platform.
+  Stream<bool> get proEntitlementUpdates;
 }
 
 class ProOffering {
