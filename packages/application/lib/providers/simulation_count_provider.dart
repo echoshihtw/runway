@@ -1,28 +1,30 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import '../services/simulation_count_store.dart';
 
 /// Simulations a free user can run before the Pro paywall.
 const kFreeSimulations = 3;
-
-const _kSimulationsRun = 'simulations_run';
 
 /// Whether running another simulation needs Pro.
 bool needsProForSimulation({required bool isPro, required int simulationsRun}) =>
     !isPro && simulationsRun >= kFreeSimulations;
 
-/// How many simulations have been run on this device. Kept in preferences,
-/// so the free limit and the Getting Started step survive a restart.
+/// Overridden in main.dart with the Keychain-backed store.
+final simulationCountStoreProvider = Provider<SimulationCountStore>((ref) {
+  throw UnimplementedError(
+    'simulationCountStoreProvider must be overridden in main.dart',
+  );
+});
+
+/// How many simulations have been run on this device.
 class SimulationCountNotifier extends AsyncNotifier<int> {
   @override
-  Future<int> build() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt(_kSimulationsRun) ?? 0;
-  }
+  Future<int> build() => ref.watch(simulationCountStoreProvider).read();
 
   Future<void> increment() async {
-    final prefs = await SharedPreferences.getInstance();
-    final next = (prefs.getInt(_kSimulationsRun) ?? 0) + 1;
-    await prefs.setInt(_kSimulationsRun, next);
+    final store = ref.read(simulationCountStoreProvider);
+    final next = await store.read() + 1;
+    await store.write(next);
     state = AsyncData(next);
   }
 }
