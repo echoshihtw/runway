@@ -9,25 +9,32 @@ import 'package:path/path.dart' as p;
 import 'package:sqlcipher_flutter_libs/sqlcipher_flutter_libs.dart';
 import 'package:sqlite3/open.dart';
 import 'database_files.dart';
+import 'sqlcipher_check.dart';
 import '../tables/transactions_table.dart';
 import '../tables/loans_table.dart';
 import '../tables/subscriptions_table.dart';
+import '../tables/financial_settings_table.dart';
 import '../daos/transaction_dao.dart';
 import '../daos/loan_dao.dart';
 import '../daos/subscription_dao.dart';
+import '../daos/financial_settings_dao.dart';
 
 part 'app_database.g.dart';
 
 @DriftDatabase(
-  tables: [Transactions, Loans, Subscriptions],
-  daos: [TransactionDao, LoanDao, SubscriptionDao],
+  tables: [Transactions, Loans, Subscriptions, FinancialSettings],
+  daos: [TransactionDao, LoanDao, SubscriptionDao, FinancialSettingsDao],
 )
 class AppDatabase extends _$AppDatabase {
-  AppDatabase() : super(_openConnection());
-  AppDatabase.forTesting(super.executor);
+  AppDatabase() : _verifyCipher = true, super(_openConnection());
+
+  /// Plain SQLite for tests, so the SQLCipher check is skipped.
+  AppDatabase.forTesting(super.executor) : _verifyCipher = false;
+
+  final bool _verifyCipher;
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -48,6 +55,12 @@ class AppDatabase extends _$AppDatabase {
           'ALTER TABLE "transactions" ADD COLUMN "category" TEXT;',
         );
       }
+      if (from < 6) {
+        await m.createTable(financialSettings);
+      }
+    },
+    beforeOpen: (details) async {
+      if (_verifyCipher) ensureSqlCipher(await readCipherVersion(this));
     },
   );
 }

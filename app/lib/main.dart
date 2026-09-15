@@ -48,6 +48,9 @@ void main() async {
           subscriptionRepositoryProvider.overrideWithValue(
             DriftSubscriptionRepository(db),
           ),
+          financialSettingsRepositoryProvider.overrideWithValue(
+            DriftFinancialSettingsRepository(db),
+          ),
           purchaseServiceProvider.overrideWithValue(rcService),
         ];
       },
