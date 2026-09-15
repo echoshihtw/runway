@@ -64,12 +64,24 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx --yes semantic-release@25.0.9
+        # pipefail: without an explicit shell, a failure before tee is ignored.
+        run: |
+          set -o pipefail
+          npx --yes semantic-release@25.0.9 | tee release.log
 
-      # Empty when there was nothing to release, which skips deploy.
+      # Empty when there was nothing to release, which skips deploy. Fails if a
+      # release was published but no tag is visible, so deploy never skips
+      # silently.
       - name: Read the new tag
         id: tag
-        run: echo "tag=$(git tag --points-at HEAD --list 'v*' | head -n 1)" >> "$GITHUB_OUTPUT"
+        run: |
+          tag=$(git tag --points-at HEAD --list 'v*' | head -n 1)
+          if [ -z "$tag" ] && grep -q 'Published release' release.log; then
+            echo "::error::semantic-release published a release, but no tag points at HEAD. Deploy would be skipped."
+            exit 1
+          fi
+          echo "New tag: ${tag:-none}"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
 
   deploy:
     needs: release
