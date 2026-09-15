@@ -17,6 +17,7 @@ export 'providers/repository_provider.dart';
 export 'providers/transaction_provider.dart';
 export 'providers/model_provider.dart';
 export 'providers/scenario_provider.dart';
+export 'providers/simulation_count_provider.dart';
 export 'providers/locale_provider.dart';
 export 'providers/currency_provider.dart';
 export 'providers/loan_provider.dart';

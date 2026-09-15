@@ -37,14 +37,13 @@ class _GettingStartedCardState extends ConsumerState<GettingStartedCard> {
 
     final txns = ref.watch(transactionsProvider).value ?? [];
     final budget = ref.watch(budgetProvider).value ?? const Budget();
-    final scenario = ref.watch(scenarioProvider);
 
     final hasBalance = txns.any(
       (t) => t.type == TransactionType.openingBalance,
     );
     final hasBudget = budget.isSet;
     final hasExpense = txns.any((t) => t.type == TransactionType.expense);
-    final hasSim = scenario.hasRunSimulation;
+    final hasSim = (ref.watch(simulationCountProvider).value ?? 0) > 0;
 
     final steps = [
       _Step(

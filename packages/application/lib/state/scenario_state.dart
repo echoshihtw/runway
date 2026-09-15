@@ -3,7 +3,6 @@ class ScenarioState {
   final double? simulatedIncome;
   final bool isActive;
   final bool isCalculating;
-  final bool hasRunSimulation;
   final int resetVersion;
 
   const ScenarioState({
@@ -11,7 +10,6 @@ class ScenarioState {
     this.simulatedIncome,
     this.isActive = false,
     this.isCalculating = false,
-    this.hasRunSimulation = false,
     this.resetVersion = 0,
   });
 
@@ -24,7 +22,6 @@ class ScenarioState {
     double? simulatedIncome,
     bool? isActive,
     bool? isCalculating,
-    bool? hasRunSimulation,
     int? resetVersion,
   }) {
     return ScenarioState(
@@ -32,7 +29,6 @@ class ScenarioState {
       simulatedIncome: simulatedIncome ?? this.simulatedIncome,
       isActive: isActive ?? this.isActive,
       isCalculating: isCalculating ?? this.isCalculating,
-      hasRunSimulation: hasRunSimulation ?? this.hasRunSimulation,
       resetVersion: resetVersion ?? this.resetVersion,
     );
   }
