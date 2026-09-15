@@ -514,9 +514,18 @@ class _MonthSectionHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: AppTextStyles.sectionTitle),
-          Text(
-            '$sign$symbol $amount',
-            style: AppTextStyles.metricSmall.copyWith(color: color),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(context.l10n.netLabel, style: AppTextStyles.caption),
+              const SizedBox(width: AppSpacing.xs),
+              Text(
+                '$sign$symbol $amount',
+                style: AppTextStyles.metricSmall.copyWith(color: color),
+              ),
+            ],
           ),
         ],
       ),

@@ -46,6 +46,13 @@ class TransactionRow extends ConsumerWidget {
 
   bool get _isPlanned => transaction.date.isAfter(DateTime.now());
 
+  /// The note, when there is one, is what the user wrote to recognise the
+  /// entry, so it leads. The type is the fallback title.
+  String? get _note {
+    final note = transaction.note?.trim();
+    return note == null || note.isEmpty ? null : note;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
@@ -95,7 +102,7 @@ class TransactionRow extends ConsumerWidget {
                     children: [
                       Flexible(
                         child: Text(
-                          _typeLabel(l10n).toUpperCase(),
+                          _note ?? _typeLabel(l10n).toUpperCase(),
                           style: AppTextStyles.body.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
@@ -112,20 +119,16 @@ class TransactionRow extends ConsumerWidget {
                       ],
                     ],
                   ),
-                  if (transaction.category != null) ...[
-                    const SizedBox(height: 2),
-                    Text(
-                      '${transaction.category!.group} · ${transaction.category!.label}',
-                      style: AppTextStyles.caption.copyWith(
-                        color: AppColors.textDim,
-                        fontSize: 10,
-                      ),
-                    ),
-                  ],
-                  if (transaction.note != null) ...[
+                  if (_note != null || transaction.category != null) ...[
                     const SizedBox(height: AppSpacing.xxs),
                     Text(
-                      transaction.note!,
+                      [
+                        if (_note != null) _typeLabel(l10n).toUpperCase(),
+                        if (transaction.category != null) ...[
+                          transaction.category!.group,
+                          transaction.category!.label,
+                        ],
+                      ].join(' · '),
                       style: AppTextStyles.caption,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
