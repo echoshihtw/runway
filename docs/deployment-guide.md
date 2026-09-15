@@ -110,7 +110,7 @@ There is no `.env` mechanism. Configuration is compile-time:
 | RevenueCat keys + entitlement id | `app/lib/revenuecat_config.dart` (source-committed constants) |
 | Firebase | `app/lib/firebase_options.dart` (flutterfire-generated) |
 | Dev Pro unlock | `--dart-define=DEV_PRO_ENTITLEMENT=true` (non-release builds only) |
-| Build number | `--dart-define=FLUTTER_BUILD_NUMBER` (CI passes `github.run_number`) |
+| Version / build number | CD passes `--build-name` from the tag (`v1.0.1` → `1.0.1`) and `--build-number=github.run_number`; local builds use `BUILD_NAME`/`BUILD_NUMBER` via the Makefile |
 
 The RevenueCat keys in `revenuecat_config.dart` are *public SDK keys*, which are designed to be shipped in the client — but they are committed to the repo rather than injected, so rotating one requires a code change and release.
 
