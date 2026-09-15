@@ -1486,6 +1486,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No activity yet this month'**
   String get noActivityThisMonth;
+
+  /// Link on the paywall to Apple's standard end user license agreement
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Use'**
+  String get paywallTermsOfUse;
+
+  /// Link on the paywall to the Runway privacy policy
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get paywallPrivacyPolicy;
 }
 
 class _AppLocalizationsDelegate

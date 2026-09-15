@@ -282,5 +282,13 @@
   "cashIn": "IN",
   "cashOut": "OUT",
   "netLabel": "NET",
-  "noActivityThisMonth": "No activity yet this month"
+  "noActivityThisMonth": "No activity yet this month",
+  "paywallTermsOfUse": "Terms of Use",
+  "paywallPrivacyPolicy": "Privacy Policy",
+  "@paywallTermsOfUse": {
+    "description": "Link on the paywall to Apple's standard end user license agreement"
+  },
+  "@paywallPrivacyPolicy": {
+    "description": "Link on the paywall to the Runway privacy policy"
+  }
 }

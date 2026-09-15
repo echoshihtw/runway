@@ -67,7 +67,6 @@ class EntitlementState {
 
   // Feature gates — what's free vs pro
   bool get canAddMultipleLoans => isPro;
-  bool get canUseTimeline => isPro;
   bool get canUseUnlimitedSims => isPro;
 
   // Always free

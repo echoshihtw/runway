@@ -235,5 +235,7 @@
   "cashIn": "収入",
   "cashOut": "支出",
   "netLabel": "純額",
-  "noActivityThisMonth": "今月はまだ活動がありません"
+  "noActivityThisMonth": "今月はまだ活動がありません",
+  "paywallTermsOfUse": "利用規約",
+  "paywallPrivacyPolicy": "プライバシーポリシー"
 }
