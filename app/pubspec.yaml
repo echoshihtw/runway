@@ -33,6 +33,7 @@ dependencies:
   sqlcipher_flutter_libs: ^0.6.0
   flutter_windowmanager_plus: ^1.0.1
   purchases_flutter: ^10.0.0
+  in_app_review: ^2.0.12
 
 dev_dependencies:
   flutter_test:

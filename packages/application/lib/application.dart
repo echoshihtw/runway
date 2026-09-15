@@ -33,6 +33,8 @@ export 'analytics_service.dart';
 export 'providers/entitlement_provider.dart';
 export 'providers/purchase_provider.dart';
 export 'services/purchase_service.dart';
+export 'services/review_prompter.dart';
+export 'providers/review_prompt_provider.dart';
 export 'services/simulation_count_store.dart';
 export 'services/data_reset_service.dart';
 export 'providers/data_reset_provider.dart';
