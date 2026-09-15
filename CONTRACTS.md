@@ -284,6 +284,8 @@ Answer these questions:
 | 2026-04 | No investment in burn rate | Investment ≠ expense, would inflate burn |
 | 2026-04 | Adaptive safety buffer (6-18mo) | Balance conservative vs aggressive |
 | 2026-04 | max(actual, budget) formula | Reality wins, budget is floor not ceiling |
+| 2026-09 | Rent and living budget buckets | Logged spending uses up its budget instead of being compared with the whole budget, so nothing is counted twice or missed |
+| 2026-09 | Runway measured in months from today | The rest of the current month costs its unused budget, not a full month that was already partly paid |
 | 2026-04 | Mathematical runway (no 120mo cap) | Artificial caps mislead users |
 | 2026-04 | Two pockets (safety + investable) | Mental model clarity |
 | 2026-04 | JetBrains Mono for numbers | Gaming soul, readability |
@@ -293,5 +295,3 @@ Answer these questions:
 | 2026-04 | Subscription normalized to monthly | Apples-to-apples comparison |
 | 2026-06 | SQLite DB encrypted with AES-256 via SQLCipher (`PRAGMA key`) | User financial data is sensitive; key generated with `Random.secure()` and stored in iOS Keychain / Android Keystore via `flutter_secure_storage`. Wiring requires `sqlcipher_flutter_libs: ^0.6.0` (NOT `^0.7.0+eol` which is a no-op stub) and `open.overrideFor(...)` calls in `app_database.dart` — without both, `PRAGMA key` silently no-ops on plain sqlite3 |
 | 2026-06 | App Store export compliance: standard encryption (EAR 740.17(b)(1)) | SQLCipher counts as standard encryption — select "Standard algorithms" in App Store Connect compliance prompt, then claim exemption as local data protection only |
-| 2026-09 | Rent and living budget buckets | Logged spending uses up its budget instead of being compared with the whole budget, so nothing is counted twice or missed |
-| 2026-09 | Runway measured in months from today | The rest of the current month costs its unused budget, not a full month that was already partly paid |
