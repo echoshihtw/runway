@@ -1061,6 +1061,18 @@ abstract class AppLocalizations {
   /// **'SUBTOTAL'**
   String get subtotal;
 
+  /// Unused part of a monthly budget, e.g. $ 29,790 left
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} left'**
+  String budgetLeft(String amount);
+
+  /// Spending above a monthly budget, e.g. $ 1,500 over budget
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} over budget'**
+  String budgetOver(String amount);
+
   /// No description provided for @totalBudgetPerMonth.
   ///
   /// In en, this message translates to:

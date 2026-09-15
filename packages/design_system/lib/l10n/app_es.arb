@@ -165,6 +165,8 @@
   "rentFixed": "ALQUILER / FIJO",
   "livingExpenses": "GASTOS DE VIDA",
   "subtotal": "SUBTOTAL",
+  "budgetLeft": "quedan {amount}",
+  "budgetOver": "{amount} por encima del presupuesto",
   "totalBudgetPerMonth": "PRESUPUESTO TOTAL/MES",
   "setBudget": "ESTABLECER PRESUPUESTO",
   "rentFixedCosts": "ALQUILER / COSTOS FIJOS",

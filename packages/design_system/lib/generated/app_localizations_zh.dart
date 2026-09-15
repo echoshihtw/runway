@@ -492,6 +492,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get subtotal => '小計';
 
   @override
+  String budgetLeft(String amount) {
+    return '剩餘 $amount';
+  }
+
+  @override
+  String budgetOver(String amount) {
+    return '超出預算 $amount';
+  }
+
+  @override
   String get totalBudgetPerMonth => '總預算/月';
 
   @override
@@ -1207,6 +1217,16 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get subtotal => '小計';
+
+  @override
+  String budgetLeft(String amount) {
+    return '剩餘 $amount';
+  }
+
+  @override
+  String budgetOver(String amount) {
+    return '超出預算 $amount';
+  }
 
   @override
   String get totalBudgetPerMonth => '每月總預算';

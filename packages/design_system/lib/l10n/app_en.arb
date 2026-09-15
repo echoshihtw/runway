@@ -179,6 +179,16 @@
   "rentFixed": "RENT / FIXED",
   "livingExpenses": "LIVING EXPENSES",
   "subtotal": "SUBTOTAL",
+  "budgetLeft": "{amount} left",
+  "@budgetLeft": {
+    "description": "Unused part of a monthly budget, e.g. $ 29,790 left",
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "budgetOver": "{amount} over budget",
+  "@budgetOver": {
+    "description": "Spending above a monthly budget, e.g. $ 1,500 over budget",
+    "placeholders": { "amount": { "type": "String" } }
+  },
   "totalBudgetPerMonth": "TOTAL BUDGET/MO",
   "setBudget": "SET BUDGET",
   "rentFixedCosts": "RENT / FIXED COSTS",

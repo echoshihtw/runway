@@ -165,6 +165,8 @@
   "rentFixed": "房租 / 固定支出",
   "livingExpenses": "生活費",
   "subtotal": "小計",
+  "budgetLeft": "剩餘 {amount}",
+  "budgetOver": "超出預算 {amount}",
   "totalBudgetPerMonth": "每月總預算",
   "setBudget": "設定預算",
   "rentFixedCosts": "房租 / 固定支出",

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:design_system/design_system.dart';
 import 'package:application/application.dart';
+import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
 
 class ThisMonthCard extends ConsumerWidget {
@@ -11,6 +12,7 @@ class ThisMonthCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final flow = ref.watch(thisMonthFlowProvider);
+    final burn = ref.watch(monthlyBurnProvider);
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
     final nf = NumberFormat('#,##0', 'en_US');
 
@@ -19,7 +21,7 @@ class ThisMonthCard extends ConsumerWidget {
     final netColor = flow.net >= 0 ? SC.life : SC.cost;
     final netPrefix = flow.net >= 0 ? '+' : '-';
 
-    final summary = flow.isEmpty
+    final flowSummary = flow.isEmpty
         ? _EmptyState(l10n: l10n)
         : Column(
             children: [
@@ -37,6 +39,18 @@ class ThisMonthCard extends ConsumerWidget {
               ),
             ],
           );
+
+    final summary = Column(
+      children: [
+        flowSummary,
+        for (final (label, bucket) in [
+          (l10n.rentFixed, burn.rent),
+          (l10n.livingExpenses, burn.living),
+        ])
+          if (bucket.budget > 0)
+            _BudgetRow(label: label, bucket: bucket, fmt: fmt),
+      ],
+    );
 
     return NeoExpandableCard(
       title: l10n.thisMonth,
@@ -70,6 +84,54 @@ class _Row extends StatelessWidget {
           Text(
             value,
             style: AppTextStyles.metricSmall.copyWith(color: color),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Spending against one budget this month, e.g. "$ 210 / $ 30,000" with
+/// "$ 29,790 left" underneath.
+class _BudgetRow extends StatelessWidget {
+  final String label;
+  final BudgetBucket bucket;
+  final String Function(double) fmt;
+
+  const _BudgetRow({
+    required this.label,
+    required this.bucket,
+    required this.fmt,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final over = bucket.spentThisMonth - bucket.budget;
+    return Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.sm),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(child: Text(label, style: AppTextStyles.label)),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                '${fmt(bucket.spentThisMonth)} / ${fmt(bucket.budget)}',
+                style: AppTextStyles.metricSmall.copyWith(
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              Text(
+                over > 0
+                    ? l10n.budgetOver(fmt(over))
+                    : l10n.budgetLeft(fmt(bucket.leftThisMonth)),
+                style: AppTextStyles.caption.copyWith(
+                  color: over > 0 ? SC.cost : SC.life,
+                ),
+              ),
+            ],
           ),
         ],
       ),

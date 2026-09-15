@@ -165,6 +165,8 @@
   "rentFixed": "AFFITTO / FISSO",
   "livingExpenses": "SPESE DI VITA",
   "subtotal": "SUBTOTALE",
+  "budgetLeft": "restano {amount}",
+  "budgetOver": "{amount} oltre il budget",
   "totalBudgetPerMonth": "BUDGET TOTALE/MESE",
   "setBudget": "IMPOSTA BUDGET",
   "rentFixedCosts": "AFFITTO / COSTI FISSI",

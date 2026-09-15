@@ -492,6 +492,16 @@ class AppLocalizationsJa extends AppLocalizations {
   String get subtotal => '小計';
 
   @override
+  String budgetLeft(String amount) {
+    return '残り $amount';
+  }
+
+  @override
+  String budgetOver(String amount) {
+    return '予算超過 $amount';
+  }
+
+  @override
   String get totalBudgetPerMonth => '予算合計/月';
 
   @override
