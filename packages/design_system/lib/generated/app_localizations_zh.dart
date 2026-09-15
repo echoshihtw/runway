@@ -450,6 +450,24 @@ class AppLocalizationsZh extends AppLocalizations {
   String get delete => '刪除';
 
   @override
+  String get dataSection => '你的資料';
+
+  @override
+  String get deleteAllDataBody => '從這台裝置清除所有紀錄、貸款、訂閱與設定。Runway Pro 仍保持解鎖。';
+
+  @override
+  String get deleteAllDataButton => '刪除所有資料';
+
+  @override
+  String get deleteAllDataConfirmTitle => '要刪除全部嗎？';
+
+  @override
+  String get deleteAllDataConfirmBody => '資料會從這台裝置清除，且無法復原。Runway 將從頭開始。';
+
+  @override
+  String get deleteAllDataConfirmAction => '全部刪除';
+
+  @override
   String get planned => '計劃中';
 
   @override
@@ -1189,6 +1207,24 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get delete => '刪除';
+
+  @override
+  String get dataSection => '你的資料';
+
+  @override
+  String get deleteAllDataBody => '從這台裝置清除所有紀錄、貸款、訂閱與設定。Runway Pro 仍保持解鎖。';
+
+  @override
+  String get deleteAllDataButton => '刪除所有資料';
+
+  @override
+  String get deleteAllDataConfirmTitle => '要刪除全部嗎？';
+
+  @override
+  String get deleteAllDataConfirmBody => '資料會從這台裝置清除，且無法復原。Runway 將從頭開始。';
+
+  @override
+  String get deleteAllDataConfirmAction => '全部刪除';
 
   @override
   String get planned => '規劃中';

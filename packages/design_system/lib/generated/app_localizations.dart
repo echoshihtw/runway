@@ -977,6 +977,42 @@ abstract class AppLocalizations {
   /// **'DELETE'**
   String get delete;
 
+  /// Settings card title for erasing all local data
+  ///
+  /// In en, this message translates to:
+  /// **'Your data'**
+  String get dataSection;
+
+  /// Explains what Delete all data erases
+  ///
+  /// In en, this message translates to:
+  /// **'Erase every entry, loan, subscription and setting from this device. Runway Pro stays unlocked.'**
+  String get deleteAllDataBody;
+
+  /// Button that opens the delete-all-data confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'DELETE ALL DATA'**
+  String get deleteAllDataButton;
+
+  /// Title of the delete-all-data confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Delete everything?'**
+  String get deleteAllDataConfirmTitle;
+
+  /// Warning that deletion is permanent
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is erased from this device and cannot be recovered. Runway starts again from the beginning.'**
+  String get deleteAllDataConfirmBody;
+
+  /// Confirms permanent deletion of all data
+  ///
+  /// In en, this message translates to:
+  /// **'DELETE EVERYTHING'**
+  String get deleteAllDataConfirmAction;
+
   /// No description provided for @planned.
   ///
   /// In en, this message translates to:

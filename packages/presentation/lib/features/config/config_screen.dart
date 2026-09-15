@@ -5,6 +5,8 @@ import 'package:application/application.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
 
+import 'widgets/delete_all_data_card.dart';
+
 class ConfigScreen extends ConsumerStatefulWidget {
   const ConfigScreen({super.key});
 
@@ -586,6 +588,10 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                         ],
                       ),
                     ),
+                    const SizedBox(height: AppSpacing.cardGap),
+
+                    // ── YOUR DATA ─────────────────────
+                    const DeleteAllDataCard(),
                     const SizedBox(height: AppSpacing.xxxl),
                   ],
                 ),

@@ -450,6 +450,26 @@ class AppLocalizationsJa extends AppLocalizations {
   String get delete => '削除';
 
   @override
+  String get dataSection => 'データ';
+
+  @override
+  String get deleteAllDataBody =>
+      'この端末から、すべての記録、ローン、サブスクリプション、設定を消去します。Runway Pro のロック解除はそのままです。';
+
+  @override
+  String get deleteAllDataButton => 'すべてのデータを削除';
+
+  @override
+  String get deleteAllDataConfirmTitle => 'すべて削除しますか？';
+
+  @override
+  String get deleteAllDataConfirmBody =>
+      'データはこの端末から消去され、復元できません。Runway は最初から始まります。';
+
+  @override
+  String get deleteAllDataConfirmAction => 'すべて削除';
+
+  @override
   String get planned => '予定';
 
   @override
