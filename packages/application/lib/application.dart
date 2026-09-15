@@ -31,3 +31,5 @@ export 'analytics_service.dart';
 export 'providers/entitlement_provider.dart';
 export 'providers/purchase_provider.dart';
 export 'services/purchase_service.dart';
+export 'services/data_reset_service.dart';
+export 'providers/data_reset_provider.dart';

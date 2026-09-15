@@ -453,6 +453,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get delete => 'DELETE';
 
   @override
+  String get dataSection => 'Your data';
+
+  @override
+  String get deleteAllDataBody =>
+      'Erase every entry, loan, subscription and setting from this device. Runway Pro stays unlocked.';
+
+  @override
+  String get deleteAllDataButton => 'DELETE ALL DATA';
+
+  @override
+  String get deleteAllDataConfirmTitle => 'Delete everything?';
+
+  @override
+  String get deleteAllDataConfirmBody =>
+      'Your data is erased from this device and cannot be recovered. Runway starts again from the beginning.';
+
+  @override
+  String get deleteAllDataConfirmAction => 'DELETE EVERYTHING';
+
+  @override
   String get planned => 'PLANNED';
 
   @override

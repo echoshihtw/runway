@@ -453,6 +453,26 @@ class AppLocalizationsIt extends AppLocalizations {
   String get delete => 'ELIMINA';
 
   @override
+  String get dataSection => 'I tuoi dati';
+
+  @override
+  String get deleteAllDataBody =>
+      'Cancella tutte le voci, i prestiti, gli abbonamenti e le impostazioni da questo dispositivo. Runway Pro resta sbloccato.';
+
+  @override
+  String get deleteAllDataButton => 'CANCELLA TUTTI I DATI';
+
+  @override
+  String get deleteAllDataConfirmTitle => 'Cancellare tutto?';
+
+  @override
+  String get deleteAllDataConfirmBody =>
+      'I tuoi dati vengono cancellati da questo dispositivo e non possono essere recuperati. Runway ricomincia dall\'inizio.';
+
+  @override
+  String get deleteAllDataConfirmAction => 'CANCELLA TUTTO';
+
+  @override
   String get planned => 'PIANIFICATO';
 
   @override

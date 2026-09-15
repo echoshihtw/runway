@@ -165,6 +165,30 @@
   "addEntry": "+ ADD",
   "willRemoveLoan": "WILL ALSO REMOVE FROM LIABILITIES",
   "delete": "DELETE",
+  "dataSection": "Your data",
+  "@dataSection": {
+    "description": "Settings card title for erasing all local data"
+  },
+  "deleteAllDataBody": "Erase every entry, loan, subscription and setting from this device. Runway Pro stays unlocked.",
+  "@deleteAllDataBody": {
+    "description": "Explains what Delete all data erases"
+  },
+  "deleteAllDataButton": "DELETE ALL DATA",
+  "@deleteAllDataButton": {
+    "description": "Button that opens the delete-all-data confirmation"
+  },
+  "deleteAllDataConfirmTitle": "Delete everything?",
+  "@deleteAllDataConfirmTitle": {
+    "description": "Title of the delete-all-data confirmation dialog"
+  },
+  "deleteAllDataConfirmBody": "Your data is erased from this device and cannot be recovered. Runway starts again from the beginning.",
+  "@deleteAllDataConfirmBody": {
+    "description": "Warning that deletion is permanent"
+  },
+  "deleteAllDataConfirmAction": "DELETE EVERYTHING",
+  "@deleteAllDataConfirmAction": {
+    "description": "Confirms permanent deletion of all data"
+  },
   "planned": "PLANNED",
   "whatIfAnalysis": "WHAT-IF ANALYSIS",
   "current": "CURRENT",

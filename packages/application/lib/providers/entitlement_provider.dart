@@ -3,7 +3,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../feature_flags.dart';
 import 'purchase_provider.dart';
 
-const _kIsPro = 'is_pro';
+/// SharedPreferences key caching the Pro unlock for offline use.
+const kIsProPreferenceKey = 'is_pro';
+const _kIsPro = kIsProPreferenceKey;
 
 class EntitlementNotifier extends AsyncNotifier<EntitlementState> {
   @override

@@ -198,7 +198,7 @@ class _PrivacyPoints extends StatelessWidget {
   Widget build(BuildContext context) {
     final points = [
       ('🔐', 'Encrypted on device'),
-      ('☁️', 'Never sent to servers'),
+      ('📱', 'Numbers stay on your device'),
       ('👁️', 'No one can read your data'),
       ('🗑️', 'Delete anytime, instantly'),
     ];
