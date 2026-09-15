@@ -12,6 +12,9 @@
 | `APP_STORE_CONNECT_API_KEY_BASE64` | Base64 encoded .p8 API key file |
 
 ## Android (Play Store)
+
+Not used yet. The Android deploy job in `cd.yml` is turned off until the Google Play release (#56).
+
 | Secret | Description |
 |--------|-------------|
 | `ANDROID_KEYSTORE_BASE64` | Base64 encoded .jks keystore file |
