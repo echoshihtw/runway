@@ -24,6 +24,7 @@ export 'repositories/loan_repository.dart';
 export 'repositories/subscription_repository.dart';
 
 export 'logic/monthly_aggregator.dart';
+export 'logic/burn_engine.dart';
 export 'logic/survival_engine.dart';
 export 'logic/runway_goal_progress.dart';
 export 'logic/loan_engine.dart';

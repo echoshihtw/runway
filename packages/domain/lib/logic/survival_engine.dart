@@ -1,150 +1,100 @@
-import '../entities/monthly_state.dart';
+import 'dart:math' as math;
+
 import '../entities/model_state.dart';
-import '../value_objects/survival_month.dart';
+import 'burn_engine.dart';
 
-const _maxProjection = 120;
+const _unlimitedMonths = 9999;
+const _unlimitedDays = 99999;
 
+/// The model shown on the dashboard.
+///
+/// An expected burn override replaces [MonthlyBurn.total] and is spread
+/// evenly over what is left of this month.
 ModelState computeModel({
-  required List<MonthlyState> months,
-  required double monthlyPayment,
-  required double subscriptionMonthlyCost,
-  double? budgetBurnRate,
+  required double currentCash,
+  required MonthlyBurn burn,
   double? expectedMonthlyInflow,
   double? expectedMonthlyBurnOverride,
 }) {
-  final currentCash = months.isEmpty ? 0.0 : months.last.balance;
-  final txBurnRate = _computeBurnRate(months) ?? 0.0;
-
-  final effectiveBurn =
+  final override =
       expectedMonthlyBurnOverride != null && expectedMonthlyBurnOverride > 0
       ? expectedMonthlyBurnOverride
-      : budgetBurnRate != null && budgetBurnRate > 0
-      ? budgetBurnRate
-      : txBurnRate + subscriptionMonthlyCost + monthlyPayment;
-
-  final burnForModel = effectiveBurn > 0 ? effectiveBurn : 0.0;
-
-  final int runwayMonths;
-  final DateTime? runOutDate;
-
-  if (burnForModel <= 0) {
-    runwayMonths = 9999;
-    runOutDate = null;
-  } else {
-    final projected = months.isEmpty
-        ? _projectFromCash(currentCash, burnForModel)
-        : _projectForward(months, burnForModel);
-
-    final knownRunway = _computeRunway(projected);
-    final lastBalance = projected.isEmpty
-        ? currentCash
-        : projected.last.balance;
-
-    if (lastBalance > 0) {
-      final extraMonths = (lastBalance / burnForModel).floor();
-      runwayMonths = knownRunway + extraMonths;
-      final lastDate = projected.isEmpty
-          ? DateTime.now()
-          : projected.last.month.value;
-      runOutDate = DateTime(lastDate.year, lastDate.month + extraMonths, 1);
-    } else {
-      runwayMonths = knownRunway;
-      runOutDate = _computeRunOutDate(projected);
-    }
-  }
-
-  final pressureRatio = txBurnRate > 0
-      ? (monthlyPayment + subscriptionMonthlyCost) / txBurnRate
-      : 0.0;
-
-  final runwayDays = burnForModel > 0
-      ? (currentCash / burnForModel * 30).floor()
-      : 99999;
-  return ModelState(
+      : null;
+  return modelForMonthlyBurn(
     currentCash: currentCash,
-    burnRate: txBurnRate,
-    effectiveBurnRate: burnForModel,
-    monthlyPayment: monthlyPayment,
-    subscriptionMonthlyCost: subscriptionMonthlyCost,
+    burn: burn,
+    monthlyBurn: override ?? burn.total,
+    dueThisMonth: override == null
+        ? burn.dueThisMonth
+        : override * burn.fractionOfMonthLeft,
     expectedMonthlyInflow: expectedMonthlyInflow,
     expectedMonthlyBurnOverride: expectedMonthlyBurnOverride,
-    runwayMonths: runwayMonths,
-    runwayDays: runwayDays,
-    runOutDate: runOutDate,
-    pressureRatio: pressureRatio,
   );
 }
 
-List<MonthlyState> projectMonthsForward({
-  required List<MonthlyState> known,
-  required double burnRate,
-  int maxMonths = 120,
-}) => _projectForward(known, burnRate);
+/// Builds the model for a given [monthlyBurn], so the dashboard and the
+/// simulator share one runway calculation.
+ModelState modelForMonthlyBurn({
+  required double currentCash,
+  required MonthlyBurn burn,
+  required double monthlyBurn,
+  required double dueThisMonth,
+  double? expectedMonthlyInflow,
+  double? expectedMonthlyBurnOverride,
+}) {
+  final runway = _runwayFromToday(
+    cash: currentCash,
+    dueThisMonth: dueThisMonth,
+    monthlyBurn: monthlyBurn,
+    burn: burn,
+  );
+  final fixed = burn.loanPayments + burn.subscriptions;
 
-List<MonthlyState> _projectForward(List<MonthlyState> known, double burnRate) {
-  final result = List<MonthlyState>.from(known);
-  var balance = known.last.balance;
-  var lastMonth = known.last.month;
+  return ModelState(
+    currentCash: currentCash,
+    burnRate: burn.typicalSpending,
+    effectiveBurnRate: monthlyBurn,
+    monthlyPayment: burn.loanPayments,
+    subscriptionMonthlyCost: burn.subscriptions,
+    expectedMonthlyInflow: expectedMonthlyInflow,
+    expectedMonthlyBurnOverride: expectedMonthlyBurnOverride,
+    runwayMonths: runway.months.isInfinite
+        ? _unlimitedMonths
+        : math.min(runway.months.floor(), _unlimitedMonths),
+    runwayDays: runway.months.isInfinite
+        ? _unlimitedDays
+        : math.min((runway.months * 30).floor(), _unlimitedDays),
+    runOutDate: runway.runOutMonth,
+    pressureRatio: burn.typicalSpending > 0
+        ? fixed / burn.typicalSpending
+        : 0.0,
+  );
+}
 
-  for (int i = 0; i < _maxProjection; i++) {
-    if (balance <= 0) break;
-    final next = lastMonth.next();
-    balance -= burnRate;
-    result.add(
-      MonthlyState(
-        month: next,
-        netFlow: -burnRate,
-        balance: balance,
-        grossOutflow: burnRate,
-      ),
+/// How long cash lasts, measured in months from today.
+///
+/// The rest of this month costs [dueThisMonth] over the days that are left.
+/// Every later month costs [monthlyBurn].
+({double months, DateTime? runOutMonth}) _runwayFromToday({
+  required double cash,
+  required double dueThisMonth,
+  required double monthlyBurn,
+  required MonthlyBurn burn,
+}) {
+  final start = burn.month.value;
+  final thisMonth = DateTime(start.year, start.month);
+  if (cash <= 0) return (months: 0, runOutMonth: thisMonth);
+  if (cash <= dueThisMonth) {
+    return (
+      months: burn.fractionOfMonthLeft * cash / dueThisMonth,
+      runOutMonth: thisMonth,
     );
-    lastMonth = next;
   }
-  return result;
-}
+  if (monthlyBurn <= 0) return (months: double.infinity, runOutMonth: null);
 
-List<MonthlyState> _projectFromCash(double startCash, double burnRate) {
-  final result = <MonthlyState>[];
-  double balance = startCash;
-  final start = DateTime.now();
-
-  for (int i = 0; i < _maxProjection; i++) {
-    if (balance <= 0) break;
-    final month = SurvivalMonth(DateTime(start.year, start.month + i));
-    balance -= burnRate;
-    result.add(
-      MonthlyState(
-        month: month,
-        netFlow: -burnRate,
-        balance: balance,
-        grossOutflow: burnRate,
-      ),
-    );
-  }
-  return result;
-}
-
-double? _computeBurnRate(List<MonthlyState> months) {
-  final outflows = months
-      .where((m) => m.grossOutflow > 0)
-      .map((m) => m.grossOutflow)
-      .toList();
-  if (outflows.isEmpty) return null;
-  return outflows.reduce((a, b) => a + b) / outflows.length;
-}
-
-int _computeRunway(List<MonthlyState> months) {
-  int count = 0;
-  for (final m in months) {
-    if (m.balance <= 0) break;
-    count++;
-  }
-  return count;
-}
-
-DateTime? _computeRunOutDate(List<MonthlyState> months) {
-  for (final m in months) {
-    if (m.balance <= 0) return m.month.value;
-  }
-  return null;
+  final fullMonths = (cash - dueThisMonth) / monthlyBurn;
+  return (
+    months: burn.fractionOfMonthLeft + fullMonths,
+    runOutMonth: DateTime(start.year, start.month + fullMonths.floor() + 1),
+  );
 }

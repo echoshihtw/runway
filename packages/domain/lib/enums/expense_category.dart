@@ -1,4 +1,6 @@
 enum ExpenseCategory {
+  // Rent: counts against the rent budget. Every other category counts as living.
+  rent,
   // Living
   food,
   social,
@@ -14,6 +16,7 @@ enum ExpenseCategory {
   travel;
 
   String get label => switch (this) {
+    ExpenseCategory.rent          => 'RENT',
     ExpenseCategory.food          => 'FOOD',
     ExpenseCategory.social        => 'SOCIAL',
     ExpenseCategory.daily         => 'DAILY',
@@ -26,6 +29,7 @@ enum ExpenseCategory {
   };
 
   String get group => switch (this) {
+    ExpenseCategory.rent          => 'RENT',
     ExpenseCategory.food ||
     ExpenseCategory.social ||
     ExpenseCategory.daily ||
@@ -37,9 +41,10 @@ enum ExpenseCategory {
     ExpenseCategory.travel        => 'TRAVEL',
   };
 
-  static const groups = ['LIVING', 'TRANSPORT', 'HEALTH', 'TRAVEL'];
+  static const groups = ['RENT', 'LIVING', 'TRANSPORT', 'HEALTH', 'TRAVEL'];
 
   static List<ExpenseCategory> subcategoriesFor(String group) => switch (group) {
+    'RENT'      => [rent],
     'LIVING'    => [food, social, daily, physical, discretionary],
     'HEALTH'    => [medical, wellbeing],
     'TRANSPORT' => [transport],
