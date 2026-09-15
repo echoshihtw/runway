@@ -32,7 +32,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
   late AnimationController _fadeCtrl;
   late Animation<double> _fadeAnim;
 
-  static const _totalPages = 5;
+  static const _totalPages = 3;
 
   @override
   void initState() {
@@ -90,8 +90,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
               children: [
                 _PageWelcome(onNext: _next),
                 _PagePrivacy(onNext: _next),
-                _PageHowItWorks(onNext: _next),
-                _PageProtect(onNext: _next),
                 _PageFirstAction(onFinish: _finish),
               ],
             ),
@@ -199,7 +197,7 @@ class _PrivacyPoints extends StatelessWidget {
     final points = [
       ('🔐', 'Encrypted on device'),
       ('📱', 'Numbers stay on your device'),
-      ('👁️', 'No one can read your data'),
+      ('🙈', 'Hidden when you switch apps'),
       ('🗑️', 'Delete anytime, instantly'),
     ];
 
@@ -210,136 +208,18 @@ class _PrivacyPoints extends StatelessWidget {
           Text(p.$1,
               style: const TextStyle(fontSize: 16)),
           const SizedBox(width: AppSpacing.sm),
-          Text(p.$2,
-              style: AppTextStyles.body
-                  .copyWith(color: AppColors.textSecondary)),
+          Expanded(
+            child: Text(p.$2,
+                style: AppTextStyles.body
+                    .copyWith(color: AppColors.textSecondary)),
+          ),
         ]),
       )).toList(),
     );
   }
 }
 
-// ── Page 3: How it works ──────────────────────────────────────
-class _PageHowItWorks extends StatelessWidget {
-  final VoidCallback onNext;
-  const _PageHowItWorks({required this.onNext});
-
-  @override
-  Widget build(BuildContext context) {
-    return _PageLayout(
-      icon: '📊',
-      iconData: Icons.bar_chart_rounded,
-      iconColor: AppColors.turkishBlue,
-      title: 'Three steps\nto clarity.',
-      subtitle: 'No complexity. Just your runway.',
-      extras: const _HowItWorksSteps(),
-      cta: 'GOT IT',
-      onNext: onNext,
-    );
-  }
-}
-
-class _HowItWorksSteps extends StatelessWidget {
-  const _HowItWorksSteps();
-
-  @override
-  Widget build(BuildContext context) {
-    final steps = [
-      ('1', 'Add your cash balance',
-          'How much money do you have right now?'),
-      ('2', 'Log your expenses',
-          'Track what goes out each month.'),
-      ('3', 'Know your runway',
-          'See exactly how long you can survive.'),
-    ];
-
-    return Column(
-      children: steps.map((s) => Padding(
-        padding: const EdgeInsets.only(bottom: AppSpacing.md),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 28, height: 28,
-              decoration: BoxDecoration(
-                color: AppColors.neonGreen.withAlpha(15),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                    color: AppColors.neonGreen.withAlpha(50)),
-              ),
-              child: Center(
-                child: Text(s.$1,
-                    style: TextStyle(
-                        color: AppColors.neonGreen,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700)),
-              ),
-            ),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(s.$2,
-                      style: AppTextStyles.body.copyWith(
-                          fontWeight: FontWeight.w600)),
-                  Text(s.$3,
-                      style: AppTextStyles.caption),
-                ],
-              ),
-            ),
-          ],
-        ),
-      )).toList(),
-    );
-  }
-}
-
-// ── Page 4: Protect ───────────────────────────────────────────
-class _PageProtect extends StatelessWidget {
-  final VoidCallback onNext;
-  const _PageProtect({required this.onNext});
-
-  @override
-  Widget build(BuildContext context) {
-    return _PageLayout(
-      icon: '🛡️',
-      iconData: Icons.shield_rounded,
-      iconColor: AppColors.hotPink,
-      title: 'Lock it\ndown.',
-      subtitle:
-          'Your financial data is sensitive.\nWe blur the app when you switch away,\nso no one else can see your numbers.',
-      extras: Padding(
-        padding: const EdgeInsets.only(top: AppSpacing.sm),
-        child: Container(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          decoration: BoxDecoration(
-            color: AppColors.hotPink.withAlpha(10),
-            borderRadius:
-                BorderRadius.circular(AppSpacing.cardRadius),
-            border: Border.all(
-                color: AppColors.hotPink.withAlpha(40)),
-          ),
-          child: Row(children: [
-            const Text('👁️', style: TextStyle(fontSize: 20)),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: Text(
-                'App automatically blurs when you leave, '
-                'like a banking app.',
-                style: AppTextStyles.caption,
-              ),
-            ),
-          ]),
-        ),
-      ),
-      cta: 'UNDERSTOOD',
-      onNext: onNext,
-    );
-  }
-}
-
-// ── Page 5: First Action ──────────────────────────────────────
+// ── Page 3: First Action ──────────────────────────────────────
 class _PageFirstAction extends StatelessWidget {
   final VoidCallback onFinish;
   const _PageFirstAction({required this.onFinish});
