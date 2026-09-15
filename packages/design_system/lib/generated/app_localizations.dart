@@ -155,12 +155,6 @@ abstract class AppLocalizations {
   /// **'CASH'**
   String get cash;
 
-  /// No description provided for @burnPerMonth.
-  ///
-  /// In en, this message translates to:
-  /// **'BURN/MO'**
-  String get burnPerMonth;
-
   /// No description provided for @loanPerMonth.
   ///
   /// In en, this message translates to:
@@ -320,7 +314,7 @@ abstract class AppLocalizations {
   /// No description provided for @burnRateOverride.
   ///
   /// In en, this message translates to:
-  /// **'Monthly burn'**
+  /// **'Monthly costs'**
   String get burnRateOverride;
 
   /// No description provided for @simulatedIncome.
@@ -1040,7 +1034,7 @@ abstract class AppLocalizations {
   /// No description provided for @simHint.
   ///
   /// In en, this message translates to:
-  /// **'OVERRIDE BURN RATE OR ADD INCOME TO SEE IMPACT ON RUNWAY'**
+  /// **'CHANGE MONTHLY COSTS OR ADD INCOME TO SEE THE IMPACT ON RUNWAY'**
   String get simHint;
 
   /// No description provided for @simulation.
@@ -1154,13 +1148,13 @@ abstract class AppLocalizations {
   /// No description provided for @expectedInflow.
   ///
   /// In en, this message translates to:
-  /// **'Expected inflow'**
+  /// **'Expected income'**
   String get expectedInflow;
 
   /// No description provided for @expectedBurn.
   ///
   /// In en, this message translates to:
-  /// **'Expected burn'**
+  /// **'Expected costs'**
   String get expectedBurn;
 
   /// No description provided for @notSet.
@@ -1172,7 +1166,7 @@ abstract class AppLocalizations {
   /// No description provided for @usingCurrentBurn.
   ///
   /// In en, this message translates to:
-  /// **'Using current burn'**
+  /// **'Using current costs'**
   String get usingCurrentBurn;
 
   /// No description provided for @assumptionsProjectionOnly.
@@ -1190,25 +1184,25 @@ abstract class AppLocalizations {
   /// No description provided for @expectedMonthlyInflow.
   ///
   /// In en, this message translates to:
-  /// **'Expected monthly inflow'**
+  /// **'Expected monthly income'**
   String get expectedMonthlyInflow;
 
   /// No description provided for @expectedMonthlyBurn.
   ///
   /// In en, this message translates to:
-  /// **'Expected monthly burn'**
+  /// **'Expected monthly costs'**
   String get expectedMonthlyBurn;
 
   /// No description provided for @useCurrentBurn.
   ///
   /// In en, this message translates to:
-  /// **'Use current burn'**
+  /// **'Use current costs'**
   String get useCurrentBurn;
 
   /// No description provided for @futureInflowHint.
   ///
   /// In en, this message translates to:
-  /// **'Any recurring or expected inflow — retainers, contracts, creator income, dividends.'**
+  /// **'Any recurring or expected income, such as retainers, contracts, creator income or dividends.'**
   String get futureInflowHint;
 
   /// No description provided for @runwayGoal.
@@ -1310,7 +1304,7 @@ abstract class AppLocalizations {
   /// No description provided for @bootCountingCashDays.
   ///
   /// In en, this message translates to:
-  /// **'Estimating your breathing room...'**
+  /// **'Counting the months your money covers...'**
   String get bootCountingCashDays;
 
   /// No description provided for @bootRemovingComfortFilter.
@@ -1324,12 +1318,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your financial picture is ready.'**
   String get bootRealityCheckReady;
-
-  /// No description provided for @ifIncomeStoppedToday.
-  ///
-  /// In en, this message translates to:
-  /// **'If inflow stopped today'**
-  String get ifIncomeStoppedToday;
 
   /// No description provided for @ifIncomePausedToday.
   ///
@@ -1352,7 +1340,7 @@ abstract class AppLocalizations {
   /// No description provided for @sustainableWithExpectedInflow.
   ///
   /// In en, this message translates to:
-  /// **'Sustainable with your expected inflow'**
+  /// **'Sustainable with your expected income'**
   String get sustainableWithExpectedInflow;
 
   /// No description provided for @shortByPerMonth.
@@ -1367,23 +1355,11 @@ abstract class AppLocalizations {
   /// **'{months} month target. Progress toward your goal, not a score.'**
   String goalTargetProgress(int months);
 
-  /// No description provided for @monthlyBurn.
-  ///
-  /// In en, this message translates to:
-  /// **'Monthly burn'**
-  String get monthlyBurn;
-
   /// No description provided for @availableCash.
   ///
   /// In en, this message translates to:
   /// **'Available cash'**
   String get availableCash;
-
-  /// No description provided for @historicalBurn.
-  ///
-  /// In en, this message translates to:
-  /// **'Avg burn'**
-  String get historicalBurn;
 
   /// No description provided for @notEnoughHistory.
   ///
@@ -1408,18 +1384,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Fixed costs'**
   String get fixedPressure;
-
-  /// No description provided for @actualBurn.
-  ///
-  /// In en, this message translates to:
-  /// **'Actual burn'**
-  String get actualBurn;
-
-  /// No description provided for @actualBurnHigh.
-  ///
-  /// In en, this message translates to:
-  /// **'Actual burn ▲'**
-  String get actualBurnHigh;
 
   /// No description provided for @plannedEssentials.
   ///
@@ -1451,23 +1415,11 @@ abstract class AppLocalizations {
   /// **'Your runway'**
   String get yourRunway;
 
-  /// No description provided for @loseIncome.
-  ///
-  /// In en, this message translates to:
-  /// **'Inflow stops'**
-  String get loseIncome;
-
   /// No description provided for @higherExpenses.
   ///
   /// In en, this message translates to:
   /// **'Higher expenses'**
   String get higherExpenses;
-
-  /// No description provided for @incomeSetToZero.
-  ///
-  /// In en, this message translates to:
-  /// **'Inflow set to 0'**
-  String get incomeSetToZero;
 
   /// No description provided for @deltaDays.
   ///

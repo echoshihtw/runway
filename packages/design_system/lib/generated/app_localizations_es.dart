@@ -33,9 +33,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get cash => 'EFECTIVO';
 
   @override
-  String get burnPerMonth => 'GASTO/MES';
-
-  @override
   String get loanPerMonth => 'DEUDA/MES';
 
   @override
@@ -650,9 +647,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get bootRealityCheckReady => '> REALIDAD LISTA.';
 
   @override
-  String get ifIncomeStoppedToday => 'If inflow stopped today';
-
-  @override
   String get ifIncomePausedToday => 'Si tu ingreso se detuviera hoy';
 
   @override
@@ -676,13 +670,7 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get monthlyBurn => 'Gasto mensual';
-
-  @override
   String get availableCash => 'Efectivo disponible';
-
-  @override
-  String get historicalBurn => 'Gasto prom.';
 
   @override
   String get notEnoughHistory => 'Historial insuficiente';
@@ -695,12 +683,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get fixedPressure => 'Costos fijos';
-
-  @override
-  String get actualBurn => 'Gasto real';
-
-  @override
-  String get actualBurnHigh => 'Gasto real ▲';
 
   @override
   String get plannedEssentials => 'Esenciales previstos';
@@ -718,13 +700,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get yourRunway => 'Tu autonomía';
 
   @override
-  String get loseIncome => 'Inflow stops';
-
-  @override
   String get higherExpenses => 'Más gastos';
-
-  @override
-  String get incomeSetToZero => 'Inflow set to 0';
 
   @override
   String deltaDays(int days) {

@@ -33,9 +33,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cash => 'CASH';
 
   @override
-  String get burnPerMonth => 'BURN/MO';
-
-  @override
   String get loanPerMonth => 'DEBT/MO';
 
   @override
@@ -115,7 +112,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get overrideInputs => 'Planning inputs';
 
   @override
-  String get burnRateOverride => 'Monthly burn';
+  String get burnRateOverride => 'Monthly costs';
 
   @override
   String get simulatedIncome => 'Income change / month';
@@ -486,7 +483,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get simHint =>
-      'OVERRIDE BURN RATE OR ADD INCOME TO SEE IMPACT ON RUNWAY';
+      'CHANGE MONTHLY COSTS OR ADD INCOME TO SEE THE IMPACT ON RUNWAY';
 
   @override
   String get simulation => 'Scenario';
@@ -556,16 +553,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get futureAssumptions => 'Forecast';
 
   @override
-  String get expectedInflow => 'Expected inflow';
+  String get expectedInflow => 'Expected income';
 
   @override
-  String get expectedBurn => 'Expected burn';
+  String get expectedBurn => 'Expected costs';
 
   @override
   String get notSet => 'Not set';
 
   @override
-  String get usingCurrentBurn => 'Using current burn';
+  String get usingCurrentBurn => 'Using current costs';
 
   @override
   String get assumptionsProjectionOnly =>
@@ -575,17 +572,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setAssumptions => 'SET FORECAST';
 
   @override
-  String get expectedMonthlyInflow => 'Expected monthly inflow';
+  String get expectedMonthlyInflow => 'Expected monthly income';
 
   @override
-  String get expectedMonthlyBurn => 'Expected monthly burn';
+  String get expectedMonthlyBurn => 'Expected monthly costs';
 
   @override
-  String get useCurrentBurn => 'Use current burn';
+  String get useCurrentBurn => 'Use current costs';
 
   @override
   String get futureInflowHint =>
-      'Any recurring or expected inflow — retainers, contracts, creator income, dividends.';
+      'Any recurring or expected income, such as retainers, contracts, creator income or dividends.';
 
   @override
   String get runwayGoal => 'Runway goal';
@@ -639,16 +636,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bootIncomeStopped => 'Looking at what changes if income pauses...';
 
   @override
-  String get bootCountingCashDays => 'Estimating your breathing room...';
+  String get bootCountingCashDays => 'Counting the months your money covers...';
 
   @override
   String get bootRemovingComfortFilter => 'Separating essentials from noise...';
 
   @override
   String get bootRealityCheckReady => 'Your financial picture is ready.';
-
-  @override
-  String get ifIncomeStoppedToday => 'If inflow stopped today';
 
   @override
   String get ifIncomePausedToday => 'If income paused today';
@@ -661,7 +655,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sustainableWithExpectedInflow =>
-      'Sustainable with your expected inflow';
+      'Sustainable with your expected income';
 
   @override
   String shortByPerMonth(String amount) {
@@ -674,13 +668,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get monthlyBurn => 'Monthly burn';
-
-  @override
   String get availableCash => 'Available cash';
-
-  @override
-  String get historicalBurn => 'Avg burn';
 
   @override
   String get notEnoughHistory => 'Not enough history';
@@ -693,12 +681,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fixedPressure => 'Fixed costs';
-
-  @override
-  String get actualBurn => 'Actual burn';
-
-  @override
-  String get actualBurnHigh => 'Actual burn ▲';
 
   @override
   String get plannedEssentials => 'Planned essentials';
@@ -716,13 +698,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yourRunway => 'Your runway';
 
   @override
-  String get loseIncome => 'Inflow stops';
-
-  @override
   String get higherExpenses => 'Higher expenses';
-
-  @override
-  String get incomeSetToZero => 'Inflow set to 0';
 
   @override
   String deltaDays(int days) {

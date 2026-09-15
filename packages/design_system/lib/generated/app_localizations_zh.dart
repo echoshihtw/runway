@@ -33,9 +33,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cash => '現金';
 
   @override
-  String get burnPerMonth => '月支出';
-
-  @override
   String get loanPerMonth => '月債務';
 
   @override
@@ -638,9 +635,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get bootRealityCheckReady => '> 现实检查就绪。';
 
   @override
-  String get ifIncomeStoppedToday => 'If inflow stopped today';
-
-  @override
   String get ifIncomePausedToday => '如果收入今天暂停';
 
   @override
@@ -663,13 +657,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get monthlyBurn => '每月支出';
-
-  @override
   String get availableCash => '可用现金';
-
-  @override
-  String get historicalBurn => '平均支出';
 
   @override
   String get notEnoughHistory => '历史资料不足';
@@ -682,12 +670,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get fixedPressure => '固定支出';
-
-  @override
-  String get actualBurn => '实际支出';
-
-  @override
-  String get actualBurnHigh => '实际支出 ▲';
 
   @override
   String get plannedEssentials => '计划必要支出';
@@ -705,13 +687,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get yourRunway => '你的生存跑道';
 
   @override
-  String get loseIncome => 'Inflow stops';
-
-  @override
   String get higherExpenses => '支出增加';
-
-  @override
-  String get incomeSetToZero => 'Inflow set to 0';
 
   @override
   String deltaDays(int days) {
@@ -790,9 +766,6 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get cash => '現金';
-
-  @override
-  String get burnPerMonth => '月支出';
 
   @override
   String get loanPerMonth => '月債務';
@@ -1388,16 +1361,13 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get bootIncomeStopped => '看看如果收入暫停會怎樣...';
 
   @override
-  String get bootCountingCashDays => '正在估算你還有多少緩衝...';
+  String get bootCountingCashDays => '正在計算你的錢可以支應幾個月...';
 
   @override
   String get bootRemovingComfortFilter => '把必要支出和雜訊分開...';
 
   @override
   String get bootRealityCheckReady => '你的財務狀況整理好了。';
-
-  @override
-  String get ifIncomeStoppedToday => 'If inflow stopped today';
 
   @override
   String get ifIncomePausedToday => '如果今天收入暫停';
@@ -1422,13 +1392,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   }
 
   @override
-  String get monthlyBurn => '每月支出';
-
-  @override
   String get availableCash => '目前現金';
-
-  @override
-  String get historicalBurn => '平均支出';
 
   @override
   String get notEnoughHistory => '資料還不夠';
@@ -1441,12 +1405,6 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get fixedPressure => '固定支出';
-
-  @override
-  String get actualBurn => '實際支出';
-
-  @override
-  String get actualBurnHigh => '實際支出 ▲';
 
   @override
   String get plannedEssentials => '預計必要支出';
@@ -1464,13 +1422,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get yourRunway => '你的跑道';
 
   @override
-  String get loseIncome => 'Inflow stops';
-
-  @override
   String get higherExpenses => '支出增加';
-
-  @override
-  String get incomeSetToZero => 'Inflow set to 0';
 
   @override
   String deltaDays(int days) {
