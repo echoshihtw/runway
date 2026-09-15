@@ -15,6 +15,10 @@ class ScenarioState {
     this.resetVersion = 0,
   });
 
+  /// Whether there is anything to simulate: a monthly costs override, simulated
+  /// income, or both.
+  bool get hasInput => burnRateOverride != null || simulatedIncome != null;
+
   ScenarioState copyWith({
     double? burnRateOverride,
     double? simulatedIncome,

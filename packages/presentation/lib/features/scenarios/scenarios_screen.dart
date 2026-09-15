@@ -145,7 +145,7 @@ class ScenariosScreen extends ConsumerWidget {
                     fullWidth: true,
                     onPressed:
                         realModel.currentCash == 0 ||
-                            scenario.simulatedIncome == null ||
+                            !scenario.hasInput ||
                             scenario.isCalculating ||
                             scenario.isActive
                         ? null
