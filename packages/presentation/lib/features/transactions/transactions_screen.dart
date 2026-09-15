@@ -205,6 +205,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
     }
     showModalBottomSheet(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(
@@ -254,6 +255,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
   void _showSubscriptionForm(BuildContext context, WidgetRef ref) {
     showModalBottomSheet(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(
@@ -294,6 +296,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
     final loans = _loanChoices(ref);
     showModalBottomSheet(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(
@@ -328,6 +331,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
     final loans = _loanChoices(ref, existing: existing);
     showModalBottomSheet(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(

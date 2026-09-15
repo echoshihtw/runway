@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 void showLivingSheet(BuildContext context) {
   showModalBottomSheet(
     context: context,
+    useRootNavigator: true,
     isScrollControlled: true,
     backgroundColor: AppColors.surface,
     shape: const RoundedRectangleBorder(

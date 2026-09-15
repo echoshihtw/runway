@@ -67,6 +67,7 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
   void _showActionSheet() {
     showModalBottomSheet(
       context: context,
+      useRootNavigator: true,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (ctx) {
@@ -139,6 +140,7 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
     final loans = _loanChoices(existing: existing);
     showModalBottomSheet(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(
@@ -200,6 +202,7 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
     }
     showModalBottomSheet(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(
@@ -248,6 +251,7 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
   void _showSubscriptionForm() {
     showModalBottomSheet(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(

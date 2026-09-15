@@ -310,6 +310,7 @@ class _LegalLink extends StatelessWidget {
 void showPaywall(BuildContext context, {required String trigger}) {
   showModalBottomSheet(
     context: context,
+    useRootNavigator: true,
     isScrollControlled: true,
     backgroundColor: AppColors.surface,
     shape: const RoundedRectangleBorder(

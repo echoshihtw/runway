@@ -17,6 +17,7 @@ class DashboardScreen extends ConsumerWidget {
   void _showConfig(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       useSafeArea: true,
       backgroundColor: Colors.transparent,
