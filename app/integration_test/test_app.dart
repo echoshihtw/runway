@@ -19,6 +19,9 @@ Widget buildTestApp() {
       subscriptionRepositoryProvider.overrideWithValue(
         DriftSubscriptionRepository(db),
       ),
+      financialSettingsRepositoryProvider.overrideWithValue(
+        DriftFinancialSettingsRepository(db),
+      ),
     ],
     child: MaterialApp.router(
       routerConfig: appRouter,

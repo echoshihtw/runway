@@ -1,11 +1,9 @@
-import 'dart:convert';
-
 import 'package:domain/domain.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
-const _kRunwayGoal = 'runway_goal';
+import 'legacy_financial_preferences.dart';
+import 'repository_provider.dart';
 
 final runwayGoalProvider =
     AsyncNotifierProvider<RunwayGoalNotifier, RunwayGoal?>(
@@ -15,10 +13,8 @@ final runwayGoalProvider =
 class RunwayGoalNotifier extends AsyncNotifier<RunwayGoal?> {
   @override
   Future<RunwayGoal?> build() async {
-    final prefs = await SharedPreferences.getInstance();
-    final raw = prefs.getString(_kRunwayGoal);
-    if (raw == null) return null;
-    return RunwayGoal.fromJson(jsonDecode(raw) as Map<String, dynamic>);
+    await ref.watch(legacyFinancialPreferencesMigrationProvider.future);
+    return ref.watch(financialSettingsRepositoryProvider).getRunwayGoal();
   }
 
   Future<void> saveGoal({
@@ -34,14 +30,12 @@ class RunwayGoalNotifier extends AsyncNotifier<RunwayGoal?> {
       targetMonths: targetMonths,
       targetDate: targetDate,
     );
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_kRunwayGoal, jsonEncode(goal.toJson()));
+    await ref.read(financialSettingsRepositoryProvider).saveRunwayGoal(goal);
     state = AsyncData(goal);
   }
 
   Future<void> clearGoal() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_kRunwayGoal);
+    await ref.read(financialSettingsRepositoryProvider).saveRunwayGoal(null);
     state = const AsyncData(null);
   }
 }

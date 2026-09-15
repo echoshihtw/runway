@@ -158,7 +158,7 @@ No new top-level tabs without strong justification.
 ## 5. Data Contracts
 
 ### 5.1 Schema Versioning
-Current schema version: **4**
+Current schema version: **6**
 
 | Version | Change |
 |---|---|
@@ -166,8 +166,12 @@ Current schema version: **4**
 | 2 | Added: loanId to transactions, loans table |
 | 3 | Added: subscriptions table |
 | 4 | Added: originalTermMonths to loans |
+| 5 | Added: category to transactions |
+| 6 | Added: financial_settings table (single row: budget, forecast assumptions, runway goal) |
 
 Every schema change requires a migration in `MigrationStrategy`.
+
+All financial values live in the encrypted database. `SharedPreferences` may hold only non-financial state: onboarding and dismissal flags, locale, currency code, display settings and the cached Pro flag.
 
 ### 5.2 Opening Balance
 Opening balance transactions are handled specially:
@@ -295,3 +299,6 @@ Answer these questions:
 | 2026-04 | Subscription normalized to monthly | Apples-to-apples comparison |
 | 2026-06 | SQLite DB encrypted with AES-256 via SQLCipher (`PRAGMA key`) | User financial data is sensitive; key generated with `Random.secure()` and stored in iOS Keychain / Android Keystore via `flutter_secure_storage`. Wiring requires `sqlcipher_flutter_libs: ^0.6.0` (NOT `^0.7.0+eol` which is a no-op stub) and `open.overrideFor(...)` calls in `app_database.dart` — without both, `PRAGMA key` silently no-ops on plain sqlite3 |
 | 2026-06 | App Store export compliance: standard encryption (EAR 740.17(b)(1)) | SQLCipher counts as standard encryption — select "Standard algorithms" in App Store Connect compliance prompt, then claim exemption as local data protection only |
+| 2026-09 | Budget, forecast assumptions and runway goal moved from `SharedPreferences` into the encrypted database (schema 6) | They are financial values and `NSUserDefaults` is a plaintext plist. Existing values move on first launch, then the old keys are removed |
+| 2026-09 | `PRAGMA cipher_version` checked every time the database opens | If plain SQLite is loaded instead of SQLCipher, `PRAGMA key` silently does nothing. The check throws in debug builds and reports the error in release builds |
+| 2026-09 | "Delete all data" keeps only the cached Pro flag | It holds no financial data, and keeping it avoids locking a paying user out while offline |

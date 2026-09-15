@@ -25,6 +25,7 @@ export 'providers/budget_provider.dart';
 export 'providers/display_provider.dart';
 export 'providers/runway_goal_provider.dart';
 export 'providers/financial_assumptions_provider.dart';
+export 'providers/legacy_financial_preferences.dart';
 export 'providers/this_month_provider.dart';
 export 'feature_flags.dart';
 export 'analytics_service.dart';

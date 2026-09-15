@@ -41,3 +41,21 @@ post_install do |installer|
     flutter_additional_ios_build_settings(target)
   end
 end
+
+# FirebaseAnalytics links the system libsqlite3 (-l"sqlite3"), which CocoaPods
+# lists before the SQLCipher framework. dyld then resolves sqlite3_* symbols
+# from the system copy, so PRAGMA key is ignored and the database is written
+# in plaintext. Link SQLCipher first. The app checks PRAGMA cipher_version on
+# every open (packages/data/lib/database/sqlcipher_check.dart).
+post_integrate do |installer|
+  support_files = installer.sandbox.target_support_files_root
+  Dir.glob(File.join(support_files, 'Pods-Runner*', '*.xcconfig')).each do |path|
+    contents = File.read(path)
+    next unless contents.include?('-framework "SQLCipher"')
+    next if contents.include?('OTHER_LDFLAGS = $(inherited) -framework "SQLCipher"')
+    File.write(
+      path,
+      contents.sub('OTHER_LDFLAGS = $(inherited)', 'OTHER_LDFLAGS = $(inherited) -framework "SQLCipher"'),
+    )
+  end
+end

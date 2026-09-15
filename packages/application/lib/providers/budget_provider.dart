@@ -1,38 +1,27 @@
 import 'package:domain/domain.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-const _rentKey = 'budget_rent';
-const _livingKey = 'budget_living';
+import 'legacy_financial_preferences.dart';
+import 'repository_provider.dart';
 
 class BudgetNotifier extends AsyncNotifier<Budget> {
   @override
   Future<Budget> build() async {
-    final prefs = await SharedPreferences.getInstance();
-    return Budget(
-      rent: prefs.getDouble(_rentKey) ?? 0,
-      living: prefs.getDouble(_livingKey) ?? 0,
-    );
+    await ref.watch(legacyFinancialPreferencesMigrationProvider.future);
+    return ref.watch(financialSettingsRepositoryProvider).getBudget();
   }
 
-  Future<void> setRent(double value) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble(_rentKey, value);
-    state = AsyncData(state.value!.copyWith(rent: value));
-  }
+  Future<void> setRent(double value) =>
+      _save((state.value ?? const Budget()).copyWith(rent: value));
 
-  Future<void> setLiving(double value) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble(_livingKey, value);
-    state = AsyncData(state.value!.copyWith(living: value));
-  }
+  Future<void> setLiving(double value) =>
+      _save((state.value ?? const Budget()).copyWith(living: value));
 
-  Future<void> clear() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_rentKey);
-    await prefs.remove(_livingKey);
-    state = const AsyncData(Budget());
+  Future<void> clear() => _save(const Budget());
+
+  Future<void> _save(Budget budget) async {
+    await ref.read(financialSettingsRepositoryProvider).saveBudget(budget);
+    state = AsyncData(budget);
   }
 }
 
