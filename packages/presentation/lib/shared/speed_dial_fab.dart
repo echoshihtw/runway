@@ -73,7 +73,7 @@ class SpeedDialFabState extends State<SpeedDialFab>
         index: 0,
       ),
       _DialOption(
-        label: 'LOAN',
+        label: 'NEW LOAN',
         icon: Icons.credit_score_rounded,
         color: widget.monochromeOptions ? AppColors.neonGreen : AppColors.gold,
         index: 1,

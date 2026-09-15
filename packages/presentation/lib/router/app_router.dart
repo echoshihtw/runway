@@ -103,7 +103,7 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
                     ),
                     const Divider(color: AppColors.cardBorder, height: 1),
                     _ActionRow(
-                      label: 'LOAN',
+                      label: 'NEW LOAN',
                       icon: Icons.credit_score_rounded,
                       color: AppColors.gold,
                       onTap: () {
@@ -191,8 +191,9 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
         (ref.read(entitlementProvider).value?.isPro ?? false);
     if (!isPro) {
       final loans = await ref.read(loansProvider.future);
+      final transactions = await ref.read(transactionsProvider.future);
       if (!mounted) return;
-      if (loans.isNotEmpty) {
+      if (hasActiveLoan(loans: loans, transactions: transactions)) {
         showPaywall(context, trigger: 'loan_limit');
         return;
       }

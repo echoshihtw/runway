@@ -196,8 +196,9 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
         (ref.read(entitlementProvider).value?.isPro ?? false);
     if (!isPro) {
       final loans = await ref.read(loansProvider.future);
+      final transactions = await ref.read(transactionsProvider.future);
       if (!context.mounted) return;
-      if (loans.isNotEmpty) {
+      if (hasActiveLoan(loans: loans, transactions: transactions)) {
         showPaywall(context, trigger: 'loan_limit');
         return;
       }
