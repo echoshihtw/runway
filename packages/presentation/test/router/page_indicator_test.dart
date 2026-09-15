@@ -46,7 +46,7 @@ void main() {
 
     expect(
       tester.getSemantics(find.bySemanticsLabel('LOG')),
-      containsSemantics(label: 'LOG', isButton: true, isSelected: true, hasTapAction: true),
+      isSemantics(label: 'LOG', isButton: true, isSelected: true, hasTapAction: true),
     );
   });
 }

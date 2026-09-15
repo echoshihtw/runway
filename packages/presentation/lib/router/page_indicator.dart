@@ -24,10 +24,13 @@ class PageIndicator extends StatelessWidget {
         final color = active
             ? AppColors.neonGreen
             : AppColors.textDim.withAlpha(160);
+        // excludeSemantics hides the GestureDetector's tap from VoiceOver,
+        // so the semantics node needs its own onTap.
         return Semantics(
           button: true,
           selected: active,
           label: labels[i],
+          onTap: () => onSelect(i),
           excludeSemantics: true,
           child: GestureDetector(
             onTap: () => onSelect(i),
