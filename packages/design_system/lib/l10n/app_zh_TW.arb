@@ -167,6 +167,8 @@
   "subtotal": "小計",
   "budgetLeft": "剩餘 {amount}",
   "budgetOver": "超出預算 {amount}",
+  "dailyAllowance": "{days, plural, =1{今天可用 {amount}} other{每天 {amount}，還有 {days} 天}}",
+  "noLivingExpensesThisMonth": "本月還沒有生活費紀錄",
   "totalBudgetPerMonth": "每月總預算",
   "setBudget": "設定預算",
   "rentFixedCosts": "房租 / 固定支出",

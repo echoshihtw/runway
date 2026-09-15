@@ -27,6 +27,7 @@ Future<void> _pumpCard(WidgetTester tester, MonthlyBurn burn) async {
           const ThisMonthFlow(income: 0, expenses: 210),
         ),
         monthlyBurnProvider.overrideWithValue(burn),
+        transactionsProvider.overrideWith((ref) => Stream.value(const [])),
       ],
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -78,5 +79,20 @@ void main() {
     );
 
     expect(find.text('LIVING EXPENSES'), findsNothing);
+  });
+
+  testWidgets('tapping the living budget opens the living sheet', (tester) async {
+    await _pumpCard(
+      tester,
+      _burn(
+        rent: const BudgetBucket(budget: 32000, spentThisMonth: 0, typicalSpending: 0),
+        living: const BudgetBucket(budget: 30000, spentThisMonth: 210, typicalSpending: 210),
+      ),
+    );
+
+    await tester.tap(find.text('LIVING EXPENSES'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('No living expenses logged this month'), findsOneWidget);
   });
 }

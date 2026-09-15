@@ -175,6 +175,26 @@ void main() {
     expect(burn.dueThisMonth, closeTo(3000 * 16 / 30, 0.001));
   });
 
+  test('every expense except rent counts as living', () {
+    expect(countsAsLiving(_tx('a', TransactionType.expense, 1, _now)), isTrue);
+    expect(
+      countsAsLiving(
+        _tx('b', TransactionType.expense, 1, _now, category: ExpenseCategory.food),
+      ),
+      isTrue,
+    );
+    final rent = _tx('c', TransactionType.expense, 1, _now, category: ExpenseCategory.rent);
+    expect(countsAsLiving(rent), isFalse);
+    expect(countsAsRent(rent), isTrue);
+    expect(countsAsLiving(_tx('d', TransactionType.income, 1, _now)), isFalse);
+  });
+
+  test('days left this month counts today', () {
+    expect(_burn().daysLeftThisMonth, 16);
+    expect(_burn(now: DateTime(2026, 9, 30)).daysLeftThisMonth, 1);
+    expect(_burn(now: DateTime(2026, 2, 1)).daysLeftThisMonth, 28);
+  });
+
   test('the share of the month left counts today', () {
     expect(_burn(now: DateTime(2026, 9, 1)).fractionOfMonthLeft, 1.0);
     expect(_burn(now: DateTime(2026, 9, 30)).fractionOfMonthLeft, 1 / 30);

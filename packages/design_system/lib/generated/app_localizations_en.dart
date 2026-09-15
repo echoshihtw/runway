@@ -506,6 +506,21 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String dailyAllowance(String amount, int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$amount a day for $days days',
+      one: '$amount left for today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noLivingExpensesThisMonth =>
+      'No living expenses logged this month';
+
+  @override
   String get totalBudgetPerMonth => 'TOTAL BUDGET/MO';
 
   @override

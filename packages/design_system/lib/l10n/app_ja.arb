@@ -167,6 +167,8 @@
   "subtotal": "小計",
   "budgetLeft": "残り {amount}",
   "budgetOver": "予算超過 {amount}",
+  "dailyAllowance": "{days, plural, =1{今日は {amount}} other{1日 {amount}、残り {days} 日}}",
+  "noLivingExpensesThisMonth": "今月の生活費はまだありません",
   "totalBudgetPerMonth": "予算合計/月",
   "setBudget": "予算設定",
   "rentFixedCosts": "家賃 / 固定費用",

@@ -1073,6 +1073,18 @@ abstract class AppLocalizations {
   /// **'{amount} over budget'**
   String budgetOver(String amount);
 
+  /// What is left of the living budget per remaining day of the month
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{{amount} left for today} other{{amount} a day for {days} days}}'**
+  String dailyAllowance(String amount, int days);
+
+  /// No description provided for @noLivingExpensesThisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'No living expenses logged this month'**
+  String get noLivingExpensesThisMonth;
+
   /// No description provided for @totalBudgetPerMonth.
   ///
   /// In en, this message translates to:
