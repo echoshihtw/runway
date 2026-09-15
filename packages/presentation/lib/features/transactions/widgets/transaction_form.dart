@@ -35,9 +35,8 @@ class _TransactionFormState extends State<TransactionForm> {
 
   late bool _isInflow;
   late DateTime _date;
-  bool _linkToLoan = false;
   String? _selectedLoanId;
-  late bool _isRent;
+  late _OutKind _outKind;
 
   bool get _isOpeningBalance =>
       widget.existing?.type == TransactionType.openingBalance ||
@@ -61,9 +60,12 @@ class _TransactionFormState extends State<TransactionForm> {
         widget.existing?.amount.value.toStringAsFixed(0) ?? '';
     _noteCtrl.text = widget.existing?.note ?? '';
     _selectedLoanId = widget.existing?.loanId;
-    _linkToLoan = widget.existing?.type == TransactionType.repayment;
-    _isRent = widget.existing?.category == ExpenseCategory.rent;
-    if (_linkToLoan && _selectedLoanId == null) {
+    _outKind = switch (widget.existing) {
+      Transaction(type: TransactionType.repayment) => _OutKind.loan,
+      Transaction(category: ExpenseCategory.rent) => _OutKind.rent,
+      _ => _OutKind.living,
+    };
+    if (_outKind == _OutKind.loan && _selectedLoanId == null) {
       _selectedLoanId = _defaultLoanId();
     }
 
@@ -82,11 +84,17 @@ class _TransactionFormState extends State<TransactionForm> {
     super.dispose();
   }
 
+  /// The loan tile only exists when there is a loan to repay.
+  bool get _canRepay => widget.loans.isNotEmpty;
+
+  _OutKind get _effectiveOutKind =>
+      _outKind == _OutKind.loan && !_canRepay ? _OutKind.living : _outKind;
+
   TransactionType get _resolvedType {
     if (_isOpeningBalance) return TransactionType.openingBalance;
     if (_isLockedType) return widget.existing!.type;
     if (_isInflow) return TransactionType.income;
-    if (_linkToLoan) return TransactionType.repayment;
+    if (_effectiveOutKind == _OutKind.loan) return TransactionType.repayment;
     return TransactionType.expense;
   }
 
@@ -94,7 +102,7 @@ class _TransactionFormState extends State<TransactionForm> {
   /// expense keeps the category it already has.
   ExpenseCategory? get _resolvedCategory {
     if (_resolvedType != TransactionType.expense) return null;
-    if (_isRent) return ExpenseCategory.rent;
+    if (_effectiveOutKind == _OutKind.rent) return ExpenseCategory.rent;
     final existing = widget.existing?.category;
     return existing == ExpenseCategory.rent ? null : existing;
   }
@@ -127,7 +135,8 @@ class _TransactionFormState extends State<TransactionForm> {
   void _submit() {
     final amount = double.tryParse(_amountCtrl.text.trim());
     if (amount == null || amount <= 0) return;
-    if (_linkToLoan) {
+    final isRepayment = _resolvedType == TransactionType.repayment;
+    if (isRepayment) {
       final validIds = widget.loans.map((l) => l.id).toSet();
       if (_selectedLoanId == null || !validIds.contains(_selectedLoanId)) {
         return;
@@ -139,7 +148,7 @@ class _TransactionFormState extends State<TransactionForm> {
       _date,
       _noteCtrl.text.trim().isEmpty ? null : _noteCtrl.text.trim(),
       _resolvedCategory,
-      _linkToLoan ? _selectedLoanId : null,
+      isRepayment ? _selectedLoanId : null,
     );
     Navigator.of(context).pop();
   }
@@ -150,13 +159,7 @@ class _TransactionFormState extends State<TransactionForm> {
     final locale = Localizations.localeOf(context).toString();
     final dateStr =
         DateFormat('dd MMM yyyy', locale).format(_date).toUpperCase();
-    final showLoanLink =
-        !_isInflow &&
-        !_isOpeningBalance &&
-        !_isLockedType &&
-        widget.loans.isNotEmpty;
-    final showBudgetChoice =
-        !_isInflow && !_isOpeningBalance && !_isLockedType && !_linkToLoan;
+    final showOutKind = !_isInflow && !_isOpeningBalance && !_isLockedType;
 
     return Container(
       decoration: const BoxDecoration(
@@ -209,10 +212,7 @@ class _TransactionFormState extends State<TransactionForm> {
               _InOutToggle(
                 isInflow: _isInflow,
                 isOpeningBalance: _isOpeningBalance,
-                onChanged: (v) => setState(() {
-                  _isInflow = v;
-                  if (v) _linkToLoan = false;
-                }),
+                onChanged: (v) => setState(() => _isInflow = v),
               ),
               const SizedBox(height: AppSpacing.lg),
             ],
@@ -236,29 +236,26 @@ class _TransactionFormState extends State<TransactionForm> {
             ),
             const SizedBox(height: AppSpacing.md),
 
-            // Which budget an expense uses up
-            if (showBudgetChoice) ...[
-              _BudgetToggle(
-                isRent: _isRent,
-                onChanged: (v) => setState(() => _isRent = v),
-              ),
-              const SizedBox(height: AppSpacing.md),
-            ],
-
-            // Loan repayment link (progressive disclosure)
-            if (showLoanLink) ...[
-              _LoanLinkRow(
-                expanded: _linkToLoan,
-                loans: widget.loans,
-                selectedLoanId: _selectedLoanId,
-                onToggle: () => setState(() {
-                  _linkToLoan = !_linkToLoan;
-                  if (_linkToLoan && _selectedLoanId == null) {
+            // What the money was for: a budget, or a loan repayment
+            if (showOutKind) ...[
+              _OutKindToggle(
+                selected: _effectiveOutKind,
+                showLoan: _canRepay,
+                onChanged: (kind) => setState(() {
+                  _outKind = kind;
+                  if (kind == _OutKind.loan && _selectedLoanId == null) {
                     _selectedLoanId = _defaultLoanId();
                   }
                 }),
-                onLoanSelected: (id) => setState(() => _selectedLoanId = id),
               ),
+              if (_effectiveOutKind == _OutKind.loan) ...[
+                const SizedBox(height: AppSpacing.sm),
+                _LoanChips(
+                  loans: widget.loans,
+                  selectedLoanId: _selectedLoanId,
+                  onSelected: (id) => setState(() => _selectedLoanId = id),
+                ),
+              ],
               const SizedBox(height: AppSpacing.md),
             ],
 
@@ -324,37 +321,51 @@ class _InOutToggle extends StatelessWidget {
   }
 }
 
-// ── LIVING / RENT toggle ─────────────────────────────────────────────────────
+// ── LIVING / RENT / LOAN toggle ──────────────────────────────────────────────
 
-class _BudgetToggle extends StatelessWidget {
-  final bool isRent;
-  final ValueChanged<bool> onChanged;
+/// What an OUT entry was for. Living and rent use up a budget; loan records a
+/// repayment against one of the user's loans.
+enum _OutKind { living, rent, loan }
 
-  const _BudgetToggle({required this.isRent, required this.onChanged});
+class _OutKindToggle extends StatelessWidget {
+  final _OutKind selected;
+  final bool showLoan;
+  final ValueChanged<_OutKind> onChanged;
+
+  const _OutKindToggle({
+    required this.selected,
+    required this.showLoan,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
+    Widget tile(_OutKind kind, String label, IconData icon, Color color) {
+      return Expanded(
+        child: _ToggleTile(
+          label: label,
+          icon: icon,
+          color: color,
+          active: selected == kind,
+          onTap: () => onChanged(kind),
+        ),
+      );
+    }
+
     return Row(
       children: [
-        Expanded(
-          child: _ToggleTile(
-            label: 'LIVING',
-            icon: Icons.shopping_bag_rounded,
-            color: SC.txExpense,
-            active: !isRent,
-            onTap: () => onChanged(false),
-          ),
+        tile(
+          _OutKind.living,
+          'LIVING',
+          Icons.shopping_bag_rounded,
+          SC.txExpense,
         ),
         const SizedBox(width: AppSpacing.sm),
-        Expanded(
-          child: _ToggleTile(
-            label: 'RENT',
-            icon: Icons.home_rounded,
-            color: SC.txExpense,
-            active: isRent,
-            onTap: () => onChanged(true),
-          ),
-        ),
+        tile(_OutKind.rent, 'RENT', Icons.home_rounded, SC.txExpense),
+        if (showLoan) ...[
+          const SizedBox(width: AppSpacing.sm),
+          tile(_OutKind.loan, 'LOAN', Icons.replay_rounded, SC.txRepayment),
+        ],
       ],
     );
   }
@@ -399,11 +410,18 @@ class _ToggleTile extends StatelessWidget {
               size: 16,
             ),
             const SizedBox(width: 6),
-            Text(
-              label,
-              style: AppTextStyles.body.copyWith(
-                color: active ? color : AppColors.textSecondary,
-                fontWeight: active ? FontWeight.w600 : FontWeight.w400,
+            // Three tiles can share a row, so a long label shrinks to fit
+            // instead of overflowing.
+            Flexible(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  label,
+                  style: AppTextStyles.body.copyWith(
+                    color: active ? color : AppColors.textSecondary,
+                    fontWeight: active ? FontWeight.w600 : FontWeight.w400,
+                  ),
+                ),
               ),
             ),
           ],
@@ -454,94 +472,53 @@ class _TypeBadge extends StatelessWidget {
   }
 }
 
-// ── Loan repayment link ──────────────────────────────────────────────────────
+// ── Loan chips ───────────────────────────────────────────────────────────────
 
-class _LoanLinkRow extends StatelessWidget {
-  final bool expanded;
+class _LoanChips extends StatelessWidget {
   final List<Loan> loans;
   final String? selectedLoanId;
-  final VoidCallback onToggle;
-  final ValueChanged<String> onLoanSelected;
+  final ValueChanged<String> onSelected;
 
-  const _LoanLinkRow({
-    required this.expanded,
+  const _LoanChips({
     required this.loans,
     required this.selectedLoanId,
-    required this.onToggle,
-    required this.onLoanSelected,
+    required this.onSelected,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        GestureDetector(
-          onTap: onToggle,
-          behavior: HitTestBehavior.opaque,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.link_rounded,
-                  size: 14,
-                  color: expanded ? AppColors.gold : AppColors.textDim,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  'LOAN REPAYMENT',
-                  style: AppTextStyles.label.copyWith(
-                    color: expanded ? AppColors.gold : AppColors.textDim,
-                  ),
-                ),
-                const Spacer(),
-                Icon(
-                  expanded ? Icons.expand_less : Icons.expand_more,
-                  color: AppColors.textDim,
-                  size: 16,
-                ),
-              ],
+    return Wrap(
+      spacing: AppSpacing.xs,
+      runSpacing: AppSpacing.xs,
+      children: loans.map((loan) {
+        final active = selectedLoanId == loan.id;
+        return GestureDetector(
+          onTap: () => onSelected(loan.id),
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: AppSpacing.xs + 2,
+            ),
+            decoration: BoxDecoration(
+              color: active
+                  ? SC.txRepayment.withAlpha(20)
+                  : AppColors.surfaceHigh,
+              borderRadius: BorderRadius.circular(50),
+              border: Border.all(
+                color: active ? SC.txRepayment : AppColors.cardBorder,
+                width: active ? 1.5 : 1,
+              ),
+            ),
+            child: Text(
+              loan.name.toUpperCase(),
+              style: AppTextStyles.caption.copyWith(
+                color: active ? SC.txRepayment : AppColors.textSecondary,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
-        ),
-        if (expanded) ...[
-          const SizedBox(height: AppSpacing.xs),
-          Wrap(
-            spacing: AppSpacing.xs,
-            runSpacing: AppSpacing.xs,
-            children: loans.map((loan) {
-              final active = selectedLoanId == loan.id;
-              return GestureDetector(
-                onTap: () => onLoanSelected(loan.id),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                    vertical: AppSpacing.xs + 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: active
-                        ? AppColors.gold.withAlpha(20)
-                        : AppColors.surfaceHigh,
-                    borderRadius: BorderRadius.circular(50),
-                    border: Border.all(
-                      color: active ? AppColors.gold : AppColors.cardBorder,
-                      width: active ? 1.5 : 1,
-                    ),
-                  ),
-                  child: Text(
-                    loan.name.toUpperCase(),
-                    style: AppTextStyles.caption.copyWith(
-                      color: active ? AppColors.gold : AppColors.textSecondary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-        ],
-      ],
+        );
+      }).toList(),
     );
   }
 }
