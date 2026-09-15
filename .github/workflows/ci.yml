@@ -1,10 +1,15 @@
 name: CI
 
+# Runs on pull requests, on every push to staging, and from release.yml for the
+# merge commit on main. The staging push is also what gives the release PR its
+# checks: GitHub skips pull_request runs on PRs opened by GITHUB_TOKEN.
+
 on:
   push:
-    branches: [main, develop]
+    branches: [staging]
   pull_request:
-    branches: [main, develop]
+    branches: [staging, main]
+  workflow_call:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -16,7 +21,7 @@ env:
 
 jobs:
   # ============================================================
-  # QUALITY — runs on every push/PR
+  # QUALITY — every run
   # ============================================================
   quality:
     name: Analyze & Test
@@ -78,7 +83,7 @@ jobs:
           path: packages/domain/test-results/
 
   # ============================================================
-  # BUILD iOS — runs on main/develop push only
+  # BUILD iOS — push to staging, and the release on main
   # ============================================================
   build-ios:
     name: Build iOS
@@ -127,7 +132,7 @@ jobs:
           retention-days: 7
 
   # ============================================================
-  # BUILD Android — runs on main/develop push only
+  # BUILD Android — push to staging, and the release on main
   # ============================================================
   build-android:
     name: Build Android
