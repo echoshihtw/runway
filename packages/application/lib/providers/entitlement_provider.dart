@@ -48,7 +48,6 @@ class EntitlementState {
   const EntitlementState({required this.isPro});
 
   // Feature gates — what's free vs pro
-  bool get canUseSubscriptions => isPro;
   bool get canAddMultipleLoans => isPro;
   bool get canUseTimeline => isPro;
   bool get canUseUnlimitedSims => isPro;

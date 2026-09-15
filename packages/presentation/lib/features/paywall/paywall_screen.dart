@@ -200,14 +200,12 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
   }
 
   String _titleFor(String trigger) => switch (trigger) {
-    'subscriptions' => 'Subscriptions is\na Pro feature.',
     'loan_limit' => 'Multiple loans is\na Pro feature.',
     'simulation' => 'Unlimited simulations\nis a Pro feature.',
     _ => 'Unlock Runway Pro.',
   };
 
   static const _proFeatures = [
-    'Subscriptions tracker',
     'Unlimited loans',
     'Unlimited scenario simulations',
     'Cash timeline chart',
