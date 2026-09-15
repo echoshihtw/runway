@@ -4,6 +4,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+class _MemoryStore implements SimulationCountStore {
+  int count = 0;
+
+  @override
+  Future<int> read() async => count;
+
+  @override
+  Future<void> write(int value) async => count = value;
+}
+
 class _Transactions implements TransactionRepository {
   _Transactions(this.items);
   final List<Transaction> items;
@@ -71,6 +81,7 @@ void main() {
         ),
         loanRepositoryProvider.overrideWithValue(_Loans()),
         subscriptionRepositoryProvider.overrideWithValue(_Subscriptions()),
+        simulationCountStoreProvider.overrideWithValue(_MemoryStore()),
       ],
     );
     addTearDown(container.dispose);

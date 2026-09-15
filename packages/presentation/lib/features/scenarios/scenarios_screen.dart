@@ -13,6 +13,7 @@ class ScenariosScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final scenario = ref.watch(scenarioProvider);
+    final simulationsRun = ref.watch(simulationCountProvider).value ?? 0;
     final realModel = ref.watch(modelProvider);
     final simModel = ref.watch(scenarioModelProvider);
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
@@ -154,7 +155,10 @@ class ScenariosScreen extends ConsumerWidget {
                                 FeatureFlags.devProEntitlement ||
                                 (ref.read(entitlementProvider).value?.isPro ??
                                     false);
-                            if (!isPro && scenario.hasRunSimulation) {
+                            if (needsProForSimulation(
+                              isPro: isPro,
+                              simulationsRun: simulationsRun,
+                            )) {
                               showPaywall(context, trigger: 'simulation');
                               return;
                             }

@@ -52,6 +52,9 @@ void main() async {
             DriftFinancialSettingsRepository(db),
           ),
           purchaseServiceProvider.overrideWithValue(rcService),
+          simulationCountStoreProvider.overrideWithValue(
+            const KeychainSimulationCountStore(),
+          ),
         ];
       },
       eraseAllData: () => eraseAllUserData(database),
