@@ -171,6 +171,10 @@
   "rentFixed": "AFFITTO / FISSO",
   "livingExpenses": "SPESE DI VITA",
   "subtotal": "SUBTOTALE",
+  "budgetLeft": "restano {amount}",
+  "budgetOver": "{amount} oltre il budget",
+  "dailyAllowance": "{days, plural, =1{{amount} per oggi} other{{amount} al giorno per {days} giorni}}",
+  "noLivingExpensesThisMonth": "Nessuna spesa di vita questo mese",
   "totalBudgetPerMonth": "BUDGET TOTALE/MESE",
   "setBudget": "IMPOSTA BUDGET",
   "rentFixedCosts": "AFFITTO / COSTI FISSI",
@@ -241,5 +245,7 @@
   "cashIn": "ENTRATA",
   "cashOut": "USCITA",
   "netLabel": "NETTO",
-  "noActivityThisMonth": "Nessuna attività questo mese"
+  "noActivityThisMonth": "Nessuna attività questo mese",
+  "paywallTermsOfUse": "Termini di utilizzo",
+  "paywallPrivacyPolicy": "Informativa sulla privacy"
 }

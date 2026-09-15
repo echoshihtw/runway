@@ -1097,6 +1097,30 @@ abstract class AppLocalizations {
   /// **'SUBTOTAL'**
   String get subtotal;
 
+  /// Unused part of a monthly budget, e.g. $ 29,790 left
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} left'**
+  String budgetLeft(String amount);
+
+  /// Spending above a monthly budget, e.g. $ 1,500 over budget
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} over budget'**
+  String budgetOver(String amount);
+
+  /// What is left of the living budget per remaining day of the month
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{{amount} left for today} other{{amount} a day for {days} days}}'**
+  String dailyAllowance(String amount, int days);
+
+  /// No description provided for @noLivingExpensesThisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'No living expenses logged this month'**
+  String get noLivingExpensesThisMonth;
+
   /// No description provided for @totalBudgetPerMonth.
   ///
   /// In en, this message translates to:
@@ -1522,6 +1546,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No activity yet this month'**
   String get noActivityThisMonth;
+
+  /// Link on the paywall to Apple's standard end user license agreement
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Use'**
+  String get paywallTermsOfUse;
+
+  /// Link on the paywall to the Runway privacy policy
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get paywallPrivacyPolicy;
 }
 
 class _AppLocalizationsDelegate

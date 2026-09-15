@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -83,6 +84,23 @@ class RevenueCatService implements PurchaseService {
       debugPrint('[RevenueCat] checkProEntitlement error: $e');
       return false;
     }
+  }
+
+  @override
+  Stream<bool> get proEntitlementUpdates {
+    if (!isRevenueCatConfigured) return const Stream<bool>.empty();
+    late final StreamController<bool> controller;
+    void onCustomerInfo(CustomerInfo info) => controller.add(
+      info.entitlements.active.containsKey(kProEntitlementId),
+    );
+    // Registering replays the last known customer info straight away, so a
+    // purchase that finished before the listener was attached still arrives.
+    controller = StreamController<bool>(
+      onListen: () => Purchases.addCustomerInfoUpdateListener(onCustomerInfo),
+      onCancel: () =>
+          Purchases.removeCustomerInfoUpdateListener(onCustomerInfo),
+    );
+    return controller.stream;
   }
 
   ProPackage _toProPackage(Package pkg) {

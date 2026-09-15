@@ -1,258 +1,140 @@
-import 'package:test/test.dart';
 import 'package:domain/domain.dart';
+import 'package:test/test.dart';
 
-List<MonthlyState> makeMonths({
-  required double startBalance,
-  required double netFlowPerMonth,
-  required int count,
-  double? grossOutflowPerMonth,
-}) {
-  final result = <MonthlyState>[];
-  double balance = startBalance;
-  for (int i = 0; i < count; i++) {
-    balance += netFlowPerMonth;
-    result.add(
-      MonthlyState(
-        month: SurvivalMonth(DateTime(2025, i + 1)),
-        netFlow: netFlowPerMonth,
-        balance: balance,
-        grossOutflow: grossOutflowPerMonth ?? netFlowPerMonth.abs(),
-      ),
-    );
-  }
-  return result;
-}
+const _budget = Budget(rent: 32000, living: 30000);
+
+ModelState _model({
+  required double cash,
+  required DateTime now,
+  Budget budget = _budget,
+  List<Transaction> transactions = const [],
+  List<Subscription> subscriptions = const [],
+  double? expectedMonthlyInflow,
+  double? expectedMonthlyBurnOverride,
+}) => computeModel(
+  currentCash: cash,
+  burn: computeMonthlyBurn(
+    transactions: transactions,
+    budget: budget,
+    loans: const [],
+    subscriptions: subscriptions,
+    now: now,
+  ),
+  expectedMonthlyInflow: expectedMonthlyInflow,
+  expectedMonthlyBurnOverride: expectedMonthlyBurnOverride,
+);
+
+Transaction _lunch(DateTime date) => Transaction(
+  id: 'lunch',
+  date: date,
+  type: TransactionType.expense,
+  amount: Money(210),
+  createdAt: date,
+  updatedAt: date,
+);
 
 void main() {
-  group('computeModel', () {
-    test('returns model with subscription cost even for no months', () {
-      final m = computeModel(
-        months: [],
-        monthlyPayment: 0,
-        subscriptionMonthlyCost: 5000,
-      );
-      expect(m.subscriptionMonthlyCost, 5000);
-    });
+  group('runway from today', () {
+    test('covers the rest of this month, then full months of burn', () {
+      // 999,790 cash. The rest of September still costs 61,790, leaving
+      // 938,000 = 15.1 months of 62,000. Plus 16 of 30 days: 15.7 months.
+      final now = DateTime(2026, 9, 15);
+      final m = _model(cash: 999790, now: now, transactions: [_lunch(now)]);
 
-    test('currentCash is last balance', () {
-      final months = makeMonths(
-        startBalance: 1000000,
-        netFlowPerMonth: -50000,
-        count: 3,
-      );
-      final m = computeModel(
-        months: months,
-        monthlyPayment: 0,
-        subscriptionMonthlyCost: 0,
-      );
-      expect(m.currentCash, 850000);
-    });
-
-    test('burnRate uses grossOutflow not netFlow', () {
-      final months = [
-        MonthlyState(
-          month: SurvivalMonth(DateTime(2025, 1)),
-          netFlow: 30000,
-          balance: 1030000,
-          grossOutflow: 50000,
-        ),
-        MonthlyState(
-          month: SurvivalMonth(DateTime(2025, 2)),
-          netFlow: -10000,
-          balance: 1020000,
-          grossOutflow: 60000,
-        ),
-      ];
-      final m = computeModel(
-        months: months,
-        monthlyPayment: 0,
-        subscriptionMonthlyCost: 0,
-      );
-      expect(m.burnRate, 55000);
-    });
-
-    test('burnRate is 0 when no gross outflows', () {
-      final months = [
-        MonthlyState(
-          month: SurvivalMonth(DateTime(2025, 1)),
-          netFlow: 80000,
-          balance: 1080000,
-          grossOutflow: 0,
-        ),
-      ];
-      final m = computeModel(
-        months: months,
-        monthlyPayment: 0,
-        subscriptionMonthlyCost: 0,
-      );
-      expect(m.burnRate, 0);
-    });
-
-    test('runway projects beyond known months', () {
-      final months = makeMonths(
-        startBalance: 950000,
-        netFlowPerMonth: -50000,
-        count: 2,
-      );
-      final m = computeModel(
-        months: months,
-        monthlyPayment: 0,
-        subscriptionMonthlyCost: 0,
-      );
-      expect(m.runwayMonths, greaterThan(2));
-    });
-
-    test('runOutDate is null when burn rate is zero', () {
-      final months = makeMonths(
-        startBalance: 1000000,
-        netFlowPerMonth: 0,
-        count: 3,
-        grossOutflowPerMonth: 0,
-      );
-      final m = computeModel(
-        months: months,
-        monthlyPayment: 0,
-        subscriptionMonthlyCost: 0,
-      );
-      expect(m.runOutDate, isNull);
-    });
-
-    test('runOutDate is set when balance hits zero', () {
-      final months = makeMonths(
-        startBalance: 100000,
-        netFlowPerMonth: -50000,
-        count: 2,
-      );
-      final m = computeModel(
-        months: months,
-        monthlyPayment: 0,
-        subscriptionMonthlyCost: 0,
-      );
-      expect(m.runOutDate, isNotNull);
-    });
-
-    test('runway calculates mathematically beyond projection cap', () {
-      // 300,000 / 167 = ~1,796 months
-      final months = [
-        MonthlyState(
-          month: SurvivalMonth(DateTime(2025, 1)),
-          netFlow: -167,
-          balance: 300000,
-          grossOutflow: 167,
-        ),
-      ];
-      final m = computeModel(
-        months: months,
-        monthlyPayment: 0,
-        subscriptionMonthlyCost: 0,
-      );
-      expect(m.runwayMonths, greaterThan(120));
-    });
-
-    test('survivalStatus stable when runway >= 24', () {
-      final months = makeMonths(
-        startBalance: 2000000,
-        netFlowPerMonth: -50000,
-        count: 5,
-      );
-      final m = computeModel(
-        months: months,
-        monthlyPayment: 0,
-        subscriptionMonthlyCost: 0,
-      );
-      expect(m.survivalStatus, SurvivalStatus.stable);
-    });
-
-    test('survivalStatus caution when runway 12-23', () {
-      final months = makeMonths(
-        startBalance: 850000,
-        netFlowPerMonth: -50000,
-        count: 3,
-      );
-      final m = computeModel(
-        months: months,
-        monthlyPayment: 0,
-        subscriptionMonthlyCost: 0,
-      );
+      expect(m.effectiveBurnRate, 62000);
+      expect(m.runwayMonths, 15);
+      expect(m.runOutDate, DateTime(2028, 1, 1));
       expect(m.survivalStatus, SurvivalStatus.caution);
     });
 
-    test('survivalStatus critical when runway < 12', () {
-      final months = makeMonths(
-        startBalance: 300000,
-        netFlowPerMonth: -50000,
-        count: 2,
-      );
-      final m = computeModel(
-        months: months,
-        monthlyPayment: 0,
-        subscriptionMonthlyCost: 0,
-      );
+    test('on the first day the whole month is still ahead', () {
+      final now = DateTime(2026, 9, 1);
+      final m = _model(cash: 999790, now: now, transactions: [_lunch(now)]);
+
+      expect(m.runwayMonths, 16);
+      expect(m.runOutDate, DateTime(2028, 1, 1));
+    });
+
+    test('cash that does not cover this month runs out this month', () {
+      final m = _model(cash: 20000, now: DateTime(2026, 9, 15));
+
+      expect(m.runwayMonths, 0);
+      expect(m.runOutDate, DateTime(2026, 9, 1));
       expect(m.survivalStatus, SurvivalStatus.critical);
     });
 
-    test('subscription cost reduces runway', () {
-      final months = makeMonths(
-        startBalance: 1000000,
-        netFlowPerMonth: -50000,
-        count: 3,
+    test('no burn means unlimited runway', () {
+      final m = _model(
+        cash: 1000,
+        now: DateTime(2026, 9, 15),
+        budget: const Budget(),
       );
-      final withSub = computeModel(
-        months: months,
-        monthlyPayment: 0,
-        subscriptionMonthlyCost: 10000,
-      );
-      final noSub = computeModel(
-        months: months,
-        monthlyPayment: 0,
-        subscriptionMonthlyCost: 0,
-      );
-      expect(withSub.runwayMonths, lessThan(noSub.runwayMonths));
+
+      expect(m.runwayMonths, 9999);
+      expect(m.runwayDays, 99999);
+      expect(m.runOutDate, isNull);
     });
 
-    test(
-      'expected inflow creates sustainable runway without changing history',
-      () {
-        final months = makeMonths(
-          startBalance: 100000,
-          netFlowPerMonth: -50000,
-          count: 3,
-        );
-        final m = computeModel(
-          months: months,
-          monthlyPayment: 0,
-          subscriptionMonthlyCost: 0,
-          expectedMonthlyInflow: 60000,
-        );
+    test('runway has no cap', () {
+      final m = _model(
+        cash: 300000,
+        now: DateTime(2026, 9, 1),
+        budget: const Budget(living: 167),
+      );
 
-        expect(m.historicalMonthlyBurn, 50000);
-        expect(m.emergencyMonthlyBurn, 50000);
-        expect(m.sustainableNetMonthlyFlow, 10000);
-        expect(m.isSustainableIndefinitely, isTrue);
-      },
+      expect(m.runwayMonths, greaterThan(120));
+    });
+  });
+
+  test('subscriptions shorten runway', () {
+    final now = DateTime(2026, 9, 15);
+    final withSubscription = _model(
+      cash: 999790,
+      now: now,
+      subscriptions: [
+        Subscription(
+          id: 'sub-1',
+          name: 'Music',
+          category: SubscriptionCategory.values.first,
+          amount: 10000,
+          cycle: BillingCycle.monthly,
+          startDate: DateTime(2026, 1, 1),
+          nextBillingDate: DateTime(2026, 10, 1),
+          createdAt: DateTime(2026, 1, 1),
+          updatedAt: DateTime(2026, 1, 1),
+        ),
+      ],
+    );
+    final without = _model(cash: 999790, now: now);
+
+    expect(withSubscription.subscriptionMonthlyCost, 10000);
+    expect(withSubscription.runwayMonths, lessThan(without.runwayMonths));
+  });
+
+  test('an expected burn override replaces the monthly burn', () {
+    final now = DateTime(2026, 9, 15);
+    final baseline = _model(cash: 300000, now: now);
+    final m = _model(cash: 300000, now: now, expectedMonthlyBurnOverride: 25000);
+
+    expect(m.effectiveBurnRate, 25000);
+    expect(m.runwayMonths, greaterThan(baseline.runwayMonths));
+  });
+
+  test('expected inflow above burn is sustainable indefinitely', () {
+    final m = _model(
+      cash: 100000,
+      now: DateTime(2026, 9, 15),
+      expectedMonthlyInflow: 70000,
     );
 
-    test('expected burn override is a future assumption, not history', () {
-      final months = makeMonths(
-        startBalance: 300000,
-        netFlowPerMonth: -50000,
-        count: 3,
-      );
-      final historical = computeModel(
-        months: months,
-        monthlyPayment: 0,
-        subscriptionMonthlyCost: 0,
-      );
-      final m = computeModel(
-        months: months,
-        monthlyPayment: 0,
-        subscriptionMonthlyCost: 0,
-        expectedMonthlyBurnOverride: 25000,
-      );
+    expect(m.emergencyMonthlyBurn, 62000);
+    expect(m.sustainableNetMonthlyFlow, 8000);
+    expect(m.isSustainableIndefinitely, isTrue);
+  });
 
-      expect(m.historicalMonthlyBurn, 50000);
-      expect(m.emergencyMonthlyBurn, 25000);
-      expect(m.runwayMonths, greaterThan(historical.runwayMonths));
-    });
+  test('large cash is stable', () {
+    final m = _model(cash: 3000000, now: DateTime(2026, 9, 15));
+
+    expect(m.survivalStatus, SurvivalStatus.stable);
   });
 }

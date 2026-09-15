@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:design_system/design_system.dart';
 import 'package:application/application.dart';
+import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
+import 'living_sheet.dart';
 
 class ThisMonthCard extends ConsumerWidget {
   const ThisMonthCard({super.key});
@@ -11,6 +13,7 @@ class ThisMonthCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final flow = ref.watch(thisMonthFlowProvider);
+    final burn = ref.watch(monthlyBurnProvider);
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
     final nf = NumberFormat('#,##0', 'en_US');
 
@@ -19,7 +22,7 @@ class ThisMonthCard extends ConsumerWidget {
     final netColor = flow.net >= 0 ? SC.life : SC.cost;
     final netPrefix = flow.net >= 0 ? '+' : '-';
 
-    final summary = flow.isEmpty
+    final flowSummary = flow.isEmpty
         ? _EmptyState(l10n: l10n)
         : Column(
             children: [
@@ -37,6 +40,21 @@ class ThisMonthCard extends ConsumerWidget {
               ),
             ],
           );
+
+    final summary = Column(
+      children: [
+        flowSummary,
+        if (burn.rent.budget > 0)
+          _BudgetRow(label: l10n.rentFixed, bucket: burn.rent, fmt: fmt),
+        if (burn.living.budget > 0)
+          _BudgetRow(
+            label: l10n.livingExpenses,
+            bucket: burn.living,
+            fmt: fmt,
+            onTap: () => showLivingSheet(context),
+          ),
+      ],
+    );
 
     return NeoExpandableCard(
       title: l10n.thisMonth,
@@ -72,6 +90,66 @@ class _Row extends StatelessWidget {
             style: AppTextStyles.metricSmall.copyWith(color: color),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Spending against one budget this month, e.g. "$ 210 / $ 30,000" with
+/// "$ 29,790 left" underneath.
+class _BudgetRow extends StatelessWidget {
+  final String label;
+  final BudgetBucket bucket;
+  final String Function(double) fmt;
+  final VoidCallback? onTap;
+
+  const _BudgetRow({
+    required this.label,
+    required this.bucket,
+    required this.fmt,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final over = bucket.spentThisMonth - bucket.budget;
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Padding(
+        padding: const EdgeInsets.only(top: AppSpacing.sm),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: Text(label, style: AppTextStyles.label)),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  '${fmt(bucket.spentThisMonth)} / ${fmt(bucket.budget)}',
+                  style: AppTextStyles.metricSmall.copyWith(
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                Text(
+                  over > 0
+                      ? l10n.budgetOver(fmt(over))
+                      : l10n.budgetLeft(fmt(bucket.leftThisMonth)),
+                  style: AppTextStyles.caption.copyWith(
+                    color: over > 0 ? SC.cost : SC.life,
+                  ),
+                ),
+              ],
+            ),
+            if (onTap != null)
+              const Icon(
+                Icons.chevron_right_rounded,
+                color: AppColors.textDim,
+                size: 18,
+              ),
+          ],
+        ),
       ),
     );
   }

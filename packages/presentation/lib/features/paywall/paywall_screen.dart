@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:design_system/design_system.dart';
 import 'package:application/application.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'legal_links.dart';
 
 class PaywallScreen extends ConsumerStatefulWidget {
   final String trigger;
@@ -137,6 +139,8 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
             fullWidth: true,
             onPressed: () => Navigator.of(context).pop(),
           ),
+          const SizedBox(height: AppSpacing.xs),
+          const _LegalLinks(),
           const SizedBox(height: AppSpacing.md),
         ],
       ),
@@ -200,18 +204,14 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
   }
 
   String _titleFor(String trigger) => switch (trigger) {
-    'subscriptions' => 'Subscriptions is\na Pro feature.',
     'loan_limit' => 'Multiple loans is\na Pro feature.',
     'simulation' => 'Unlimited simulations\nis a Pro feature.',
     _ => 'Unlock Runway Pro.',
   };
 
   static const _proFeatures = [
-    'Subscriptions tracker',
     'Unlimited loans',
     'Unlimited scenario simulations',
-    'Cash timeline chart',
-    'Priority support',
   ];
 }
 
@@ -245,6 +245,64 @@ class _PriceButton extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
       ],
+    );
+  }
+}
+
+class _LegalLinks extends StatelessWidget {
+  const _LegalLinks();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _LegalLink(label: l10n.paywallTermsOfUse, url: kTermsOfUseUrl),
+        Text('·', style: AppTextStyles.caption),
+        _LegalLink(label: l10n.paywallPrivacyPolicy, url: kPrivacyPolicyUrl),
+      ],
+    );
+  }
+}
+
+class _LegalLink extends StatelessWidget {
+  final String label;
+  final Uri url;
+
+  const _LegalLink({required this.label, required this.url});
+
+  Future<void> _open() async {
+    try {
+      final opened = await launchUrl(url, mode: LaunchMode.inAppBrowserView);
+      if (!opened) {
+        await launchUrl(url, mode: LaunchMode.externalApplication);
+      }
+    } catch (_) {
+      // Nothing useful to show if no browser can open the link.
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      link: true,
+      child: InkWell(
+        onTap: _open,
+        borderRadius: BorderRadius.circular(AppSpacing.xs),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.sm,
+            vertical: AppSpacing.sm,
+          ),
+          child: Text(
+            label,
+            style: AppTextStyles.caption.copyWith(
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
