@@ -193,8 +193,16 @@ lint: format analyze ## Format + analyze all packages
 
 .PHONY: test
 test: ## Run all tests
-	@echo "→ Running domain tests..."
+	@echo "→ domain"
 	@cd packages/domain && dart test
+	@echo "→ data"
+	@cd packages/data && flutter test
+	@echo "→ application"
+	@cd packages/application && flutter test
+	@echo "→ presentation"
+	@cd packages/presentation && flutter test
+	@echo "→ app"
+	@cd app && flutter test
 	@echo "✓ All tests passed"
 
 .PHONY: test-verbose

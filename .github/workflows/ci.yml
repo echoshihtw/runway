@@ -75,6 +75,18 @@ jobs:
       - name: Test — domain
         run: cd packages/domain && dart test --reporter=github
 
+      - name: Test — data
+        run: cd packages/data && flutter test --reporter=github
+
+      - name: Test — application
+        run: cd packages/application && flutter test --reporter=github
+
+      - name: Test — presentation
+        run: cd packages/presentation && flutter test --reporter=github
+
+      - name: Test — app
+        run: cd app && flutter test --reporter=github
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
