@@ -649,6 +649,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get ifIncomePausedToday => 'Si vos revenus s\'arrêtaient aujourd\'hui';
 
   @override
+  String get runwayNeedsCosts =>
+      'Renseignez vos coûts mensuels pour voir votre marge';
+
+  @override
   String get monthSingular => 'mois';
 
   @override

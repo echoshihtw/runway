@@ -57,8 +57,12 @@
   "stepsComplete": "已完成 {completed}/{total}",
   "@stepsComplete": {
     "placeholders": {
-      "completed": { "type": "int" },
-      "total": { "type": "int" }
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "stepBalanceLabel": "新增現金餘額",
@@ -209,6 +213,7 @@
   "bootRemovingComfortFilter": "把必要支出和雜訊分開...",
   "bootRealityCheckReady": "你的財務狀況整理好了。",
   "ifIncomePausedToday": "如果今天收入暫停",
+  "runwayNeedsCosts": "設定每月支出後即可看到可用月數",
   "monthSingular": "個月",
   "monthPlural": "個月",
   "sustainableWithExpectedInflow": "照你的預期收入來看，可以持續下去",

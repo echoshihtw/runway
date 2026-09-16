@@ -638,6 +638,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ifIncomePausedToday => '如果收入今天暂停';
 
   @override
+  String get runwayNeedsCosts => '設定每月支出後即可看到可用月數';
+
+  @override
   String get monthSingular => '个月';
 
   @override
@@ -1371,6 +1374,9 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get ifIncomePausedToday => '如果今天收入暫停';
+
+  @override
+  String get runwayNeedsCosts => '設定每月支出後即可看到可用月數';
 
   @override
   String get monthSingular => '個月';

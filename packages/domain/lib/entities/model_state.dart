@@ -12,6 +12,15 @@ class ModelState {
   final int runwayDays;
   final DateTime? runOutDate;
 
+  /// Whether a monthly cost is known at all.
+  ///
+  /// A cost of zero is not a free life: it means nothing has been budgeted,
+  /// logged, or committed yet. Dividing cash by it produced an unlimited
+  /// runway, so a user who had only entered their cash — exactly what
+  /// onboarding asks for — was told their money lasts for ever. Defaults to
+  /// true so only the engines decide it.
+  final bool hasCostBasis;
+
   const ModelState({
     required this.currentCash,
     required this.burnRate,
@@ -23,6 +32,7 @@ class ModelState {
     required this.runwayMonths,
     required this.runwayDays,
     this.runOutDate,
+    this.hasCostBasis = true,
   });
 
   double get totalMonthlyOutflow => effectiveBurnRate;
@@ -34,6 +44,12 @@ class ModelState {
       hasSustainableProjection && sustainableNetMonthlyFlow >= 0;
   double get sustainableMonthlyShortfall =>
       sustainableNetMonthlyFlow < 0 ? sustainableNetMonthlyFlow.abs() : 0.0;
+  /// Whether the runway can be stated at all. When no cost is known the
+  /// number is unknown, which is different from unlimited: a scenario whose
+  /// simulated income covers its costs is genuinely unlimited and keeps a
+  /// cost basis.
+  bool get runwayIsKnown => hasCostBasis;
+
   /// Three to six months of cover is the widely used adequacy range, so
   /// caution sits there and anything above six reads as stable.
   SurvivalStatus get survivalStatus => switch (runwayMonths) {

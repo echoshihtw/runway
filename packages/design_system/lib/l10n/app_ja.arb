@@ -57,8 +57,12 @@
   "stepsComplete": "{total}中{completed}完了",
   "@stepsComplete": {
     "placeholders": {
-      "completed": { "type": "int" },
-      "total": { "type": "int" }
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "stepBalanceLabel": "残高を追加する",
@@ -209,6 +213,7 @@
   "bootRemovingComfortFilter": "> 安心フィルターを解除中...",
   "bootRealityCheckReady": "> 現実チェック準備完了。",
   "ifIncomePausedToday": "今日、収入が止まったら",
+  "runwayNeedsCosts": "毎月のコストを設定すると残り月数がわかります",
   "monthSingular": "か月",
   "monthPlural": "か月",
   "sustainableWithExpectedInflow": "想定流入で持続可能",

@@ -57,8 +57,12 @@
   "stepsComplete": "{completed} de {total} completados",
   "@stepsComplete": {
     "placeholders": {
-      "completed": { "type": "int" },
-      "total": { "type": "int" }
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "stepBalanceLabel": "Agrega tu saldo en efectivo",
@@ -209,6 +213,7 @@
   "bootRemovingComfortFilter": "> QUITANDO EL FILTRO DE COMODIDAD...",
   "bootRealityCheckReady": "> REALIDAD LISTA.",
   "ifIncomePausedToday": "Si tu ingreso se detuviera hoy",
+  "runwayNeedsCosts": "Indica tus gastos mensuales para ver tu margen",
   "monthSingular": "mes",
   "monthPlural": "meses",
   "sustainableWithExpectedInflow": "Sostenible con tu entrada esperada",
