@@ -210,17 +210,34 @@ on. The 30 days is a starting number, not a researched one.
 
 ## Part 3: a trailing window for typical spending
 
-`typicalSpending` changes from an all-time mean to a **trailing three completed
-months**, falling back to however many exist when there are fewer.
+`typicalSpending` changes from an all-time mean to the **last completed
+month**, falling back to this month's spending when there is none.
 
 Without this, Part 2 makes things worse rather than better: allocated
 adjustments would be diluted by every month ever recorded, so the newly
-measured truth about spending would take a year to show up. With it, the runway
-tracks the last quarter of real behaviour, which is what "current habit" means.
+measured truth about spending would take a year to show up.
 
-Three months is chosen to smooth a single unusual month without blurring a real
-change of circumstances. It is the one number here worth revisiting once there
-is real usage.
+One month rather than three, chosen by the owner on 2026-09-16 alongside a
+commitment to log as much as possible. The two go together: diligent logging
+makes a single month a fair sample, and a one-month window reflects a real
+change in circumstances immediately instead of lagging it by a quarter.
+
+The accepted cost is volatility. One unusual month, a flight or a deposit,
+becomes the whole burn rate, and the runway will swing month to month more than
+a smoothed window would. That is a real trade, not an oversight: a number that
+moves when spending moves is the point, and a number that is slow to move is
+what this design is replacing.
+
+### Coverage
+
+Alongside the burn rate, show what share of spending was measured rather than
+logged: the unlogged adjustments for a month over total spending for that month.
+
+It costs nothing to compute and it is the figure that makes logging worth doing.
+"18% of your spending last month was unaccounted for" is actionable in a way
+that a burn rate is not, and it degrades honestly: the better the logging, the
+smaller the number, until it approaches zero and the balance check becomes a
+formality.
 
 ## Risks, accepted for now
 
@@ -230,6 +247,15 @@ is a liquidity question, and a month carrying a large one-off charge can be
 fatal while the smoothed average reports comfort. Landing yearly charges on
 their anniversary is deferred, and recorded here as a risk rather than as
 tidiness, because it is the failure mode that actually hurts.
+
+**A log-everything policy arms the double count.** The owner's stated intent
+is to log as much as possible. Defect 2 is dormant only because subscription
+payments are currently not logged; the moment they are, each one counts twice,
+once in living and once in the `subscriptions` line. "Log everything except
+subscriptions" is not a rule anyone can keep, so this raises the priority of
+the open question below: either subscriptions move into the ledger, or the burn
+model must ignore the subscription rule for any month where a matching payment
+was logged. Neither is in this change, and the risk grows as logging improves.
 
 **Income has no equivalent discipline.** Everything here tightens the
 measurement of spending. Runway is `cash ÷ (burn − inflow)`, and if income is
@@ -262,8 +288,10 @@ testable without a clock.
   pro rata by days, summing exactly to the difference with no rounding drift.
 - A difference over a single day produces one adjustment in that month.
 - Negative difference allocates as income, not negative expense.
-- Trailing window: four or more completed months use the last three; fewer use
-  what exists; no completed months falls back to this month's spending.
+- Trailing window: the last completed month is used; no completed months falls
+  back to this month's spending.
+- Coverage: unlogged adjustments over total spending for a month, zero when
+  nothing was adjusted.
 - Migration: existing subscriptions land with the right `endDate` and
   `seriesId`; summed opening balances become one check with the balance
   unchanged.
@@ -274,9 +302,11 @@ testable without a clock.
 
 1. How often will a check realistically happen? 30 days is assumed and
    unvalidated. If it is closer to "whenever I remember", the prompt matters
-   more than the cadence.
-2. Is three months the right window, or does one month track the habit better
-   at the cost of noise?
+   more than the cadence. Less pressing than it was: with diligent logging the
+   adjustment shrinks, and so does the cost of checking late.
+2. Resolved on 2026-09-16: one month, not three.
+3. Raised by the log-everything policy: does the subscription rule survive at
+   all, or do subscriptions become ledger rows? See risks.
 
 ## What the financial review changed
 
@@ -288,7 +318,7 @@ folded in:
    months. Now spread pro rata across the months it covers.
 2. **Trailing window.** `typicalSpending` was left as an all-time mean, which
    contradicts "current habit" and would have diluted the adjustments this
-   design exists to produce. Now Part 3.
+   design exists to produce. Now Part 3, set to one month.
 3. **One balance concept.** Opening balance already existed and already summed.
    The draft added a second mechanism without saying how they relate. The check
    now supersedes it.
