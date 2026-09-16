@@ -67,6 +67,7 @@ monthlyBurn = max(rentBudget, typicalRent)
 - A logged expense uses up its budget and never adds on top of it. Burn only rises when a bucket goes over budget.
 - `typicalRent` and `typicalLiving` = average logged spending per completed month in that bucket, or this month's spending when there is no earlier month.
 - Loan repayments count only against their loan's scheduled payment. Income, loans received, investments and opening balances are not burn.
+- A loan with a term keeps costing its monthly payment until that term ends. Repaid principal does not end it, because `remainingBalance` ignores interest and stopping there would raise the runway while the user is still paying. A loan with no term falls back to repaid principal, which is correct for an interest-free loan. The free-plan limit is deliberately more generous and frees the slot on repaid principal.
 - An expected burn override in Forecast replaces `monthlyBurn`.
 
 ### 3.2 Runway Calculation

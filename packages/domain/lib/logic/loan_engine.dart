@@ -53,14 +53,51 @@ bool hasActiveLoan({
   computeLoanSummaries(loans: loans, transactions: transactions),
 ).isNotEmpty;
 
+/// The month after the last scheduled payment, or null when no term is set.
+DateTime? loanTermEnd(Loan loan) => loan.originalTermMonths > 0
+    ? DateTime(
+        loan.startDate.year,
+        loan.startDate.month + loan.originalTermMonths,
+        loan.startDate.day,
+      )
+    : null;
+
+/// Loans that still cost money every month at [now].
+///
+/// When a term is set it is the end this app can trust. `remainingBalance`
+/// ignores interest, so repaid principal does not mean the payments have
+/// stopped: on a loan at 6% over 96 months the payments exceed the principal by
+/// about a quarter, and dropping the loan there would raise the runway while the
+/// user is still paying.
+///
+/// Without a term there is nothing better than repaid principal, which is also
+/// correct for an interest-free loan. A loan carrying interest but no recorded
+/// term will still stop early; recording a term is what fixes that.
+List<LoanSummary> costingLoanSummaries(
+  List<LoanSummary> summaries, {
+  required DateTime now,
+}) => summaries.where((summary) {
+  if (!summary.loan.isActive) return false;
+  final end = loanTermEnd(summary.loan);
+  // With a term, the term governs: repaid principal does not mean the payments
+  // stopped. Without a term, repaid principal is the only end available, and it
+  // is the right one for an interest-free loan, where payment = amount / months.
+  return end == null ? !summary.isFullyPaid : now.isBefore(end);
+}).toList();
+
+/// Loans to show and to count against the free-plan limit. Repaying the
+/// principal frees the slot, which is deliberately more generous than the
+/// costing rule above.
 List<LoanSummary> activeLoanSummaries(List<LoanSummary> summaries) {
   return summaries
       .where((summary) => summary.loan.isActive && !summary.isFullyPaid)
       .toList();
 }
 
-double totalMonthlyPaymentFromSummaries(List<LoanSummary> summaries) {
-  return activeLoanSummaries(
-    summaries,
-  ).fold(0.0, (sum, summary) => sum + summary.loan.monthlyPayment);
-}
+double totalMonthlyPaymentFromSummaries(
+  List<LoanSummary> summaries, {
+  DateTime? now,
+}) => costingLoanSummaries(
+  summaries,
+  now: now ?? DateTime.now(),
+).fold(0.0, (sum, summary) => sum + summary.loan.monthlyPayment);
