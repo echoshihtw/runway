@@ -7,7 +7,7 @@ void main() {
 
   group('computeLoanSummaries', () {
     test('returns empty for no loans', () {
-      final result = computeLoanSummaries(loans: [], transactions: []);
+      final result = computeLoanSummaries(loans: [], transactions: [], now: DateTime.now());
       expect(result, isEmpty);
     });
 
@@ -18,7 +18,7 @@ void main() {
         originalAmount: 500000,
         monthlyPayment: 15000,
       );
-      final result = computeLoanSummaries(loans: [loan], transactions: []);
+      final result = computeLoanSummaries(loans: [loan], transactions: [], now: DateTime.now());
       expect(result.first.totalRepaid, 0);
       expect(result.first.remainingBalance, 500000);
     });
@@ -48,7 +48,7 @@ void main() {
           loanId: 'loan1',
         ),
       ];
-      final result = computeLoanSummaries(loans: [loan], transactions: txs);
+      final result = computeLoanSummaries(loans: [loan], transactions: txs, now: DateTime.now());
       expect(result.first.totalRepaid, 30000);
       expect(result.first.remainingBalance, 470000);
     });
@@ -70,7 +70,7 @@ void main() {
           loanId: 'loan2',
         ),
       ];
-      final result = computeLoanSummaries(loans: [loan], transactions: txs);
+      final result = computeLoanSummaries(loans: [loan], transactions: txs, now: DateTime.now());
       expect(result.first.totalRepaid, 0);
     });
 
@@ -91,7 +91,7 @@ void main() {
           loanId: 'loan1',
         ),
       ];
-      final result = computeLoanSummaries(loans: [loan], transactions: txs);
+      final result = computeLoanSummaries(loans: [loan], transactions: txs, now: DateTime.now());
       expect(result.first.remainingBalance, 0);
       expect(result.first.isFullyPaid, true);
     });
@@ -113,7 +113,7 @@ void main() {
           loanId: 'loan1',
         ),
       ];
-      final result = computeLoanSummaries(loans: [loan], transactions: txs);
+      final result = computeLoanSummaries(loans: [loan], transactions: txs, now: DateTime.now());
       expect(result.first.repaidRatio, 0.25);
     });
 
@@ -134,7 +134,7 @@ void main() {
           loanId: 'loan1',
         ),
       ];
-      final result = computeLoanSummaries(loans: [loan], transactions: txs);
+      final result = computeLoanSummaries(loans: [loan], transactions: txs, now: DateTime.now());
       expect(result.first.monthsRemaining, 10);
     });
 
@@ -157,7 +157,7 @@ void main() {
           updatedAt: now,
         ),
       ];
-      final result = computeLoanSummaries(loans: [loan], transactions: txs);
+      final result = computeLoanSummaries(loans: [loan], transactions: txs, now: DateTime.now());
       expect(result.first.isAheadThisMonth, true);
       expect(result.first.paidThisMonth, 20000);
     });
@@ -222,6 +222,7 @@ void main() {
         monthlyPayment: 5000,
       );
       final summaries = computeLoanSummaries(
+        now: DateTime.now(),
         loans: [openLoan, paidLoan],
         transactions: [
           makeTx(

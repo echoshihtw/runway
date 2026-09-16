@@ -67,6 +67,8 @@ MonthlyBurn _burn({
 const _budget = Budget(rent: 32000, living: 30000);
 
 void main() {
+  _readsLongTests();
+
   test('a logged expense uses up the living budget instead of adding to it', () {
     final burn = _burn(
       budget: _budget,
@@ -198,5 +200,137 @@ void main() {
   test('the share of the month left counts today', () {
     expect(_burn(now: DateTime(2026, 9, 1)).fractionOfMonthLeft, 1.0);
     expect(_burn(now: DateTime(2026, 9, 30)).fractionOfMonthLeft, 1 / 30);
+  });
+}
+
+void _readsLongTests() {
+  Transaction entry(
+    String id,
+    DateTime date,
+    TransactionType type,
+    double amount, {
+    String? loanId,
+  }) => Transaction(
+    id: id,
+    date: date,
+    type: type,
+    amount: Money(amount),
+    loanId: loanId,
+    createdAt: date,
+    updatedAt: date,
+  );
+
+  group('the rest of the month is charged on the same basis as later months', () {
+    test('with no budget set, the month still costs typical spending', () {
+      // The default Budget() is 0/0 and nothing gates the runway on it, so
+      // charging the budget remainder handed a new user a free month.
+      final now = DateTime(2026, 9, 1);
+      final txs = [
+        entry('ob', DateTime(2026, 8, 1), TransactionType.openingBalance, 400000),
+        entry('aug', DateTime(2026, 8, 10), TransactionType.expense, 40000),
+      ];
+      final burn = computeMonthlyBurn(
+        transactions: txs,
+        budget: const Budget(),
+        loans: const [],
+        subscriptions: const [],
+        now: now,
+      );
+
+      expect(burn.living.monthlyEstimate, 40000);
+      expect(burn.living.remainingThisMonth, 40000);
+      expect(burn.dueThisMonth, 40000);
+      expect(
+        computeModel(
+          currentCash: currentCashAsOf(transactions: txs, now: now),
+          burn: burn,
+        ).runwayMonths,
+        9,
+      );
+    });
+
+    test('a budget above typical spending still drives the remainder', () {
+      final now = DateTime(2026, 9, 16);
+      final txs = [
+        entry('ob', DateTime(2026, 9, 1), TransactionType.openingBalance, 34000),
+        entry('lunch', DateTime(2026, 9, 6), TransactionType.expense, 18),
+      ];
+      final burn = computeMonthlyBurn(
+        transactions: txs,
+        budget: const Budget(rent: 1450, living: 1100),
+        loans: const [],
+        subscriptions: const [],
+        now: now,
+      );
+
+      // Budget is the floor, so the remainder is the budget less what is spent.
+      expect(burn.living.remainingThisMonth, 1082);
+      expect(burn.living.leftThisMonth, 1082);
+    });
+  });
+
+  group('entries dated later have not happened', () {
+    final now = DateTime(2026, 9, 15);
+    const budget = Budget(rent: 32000, living: 30000);
+
+    List<Transaction> base() => [
+      entry('ob', DateTime(2026, 9, 1), TransactionType.openingBalance, 100000),
+    ];
+
+    MonthlyBurn burnFor(List<Transaction> txs) => computeMonthlyBurn(
+      transactions: txs,
+      budget: budget,
+      loans: const [],
+      subscriptions: const [],
+      now: now,
+    );
+
+    test('an expense dated later this month does not pay for the month', () {
+      // Cash already ignores it, so counting it as spent let the month be
+      // part-paid in advance and lengthened the runway.
+      final planned = [
+        ...base(),
+        entry('f', DateTime(2026, 9, 28), TransactionType.expense, 30000),
+      ];
+
+      expect(burnFor(planned).dueThisMonth, burnFor(base()).dueThisMonth);
+      expect(burnFor(planned).living.spentThisMonth, 0);
+    });
+
+    test('an expense dated today does count', () {
+      final today = [
+        ...base(),
+        entry('t', now, TransactionType.expense, 5000),
+      ];
+
+      expect(burnFor(today).living.spentThisMonth, 5000);
+    });
+
+    test('a repayment dated later this month does not satisfy it', () {
+      final loan = Loan(
+        id: 'l',
+        name: 'Student loan',
+        source: 'Bank',
+        originalAmount: 100000,
+        monthlyPayment: 10000,
+        startDate: DateTime(2024, 1, 1),
+        createdAt: now,
+        updatedAt: now,
+      );
+      final later = [
+        entry('r', DateTime(2026, 9, 30), TransactionType.repayment, 10000,
+            loanId: 'l'),
+      ];
+
+      final summary = computeLoanSummaries(
+        loans: [loan],
+        transactions: later,
+        now: now,
+      ).first;
+
+      expect(summary.paidThisMonth, 0);
+      expect(summary.remainingBalance, 100000);
+      expect(summary.isFullyPaid, isFalse);
+    });
   });
 }

@@ -18,7 +18,11 @@ final loansProvider = StreamProvider<List<Loan>>((ref) {
 final loanSummariesProvider = Provider<List<LoanSummary>>((ref) {
   final loans = ref.watch(loansProvider).value ?? [];
   final transactions = ref.watch(transactionsProvider).value ?? [];
-  return computeLoanSummaries(loans: loans, transactions: transactions);
+  return computeLoanSummaries(
+    loans: loans,
+    transactions: transactions,
+    now: DateTime.now(),
+  );
 });
 
 final activeLoanSummariesProvider = Provider<List<LoanSummary>>((ref) {

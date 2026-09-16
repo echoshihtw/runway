@@ -6,10 +6,17 @@ import '../enums/transaction_type.dart';
 List<LoanSummary> computeLoanSummaries({
   required List<Loan> loans,
   required List<Transaction> transactions,
+  required DateTime now,
 }) {
-  final now = DateTime.now();
+  // A repayment dated later this month has not been paid. Counting it zeroed
+  // what the month still owed, cut the remaining balance, and could free the
+  // free-plan loan slot early.
+  final endOfToday = DateTime(now.year, now.month, now.day, 23, 59, 59, 999);
   final repayments = transactions.where(
-    (t) => t.type == TransactionType.repayment && t.loanId != null,
+    (t) =>
+        t.type == TransactionType.repayment &&
+        t.loanId != null &&
+        !t.date.isAfter(endOfToday),
   );
 
   return loans.map((loan) {
@@ -49,8 +56,13 @@ double totalMonthlyPayment(List<Loan> loans) {
 bool hasActiveLoan({
   required List<Loan> loans,
   required List<Transaction> transactions,
+  DateTime? now,
 }) => activeLoanSummaries(
-  computeLoanSummaries(loans: loans, transactions: transactions),
+  computeLoanSummaries(
+    loans: loans,
+    transactions: transactions,
+    now: now ?? DateTime.now(),
+  ),
 ).isNotEmpty;
 
 /// The month after the last scheduled payment, or null when no term is set.

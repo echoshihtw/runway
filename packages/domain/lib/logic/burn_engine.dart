@@ -32,7 +32,18 @@ class BudgetBucket {
   /// raises it when it goes over.
   double get monthlyEstimate => math.max(budget, typicalSpending);
 
+  /// What is left of the budget. A display figure: it is what "821 left"
+  /// and the living sheet's daily amount are built from.
   double get leftThisMonth => math.max(budget - spentThisMonth, 0);
+
+  /// What this bucket still costs for the rest of the month.
+  ///
+  /// Measured against [monthlyEstimate], not [budget]. Charging the budget
+  /// remainder made the rest of the month free whenever no budget was set —
+  /// the default — because the remainder of zero is zero, while every later
+  /// month was charged typical spending.
+  double get remainingThisMonth =>
+      math.max(monthlyEstimate - spentThisMonth, 0);
 }
 
 /// Everything that makes up the monthly burn, split so nothing is counted
@@ -82,8 +93,8 @@ class MonthlyBurn {
   /// What the rest of this month still costs. Spending already logged is
   /// already out of cash, so only the unused part of each budget counts.
   double get dueThisMonth =>
-      rent.leftThisMonth +
-      living.leftThisMonth +
+      rent.remainingThisMonth +
+      living.remainingThisMonth +
       subscriptions * fractionOfMonthLeft +
       loanPaymentsLeftThisMonth;
 }
@@ -119,7 +130,13 @@ MonthlyBurn computeMonthlyBurn({
     final spending = transactions.where(counts);
     var spentThisMonth = 0.0;
     final completedMonths = <SurvivalMonth, double>{};
+    final endOfToday = DateTime(now.year, now.month, now.day, 23, 59, 59, 999);
     for (final t in spending) {
+      if (t.date.isAfter(endOfToday)) {
+        // A plan, not a cost. Cash already ignores these; the month must too,
+        // or a future-dated expense pays for part of the month in advance.
+        continue;
+      }
       if (t.month == month) {
         spentThisMonth += t.amount.value;
       } else if (t.month.isBefore(month)) {
