@@ -313,6 +313,30 @@ void _scenarioBasisTests() {
       expect(scenario.effectiveBurnRate, burn.total - 250);
     });
 
+    test('the scenario reports sustainability on the dashboard footing', () {
+      // Nothing renders this on the plan screen today, but leaving the two
+      // sides on different assumptions is the bug this group exists to stop.
+      final burn = burnAt();
+      final dashboard = computeModel(
+        currentCash: 34000,
+        burn: burn,
+        expectedMonthlyInflow: 2400,
+      );
+      final scenario = modelForScenario(
+        currentCash: 34000,
+        burn: burn,
+        expectedMonthlyInflow: 2400,
+      );
+
+      expect(scenario.hasSustainableProjection, isTrue);
+      expect(
+        scenario.sustainableMonthlyShortfall,
+        dashboard.sustainableMonthlyShortfall,
+      );
+      // And it still does not move the number.
+      expect(scenario.runwayMonths, dashboard.runwayMonths);
+    });
+
     test('simulated income above costs gives an unlimited runway', () {
       final burn = burnAt();
       final scenario = modelForScenario(

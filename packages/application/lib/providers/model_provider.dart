@@ -48,6 +48,7 @@ final scenarioModelProvider = Provider<ModelState?>((ref) {
     monthlyCostOverride: scenario.burnRateOverride,
     simulatedIncome: scenario.simulatedIncome,
     expectedMonthlyBurnOverride: assumptions.expectedMonthlyBurnOverride,
+    expectedMonthlyInflow: assumptions.expectedMonthlyInflow,
   );
 });
 

@@ -77,6 +77,7 @@ ModelState modelForScenario({
   double? monthlyCostOverride,
   double? simulatedIncome,
   double? expectedMonthlyBurnOverride,
+  double? expectedMonthlyInflow,
 }) {
   // The dashboard may already be running on an assumed monthly cost. Start from
   // whatever it uses, or the comparison subtracts one basis from another and a
@@ -104,6 +105,11 @@ ModelState modelForScenario({
     burn: burn,
     monthlyBurn: monthlyBurn,
     dueThisMonth: math.max(baseDueThisMonth + changeThisMonth, 0.0),
+    // Carried through so the scenario reports sustainability on the same
+    // footing as the dashboard. It does not move the runway: the number
+    // answers what happens if income stopped today.
+    expectedMonthlyInflow: expectedMonthlyInflow,
+    expectedMonthlyBurnOverride: expectedMonthlyBurnOverride,
   );
 }
 
