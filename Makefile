@@ -92,7 +92,7 @@ run-chrome: ## Run app in Chrome
 # ============================================================================
 
 .PHONY: gen
-gen: ## Run code generation (Drift, Riverpod)
+gen: ## Run code generation (Drift, Riverpod, localizations)
 	melos run gen
 
 .PHONY: gen-l10n
@@ -101,7 +101,7 @@ gen-l10n: ## Generate localizations from ARB files
 	@echo "✓ Localizations generated"
 
 .PHONY: gen-all
-gen-all: gen gen-l10n ## Run all code generation
+gen-all: gen ## Deprecated alias for gen, which now includes localizations
 
 # ============================================================================
 # BRAND ASSETS
