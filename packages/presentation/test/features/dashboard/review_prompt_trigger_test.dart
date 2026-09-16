@@ -33,7 +33,6 @@ const _model = ModelState(
   subscriptionMonthlyCost: 0,
   runwayMonths: 10,
   runwayDays: 300,
-  pressureRatio: 0,
 );
 
 Future<_FakePrompter> _pump(

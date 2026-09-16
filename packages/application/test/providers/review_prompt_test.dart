@@ -23,7 +23,6 @@ ModelState _model(int runwayMonths) => ModelState(
   subscriptionMonthlyCost: 0,
   runwayMonths: runwayMonths,
   runwayDays: runwayMonths * 30,
-  pressureRatio: 0,
 );
 
 void main() {

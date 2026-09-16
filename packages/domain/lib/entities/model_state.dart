@@ -11,7 +11,6 @@ class ModelState {
   final int runwayMonths;
   final int runwayDays;
   final DateTime? runOutDate;
-  final double pressureRatio;
 
   const ModelState({
     required this.currentCash,
@@ -24,11 +23,9 @@ class ModelState {
     required this.runwayMonths,
     required this.runwayDays,
     this.runOutDate,
-    required this.pressureRatio,
   });
 
   double get totalMonthlyOutflow => effectiveBurnRate;
-  double get historicalMonthlyBurn => burnRate;
   double get emergencyMonthlyBurn => effectiveBurnRate;
   double get sustainableNetMonthlyFlow =>
       (expectedMonthlyInflow ?? 0) - emergencyMonthlyBurn;
@@ -37,26 +34,6 @@ class ModelState {
       hasSustainableProjection && sustainableNetMonthlyFlow >= 0;
   double get sustainableMonthlyShortfall =>
       sustainableNetMonthlyFlow < 0 ? sustainableNetMonthlyFlow.abs() : 0.0;
-  int get sustainableRunwayMonths {
-    if (!hasSustainableProjection) return runwayMonths;
-    if (isSustainableIndefinitely) return 9999;
-    if (sustainableMonthlyShortfall <= 0) return 9999;
-    return (currentCash / sustainableMonthlyShortfall).floor();
-  }
-
-  int get sustainableRunwayDays {
-    if (!hasSustainableProjection) return runwayDays;
-    if (isSustainableIndefinitely) return 99999;
-    if (sustainableMonthlyShortfall <= 0) return 99999;
-    return (currentCash / sustainableMonthlyShortfall * 30).floor();
-  }
-
-  double get fixedObligations => monthlyPayment + subscriptionMonthlyCost;
-  double get fixedPressureRatio => totalMonthlyOutflow > 0
-      ? (fixedObligations / totalMonthlyOutflow).clamp(0.0, 1.0)
-      : 0.0;
-  double get flexibilityRatio => 1.0 - fixedPressureRatio;
-  bool get isOverBudget => burnRate > effectiveBurnRate && burnRate > 0;
   SurvivalStatus get survivalStatus => switch (runwayMonths) {
     >= 24 => SurvivalStatus.stable,
     >= 12 => SurvivalStatus.caution,
@@ -74,6 +51,5 @@ class ModelState {
     runwayMonths: 0,
     runwayDays: 0,
     runOutDate: null,
-    pressureRatio: 0,
   );
 }

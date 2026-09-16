@@ -27,31 +27,4 @@ enum ExpenseCategory {
     ExpenseCategory.wellbeing     => 'WELLBEING',
     ExpenseCategory.travel        => 'TRAVEL',
   };
-
-  String get group => switch (this) {
-    ExpenseCategory.rent          => 'RENT',
-    ExpenseCategory.food ||
-    ExpenseCategory.social ||
-    ExpenseCategory.daily ||
-    ExpenseCategory.physical ||
-    ExpenseCategory.discretionary => 'LIVING',
-    ExpenseCategory.transport     => 'TRANSPORT',
-    ExpenseCategory.medical ||
-    ExpenseCategory.wellbeing     => 'HEALTH',
-    ExpenseCategory.travel        => 'TRAVEL',
-  };
-
-  static const groups = ['RENT', 'LIVING', 'TRANSPORT', 'HEALTH', 'TRAVEL'];
-
-  static List<ExpenseCategory> subcategoriesFor(String group) => switch (group) {
-    'RENT'      => [rent],
-    'LIVING'    => [food, social, daily, physical, discretionary],
-    'HEALTH'    => [medical, wellbeing],
-    'TRANSPORT' => [transport],
-    'TRAVEL'    => [travel],
-    _           => [],
-  };
-
-  static bool groupHasSubcategories(String group) =>
-      group == 'LIVING' || group == 'HEALTH';
 }
