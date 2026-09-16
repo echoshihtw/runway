@@ -8,6 +8,7 @@ import 'package:design_system/design_system.dart';
 import 'package:application/application.dart';
 import 'package:domain/domain.dart';
 import '../features/boot/boot_screen.dart';
+import '../features/onboarding/onboarding_screen.dart';
 import '../features/dashboard/dashboard_screen.dart';
 import '../features/transactions/transactions_screen.dart';
 import '../features/transactions/widgets/transaction_form.dart';
@@ -26,6 +27,10 @@ final appRouter = GoRouter(
   initialLocation: '/boot',
   routes: [
     GoRoute(path: '/boot', builder: (_, __) => const BootScreen()),
+    // A route, not an imperative push. Pushing it onto the navigator left
+    // go_router's match list holding only /boot, so the iOS back swipe popped
+    // a page go_router did not own and emptied the configuration.
+    GoRoute(path: '/onboarding', builder: (_, __) => const OnboardingScreen()),
     StatefulShellRoute.indexedStack(
       builder: (context, state, shell) => _ScaffoldWithNav(shell: shell),
       branches: [
