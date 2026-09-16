@@ -32,7 +32,7 @@ Widget buildTestApp({AppDatabase? database}) {
       reviewPrompterProvider.overrideWithValue(const _NoReviewPrompt()),
     ],
     // The real root widget, so tests see the app's theme and localizations.
-    child: const SurvivalApp(),
+    child: const FinancialRunwayApp(),
   );
 }
 

@@ -1,4 +1,4 @@
-import '../enums/survival_status.dart';
+import '../enums/runway_status.dart';
 
 class ModelState {
   final double currentCash;
@@ -52,10 +52,10 @@ class ModelState {
 
   /// Three to six months of cover is the widely used adequacy range, so
   /// caution sits there and anything above six reads as stable.
-  SurvivalStatus get survivalStatus => switch (runwayMonths) {
-    >= 6 => SurvivalStatus.stable,
-    >= 3 => SurvivalStatus.caution,
-    _ => SurvivalStatus.critical,
+  RunwayStatus get runwayStatus => switch (runwayMonths) {
+    >= 6 => RunwayStatus.stable,
+    >= 3 => RunwayStatus.caution,
+    _ => RunwayStatus.critical,
   };
 
   static ModelState empty() => ModelState(

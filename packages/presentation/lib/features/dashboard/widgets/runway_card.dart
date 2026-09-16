@@ -15,16 +15,16 @@ class RunwayCard extends ConsumerWidget {
     final l10n = context.l10n;
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
     final nf = NumberFormat('#,##0', 'en_US');
-    final status = model.survivalStatus;
+    final status = model.runwayStatus;
 
     // With no cost known the runway cannot be stated, so it must not borrow
     // the confidence of a status colour.
     final known = model.runwayIsKnown;
     final color = known ? statusColor(status) : AppColors.textSecondary;
     final statusLabel = switch (status) {
-      SurvivalStatus.stable => l10n.stable,
-      SurvivalStatus.caution => l10n.caution,
-      SurvivalStatus.critical => l10n.critical,
+      RunwayStatus.stable => l10n.stable,
+      RunwayStatus.caution => l10n.caution,
+      RunwayStatus.critical => l10n.critical,
     };
 
     String fmtRunwayMonths(int m) {

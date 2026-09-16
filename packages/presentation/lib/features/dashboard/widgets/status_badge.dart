@@ -4,15 +4,15 @@ import 'package:domain/domain.dart';
 import '../../../shared/status_color.dart';
 
 class StatusBadge extends StatelessWidget {
-  final SurvivalStatus status;
+  final RunwayStatus status;
   const StatusBadge({super.key, required this.status});
 
   Color get _color => statusColor(status);
 
   String _label(AppLocalizations l10n) => switch (status) {
-    SurvivalStatus.stable => l10n.stable,
-    SurvivalStatus.caution => l10n.caution,
-    SurvivalStatus.critical => l10n.critical,
+    RunwayStatus.stable => l10n.stable,
+    RunwayStatus.caution => l10n.caution,
+    RunwayStatus.critical => l10n.critical,
   };
 
   @override

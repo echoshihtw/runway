@@ -26,7 +26,7 @@ Transaction _tx(
 );
 
 MonthlyBurn _burn({required double budget, required double spent}) => MonthlyBurn(
-  month: SurvivalMonth(DateTime(2026, 9)),
+  month: LedgerMonth(DateTime(2026, 9)),
   fractionOfMonthLeft: 16 / 30,
   rent: const BudgetBucket(budget: 32000, spentThisMonth: 0, typicalSpending: 0),
   living: BudgetBucket(budget: budget, spentThisMonth: spent, typicalSpending: spent),

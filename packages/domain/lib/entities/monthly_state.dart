@@ -1,7 +1,7 @@
-import '../value_objects/survival_month.dart';
+import '../value_objects/ledger_month.dart';
 
 class MonthlyState {
-  final SurvivalMonth month;
+  final LedgerMonth month;
   final double netFlow;
   final double balance;
   final double grossOutflow; // expenses + repayments only, no income
