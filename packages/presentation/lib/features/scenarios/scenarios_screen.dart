@@ -16,6 +16,7 @@ class ScenariosScreen extends ConsumerWidget {
     final scenario = ref.watch(scenarioProvider);
     final simulationsRun = ref.watch(simulationCountProvider).value ?? 0;
     final realModel = ref.watch(modelProvider);
+    final burn = ref.watch(monthlyBurnProvider);
     final simModel = ref.watch(scenarioModelProvider);
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
     final nf = NumberFormat('#,##0', 'en_US');
@@ -100,9 +101,9 @@ class ScenariosScreen extends ConsumerWidget {
                   const SizedBox(height: AppSpacing.md),
                   _SimInput(
                     label: l10n.burnRateOverride,
-                    hint: realModel.burnRate > 0
-                        ? realModel.burnRate.toStringAsFixed(0)
-                        : '50000',
+                    hint: burn.variableBurn > 0
+                        ? burn.variableBurn.toStringAsFixed(0)
+                        : '0',
                     initialValue: scenario.burnRateOverride?.toStringAsFixed(0),
                     resetVersion: scenario.resetVersion,
                     focusOnReset: true,

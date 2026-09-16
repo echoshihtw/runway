@@ -76,20 +76,34 @@ ModelState modelForScenario({
   required MonthlyBurn burn,
   double? monthlyCostOverride,
   double? simulatedIncome,
+  double? expectedMonthlyBurnOverride,
 }) {
-  final variable = monthlyCostOverride ?? burn.variableBurn;
+  // The dashboard may already be running on an assumed monthly cost. Start from
+  // whatever it uses, or the comparison subtracts one basis from another and a
+  // scenario with no changes reports a loss.
+  final assumption =
+      expectedMonthlyBurnOverride != null && expectedMonthlyBurnOverride > 0
+      ? expectedMonthlyBurnOverride
+      : null;
+  final baseMonthly = assumption ?? burn.total;
+  final baseDueThisMonth = assumption != null
+      ? assumption * burn.fractionOfMonthLeft
+      : burn.dueThisMonth;
+
+  // The input is a change to the variable part, so fixed costs survive it: a
+  // user cutting living expenses does not silently drop a loan payment.
+  final variableChange =
+      (monthlyCostOverride ?? burn.variableBurn) - burn.variableBurn;
   final income = simulatedIncome ?? 0.0;
-  final monthlyBurn = math.max(
-    variable + burn.subscriptions + burn.loanPayments - income,
-    0.0,
-  );
+
+  final monthlyBurn = math.max(baseMonthly + variableChange - income, 0.0);
   final changeThisMonth =
-      (variable - burn.variableBurn - income) * burn.fractionOfMonthLeft;
+      (variableChange - income) * burn.fractionOfMonthLeft;
   return modelForMonthlyBurn(
     currentCash: currentCash,
     burn: burn,
     monthlyBurn: monthlyBurn,
-    dueThisMonth: math.max(burn.dueThisMonth + changeThisMonth, 0.0),
+    dueThisMonth: math.max(baseDueThisMonth + changeThisMonth, 0.0),
   );
 }
 

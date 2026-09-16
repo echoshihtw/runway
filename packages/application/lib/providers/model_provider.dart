@@ -38,11 +38,16 @@ final scenarioModelProvider = Provider<ModelState?>((ref) {
   final transactions = ref.watch(transactionsProvider).value;
   if (transactions == null) return null;
 
+  final assumptions =
+      ref.watch(financialAssumptionsProvider).value ??
+      const FinancialAssumptions();
+
   return modelForScenario(
     currentCash: _currentCash(transactions),
     burn: ref.watch(monthlyBurnProvider),
     monthlyCostOverride: scenario.burnRateOverride,
     simulatedIncome: scenario.simulatedIncome,
+    expectedMonthlyBurnOverride: assumptions.expectedMonthlyBurnOverride,
   );
 });
 
