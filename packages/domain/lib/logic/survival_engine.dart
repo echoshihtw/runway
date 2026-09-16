@@ -66,6 +66,33 @@ ModelState modelForMonthlyBurn({
   );
 }
 
+/// The model for a what-if on the plan screen.
+///
+/// Changes take effect from today. The rest of this month keeps the costs
+/// already paid and applies only the difference over the days that are left,
+/// so a scenario with no changes returns the dashboard's own runway.
+ModelState modelForScenario({
+  required double currentCash,
+  required MonthlyBurn burn,
+  double? monthlyCostOverride,
+  double? simulatedIncome,
+}) {
+  final variable = monthlyCostOverride ?? burn.variableBurn;
+  final income = simulatedIncome ?? 0.0;
+  final monthlyBurn = math.max(
+    variable + burn.subscriptions + burn.loanPayments - income,
+    0.0,
+  );
+  final changeThisMonth =
+      (variable - burn.variableBurn - income) * burn.fractionOfMonthLeft;
+  return modelForMonthlyBurn(
+    currentCash: currentCash,
+    burn: burn,
+    monthlyBurn: monthlyBurn,
+    dueThisMonth: math.max(burn.dueThisMonth + changeThisMonth, 0.0),
+  );
+}
+
 /// How long cash lasts, measured in months from today.
 ///
 /// The rest of this month costs [dueThisMonth] over the days that are left.

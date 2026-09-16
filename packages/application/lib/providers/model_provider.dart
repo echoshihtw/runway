@@ -38,24 +38,13 @@ final scenarioModelProvider = Provider<ModelState?>((ref) {
   final transactions = ref.watch(transactionsProvider).value;
   if (transactions == null) return null;
 
-  final burn = ref.watch(monthlyBurnProvider);
-  final variableBurn = scenario.burnRateOverride ?? burn.variableBurn;
-  final netBurn =
-      variableBurn +
-      burn.loanPayments +
-      burn.subscriptions -
-      (scenario.simulatedIncome ?? 0.0);
-  final monthlyBurn = netBurn > 0 ? netBurn : 0.0;
-
-  return modelForMonthlyBurn(
+  return modelForScenario(
     currentCash: _currentCash(transactions),
-    burn: burn,
-    monthlyBurn: monthlyBurn,
-    dueThisMonth: monthlyBurn * burn.fractionOfMonthLeft,
+    burn: ref.watch(monthlyBurnProvider),
+    monthlyCostOverride: scenario.burnRateOverride,
+    simulatedIncome: scenario.simulatedIncome,
   );
 });
 
-double _currentCash(List<Transaction> transactions) {
-  final months = aggregateMonths(transactions);
-  return months.isEmpty ? 0.0 : months.last.balance;
-}
+double _currentCash(List<Transaction> transactions) =>
+    currentCashAsOf(transactions: transactions, now: DateTime.now());

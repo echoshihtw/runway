@@ -77,13 +77,19 @@ dueThisMonth = rentLeft + livingLeft
              + loan payments not yet logged this month
 runwayMonths = floor(fractionOfMonthLeft + (cash - dueThisMonth) / monthlyBurn)
 ```
+- Cash counts only entries dated today or earlier. An entry dated later is a plan: the log shows it, and it does not move cash or the runway until its date arrives.
 - `fractionOfMonthLeft` counts today, so it is 1.0 on the first day of the month.
 - If cash does not cover `dueThisMonth`, cash runs out this month.
 - `runOutDate` is the month cash reaches zero. It is null only when burn is zero.
 - No arbitrary cap. 9999 means unlimited.
-- The dashboard and the simulator share this calculation.
+- The dashboard and the simulator share this calculation. A simulation starts from the real `dueThisMonth` and applies only the difference over the days left, so a scenario with no changes returns the dashboard's runway.
 
-### 3.3 Investable Calculation
+### 3.3 Investable Calculation — not implemented in 1.0.1
+
+> Specified, not built. 1.0.1 has no safety fund and no investable split, and
+> the store listing must not claim either (#19). Kept here as the intended
+> design, so the numbers below are a target, not a description of the app.
+
 ```dart
 safetyMonths = clamp(runwayMonths / 2, 6, 18)  // adaptive buffer
 safetyCash   = effectiveBurn * safetyMonths
@@ -91,7 +97,7 @@ surplus      = currentCash - safetyCash
 riskCapacity = clamp((runwayMonths - safetyMonths) / safetyMonths, 0, 1)
 investable   = max(0, surplus × riskCapacity × pressureFactor)
 ```
-Two pockets: SAFETY FUND (locked) and INVESTABLE (deployable). Never mix them.
+Two pockets: SAFETY FUND (locked) and INVESTABLE (deployable). Never mix them. Neither exists in 1.0.1.
 
 ### 3.4 Investment Transactions
 Investment transactions reduce cash balance but are excluded from burn rate calculation. They are not expenses.
@@ -124,6 +130,8 @@ Uses `originalTermMonths - elapsed` — not `remainingBalance / monthlyPayment`.
 | Smoke | `#CDD5E0` | All other numbers — neutral facts |
 
 **Rule:** Color = semantic meaning, not decoration. Color a number only when it represents a distinct mental category.
+
+Status follows months of cover: under 3 critical, 3 to 6 caution, above 6 stable. Three to six months is the widely used adequacy range, so the app does not call a long runway an emergency.
 
 The runway number carries its status colour: mint when stable, amber when caution, pink when critical. Caution is amber, not gold, because the runway card sits directly above the gold liabilities card.
 
@@ -293,6 +301,8 @@ Answer these questions:
 | 2026-04 | max(actual, budget) formula | Reality wins, budget is floor not ceiling |
 | 2026-09 | Rent and living budget buckets | Logged spending uses up its budget instead of being compared with the whole budget, so nothing is counted twice or missed |
 | 2026-09 | Runway measured in months from today | The rest of the current month costs its unused budget, not a full month that was already partly paid |
+| 2026-09 | Status bands are 3 and 6 months, not 12 and 24 | Three to six months of cover is the recognised adequacy range. The old bands called an 11-month runway critical, which the facts do not support |
+| 2026-09 | Cash excludes entries dated in the future | The log already marks them planned. Counting them let a future bonus lengthen the runway today |
 | 2026-09 | Caution runway status is amber `#FFC978`, not gold | Gold means debt. A gold runway number above the gold liabilities card read as one category |
 | 2026-04 | Mathematical runway (no 120mo cap) | Artificial caps mislead users |
 | 2026-04 | Two pockets (safety + investable) | Mental model clarity |
