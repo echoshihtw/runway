@@ -48,8 +48,6 @@ ModelState modelForMonthlyBurn({
     monthlyBurn: monthlyBurn,
     burn: burn,
   );
-  final fixed = burn.loanPayments + burn.subscriptions;
-
   return ModelState(
     currentCash: currentCash,
     burnRate: burn.typicalSpending,
@@ -65,9 +63,6 @@ ModelState modelForMonthlyBurn({
         ? _unlimitedDays
         : math.min((runway.months * 30).floor(), _unlimitedDays),
     runOutDate: runway.runOutMonth,
-    pressureRatio: burn.typicalSpending > 0
-        ? fixed / burn.typicalSpending
-        : 0.0,
   );
 }
 
