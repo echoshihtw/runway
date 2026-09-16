@@ -144,6 +144,41 @@ void main() {
       );
     });
 
+    test('a bill from a previous month is not accrued', () {
+      // Nothing stores what the amount used to be, so pricing August from
+      // today's amount would restate it. Only this month is accrued.
+      expect(
+        accruedSubscriptionCharges(
+          subscriptions: [
+            _sub(startDate: DateTime(2026, 8, 3), createdAt: DateTime(2026, 8, 3)),
+          ],
+          transactions: [
+            _tx('open', TransactionType.openingBalance, 100000, DateTime(2026, 8, 1)),
+          ],
+          now: now,
+        ),
+        980,
+        reason: 'the 3 September bill only, not August as well',
+      );
+    });
+
+    test('a price change cannot restate an earlier month', () {
+      // Three bills have fallen due since July, but only September is accrued,
+      // so a raised price applies to one bill instead of rewriting two others.
+      expect(
+        accruedSubscriptionCharges(
+          subscriptions: [
+            _sub(amount: 1200, startDate: DateTime(2026, 7, 3), createdAt: DateTime(2026, 7, 3)),
+          ],
+          transactions: [
+            _tx('open', TransactionType.openingBalance, 100000, DateTime(2026, 7, 1)),
+          ],
+          now: now,
+        ),
+        1200,
+      );
+    });
+
     test('an inactive subscription accrues nothing', () {
       expect(
         accruedSubscriptionCharges(

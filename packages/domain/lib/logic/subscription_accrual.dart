@@ -11,6 +11,13 @@ import 'subscription_billing.dart';
 /// This corrects it on the read side. Nothing is written: a derived charge
 /// says "the rule says this billed", which is not the same claim as "this was
 /// paid", and only a real entry may assert the second.
+///
+/// The window is the current month, and that bound is deliberate. Nothing
+/// stores what a subscription used to cost, so pricing an earlier month from
+/// today's amount would restate history: raise Netflix from 390 to 420 and
+/// every past month would silently claim 420. A month that is never accrued
+/// cannot be repriced. Drift from earlier months is the balance check's job,
+/// where an external statement settles it instead of a guess.
 
 /// Charges are never accrued from before this date.
 ///
@@ -32,8 +39,8 @@ DateTime _accrualAnchor(Subscription s, DateTime? openingBalanceDate) {
 String _monthAndAmount(DateTime date, double amount) =>
     '${date.year}-${date.month}@${amount.toStringAsFixed(2)}';
 
-/// What active subscriptions have taken from the account but the ledger does
-/// not show, up to and including today.
+/// What active subscriptions have taken from the account this month but the
+/// ledger does not show, up to and including today.
 ///
 /// A payment the user logged by hand for the same amount in the same billing
 /// month wins: "log everything except subscriptions" is not a rule anyone can
@@ -63,11 +70,13 @@ double accruedSubscriptionCharges({
     );
   }
 
+  final startOfMonth = DateTime(now.year, now.month);
+
   var accrued = 0.0;
   for (final s in subscriptions.where((s) => s.isActive)) {
     final anchor = _accrualAnchor(s, openingBalanceDate);
-    for (final date in billingDatesUpTo(s, endOfToday)) {
-      if (date.isBefore(anchor)) continue;
+    final from = anchor.isAfter(startOfMonth) ? anchor : startOfMonth;
+    for (final date in billingDatesInRange(s, from: from, to: endOfToday)) {
       final key = _monthAndAmount(date, s.amount);
       final matches = loggedPayments[key] ?? 0;
       if (matches > 0) {
