@@ -15,7 +15,6 @@ export 'components/neo_input.dart';
 export 'components/pixel_badge.dart';
 export 'components/pixel_bar.dart';
 export 'components/gradient_scaffold.dart';
-export 'components/liquid_glass_container.dart';
 export 'components/app_input_formatters.dart';
 
 // Legacy components (keep during transition)

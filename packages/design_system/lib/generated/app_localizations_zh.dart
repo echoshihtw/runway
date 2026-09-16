@@ -608,15 +608,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get targetMonths => '目标月数';
 
   @override
-  String get display => '顯示';
-
-  @override
-  String get glassEffect => '玻璃效果';
-
-  @override
-  String get glassEffectHint => 'GPU 密集 — 舊裝置建議關閉';
-
-  @override
   String get runwayBrand => 'RUNWAY';
 
   @override
@@ -1341,15 +1332,6 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get targetMonths => '目標月數';
-
-  @override
-  String get display => '顯示';
-
-  @override
-  String get glassEffect => '玻璃效果';
-
-  @override
-  String get glassEffectHint => '比較吃效能，舊裝置可以關掉';
 
   @override
   String get runwayBrand => 'RUNWAY';

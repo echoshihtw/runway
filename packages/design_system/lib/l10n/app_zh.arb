@@ -57,8 +57,12 @@
   "stepsComplete": "已完成 {completed}/{total}",
   "@stepsComplete": {
     "placeholders": {
-      "completed": { "type": "int" },
-      "total": { "type": "int" }
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "stepBalanceLabel": "添加现金余额",
@@ -199,9 +203,6 @@
   "setGoal": "设置目标",
   "goalName": "目标名称",
   "targetMonths": "目标月数",
-  "display": "顯示",
-  "glassEffect": "玻璃效果",
-  "glassEffectHint": "GPU 密集 — 舊裝置建議關閉",
   "runwayBrand": "RUNWAY",
   "bootRunwayCheck": "> RUNWAY 检查...",
   "bootIncomeStopped": "> 如果你的收入今天停止...",

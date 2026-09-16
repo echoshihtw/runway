@@ -618,15 +618,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get targetMonths => 'Target months';
 
   @override
-  String get display => 'DISPLAY';
-
-  @override
-  String get glassEffect => 'GLASS EFFECT';
-
-  @override
-  String get glassEffectHint => 'GPU INTENSIVE — DISABLE ON OLDER DEVICES';
-
-  @override
   String get runwayBrand => 'RUNWAY';
 
   @override

@@ -1265,24 +1265,6 @@ abstract class AppLocalizations {
   /// **'Target months'**
   String get targetMonths;
 
-  /// No description provided for @display.
-  ///
-  /// In en, this message translates to:
-  /// **'DISPLAY'**
-  String get display;
-
-  /// No description provided for @glassEffect.
-  ///
-  /// In en, this message translates to:
-  /// **'GLASS EFFECT'**
-  String get glassEffect;
-
-  /// No description provided for @glassEffectHint.
-  ///
-  /// In en, this message translates to:
-  /// **'GPU INTENSIVE — DISABLE ON OLDER DEVICES'**
-  String get glassEffectHint;
-
   /// No description provided for @runwayBrand.
   ///
   /// In en, this message translates to:

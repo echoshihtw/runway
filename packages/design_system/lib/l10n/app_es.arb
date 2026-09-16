@@ -57,8 +57,12 @@
   "stepsComplete": "{completed} de {total} completados",
   "@stepsComplete": {
     "placeholders": {
-      "completed": { "type": "int" },
-      "total": { "type": "int" }
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "stepBalanceLabel": "Agrega tu saldo en efectivo",
@@ -199,9 +203,6 @@
   "setGoal": "DEFINIR OBJETIVO",
   "goalName": "Nombre del objetivo",
   "targetMonths": "Meses objetivo",
-  "display": "PANTALLA",
-  "glassEffect": "EFECTO VIDRIO",
-  "glassEffectHint": "INTENSIVO GPU — DESACTIVAR EN DISPOSITIVOS ANTIGUOS",
   "runwayBrand": "RUNWAY",
   "bootRunwayCheck": "> COMPROBANDO AUTONOMÍA...",
   "bootIncomeStopped": "> SI TU INGRESO SE DETUVIERA HOY...",

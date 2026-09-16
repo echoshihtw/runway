@@ -57,8 +57,12 @@
   "stepsComplete": "{completed} sur {total} complétés",
   "@stepsComplete": {
     "placeholders": {
-      "completed": { "type": "int" },
-      "total": { "type": "int" }
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "stepBalanceLabel": "Ajoutez votre solde",
@@ -199,9 +203,6 @@
   "setGoal": "DÉFINIR UN OBJECTIF",
   "goalName": "Nom de l’objectif",
   "targetMonths": "Mois cible",
-  "display": "AFFICHAGE",
-  "glassEffect": "EFFET VERRE",
-  "glassEffectHint": "INTENSIF GPU — DÉSACTIVER SUR ANCIENS APPAREILS",
   "runwayBrand": "RUNWAY",
   "bootRunwayCheck": "> VÉRIFICATION DU RUNWAY...",
   "bootIncomeStopped": "> SI VOS REVENUS S'ARRÊTAIENT AUJOURD'HUI...",

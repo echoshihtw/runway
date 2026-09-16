@@ -57,8 +57,12 @@
   "stepsComplete": "已完成 {completed}/{total}",
   "@stepsComplete": {
     "placeholders": {
-      "completed": { "type": "int" },
-      "total": { "type": "int" }
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "stepBalanceLabel": "新增現金餘額",
@@ -199,9 +203,6 @@
   "setGoal": "設定目標",
   "goalName": "目標名稱",
   "targetMonths": "目標月數",
-  "display": "顯示",
-  "glassEffect": "玻璃效果",
-  "glassEffectHint": "比較吃效能，舊裝置可以關掉",
   "runwayBrand": "RUNWAY",
   "bootRunwayCheck": "正在檢查你的跑道...",
   "bootIncomeStopped": "看看如果收入暫停會怎樣...",

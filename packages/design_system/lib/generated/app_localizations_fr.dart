@@ -617,16 +617,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get targetMonths => 'Mois cible';
 
   @override
-  String get display => 'AFFICHAGE';
-
-  @override
-  String get glassEffect => 'EFFET VERRE';
-
-  @override
-  String get glassEffectHint =>
-      'INTENSIF GPU — DÉSACTIVER SUR ANCIENS APPAREILS';
-
-  @override
   String get runwayBrand => 'RUNWAY';
 
   @override

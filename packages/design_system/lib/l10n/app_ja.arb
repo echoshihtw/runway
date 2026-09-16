@@ -57,8 +57,12 @@
   "stepsComplete": "{total}中{completed}完了",
   "@stepsComplete": {
     "placeholders": {
-      "completed": { "type": "int" },
-      "total": { "type": "int" }
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "stepBalanceLabel": "残高を追加する",
@@ -199,9 +203,6 @@
   "setGoal": "目標を設定",
   "goalName": "目標名",
   "targetMonths": "目標月数",
-  "display": "表示",
-  "glassEffect": "グラスエフェクト",
-  "glassEffectHint": "GPU負荷大 — 旧デバイスは無効化推奨",
   "runwayBrand": "RUNWAY",
   "bootRunwayCheck": "> RUNWAYチェック...",
   "bootIncomeStopped": "> 今日、収入が止まったら...",
