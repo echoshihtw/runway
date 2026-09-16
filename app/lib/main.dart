@@ -8,9 +8,11 @@ import 'package:design_system/design_system.dart';
 import 'package:presentation/router/app_router.dart';
 import 'package:application/application.dart';
 import 'package:data/data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
 import 'firebase_analytics_service.dart';
 import 'erase_user_data.dart';
+import 'in_app_review_prompter.dart';
 import 'revenuecat_service.dart';
 import 'runway_root.dart';
 
@@ -30,6 +32,8 @@ void main() async {
   } catch (e) {
     debugPrint('Firebase init failed: $e');
   }
+
+  await recordAppLaunch(await SharedPreferences.getInstance());
 
   final rcService = await RevenueCatService.init();
   final analytics = FirebaseAnalyticsService();
@@ -54,6 +58,9 @@ void main() async {
           purchaseServiceProvider.overrideWithValue(rcService),
           simulationCountStoreProvider.overrideWithValue(
             const KeychainSimulationCountStore(),
+          ),
+          reviewPrompterProvider.overrideWithValue(
+            const InAppReviewPrompter(),
           ),
         ];
       },

@@ -7,6 +7,7 @@ import 'widgets/this_month_card.dart';
 import 'widgets/goal_card.dart';
 import 'widgets/runway_card.dart';
 import 'widgets/getting_started_card.dart';
+import 'widgets/review_prompt_trigger.dart';
 import '../config/config_screen.dart';
 import '../loans/liabilities_panel.dart';
 import '../subscriptions/subscriptions_panel.dart';
@@ -60,6 +61,8 @@ class DashboardScreen extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
               child: Column(
                 children: [
+                  // Asks for an App Store rating at the right moment. Renders nothing.
+                  const ReviewPromptTrigger(),
                   // Runway is always the hero, center-top (CONTRACTS.md §4.3).
                   RunwayCard(model: model),
                   const SizedBox(height: AppSpacing.cardGap),
