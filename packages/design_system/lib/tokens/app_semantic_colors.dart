@@ -21,7 +21,7 @@ abstract final class SC {
 
   // ── Status ────────────────────────────────────
   static const statusStable   = AppColors.neonGreen;
-  static const statusCaution  = AppColors.gold;
+  static const statusCaution  = AppColors.amber;
   static const statusCritical = AppColors.hotPink;
 
   // ── Section accents (thin left bar) ──────────

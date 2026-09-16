@@ -119,10 +119,13 @@ Uses `originalTermMonths - elapsed` — not `remainingBalance / monthlyPayment`.
 | `SC.cost` / Pink | `#E8829E` | Total outflow, burn, critical status |
 | `SC.subscr` / Purple | `#BB6DFF` | Subscriptions ONLY |
 | `SC.chrome` / Gold | `#CB9A3E` | Debt, loan obligations |
+| Amber | `#FFC978` | Caution runway status only |
 | Turkish Blue | `#5B9DC4` | UI structure, investable, neutral |
 | Smoke | `#CDD5E0` | All other numbers — neutral facts |
 
 **Rule:** Color = semantic meaning, not decoration. Color a number only when it represents a distinct mental category.
+
+The runway number carries its status colour: mint when stable, amber when caution, pink when critical. Caution is amber, not gold, because the runway card sits directly above the gold liabilities card.
 
 ### 4.2 Typography Hierarchy
 - **Numbers/values** → JetBrains Mono (gaming soul)
@@ -290,6 +293,7 @@ Answer these questions:
 | 2026-04 | max(actual, budget) formula | Reality wins, budget is floor not ceiling |
 | 2026-09 | Rent and living budget buckets | Logged spending uses up its budget instead of being compared with the whole budget, so nothing is counted twice or missed |
 | 2026-09 | Runway measured in months from today | The rest of the current month costs its unused budget, not a full month that was already partly paid |
+| 2026-09 | Caution runway status is amber `#FFC978`, not gold | Gold means debt. A gold runway number above the gold liabilities card read as one category |
 | 2026-04 | Mathematical runway (no 120mo cap) | Artificial caps mislead users |
 | 2026-04 | Two pockets (safety + investable) | Mental model clarity |
 | 2026-04 | JetBrains Mono for numbers | Gaming soul, readability |
