@@ -75,7 +75,12 @@ double accruedSubscriptionCharges({
   var accrued = 0.0;
   for (final s in subscriptions.where((s) => s.isActive)) {
     final anchor = _accrualAnchor(s, openingBalanceDate);
-    final from = anchor.isAfter(startOfMonth) ? anchor : startOfMonth;
+    var from = anchor.isAfter(startOfMonth) ? anchor : startOfMonth;
+    // The amount is one mutable value, so a change erases what came before it:
+    // 390 ended when it became 490. A bill that fell due before the last edit
+    // can no longer be priced, so it is left alone rather than repriced at
+    // today's amount. Refusing to claim beats claiming the wrong number.
+    if (s.updatedAt.isAfter(from)) from = s.updatedAt;
     for (final date in billingDatesInRange(s, from: from, to: endOfToday)) {
       final key = _monthAndAmount(date, s.amount);
       final matches = loggedPayments[key] ?? 0;

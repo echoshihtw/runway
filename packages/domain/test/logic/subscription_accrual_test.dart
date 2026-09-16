@@ -11,6 +11,7 @@ Subscription _sub({
   BillingCycle cycle = BillingCycle.monthly,
   required DateTime startDate,
   DateTime? createdAt,
+  DateTime? updatedAt,
   bool isActive = true,
 }) => Subscription(
   id: id,
@@ -22,7 +23,7 @@ Subscription _sub({
   nextBillingDate: startDate,
   isActive: isActive,
   createdAt: createdAt ?? startDate,
-  updatedAt: createdAt ?? startDate,
+  updatedAt: updatedAt ?? createdAt ?? startDate,
 );
 
 Transaction _tx(
@@ -176,6 +177,44 @@ void main() {
           now: now,
         ),
         1200,
+      );
+    });
+
+    test('a bill from before a price change is left alone, not repriced', () {
+      // Started at 390, upgraded to 490 on the 10th. The bill on the 3rd was
+      // 390 and nothing records that, so claiming 490 for it would rewrite
+      // history. It is skipped instead.
+      expect(
+        accruedSubscriptionCharges(
+          subscriptions: [
+            _sub(
+              amount: 490,
+              startDate: DateTime(2026, 9, 3),
+              createdAt: DateTime(2026, 9, 3),
+              updatedAt: DateTime(2026, 9, 10, 14),
+            ),
+          ],
+          transactions: [opening],
+          now: now,
+        ),
+        0,
+      );
+    });
+
+    test('an edit from before this month changes nothing', () {
+      expect(
+        accruedSubscriptionCharges(
+          subscriptions: [
+            _sub(
+              startDate: DateTime(2026, 6, 3),
+              createdAt: DateTime(2026, 6, 3),
+              updatedAt: DateTime(2026, 8, 20),
+            ),
+          ],
+          transactions: [opening],
+          now: now,
+        ),
+        980,
       );
     });
 
