@@ -98,7 +98,8 @@ class LoanCard extends StatelessWidget {
                     ? AppColors.textPrimary
                     : summary.isAheadThisMonth
                     ? AppColors.safe
-                    : AppColors.caution,
+                    // Gold: this is a loan obligation, not a runway status.
+                    : AppColors.gold,
               ),
               if (summary.paidThisMonth > loan.monthlyPayment) ...[
                 const SizedBox(height: AppSpacing.xxs),

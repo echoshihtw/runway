@@ -17,7 +17,8 @@ abstract final class AppColors {
   static const green = neonGreen;
   static const blue = turkishBlue;
   static const red = hotPink;
-  static const gold = Color(0xFFCB9A3E); // muted amber
+  static const gold = Color(0xFFCB9A3E); // muted amber — debt only
+  static const amber = Color(0xFFFFC978); // light amber — caution status
   static const purple = Color(0xFFBB6DFF); // keep purple for subscriptions
 
   // ── Text ─────────────────────────────────────
@@ -27,7 +28,7 @@ abstract final class AppColors {
 
   // ── Status ────────────────────────────────────
   static const stable = neonGreen;
-  static const caution = gold;
+  static const caution = amber;
   static const critical = hotPink;
   static const safe = turkishBlue;
 

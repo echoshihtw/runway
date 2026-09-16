@@ -6,6 +6,7 @@ import 'package:design_system/design_system.dart';
 import 'package:domain/domain.dart';
 import 'package:application/application.dart';
 import 'package:intl/intl.dart';
+import '../../../shared/status_color.dart';
 
 class RunwayCard extends ConsumerWidget {
   final ModelState model;
@@ -18,11 +19,7 @@ class RunwayCard extends ConsumerWidget {
     final nf = NumberFormat('#,##0', 'en_US');
     final status = model.survivalStatus;
 
-    final color = switch (status) {
-      SurvivalStatus.stable => AppColors.green,
-      SurvivalStatus.caution => AppColors.gold,
-      SurvivalStatus.critical => AppColors.red,
-    };
+    final color = statusColor(status);
     final statusLabel = switch (status) {
       SurvivalStatus.stable => l10n.stable,
       SurvivalStatus.caution => l10n.caution,

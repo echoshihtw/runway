@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:design_system/design_system.dart';
 import 'package:application/application.dart';
+import '../../shared/status_color.dart';
 import '../paywall/paywall_screen.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
@@ -26,11 +27,7 @@ class ScenariosScreen extends ConsumerWidget {
       return '$m MO';
     }
 
-    Color runwayColor(SurvivalStatus s) => switch (s) {
-      SurvivalStatus.stable => AppColors.green,
-      SurvivalStatus.caution => AppColors.gold,
-      SurvivalStatus.critical => AppColors.red,
-    };
+    Color runwayColor(SurvivalStatus s) => statusColor(s);
 
     return GradientScaffold(
       body: SingleChildScrollView(

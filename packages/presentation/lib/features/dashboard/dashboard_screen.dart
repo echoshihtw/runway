@@ -8,6 +8,7 @@ import 'widgets/goal_card.dart';
 import 'widgets/runway_card.dart';
 import 'widgets/getting_started_card.dart';
 import 'widgets/review_prompt_trigger.dart';
+import '../../shared/status_color.dart';
 import '../config/config_screen.dart';
 import '../loans/liabilities_panel.dart';
 import '../subscriptions/subscriptions_panel.dart';
@@ -136,11 +137,7 @@ class _RunwayBadgeState extends ConsumerState<_RunwayBadge>
     SurvivalStatus.critical => const Duration(milliseconds: 650),
   };
 
-  static Color _colorFor(SurvivalStatus s) => switch (s) {
-    SurvivalStatus.stable   => AppColors.neonGreen,
-    SurvivalStatus.caution  => AppColors.gold,
-    SurvivalStatus.critical => AppColors.red,
-  };
+  static Color _colorFor(SurvivalStatus s) => statusColor(s);
 
   @override
   void initState() {

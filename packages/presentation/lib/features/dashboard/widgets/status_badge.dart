@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:design_system/design_system.dart';
 import 'package:domain/domain.dart';
+import '../../../shared/status_color.dart';
 
 class StatusBadge extends StatelessWidget {
   final SurvivalStatus status;
   const StatusBadge({super.key, required this.status});
 
-  Color get _color => switch (status) {
-    SurvivalStatus.stable => AppColors.stable,
-    SurvivalStatus.caution => AppColors.caution,
-    SurvivalStatus.critical => AppColors.critical,
-  };
+  Color get _color => statusColor(status);
 
   String _label(AppLocalizations l10n) => switch (status) {
     SurvivalStatus.stable => l10n.stable,
