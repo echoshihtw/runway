@@ -34,9 +34,11 @@ class ModelState {
       hasSustainableProjection && sustainableNetMonthlyFlow >= 0;
   double get sustainableMonthlyShortfall =>
       sustainableNetMonthlyFlow < 0 ? sustainableNetMonthlyFlow.abs() : 0.0;
+  /// Three to six months of cover is the widely used adequacy range, so
+  /// caution sits there and anything above six reads as stable.
   SurvivalStatus get survivalStatus => switch (runwayMonths) {
-    >= 24 => SurvivalStatus.stable,
-    >= 12 => SurvivalStatus.caution,
+    >= 6 => SurvivalStatus.stable,
+    >= 3 => SurvivalStatus.caution,
     _ => SurvivalStatus.critical,
   };
 

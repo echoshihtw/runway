@@ -67,6 +67,7 @@ monthlyBurn = max(rentBudget, typicalRent)
 - A logged expense uses up its budget and never adds on top of it. Burn only rises when a bucket goes over budget.
 - `typicalRent` and `typicalLiving` = average logged spending per completed month in that bucket, or this month's spending when there is no earlier month.
 - Loan repayments count only against their loan's scheduled payment. Income, loans received, investments and opening balances are not burn.
+- A loan with a term keeps costing its monthly payment until that term ends. Repaid principal does not end it, because `remainingBalance` ignores interest and stopping there would raise the runway while the user is still paying. A loan with no term falls back to repaid principal, which is correct for an interest-free loan. The free-plan limit is deliberately more generous and frees the slot on repaid principal.
 - An expected burn override in Forecast replaces `monthlyBurn`.
 
 ### 3.2 Runway Calculation
@@ -77,21 +78,27 @@ dueThisMonth = rentLeft + livingLeft
              + loan payments not yet logged this month
 runwayMonths = floor(fractionOfMonthLeft + (cash - dueThisMonth) / monthlyBurn)
 ```
+- Cash counts only entries dated today or earlier. An entry dated later is a plan: the log shows it, and it does not move cash or the runway until its date arrives.
 - `fractionOfMonthLeft` counts today, so it is 1.0 on the first day of the month.
 - If cash does not cover `dueThisMonth`, cash runs out this month.
 - `runOutDate` is the month cash reaches zero. It is null only when burn is zero.
 - No arbitrary cap. 9999 means unlimited.
-- The dashboard and the simulator share this calculation.
+- The dashboard and the simulator share this calculation. A simulation starts from the real `dueThisMonth` and applies only the difference over the days left, so a scenario with no changes returns the dashboard's runway.
 
-### 3.3 Investable Calculation
+### 3.3 Cash Reserve — not implemented in 1.0.1
+
+A reserve is cash the user has decided not to count as runway. It is a number
+they set, not one the app derives.
+
 ```dart
-safetyMonths = clamp(runwayMonths / 2, 6, 18)  // adaptive buffer
-safetyCash   = effectiveBurn * safetyMonths
-surplus      = currentCash - safetyCash
-riskCapacity = clamp((runwayMonths - safetyMonths) / safetyMonths, 0, 1)
-investable   = max(0, surplus × riskCapacity × pressureFactor)
+reserve    = user-set amount, default 0
+runwayCash = max(currentCash - reserve, 0)   // runway is measured on this
 ```
-Two pockets: SAFETY FUND (locked) and INVESTABLE (deployable). Never mix them.
+- With a reserve set, the runway answers how long the money the user is willing to spend lasts.
+- The amount above the reserve is stated as a fact. What to do with it is the user's decision, and the app does not advise.
+- A reserve of 0, the default, leaves every number exactly as it is today.
+
+The earlier `investable` formula (`safetyMonths`, `riskCapacity`, `pressureFactor`, and the SAFETY FUND / INVESTABLE pockets) is dropped, not deferred. It sized how much to put at risk from inputs the app does not hold — income stability, dependents, debt rates, insurance, time horizon — and sizing an investment is advice, not measurement. Runway states a position.
 
 ### 3.4 Investment Transactions
 Investment transactions reduce cash balance but are excluded from burn rate calculation. They are not expenses.
@@ -120,10 +127,12 @@ Uses `originalTermMonths - elapsed` — not `remainingBalance / monthlyPayment`.
 | `SC.subscr` / Purple | `#BB6DFF` | Subscriptions ONLY |
 | `SC.chrome` / Gold | `#CB9A3E` | Debt, loan obligations |
 | Amber | `#FFC978` | Caution runway status only |
-| Turkish Blue | `#5B9DC4` | UI structure, investable, neutral |
+| Turkish Blue | `#5B9DC4` | UI structure, neutral |
 | Smoke | `#CDD5E0` | All other numbers — neutral facts |
 
 **Rule:** Color = semantic meaning, not decoration. Color a number only when it represents a distinct mental category.
+
+Status follows months of cover: under 3 critical, 3 to 6 caution, above 6 stable. Three to six months is the widely used adequacy range, so the app does not call a long runway an emergency.
 
 The runway number carries its status colour: mint when stable, amber when caution, pink when critical. Caution is amber, not gold, because the runway card sits directly above the gold liabilities card.
 
@@ -293,6 +302,9 @@ Answer these questions:
 | 2026-04 | max(actual, budget) formula | Reality wins, budget is floor not ceiling |
 | 2026-09 | Rent and living budget buckets | Logged spending uses up its budget instead of being compared with the whole budget, so nothing is counted twice or missed |
 | 2026-09 | Runway measured in months from today | The rest of the current month costs its unused budget, not a full month that was already partly paid |
+| 2026-09 | Dropped the investable split; kept a user-set cash reserve | The formula recommended how much to put at risk, from inputs the app does not hold. Stating a position is measurement; sizing an investment is advice |
+| 2026-09 | Status bands are 3 and 6 months, not 12 and 24 | Three to six months of cover is the recognised adequacy range. The old bands called an 11-month runway critical, which the facts do not support |
+| 2026-09 | Cash excludes entries dated in the future | The log already marks them planned. Counting them let a future bonus lengthen the runway today |
 | 2026-09 | Caution runway status is amber `#FFC978`, not gold | Gold means debt. A gold runway number above the gold liabilities card read as one category |
 | 2026-04 | Mathematical runway (no 120mo cap) | Artificial caps mislead users |
 | 2026-04 | Two pockets (safety + investable) | Mental model clarity |

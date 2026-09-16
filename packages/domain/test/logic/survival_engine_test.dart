@@ -34,6 +34,8 @@ Transaction _lunch(DateTime date) => Transaction(
 );
 
 void main() {
+  _cashAndStatusTests();
+
   group('runway from today', () {
     test('covers the rest of this month, then full months of burn', () {
       // 999,790 cash. The rest of September still costs 61,790, leaving
@@ -44,7 +46,7 @@ void main() {
       expect(m.effectiveBurnRate, 62000);
       expect(m.runwayMonths, 15);
       expect(m.runOutDate, DateTime(2028, 1, 1));
-      expect(m.survivalStatus, SurvivalStatus.caution);
+      expect(m.survivalStatus, SurvivalStatus.stable);
     });
 
     test('on the first day the whole month is still ahead', () {
@@ -136,5 +138,111 @@ void main() {
     final m = _model(cash: 3000000, now: DateTime(2026, 9, 15));
 
     expect(m.survivalStatus, SurvivalStatus.stable);
+  });
+}
+
+Transaction _entry(
+  DateTime date,
+  TransactionType type,
+  double amount,
+) => Transaction(
+  id: 'e-${date.toIso8601String()}-${type.name}',
+  date: date,
+  type: type,
+  amount: Money(amount),
+  createdAt: date,
+  updatedAt: date,
+);
+
+void _cashAndStatusTests() {
+  group('cash counts only what has happened', () {
+    final now = DateTime(2026, 9, 16);
+
+    test('a future-dated income does not lengthen the runway', () {
+      final settled = [_entry(DateTime(2026, 9, 1), TransactionType.openingBalance, 100000)];
+      final planned = [...settled, _entry(DateTime(2026, 12, 20), TransactionType.income, 500000)];
+
+      expect(
+        currentCashAsOf(transactions: planned, now: now),
+        currentCashAsOf(transactions: settled, now: now),
+      );
+    });
+
+    test('a future-dated expense does not shorten it', () {
+      final settled = [_entry(DateTime(2026, 9, 1), TransactionType.openingBalance, 100000)];
+      final planned = [...settled, _entry(DateTime(2026, 10, 5), TransactionType.expense, 40000)];
+
+      expect(currentCashAsOf(transactions: planned, now: now), 100000);
+    });
+
+    test('an entry dated today counts', () {
+      final txs = [
+        _entry(DateTime(2026, 9, 1), TransactionType.openingBalance, 100000),
+        _entry(now, TransactionType.expense, 10000),
+      ];
+
+      expect(currentCashAsOf(transactions: txs, now: now), 90000);
+    });
+  });
+
+  group('status bands', () {
+    ModelState atMonths(int months) => ModelState(
+      currentCash: 0,
+      burnRate: 0,
+      effectiveBurnRate: 0,
+      monthlyPayment: 0,
+      subscriptionMonthlyCost: 0,
+      runwayMonths: months,
+      runwayDays: months * 30,
+    );
+
+    test('under three months is critical', () {
+      expect(atMonths(0).survivalStatus, SurvivalStatus.critical);
+      expect(atMonths(2).survivalStatus, SurvivalStatus.critical);
+    });
+
+    test('three to six months is caution', () {
+      expect(atMonths(3).survivalStatus, SurvivalStatus.caution);
+      expect(atMonths(5).survivalStatus, SurvivalStatus.caution);
+    });
+
+    test('above six months is stable', () {
+      expect(atMonths(6).survivalStatus, SurvivalStatus.stable);
+      expect(atMonths(12).survivalStatus, SurvivalStatus.stable);
+    });
+  });
+
+  group('scenario shares the dashboard basis', () {
+    final now = DateTime(2026, 9, 16);
+
+    MonthlyBurn burnAt(DateTime when) => computeMonthlyBurn(
+      transactions: [_lunch(when)],
+      budget: _budget,
+      loans: const [],
+      subscriptions: const [],
+      now: when,
+    );
+
+    test('no changes returns the dashboard runway', () {
+      final burn = burnAt(now);
+      final dashboard = computeModel(currentCash: 999790, burn: burn);
+      final scenario = modelForScenario(currentCash: 999790, burn: burn);
+
+      expect(scenario.runwayMonths, dashboard.runwayMonths);
+      expect(scenario.runOutDate, dashboard.runOutDate);
+      expect(scenario.effectiveBurnRate, dashboard.effectiveBurnRate);
+    });
+
+    test('a lower cost only saves the part of the month still to come', () {
+      final burn = burnAt(now);
+      final cut = modelForScenario(
+        currentCash: 999790,
+        burn: burn,
+        monthlyCostOverride: burn.variableBurn - 30000,
+      );
+
+      expect(cut.effectiveBurnRate, burn.total - 30000);
+      expect(cut.runwayMonths, greaterThan(computeModel(currentCash: 999790, burn: burn).runwayMonths));
+    });
   });
 }

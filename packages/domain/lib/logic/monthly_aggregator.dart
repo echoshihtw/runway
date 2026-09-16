@@ -55,3 +55,19 @@ List<MonthlyState> aggregateMonths(List<Transaction> transactions) {
 
   return result;
 }
+
+/// Cash on hand at [now].
+///
+/// Entries dated after today are plans: the log shows them with a badge, and
+/// they must not move cash or the runway until their date arrives.
+double currentCashAsOf({
+  required List<Transaction> transactions,
+  required DateTime now,
+}) {
+  final endOfToday = DateTime(now.year, now.month, now.day, 23, 59, 59, 999);
+  final settled = transactions
+      .where((t) => !t.date.isAfter(endOfToday))
+      .toList();
+  final months = aggregateMonths(settled);
+  return months.isEmpty ? 0.0 : months.last.balance;
+}

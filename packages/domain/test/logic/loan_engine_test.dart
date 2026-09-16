@@ -3,6 +3,8 @@ import 'package:domain/domain.dart';
 import '../helpers/transaction_helper.dart';
 
 void main() {
+  _costingTests();
+
   group('computeLoanSummaries', () {
     test('returns empty for no loans', () {
       final result = computeLoanSummaries(loans: [], transactions: []);
@@ -237,6 +239,70 @@ void main() {
 
       expect(active.map((summary) => summary.loan.id), ['open']);
       expect(totalMonthlyPaymentFromSummaries(summaries), 10000);
+    });
+  });
+}
+
+void _costingTests() {
+  Loan loanFrom(DateTime start, {int termMonths = 0, bool isActive = true}) => Loan(
+    id: 'l1',
+    name: 'Student loan',
+    source: 'Bank',
+    originalAmount: 18000,
+    monthlyPayment: 210,
+    originalTermMonths: termMonths,
+    startDate: start,
+    isActive: isActive,
+    createdAt: start,
+    updatedAt: start,
+  );
+
+  LoanSummary summaryOf(Loan loan, {double repaid = 0}) => LoanSummary(
+    loan: loan,
+    totalRepaid: repaid,
+    remainingBalance: (loan.originalAmount - repaid).clamp(0, double.infinity),
+    paidThisMonth: 0,
+  );
+
+  group('a loan keeps costing until its term ends', () {
+    test('repaid principal does not stop the monthly payment', () {
+      // Every rupee of principal is repaid, but interest means payments go on.
+      final loan = loanFrom(DateTime(2020, 1, 1), termMonths: 96);
+      final summary = summaryOf(loan, repaid: 18000);
+
+      expect(summary.isFullyPaid, isTrue);
+      expect(
+        costingLoanSummaries([summary], now: DateTime(2026, 9, 16)),
+        hasLength(1),
+      );
+      expect(
+        totalMonthlyPaymentFromSummaries([summary], now: DateTime(2026, 9, 16)),
+        210,
+      );
+    });
+
+    test('a loan past its term stops counting', () {
+      final loan = loanFrom(DateTime(2020, 1, 1), termMonths: 12);
+
+      expect(
+        costingLoanSummaries([summaryOf(loan)], now: DateTime(2026, 9, 16)),
+        isEmpty,
+      );
+    });
+
+    test('a loan with no term counts until it is made inactive', () {
+      final open = loanFrom(DateTime(2020, 1, 1));
+      final closed = loanFrom(DateTime(2020, 1, 1), isActive: false);
+      final now = DateTime(2026, 9, 16);
+
+      expect(costingLoanSummaries([summaryOf(open)], now: now), hasLength(1));
+      expect(costingLoanSummaries([summaryOf(closed)], now: now), isEmpty);
+    });
+
+    test('the free-plan limit still frees the slot on repaid principal', () {
+      final loan = loanFrom(DateTime(2020, 1, 1), termMonths: 96);
+
+      expect(activeLoanSummaries([summaryOf(loan, repaid: 18000)]), isEmpty);
     });
   });
 }

@@ -17,6 +17,8 @@ class LoanSummary {
       ? (totalRepaid / loan.originalAmount).clamp(0.0, 1.0)
       : 0.0;
 
+  /// Whether the principal has been repaid. Display only: `remainingBalance`
+  /// ignores interest, so this can be true while the lender is still charging.
   bool get isFullyPaid => remainingBalance <= 0;
 
   int get monthsRemaining {

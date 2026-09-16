@@ -141,7 +141,7 @@ MonthlyBurn computeMonthlyBurn({
     );
   }
 
-  final activeLoans = activeLoanSummaries(loans);
+  final activeLoans = costingLoanSummaries(loans, now: now);
   final daysInMonth = DateTime(now.year, now.month + 1, 0).day;
 
   return MonthlyBurn(
