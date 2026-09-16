@@ -155,18 +155,15 @@ Future<void> _seed(AppDatabase database) async {
         note: 'Rent', category: ExpenseCategory.rent),
     _entry('t3', day(2), TransactionType.repayment, 210,
         note: 'Student loan', loanId: loanId),
-    _entry('t4', day(3), TransactionType.expense, 44,
-        note: 'Metro pass', category: ExpenseCategory.transport),
-    _entry('t5', day(4), TransactionType.expense, 62,
-        note: 'Groceries', category: ExpenseCategory.food),
+    // Only rent carries a category, because that is all the form sets.
+    _entry('t4', day(3), TransactionType.expense, 44, note: 'Metro pass'),
+    _entry('t5', day(4), TransactionType.expense, 62, note: 'Groceries'),
     _entry('t6', day(5), TransactionType.income, 2400,
         note: 'Client invoice'),
-    _entry('t7', day(6), TransactionType.expense, 18,
-        note: 'Lunch', category: ExpenseCategory.food),
+    _entry('t7', day(6), TransactionType.expense, 18, note: 'Lunch'),
     _entry('t8', day(8), TransactionType.expense, 120,
-        note: 'Phone and utilities', category: ExpenseCategory.daily),
-    _entry('t9', day(9), TransactionType.expense, 35,
-        note: 'Coffee', category: ExpenseCategory.social),
+        note: 'Phone and utilities'),
+    _entry('t9', day(9), TransactionType.expense, 35, note: 'Coffee'),
   ];
   for (final entry in entries) {
     await transactions.add(entry);
