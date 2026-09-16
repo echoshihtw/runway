@@ -8,9 +8,10 @@ Runway is a personal financial runway app built for people navigating a defined 
 ## Screens
 
 <p align="center">
-  <img src="docs/screenshots/dashboard.png" width="30%" alt="Runway dashboard — months remaining, cash, run-out date">
-  <img src="docs/screenshots/ledger.png" width="30%" alt="Ledger — income, expenses and opening balance by month">
-  <img src="docs/screenshots/subscriptions.png" width="30%" alt="Subscriptions — monthly and yearly totals, per-item cadence">
+  <img src="docs/screenshots/01-runway.png" width="24%" alt="Dashboard — how many months your money covers, cash and run-out month">
+  <img src="docs/screenshots/02-living.png" width="24%" alt="Living budget — spent against budget, what is left, and the daily amount">
+  <img src="docs/screenshots/03-log.png" width="24%" alt="Log — every entry with the budget it counts against">
+  <img src="docs/screenshots/04-plan.png" width="24%" alt="Plan — a lower monthly cost and the months it adds">
 </p>
 
 Demo data. The runway reads 12 months because 718,760 in cash divided by a
