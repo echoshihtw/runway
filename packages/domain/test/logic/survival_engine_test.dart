@@ -34,6 +34,8 @@ Transaction _lunch(DateTime date) => Transaction(
 );
 
 void main() {
+  _scenarioBasisTests();
+
   _cashAndStatusTests();
 
   group('runway from today', () {
@@ -243,6 +245,107 @@ void _cashAndStatusTests() {
 
       expect(cut.effectiveBurnRate, burn.total - 30000);
       expect(cut.runwayMonths, greaterThan(computeModel(currentCash: 999790, burn: burn).runwayMonths));
+    });
+  });
+}
+
+void _scenarioBasisTests() {
+  final now = DateTime(2026, 9, 16);
+
+  MonthlyBurn burnAt() => computeMonthlyBurn(
+    transactions: const [],
+    budget: const Budget(rent: 1450, living: 1100),
+    loans: const [],
+    subscriptions: const [],
+    now: now,
+  );
+
+  group('a scenario starts from the basis the dashboard uses', () {
+    test('no change, no assumption, equals the dashboard', () {
+      final burn = burnAt();
+      final dashboard = computeModel(currentCash: 34000, burn: burn);
+      final scenario = modelForScenario(currentCash: 34000, burn: burn);
+
+      expect(scenario.runwayMonths, dashboard.runwayMonths);
+      expect(scenario.runOutDate, dashboard.runOutDate);
+    });
+
+    test('no change with an assumption active equals the dashboard', () {
+      // Previously the scenario ignored the assumption, so simulating nothing
+      // reported losing five months.
+      final burn = burnAt();
+      final dashboard = computeModel(
+        currentCash: 34000,
+        burn: burn,
+        expectedMonthlyBurnOverride: 2000,
+      );
+      final scenario = modelForScenario(
+        currentCash: 34000,
+        burn: burn,
+        expectedMonthlyBurnOverride: 2000,
+      );
+
+      expect(scenario.runwayMonths, dashboard.runwayMonths);
+      expect(scenario.effectiveBurnRate, dashboard.effectiveBurnRate);
+      expect(scenario.runwayMonths - dashboard.runwayMonths, 0);
+    });
+
+    test('a cut applies to the assumption, not the budget figure', () {
+      final burn = burnAt();
+      final scenario = modelForScenario(
+        currentCash: 34000,
+        burn: burn,
+        monthlyCostOverride: burn.variableBurn - 250,
+        expectedMonthlyBurnOverride: 2000,
+      );
+
+      expect(scenario.effectiveBurnRate, 1750);
+    });
+
+    test('without an assumption a cut behaves as it always did', () {
+      final burn = burnAt();
+      final scenario = modelForScenario(
+        currentCash: 34000,
+        burn: burn,
+        monthlyCostOverride: burn.variableBurn - 250,
+      );
+
+      expect(scenario.effectiveBurnRate, burn.total - 250);
+    });
+
+    test('the scenario reports sustainability on the dashboard footing', () {
+      // Nothing renders this on the plan screen today, but leaving the two
+      // sides on different assumptions is the bug this group exists to stop.
+      final burn = burnAt();
+      final dashboard = computeModel(
+        currentCash: 34000,
+        burn: burn,
+        expectedMonthlyInflow: 2400,
+      );
+      final scenario = modelForScenario(
+        currentCash: 34000,
+        burn: burn,
+        expectedMonthlyInflow: 2400,
+      );
+
+      expect(scenario.hasSustainableProjection, isTrue);
+      expect(
+        scenario.sustainableMonthlyShortfall,
+        dashboard.sustainableMonthlyShortfall,
+      );
+      // And it still does not move the number.
+      expect(scenario.runwayMonths, dashboard.runwayMonths);
+    });
+
+    test('simulated income above costs gives an unlimited runway', () {
+      final burn = burnAt();
+      final scenario = modelForScenario(
+        currentCash: 34000,
+        burn: burn,
+        simulatedIncome: burn.total + 1,
+      );
+
+      expect(scenario.runwayMonths, 9999);
     });
   });
 }
