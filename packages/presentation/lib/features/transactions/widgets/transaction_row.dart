@@ -48,6 +48,8 @@ class TransactionRow extends ConsumerWidget {
 
   /// The note, when there is one, is what the user wrote to recognise the
   /// entry, so it leads. The type is the fallback title.
+  bool get _isExpense => transaction.type == TransactionType.expense;
+
   String? get _note {
     final note = transaction.note?.trim();
     return note == null || note.isEmpty ? null : note;
@@ -119,15 +121,20 @@ class TransactionRow extends ConsumerWidget {
                       ],
                     ],
                   ),
-                  if (_note != null || transaction.category != null) ...[
+                  if (_note != null || _isExpense) ...[
                     const SizedBox(height: AppSpacing.xxs),
                     Text(
                       [
                         if (_note != null) _typeLabel(l10n).toUpperCase(),
-                        if (transaction.category != null) ...[
-                          transaction.category!.group,
+                        // Every expense uses up the rent or the living budget,
+                        // so name that, not the category picker's old group.
+                        if (_isExpense)
+                          if (countsAsRent(transaction)) 'RENT' else 'LIVING',
+                        // Older entries carry a finer category. Newer ones
+                        // don't, and the bucket above already says enough.
+                        if (transaction.category != null &&
+                            transaction.category != ExpenseCategory.rent)
                           transaction.category!.label,
-                        ],
                       ].join(' · '),
                       style: AppTextStyles.caption,
                       maxLines: 1,

@@ -44,12 +44,16 @@ double _top(WidgetTester tester, String text) =>
     tester.getTopLeft(find.text(text)).dy;
 
 void main() {
-  testWidgets('the note leads and the type moves underneath', (tester) async {
+  testWidgets('the note leads and the budget moves underneath', (tester) async {
     await _pumpRow(tester, _expense(note: 'Lunch with Mei'));
 
     expect(find.text('Lunch with Mei'), findsOneWidget);
-    expect(find.text('EXPENSE'), findsOneWidget);
-    expect(_top(tester, 'Lunch with Mei'), lessThan(_top(tester, 'EXPENSE')));
+    // An expense names the budget it uses up, even with no category.
+    expect(find.text('EXPENSE · LIVING'), findsOneWidget);
+    expect(
+      _top(tester, 'Lunch with Mei'),
+      lessThan(_top(tester, 'EXPENSE · LIVING')),
+    );
   });
 
   testWidgets('without a note, the type is the title', (tester) async {
@@ -73,5 +77,23 @@ void main() {
 
     expect(find.text('Groceries'), findsOneWidget);
     expect(find.text('EXPENSE · LIVING · FOOD'), findsOneWidget);
+  });
+
+  testWidgets('transport counts against the living budget', (tester) async {
+    await _pumpRow(
+      tester,
+      _expense(note: 'Metro pass', category: ExpenseCategory.transport),
+    );
+
+    expect(find.text('EXPENSE · LIVING · TRANSPORT'), findsOneWidget);
+  });
+
+  testWidgets('rent names its budget once', (tester) async {
+    await _pumpRow(
+      tester,
+      _expense(note: 'Rent', category: ExpenseCategory.rent),
+    );
+
+    expect(find.text('EXPENSE · RENT'), findsOneWidget);
   });
 }
