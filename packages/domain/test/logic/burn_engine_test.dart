@@ -38,13 +38,13 @@ LoanSummary _loan({required double payment, double paidThisMonth = 0}) =>
       paidThisMonth: paidThisMonth,
     );
 
-Subscription _subscription(double monthly) => Subscription(
+Subscription _subscription(double monthly, {int billingDay = 1}) => Subscription(
   id: 'sub-1',
   name: 'Music',
   category: SubscriptionCategory.values.first,
   amount: monthly,
   cycle: BillingCycle.monthly,
-  startDate: DateTime(2026, 1, 1),
+  startDate: DateTime(2026, 1, billingDay),
   nextBillingDate: DateTime(2026, 10, 1),
   createdAt: DateTime(2026, 1, 1),
   updatedAt: DateTime(2026, 1, 1),
@@ -170,11 +170,23 @@ void main() {
     expect(burn.dueThisMonth, 0);
   });
 
-  test('subscriptions are spread over what is left of the month', () {
+  test('a subscription already billed this month is not owed again', () {
+    // It bills on the 1st and today is the 15th, so the charge is a recorded
+    // transaction and is already out of cash. Pro-rating the normalised figure
+    // on top of it counted the same money twice.
     final burn = _burn(subscriptions: [_subscription(3000)]);
 
+    // The normalised figure stays as the forward run rate for future months.
     expect(burn.total, 3000);
-    expect(burn.dueThisMonth, closeTo(3000 * 16 / 30, 0.001));
+    expect(burn.dueThisMonth, 0);
+  });
+
+  test('a subscription still ahead this month is owed in full', () {
+    // Not pro-rated: the 28th either takes the whole 3000 or none of it.
+    final burn = _burn(subscriptions: [_subscription(3000, billingDay: 28)]);
+
+    expect(burn.total, 3000);
+    expect(burn.dueThisMonth, 3000);
   });
 
   test('every expense except rent counts as living', () {

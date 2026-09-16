@@ -25,4 +25,5 @@ class DriftSubscriptionRepository implements domain.SubscriptionRepository {
 
   @override
   Future<void> delete(String id) => _db.subscriptionDao.deleteSubscription(id);
+
 }

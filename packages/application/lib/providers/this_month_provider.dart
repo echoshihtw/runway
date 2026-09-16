@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:domain/domain.dart';
-import 'transaction_provider.dart';
 import 'subscription_provider.dart';
+import 'transaction_provider.dart';
 
 class ThisMonthFlow {
   final double income;
@@ -29,10 +29,14 @@ final thisMonthFlowProvider = Provider<ThisMonthFlow>((ref) {
             t.type == TransactionType.repayment,
       )
       .fold(0.0, (sum, t) => sum + t.amount.value);
-  final activeSubs =
-      (ref.watch(subscriptionsProvider).value ?? [])
-          .where((s) => s.isActive)
-          .toList();
-  final subCost = totalSubscriptionMonthlyCost(activeSubs);
+  final activeSubs = (ref.watch(subscriptionsProvider).value ?? [])
+      .where((s) => s.isActive)
+      .toList();
+  // What actually bills this month, not a twelfth of every yearly plan: a
+  // yearly bill belongs to its anniversary month.
+  final subCost = subscriptionsChargedInMonth(
+    subscriptions: activeSubs,
+    month: now,
+  );
   return ThisMonthFlow(income: income, expenses: txExpenses + subCost);
 });
