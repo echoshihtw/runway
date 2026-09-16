@@ -1325,6 +1325,12 @@ abstract class AppLocalizations {
   /// **'If income paused today'**
   String get ifIncomePausedToday;
 
+  /// No description provided for @runwayNeedsCosts.
+  ///
+  /// In en, this message translates to:
+  /// **'Set your monthly costs to see your runway'**
+  String get runwayNeedsCosts;
+
   /// No description provided for @monthSingular.
   ///
   /// In en, this message translates to:

@@ -57,8 +57,12 @@
   "stepsComplete": "{completed} di {total} completati",
   "@stepsComplete": {
     "placeholders": {
-      "completed": { "type": "int" },
-      "total": { "type": "int" }
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "stepBalanceLabel": "Aggiungi il tuo saldo",
@@ -209,6 +213,7 @@
   "bootRemovingComfortFilter": "> RIMOZIONE DEL FILTRO DI COMFORT...",
   "bootRealityCheckReady": "> CONTROLLO REALTÀ PRONTO.",
   "ifIncomePausedToday": "Se il reddito si fermasse oggi",
+  "runwayNeedsCosts": "Imposta i costi mensili per vedere la tua autonomia",
   "monthSingular": "mese",
   "monthPlural": "mesi",
   "sustainableWithExpectedInflow": "Sostenibile con le entrate previste",

@@ -57,8 +57,12 @@
   "stepsComplete": "已完成 {completed}/{total}",
   "@stepsComplete": {
     "placeholders": {
-      "completed": { "type": "int" },
-      "total": { "type": "int" }
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "stepBalanceLabel": "添加现金余额",
@@ -209,6 +213,7 @@
   "bootRemovingComfortFilter": "> 正在移除舒适滤镜...",
   "bootRealityCheckReady": "> 现实检查就绪。",
   "ifIncomePausedToday": "如果收入今天暂停",
+  "runwayNeedsCosts": "設定每月支出後即可看到可用月數",
   "monthSingular": "个月",
   "monthPlural": "个月",
   "sustainableWithExpectedInflow": "在预期流入下可持续",

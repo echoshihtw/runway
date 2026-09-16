@@ -57,8 +57,12 @@
   "stepsComplete": "{completed} of {total} complete",
   "@stepsComplete": {
     "placeholders": {
-      "completed": { "type": "int" },
-      "total": { "type": "int" }
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "stepBalanceLabel": "Add your cash balance",
@@ -205,17 +209,32 @@
   "budgetLeft": "{amount} left",
   "@budgetLeft": {
     "description": "Unused part of a monthly budget, e.g. $ 29,790 left",
-    "placeholders": { "amount": { "type": "String" } }
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
   },
   "budgetOver": "{amount} over budget",
   "@budgetOver": {
     "description": "Spending above a monthly budget, e.g. $ 1,500 over budget",
-    "placeholders": { "amount": { "type": "String" } }
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
   },
   "dailyAllowance": "{days, plural, =1{{amount} left for today} other{{amount} a day for {days} days}}",
   "@dailyAllowance": {
     "description": "What is left of the living budget per remaining day of the month",
-    "placeholders": { "amount": { "type": "String" }, "days": { "type": "int" } }
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
   },
   "noLivingExpensesThisMonth": "No living expenses logged this month",
   "totalBudgetPerMonth": "TOTAL BUDGET/MO",
@@ -260,6 +279,7 @@
   "bootRemovingComfortFilter": "Separating essentials from noise...",
   "bootRealityCheckReady": "Your financial picture is ready.",
   "ifIncomePausedToday": "If income paused today",
+  "runwayNeedsCosts": "Set your monthly costs to see your runway",
   "monthSingular": "month",
   "monthPlural": "months",
   "sustainableWithExpectedInflow": "Sustainable with your expected income",
@@ -307,7 +327,9 @@
   "monthsToGoal": "{count} months to go",
   "@monthsToGoal": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "thisMonth": "THIS MONTH",

@@ -19,7 +19,10 @@ class RunwayCard extends ConsumerWidget {
     final nf = NumberFormat('#,##0', 'en_US');
     final status = model.survivalStatus;
 
-    final color = statusColor(status);
+    // With no cost known the runway cannot be stated, so it must not borrow
+    // the confidence of a status colour.
+    final known = model.runwayIsKnown;
+    final color = known ? statusColor(status) : AppColors.textSecondary;
     final statusLabel = switch (status) {
       SurvivalStatus.stable => l10n.stable,
       SurvivalStatus.caution => l10n.caution,
@@ -27,12 +30,13 @@ class RunwayCard extends ConsumerWidget {
     };
 
     String fmtRunwayMonths(int m) {
+      if (!known) return '—';
       if (m >= 9999) return '∞';
       return '$m';
     }
 
     String fmtRunwayMonthUnit(int m) {
-      if (m >= 9999) return '';
+      if (!known || m >= 9999) return '';
       return m == 1 ? l10n.monthSingular : l10n.monthPlural;
     }
 
@@ -77,9 +81,15 @@ class RunwayCard extends ConsumerWidget {
                   ),
                 ],
               ),
-              Text(l10n.ifIncomePausedToday, style: AppTextStyles.bodySmall),
-              const SizedBox(height: AppSpacing.md),
-              PixelBadge(label: statusLabel, color: color),
+              Text(
+                known ? l10n.ifIncomePausedToday : l10n.runwayNeedsCosts,
+                textAlign: TextAlign.center,
+                style: AppTextStyles.bodySmall,
+              ),
+              if (known) ...[
+                const SizedBox(height: AppSpacing.md),
+                PixelBadge(label: statusLabel, color: color),
+              ],
               if (model.hasSustainableProjection) ...[
                 const SizedBox(height: AppSpacing.sm),
                 Text(

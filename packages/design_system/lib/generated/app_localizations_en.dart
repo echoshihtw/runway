@@ -648,6 +648,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ifIncomePausedToday => 'If income paused today';
 
   @override
+  String get runwayNeedsCosts => 'Set your monthly costs to see your runway';
+
+  @override
   String get monthSingular => 'month';
 
   @override

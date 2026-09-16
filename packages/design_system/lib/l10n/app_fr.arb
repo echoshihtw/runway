@@ -57,8 +57,12 @@
   "stepsComplete": "{completed} sur {total} complétés",
   "@stepsComplete": {
     "placeholders": {
-      "completed": { "type": "int" },
-      "total": { "type": "int" }
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "stepBalanceLabel": "Ajoutez votre solde",
@@ -209,6 +213,7 @@
   "bootRemovingComfortFilter": "> RETRAIT DU FILTRE DE CONFORT...",
   "bootRealityCheckReady": "> RETOUR AU RÉEL PRÊT.",
   "ifIncomePausedToday": "Si vos revenus s'arrêtaient aujourd'hui",
+  "runwayNeedsCosts": "Renseignez vos coûts mensuels pour voir votre marge",
   "monthSingular": "mois",
   "monthPlural": "mois",
   "sustainableWithExpectedInflow": "Soutenable avec vos entrées attendues",

@@ -34,6 +34,8 @@ Transaction _lunch(DateTime date) => Transaction(
 );
 
 void main() {
+  _unknownRunwayTests();
+
   _scenarioBasisTests();
 
   _cashAndStatusTests();
@@ -345,6 +347,81 @@ void _scenarioBasisTests() {
         simulatedIncome: burn.total + 1,
       );
 
+      expect(scenario.runwayMonths, 9999);
+    });
+  });
+}
+
+void _unknownRunwayTests() {
+  final now = DateTime(2026, 9, 16);
+
+  Transaction cash(double amount) => Transaction(
+    id: 'ob',
+    date: now,
+    type: TransactionType.openingBalance,
+    amount: Money(amount),
+    createdAt: now,
+    updatedAt: now,
+  );
+
+  MonthlyBurn burnWith({
+    Budget budget = const Budget(),
+    List<Transaction> transactions = const [],
+  }) => computeMonthlyBurn(
+    transactions: transactions,
+    budget: budget,
+    loans: const [],
+    subscriptions: const [],
+    now: now,
+  );
+
+  group('a cost of zero means unknown, not unlimited', () {
+    test('cash entered and nothing else leaves the runway unknown', () {
+      // Exactly what onboarding instructs: enter your balance. This used to
+      // report 9999 months and a stable status.
+      final burn = burnWith(transactions: [cash(34000)]);
+      final model = computeModel(currentCash: 34000, burn: burn);
+
+      expect(burn.total, 0);
+      expect(model.hasCostBasis, isFalse);
+      expect(model.runwayIsKnown, isFalse);
+    });
+
+    test('no data at all is also unknown, not zero months', () {
+      final model = computeModel(currentCash: 0, burn: burnWith());
+
+      expect(model.hasCostBasis, isFalse);
+    });
+
+    test('a budget alone is enough of a basis', () {
+      final burn = burnWith(budget: const Budget(rent: 200, living: 500));
+      final model = computeModel(currentCash: 34000, burn: burn);
+
+      expect(model.hasCostBasis, isTrue);
+      expect(model.runwayMonths, greaterThan(0));
+    });
+
+    test('an expected cost assumption is a basis on its own', () {
+      final model = computeModel(
+        currentCash: 34000,
+        burn: burnWith(),
+        expectedMonthlyBurnOverride: 2000,
+      );
+
+      expect(model.hasCostBasis, isTrue);
+      expect(model.runwayMonths, 17);
+    });
+
+    test('simulated income covering costs stays genuinely unlimited', () {
+      // The distinction that matters: this runway is unlimited *and* known.
+      final burn = burnWith(budget: const Budget(rent: 200, living: 500));
+      final scenario = modelForScenario(
+        currentCash: 34000,
+        burn: burn,
+        simulatedIncome: burn.total + 1,
+      );
+
+      expect(scenario.hasCostBasis, isTrue);
       expect(scenario.runwayMonths, 9999);
     });
   });

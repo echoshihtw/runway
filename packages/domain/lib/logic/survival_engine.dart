@@ -29,6 +29,7 @@ ModelState computeModel({
         : override * burn.fractionOfMonthLeft,
     expectedMonthlyInflow: expectedMonthlyInflow,
     expectedMonthlyBurnOverride: expectedMonthlyBurnOverride,
+    hasCostBasis: (override ?? burn.total) > 0,
   );
 }
 
@@ -41,6 +42,7 @@ ModelState modelForMonthlyBurn({
   required double dueThisMonth,
   double? expectedMonthlyInflow,
   double? expectedMonthlyBurnOverride,
+  bool hasCostBasis = true,
 }) {
   final runway = _runwayFromToday(
     cash: currentCash,
@@ -63,6 +65,7 @@ ModelState modelForMonthlyBurn({
         ? _unlimitedDays
         : math.min((runway.months * 30).floor(), _unlimitedDays),
     runOutDate: runway.runOutMonth,
+    hasCostBasis: hasCostBasis,
   );
 }
 
@@ -105,6 +108,9 @@ ModelState modelForScenario({
     burn: burn,
     monthlyBurn: monthlyBurn,
     dueThisMonth: math.max(baseDueThisMonth + changeThisMonth, 0.0),
+    // The underlying cost, before income offsets it. Income covering costs is
+    // a real unlimited runway, not an unknown one.
+    hasCostBasis: baseMonthly > 0,
     // Carried through so the scenario reports sustainability on the same
     // footing as the dashboard. It does not move the runway: the number
     // answers what happens if income stopped today.
