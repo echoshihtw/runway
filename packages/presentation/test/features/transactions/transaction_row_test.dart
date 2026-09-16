@@ -74,4 +74,22 @@ void main() {
     expect(find.text('Groceries'), findsOneWidget);
     expect(find.text('EXPENSE · LIVING · FOOD'), findsOneWidget);
   });
+
+  testWidgets('transport counts against the living budget', (tester) async {
+    await _pumpRow(
+      tester,
+      _expense(note: 'Metro pass', category: ExpenseCategory.transport),
+    );
+
+    expect(find.text('EXPENSE · LIVING · TRANSPORT'), findsOneWidget);
+  });
+
+  testWidgets('rent names its budget once', (tester) async {
+    await _pumpRow(
+      tester,
+      _expense(note: 'Rent', category: ExpenseCategory.rent),
+    );
+
+    expect(find.text('EXPENSE · RENT'), findsOneWidget);
+  });
 }

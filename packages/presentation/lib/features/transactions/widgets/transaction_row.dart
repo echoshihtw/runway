@@ -125,8 +125,11 @@ class TransactionRow extends ConsumerWidget {
                       [
                         if (_note != null) _typeLabel(l10n).toUpperCase(),
                         if (transaction.category != null) ...[
-                          transaction.category!.group,
-                          transaction.category!.label,
+                          // Name the budget it counts against, not the picker
+                          // group, so transport reads as living here too.
+                          if (countsAsRent(transaction)) 'RENT' else 'LIVING',
+                          if (transaction.category != ExpenseCategory.rent)
+                            transaction.category!.label,
                         ],
                       ].join(' · '),
                       style: AppTextStyles.caption,
