@@ -610,15 +610,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get targetMonths => '目標月数';
 
   @override
-  String get display => '表示';
-
-  @override
-  String get glassEffect => 'グラスエフェクト';
-
-  @override
-  String get glassEffectHint => 'GPU負荷大 — 旧デバイスは無効化推奨';
-
-  @override
   String get runwayBrand => 'RUNWAY';
 
   @override
