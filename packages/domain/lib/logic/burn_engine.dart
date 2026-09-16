@@ -6,7 +6,7 @@ import '../entities/subscription.dart';
 import '../entities/transaction.dart';
 import '../enums/expense_category.dart';
 import '../enums/transaction_type.dart';
-import '../value_objects/survival_month.dart';
+import '../value_objects/ledger_month.dart';
 import 'loan_engine.dart';
 import 'subscription_engine.dart';
 
@@ -49,7 +49,7 @@ class BudgetBucket {
 /// Everything that makes up the monthly burn, split so nothing is counted
 /// twice or missed.
 class MonthlyBurn {
-  final SurvivalMonth month;
+  final LedgerMonth month;
 
   /// Share of [month] still ahead, counting today. 1.0 on the first day.
   final double fractionOfMonthLeft;
@@ -121,7 +121,7 @@ MonthlyBurn computeMonthlyBurn({
   required List<Subscription> subscriptions,
   required DateTime now,
 }) {
-  final month = SurvivalMonth(now);
+  final month = LedgerMonth(now);
 
   BudgetBucket bucket({
     required bool Function(Transaction) counts,
@@ -129,7 +129,7 @@ MonthlyBurn computeMonthlyBurn({
   }) {
     final spending = transactions.where(counts);
     var spentThisMonth = 0.0;
-    final completedMonths = <SurvivalMonth, double>{};
+    final completedMonths = <LedgerMonth, double>{};
     final endOfToday = DateTime(now.year, now.month, now.day, 23, 59, 59, 999);
     for (final t in spending) {
       if (t.date.isAfter(endOfToday)) {

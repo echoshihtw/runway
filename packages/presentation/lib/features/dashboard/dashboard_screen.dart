@@ -131,13 +131,13 @@ class _RunwayBadgeState extends ConsumerState<_RunwayBadge>
   late final AnimationController _controller;
   late final Animation<double> _glow;
 
-  static Duration _durationFor(SurvivalStatus s) => switch (s) {
-    SurvivalStatus.stable   => const Duration(milliseconds: 2800),
-    SurvivalStatus.caution  => const Duration(milliseconds: 1400),
-    SurvivalStatus.critical => const Duration(milliseconds: 650),
+  static Duration _durationFor(RunwayStatus s) => switch (s) {
+    RunwayStatus.stable   => const Duration(milliseconds: 2800),
+    RunwayStatus.caution  => const Duration(milliseconds: 1400),
+    RunwayStatus.critical => const Duration(milliseconds: 650),
   };
 
-  static Color _colorFor(SurvivalStatus s) => statusColor(s);
+  static Color _colorFor(RunwayStatus s) => statusColor(s);
 
   @override
   void initState() {
@@ -159,7 +159,7 @@ class _RunwayBadgeState extends ConsumerState<_RunwayBadge>
 
   @override
   Widget build(BuildContext context) {
-    final status = ref.watch(modelProvider).survivalStatus;
+    final status = ref.watch(modelProvider).runwayStatus;
     final targetDuration = _durationFor(status);
     if (_controller.duration != targetDuration) {
       _controller.duration = targetDuration;

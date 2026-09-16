@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 MonthlyBurn _burn({required BudgetBucket rent, required BudgetBucket living}) =>
     MonthlyBurn(
-      month: SurvivalMonth(DateTime(2026, 9)),
+      month: LedgerMonth(DateTime(2026, 9)),
       fractionOfMonthLeft: 0.5,
       rent: rent,
       living: living,

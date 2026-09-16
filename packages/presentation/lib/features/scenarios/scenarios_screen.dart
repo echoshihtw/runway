@@ -28,7 +28,7 @@ class ScenariosScreen extends ConsumerWidget {
       return '$m MO';
     }
 
-    Color runwayColor(SurvivalStatus s) => statusColor(s);
+    Color runwayColor(RunwayStatus s) => statusColor(s);
 
     return GradientScaffold(
       body: SingleChildScrollView(
@@ -62,7 +62,7 @@ class ScenariosScreen extends ConsumerWidget {
                         child: _tile(
                           l10n.runway,
                           fmtRunway(realModel.runwayMonths),
-                          runwayColor(realModel.survivalStatus),
+                          runwayColor(realModel.runwayStatus),
                         ),
                       ),
                       Expanded(
@@ -204,7 +204,7 @@ class ScenariosScreen extends ConsumerWidget {
     required ModelState realModel,
     required ModelState? simModel,
     required String Function(int) fmtRunway,
-    required Color Function(SurvivalStatus) runwayColor,
+    required Color Function(RunwayStatus) runwayColor,
   }) {
     if (realModel.currentCash == 0) {
       return _simulationPanel(
@@ -260,7 +260,7 @@ class ScenariosScreen extends ConsumerWidget {
                   child: _tile(
                     l10n.simRunway,
                     fmtRunway(simModel.runwayMonths),
-                    runwayColor(simModel.survivalStatus),
+                    runwayColor(simModel.runwayStatus),
                   ),
                 ),
                 Icon(

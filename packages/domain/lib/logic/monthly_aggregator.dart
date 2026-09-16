@@ -1,7 +1,7 @@
 import '../entities/transaction.dart';
 import '../entities/monthly_state.dart';
 import '../enums/transaction_type.dart';
-import '../value_objects/survival_month.dart';
+import '../value_objects/ledger_month.dart';
 
 List<MonthlyState> aggregateMonths(List<Transaction> transactions) {
   if (transactions.isEmpty) return [];
@@ -25,7 +25,7 @@ List<MonthlyState> aggregateMonths(List<Transaction> transactions) {
   if (regular.isEmpty && opening > 0) {
     return [
       MonthlyState(
-        month: SurvivalMonth(DateTime.now()),
+        month: LedgerMonth(DateTime.now()),
         netFlow: 0,
         balance: opening,
         grossOutflow: 0,

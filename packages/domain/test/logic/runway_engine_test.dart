@@ -50,7 +50,7 @@ void main() {
       expect(m.effectiveBurnRate, 62000);
       expect(m.runwayMonths, 15);
       expect(m.runOutDate, DateTime(2028, 1, 1));
-      expect(m.survivalStatus, SurvivalStatus.stable);
+      expect(m.runwayStatus, RunwayStatus.stable);
     });
 
     test('on the first day the whole month is still ahead', () {
@@ -66,7 +66,7 @@ void main() {
 
       expect(m.runwayMonths, 0);
       expect(m.runOutDate, DateTime(2026, 9, 1));
-      expect(m.survivalStatus, SurvivalStatus.critical);
+      expect(m.runwayStatus, RunwayStatus.critical);
     });
 
     test('no burn means unlimited runway', () {
@@ -141,7 +141,7 @@ void main() {
   test('large cash is stable', () {
     final m = _model(cash: 3000000, now: DateTime(2026, 9, 15));
 
-    expect(m.survivalStatus, SurvivalStatus.stable);
+    expect(m.runwayStatus, RunwayStatus.stable);
   });
 }
 
@@ -201,18 +201,18 @@ void _cashAndStatusTests() {
     );
 
     test('under three months is critical', () {
-      expect(atMonths(0).survivalStatus, SurvivalStatus.critical);
-      expect(atMonths(2).survivalStatus, SurvivalStatus.critical);
+      expect(atMonths(0).runwayStatus, RunwayStatus.critical);
+      expect(atMonths(2).runwayStatus, RunwayStatus.critical);
     });
 
     test('three to six months is caution', () {
-      expect(atMonths(3).survivalStatus, SurvivalStatus.caution);
-      expect(atMonths(5).survivalStatus, SurvivalStatus.caution);
+      expect(atMonths(3).runwayStatus, RunwayStatus.caution);
+      expect(atMonths(5).runwayStatus, RunwayStatus.caution);
     });
 
     test('above six months is stable', () {
-      expect(atMonths(6).survivalStatus, SurvivalStatus.stable);
-      expect(atMonths(12).survivalStatus, SurvivalStatus.stable);
+      expect(atMonths(6).runwayStatus, RunwayStatus.stable);
+      expect(atMonths(12).runwayStatus, RunwayStatus.stable);
     });
   });
 

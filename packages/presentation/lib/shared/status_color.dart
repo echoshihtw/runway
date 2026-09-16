@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 /// Caution is amber, not gold, because gold means debt and loan obligations
 /// (CONTRACTS.md §4.1). The runway number sits directly above the gold
 /// liabilities card, so sharing the colour made them read as one category.
-Color statusColor(SurvivalStatus status) => switch (status) {
-  SurvivalStatus.stable => SC.statusStable,
-  SurvivalStatus.caution => SC.statusCaution,
-  SurvivalStatus.critical => SC.statusCritical,
+Color statusColor(RunwayStatus status) => switch (status) {
+  RunwayStatus.stable => SC.statusStable,
+  RunwayStatus.caution => SC.statusCaution,
+  RunwayStatus.critical => SC.statusCritical,
 };

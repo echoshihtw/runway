@@ -66,13 +66,13 @@ void main() async {
       },
       eraseAllData: () => eraseAllUserData(database),
       onRestarted: () => appRouter.go('/boot'),
-      child: const SurvivalApp(),
+      child: const FinancialRunwayApp(),
     ),
   );
 }
 
-class SurvivalApp extends ConsumerWidget {
-  const SurvivalApp({super.key});
+class FinancialRunwayApp extends ConsumerWidget {
+  const FinancialRunwayApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
