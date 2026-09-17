@@ -63,10 +63,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get clear => 'LIMPIAR';
 
   @override
-  String get loanAffectsInfo =>
-      '> PRÉSTAMO/MES AFECTA RATIO DE PRESIÓN E INVERTIBLE';
-
-  @override
   String get transactionLog => 'REGISTRO DE TRANSACCIONES';
 
   @override

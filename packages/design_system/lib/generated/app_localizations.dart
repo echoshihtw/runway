@@ -215,12 +215,6 @@ abstract class AppLocalizations {
   /// **'CLEAR'**
   String get clear;
 
-  /// No description provided for @loanAffectsInfo.
-  ///
-  /// In en, this message translates to:
-  /// **'Loan payments add to your fixed costs and reduce runway.'**
-  String get loanAffectsInfo;
-
   /// No description provided for @transactionLog.
   ///
   /// In en, this message translates to:

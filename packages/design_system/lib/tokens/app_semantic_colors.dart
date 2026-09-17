@@ -28,13 +28,12 @@ abstract final class SC {
   static const accentLife         = AppColors.neonGreen;   // metrics, config
   static const accentCost         = AppColors.gold;        // liabilities — gold
   static const accentSubscription = AppColors.purple;      // subscriptions only
-  static const accentNeutral      = AppColors.turkishBlue; // investable, timeline, sim
+  static const accentNeutral      = AppColors.turkishBlue; // timeline, sim
 
   // ── Transaction icons ─────────────────────────
   static const txExpense        = AppColors.hotPink;
   static const txIncome         = AppColors.neonGreen;
   static const txLoan           = AppColors.turkishBlue;
-  static const txInvestment     = AppColors.purple;
   static const txRepayment      = AppColors.gold;
   static const txOpeningBalance = AppColors.turkishBlue;
 
@@ -51,7 +50,6 @@ abstract final class SC {
   static const metricBudget     = numberCost;     // pink — budget outflow
   static const metricDebt       = AppColors.gold;  // gold — obligation/weight
   static const metricSubscr     = numberSubscr;   // purple — subscriptions
-  static const metricInvestable = numberPrimary;  // white — neutral fact
   static const metricSafety     = numberPrimary;  // white — neutral fact
   static const metricRunOut     = AppColors.textSecondary;
 

@@ -63,9 +63,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get clear => 'クリア';
 
   @override
-  String get loanAffectsInfo => '> 月間返済はプレッシャー比率と投資可能額に影響します';
-
-  @override
   String get transactionLog => '取引ログ';
 
   @override

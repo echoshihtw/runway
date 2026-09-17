@@ -96,8 +96,6 @@ Measured against `CONTRACTS.md`, which is binding on both humans and AI agents i
 |---|---|
 | Color contract drift | 287 raw `AppColors.*` references vs 38 `SC.*` in `presentation`, against CONTRACTS §4.1 / §4.4 |
 | Contract out of date | §5.1 declares schema version **4**; the code is at **5** (`transactions.category`) |
-| Specified-but-unimplemented | §3.3 investable / safety-fund model has no engine in `domain/lib/logic/` |
-| Contract vs. code | §3.4/§5.3 say `investment` is excluded from burn rate; in code it lands in `grossOutflow` and *does* feed burn |
 | Dead melos config | `melos.yaml` scripts (`test:all`, `test:integration:*`) are not loaded — melos reads the `melos:` block in the root `pubspec.yaml`, which has only `test`/`analyze`/`gen` |
 | Test coverage | `design_system` and `presentation` have zero tests; CI runs only the domain suite, so the data and application tests never run in CI |
 | Missing token | §4.2 specifies a 72px hero; no style above 42px exists in `app_text_styles.dart` |

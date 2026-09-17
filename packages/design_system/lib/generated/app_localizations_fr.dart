@@ -63,10 +63,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get clear => 'EFFACER';
 
   @override
-  String get loanAffectsInfo =>
-      '> LE PRÊT/MO AFFECTE LE RATIO DE PRESSION ET L\'INVESTISSABLE';
-
-  @override
   String get transactionLog => 'JOURNAL DES TRANSACTIONS';
 
   @override

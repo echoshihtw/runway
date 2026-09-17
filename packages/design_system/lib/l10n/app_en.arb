@@ -18,7 +18,6 @@
   "edit": "EDIT",
   "save": "SAVE",
   "clear": "CLEAR",
-  "loanAffectsInfo": "Loan payments add to your fixed costs and reduce runway.",
   "transactionLog": "TRANSACTION LOG",
   "newEntry": "+ NEW",
   "noEntries": "No entries yet\nTap + ADD to log your first entry",

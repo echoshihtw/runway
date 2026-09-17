@@ -120,7 +120,7 @@ bool countsAsLiving(Transaction t) =>
 /// - Expenses with the rent category count as rent. Every other expense,
 ///   including uncategorized ones, counts as living.
 /// - Loan repayments count only against their loan's scheduled payment.
-/// - Income, loans received, investments and opening balances are not burn.
+/// - Income, loans received and opening balances are not burn.
 MonthlyBurn computeMonthlyBurn({
   required List<Transaction> transactions,
   required Budget budget,
