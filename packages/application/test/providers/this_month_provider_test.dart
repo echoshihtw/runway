@@ -49,8 +49,11 @@ class _Subscriptions implements SubscriptionRepository {
 }
 
 class _Settings implements FinancialSettingsRepository {
+  _Settings(this.budget);
+  final Budget budget;
+
   @override
-  Future<Budget> getBudget() async => const Budget();
+  Future<Budget> getBudget() async => budget;
 
   @override
   Future<FinancialAssumptions> getFinancialAssumptions() async =>
@@ -63,22 +66,24 @@ class _Settings implements FinancialSettingsRepository {
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-final _now = DateTime.now();
-final _firstOfMonth = DateTime(_now.year, _now.month);
-
-Transaction _tx(String id, TransactionType type, double amount) => Transaction(
+Transaction _tx(
+  String id,
+  TransactionType type,
+  double amount, {
+  required DateTime date,
+}) => Transaction(
   id: id,
-  date: _firstOfMonth,
+  date: date,
   type: type,
   amount: Money(amount),
-  createdAt: _firstOfMonth,
-  updatedAt: _firstOfMonth,
+  createdAt: date,
+  updatedAt: date,
 );
 
 /// A yearly plan whose anniversary is six months away: it bills in no month
 /// near today, so its only contribution is the normalised monthly figure.
-Subscription _yearlyPlan() {
-  final started = DateTime(_now.year, _now.month - 6, 10);
+Subscription _yearlyPlan(DateTime now) {
+  final started = DateTime(now.year, now.month - 6, 10);
   return Subscription(
     id: 'sub-1',
     name: 'Adobe',
@@ -95,6 +100,7 @@ Subscription _yearlyPlan() {
 Future<ProviderContainer> _open({
   required List<Transaction> transactions,
   required List<Subscription> subscriptions,
+  Budget budget = const Budget(),
 }) async {
   SharedPreferences.setMockInitialValues({});
   final container = ProviderContainer(
@@ -106,7 +112,7 @@ Future<ProviderContainer> _open({
       subscriptionRepositoryProvider.overrideWithValue(
         _Subscriptions(subscriptions),
       ),
-      financialSettingsRepositoryProvider.overrideWithValue(_Settings()),
+      financialSettingsRepositoryProvider.overrideWithValue(_Settings(budget)),
     ],
   );
   addTearDown(container.dispose);
@@ -130,12 +136,23 @@ Future<ProviderContainer> _open({
 void main() {
   test('OUT counts only money that moved, while the monthly cost keeps the '
       'commitment', () async {
+    // monthlyBurnProvider reads the wall clock itself, so the fixtures date
+    // themselves from one reading taken here rather than at file load: the
+    // two only have to agree on the month.
+    final now = DateTime.now();
+    final thisMonth = DateTime(now.year, now.month);
+
     final container = await _open(
       transactions: [
-        _tx('open', TransactionType.openingBalance, 500000),
-        _tx('lunch', TransactionType.expense, 2100),
+        _tx('open', TransactionType.openingBalance, 500000, date: thisMonth),
+        _tx('lunch', TransactionType.expense, 2100, date: thisMonth),
       ],
-      subscriptions: [_yearlyPlan()],
+      subscriptions: [_yearlyPlan(now)],
+      // A budget the logged spending cannot coincide with. Under no budget the
+      // living estimate collapses to exactly the 2,100 that was logged, and
+      // this test would pass whether the divisor carried the commitment or
+      // merely echoed OUT back.
+      budget: const Budget(living: 30000),
     );
 
     final flow = container.read(thisMonthFlowProvider);
@@ -149,25 +166,31 @@ void main() {
     );
     expect(
       burn.total,
-      closeTo(3100, 0.01),
-      reason: 'the divisor still carries the commitment OUT excludes',
+      closeTo(31000, 0.01),
+      reason: '30,000 of living cover and 1,000 of subscription cover — the '
+          'divisor carries the commitment that OUT excludes',
     );
   });
 
   test('a confirmed subscription charge does count as money that moved', () {
     // The point is not that subscriptions are excluded from OUT, but that only
     // the entry counts. Once a charge is confirmed it is an ordinary outflow.
+    final now = DateTime.now();
+    final thisMonth = DateTime(now.year, now.month);
     final charge = Transaction(
-      id: subscriptionChargeId('sub-1', _firstOfMonth),
-      date: _firstOfMonth,
+      id: subscriptionChargeId('sub-1', thisMonth),
+      date: thisMonth,
       type: TransactionType.subscriptionCharge,
       amount: Money(980),
-      createdAt: _firstOfMonth,
-      updatedAt: _firstOfMonth,
+      createdAt: thisMonth,
+      updatedAt: thisMonth,
     );
 
     return _open(
-      transactions: [_tx('open', TransactionType.openingBalance, 500000), charge],
+      transactions: [
+        _tx('open', TransactionType.openingBalance, 500000, date: thisMonth),
+        charge,
+      ],
       subscriptions: const [],
     ).then((container) {
       expect(container.read(thisMonthFlowProvider).expenses, 980);
