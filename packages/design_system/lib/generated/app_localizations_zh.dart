@@ -63,9 +63,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get clear => '清除';
 
   @override
-  String get loanAffectsInfo => '> 月還款影響壓力比例和可投資金額';
-
-  @override
   String get transactionLog => '交易記錄';
 
   @override
@@ -790,9 +787,6 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get clear => '清除';
-
-  @override
-  String get loanAffectsInfo => '每月還款會影響你的現金壓力和跑道長度。';
 
   @override
   String get transactionLog => '交易記錄';
