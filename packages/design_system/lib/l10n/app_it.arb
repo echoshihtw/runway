@@ -99,6 +99,7 @@
     }
   },
   "subscriptionPaidYes": "Sì, registralo",
+  "subscriptionChargeFailed": "Non è stato possibile registrarlo. Controlla l'importo dell'abbonamento.",
   "subscriptionPaidNo": "No",
   "subscriptionWhatHappened": "Cosa è successo?",
   "subscriptionReasonCancelled": "L'ho disdetto",

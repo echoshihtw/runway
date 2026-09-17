@@ -135,24 +135,28 @@ void main() {
       expect(charges.map((c) => c.date), [DateTime(2026, 9, 3)]);
     });
 
-    test('never writes a period whose price is no longer knowable', () {
-      // Started at 390, upgraded to 490 on the 10th. The 3rd was 390 and
-      // nothing records that, so writing 490 for it would bake in a wrong
-      // history permanently. It is skipped instead.
+    test('an edit does not drop the charges already waiting to be asked', () {
+      // updatedAt moves on any edit, including a rename. Using it as a bound
+      // silently destroyed every unanswered charge; the question itself is the
+      // safeguard now, because the owner reads the amount before confirming.
       final charges = dueSubscriptionCharges(
         subscriptions: [
           _sub(
             amount: 490,
-            startDate: DateTime(2026, 9, 3),
-            createdAt: DateTime(2026, 9, 3),
-            updatedAt: DateTime(2026, 9, 10, 14),
+            startDate: DateTime(2026, 7, 3),
+            createdAt: DateTime(2026, 7, 3),
+            updatedAt: DateTime(2026, 9, 17, 9),
           ),
         ],
-        transactions: [opening],
+        transactions: [_tx('open', TransactionType.openingBalance, 100000, DateTime(2026, 7, 1))],
         now: now,
       );
 
-      expect(charges, isEmpty);
+      expect(charges.map((c) => c.date), [
+        DateTime(2026, 7, 3),
+        DateTime(2026, 8, 3),
+        DateTime(2026, 9, 3),
+      ]);
     });
 
     test('an edit from before the period still writes it', () {

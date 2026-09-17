@@ -99,6 +99,7 @@
     }
   },
   "subscriptionPaidYes": "Oui, enregistrer",
+  "subscriptionChargeFailed": "Enregistrement impossible. Vérifiez le montant de l'abonnement.",
   "subscriptionPaidNo": "Non",
   "subscriptionWhatHappened": "Que s'est-il passé ?",
   "subscriptionReasonCancelled": "Je l'ai résilié",

@@ -1,4 +1,5 @@
 import '../entities/subscription.dart';
+import '../entities/transaction.dart';
 import '../enums/billing_cycle.dart';
 
 /// When a subscription actually bills, derived from its start date and cycle
@@ -19,8 +20,11 @@ DateTime _advance(DateTime date, BillingCycle cycle) => switch (cycle) {
   BillingCycle.yearly => DateTime(date.year + 1, date.month, date.day),
 };
 
-/// Guards against a runaway loop if stored data holds an absurd start date.
-const _maxPeriods = 2000;
+/// Only a guard against a runaway loop. It has to be far beyond any real
+/// start date, because truncating the walk would stop a plan billing at all:
+/// a weekly plan whose year was mistyped decades back would run out of
+/// iterations before reaching today and then never bill again.
+const _maxPeriods = 10000;
 
 /// Billing dates of [s] from its start date up to and including [to].
 List<DateTime> billingDatesUpTo(Subscription s, DateTime to) {
@@ -58,21 +62,40 @@ double subscriptionsChargedInMonth({
   return total;
 }
 
-/// What subscriptions still bill before this month ends.
+/// A charge's id is derived from its subscription and payment date, so a
+/// second copy collides with the primary key and a confirmed charge can be
+/// recognised without a column linking the two.
+String subscriptionChargeId(String subscriptionId, DateTime date) {
+  final month = date.month.toString().padLeft(2, '0');
+  final day = date.day.toString().padLeft(2, '0');
+  return 'subchg-$subscriptionId-${date.year}$month$day';
+}
+
+/// What subscriptions still owe this month: every bill dated in it that has no
+/// confirmed entry.
 ///
-/// Bills already past are money that has left the account, so charging a
-/// pro-rated share of the monthly average on top of them counted it twice.
-double subscriptionsDueLaterThisMonth({
+/// A bill whose date has passed but which the owner has not answered for yet is
+/// owed, not invisible. Counting only the bills still ahead left it in neither
+/// cash nor the month's cost, which pushed the runway long — the direction this
+/// whole correction exists to fix.
+///
+/// A confirmed charge is already out of cash, so it is not counted again.
+double subscriptionsUnpaidThisMonth({
   required List<Subscription> subscriptions,
+  required List<Transaction> transactions,
   required DateTime now,
 }) {
-  final tomorrow = DateTime(now.year, now.month, now.day + 1);
+  final first = DateTime(now.year, now.month);
   final last = DateTime(now.year, now.month + 1, 0, 23, 59, 59, 999);
-  var due = 0.0;
+  final recorded = transactions.map((t) => t.id).toSet();
+  var owed = 0.0;
   for (final s in subscriptions.where((s) => s.isActive)) {
-    due += billingDatesInRange(s, from: tomorrow, to: last).length * s.amount;
+    for (final date in billingDatesInRange(s, from: first, to: last)) {
+      if (recorded.contains(subscriptionChargeId(s.id, date))) continue;
+      owed += s.amount;
+    }
   }
-  return due;
+  return owed;
 }
 
 /// The first billing date still ahead of [now].

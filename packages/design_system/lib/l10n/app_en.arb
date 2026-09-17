@@ -99,6 +99,7 @@
     }
   },
   "subscriptionPaidYes": "Yes, log it",
+  "subscriptionChargeFailed": "Couldn't record that. Check the amount on the subscription.",
   "subscriptionPaidNo": "No",
   "subscriptionWhatHappened": "What happened?",
   "subscriptionReasonCancelled": "I cancelled it",

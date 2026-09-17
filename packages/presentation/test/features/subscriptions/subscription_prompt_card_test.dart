@@ -12,9 +12,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// tap, so it must write exactly what was confirmed and nothing otherwise.
 class _FakeTransactionRepository implements TransactionRepository {
   final List<Transaction> added = [];
+  Object? failWith;
 
   @override
-  Future<void> add(Transaction transaction) async => added.add(transaction);
+  Future<void> add(Transaction transaction) async {
+    if (failWith != null) throw failWith!;
+    added.add(transaction);
+  }
 
   @override
   Future<void> delete(String id) async {}
@@ -132,6 +136,28 @@ void _batchTests() {
 }
 
 void main() {
+  testWidgets('a write that fails is not silently treated as recorded', (
+    tester,
+  ) async {
+    // The old blanket catch assumed the only possible throw was the derived
+    // id colliding. AddTransactionUseCase also rejects a zero amount, so a
+    // reminder saved at zero made Yes do nothing, for ever, without a word.
+    final repository = await _pump(tester, pending: [_charge]);
+    repository.failWith = const InvalidTransactionFailure('Amount cannot be zero');
+
+    await tester.tap(find.text('Yes, log it'));
+    await tester.pumpAndSettle();
+
+    expect(repository.added, isEmpty);
+    // What matters is that the owner is told, not that an exception escaped:
+    // an unawaited throw reaches neither the test nor the person tapping.
+    expect(
+      find.text("Couldn't record that. Check the amount on the subscription."),
+      findsOneWidget,
+    );
+  });
+
+
   testWidgets('asks before recording, naming the amount, plan and date', (
     tester,
   ) async {

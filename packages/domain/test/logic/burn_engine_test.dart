@@ -170,14 +170,30 @@ void main() {
     expect(burn.dueThisMonth, 0);
   });
 
-  test('a subscription already billed this month is not owed again', () {
-    // It bills on the 1st and today is the 15th, so the charge is a recorded
-    // transaction and is already out of cash. Pro-rating the normalised figure
-    // on top of it counted the same money twice.
+  test('a subscription billed this month is owed until it is confirmed', () {
+    // It bills on the 1st and today is the 15th, but nobody has answered for
+    // it yet, so it is in neither cash nor the month's cost. Leaving it out of
+    // both pushed the runway long.
     final burn = _burn(subscriptions: [_subscription(3000)]);
 
     // The normalised figure stays as the forward run rate for future months.
     expect(burn.total, 3000);
+    expect(burn.dueThisMonth, 3000);
+  });
+
+  test('a confirmed subscription charge is out of cash, not owed again', () {
+    final confirmed = _tx(
+      subscriptionChargeId('sub-1', DateTime(2026, 9, 1)),
+      TransactionType.subscriptionCharge,
+      3000,
+      DateTime(2026, 9, 1),
+    );
+    final burn = _burn(
+      subscriptions: [_subscription(3000)],
+      transactions: [confirmed],
+    );
+
+    expect(burn.total, 3000, reason: 'still the forward run rate');
     expect(burn.dueThisMonth, 0);
   });
 

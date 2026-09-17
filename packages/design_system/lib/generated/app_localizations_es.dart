@@ -251,6 +251,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get subscriptionPaidYes => 'Sí, regístralo';
 
   @override
+  String get subscriptionChargeFailed =>
+      'No se pudo registrar. Comprueba el importe de la suscripción.';
+
+  @override
   String get subscriptionPaidNo => 'No';
 
   @override

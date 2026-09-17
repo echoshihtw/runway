@@ -251,6 +251,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get subscriptionPaidYes => 'Yes, log it';
 
   @override
+  String get subscriptionChargeFailed =>
+      'Couldn\'t record that. Check the amount on the subscription.';
+
+  @override
   String get subscriptionPaidNo => 'No';
 
   @override

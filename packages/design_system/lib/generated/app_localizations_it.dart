@@ -251,6 +251,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get subscriptionPaidYes => 'Sì, registralo';
 
   @override
+  String get subscriptionChargeFailed =>
+      'Non è stato possibile registrarlo. Controlla l\'importo dell\'abbonamento.';
+
+  @override
   String get subscriptionPaidNo => 'No';
 
   @override

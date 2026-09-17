@@ -251,6 +251,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get subscriptionPaidYes => 'Oui, enregistrer';
 
   @override
+  String get subscriptionChargeFailed =>
+      'Enregistrement impossible. Vérifiez le montant de l\'abonnement.';
+
+  @override
   String get subscriptionPaidNo => 'Non';
 
   @override

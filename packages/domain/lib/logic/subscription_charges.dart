@@ -12,27 +12,22 @@ import 'subscription_billing.dart';
 /// entry and never an earlier one. No price history has to be stored, because
 /// each entry carries its own amount.
 
-/// A charge's id is derived from its subscription and payment date, so a second
-/// copy collides with the primary key. Opening the app twice cannot double
-/// charge even if two passes race.
-String subscriptionChargeId(String subscriptionId, DateTime date) {
-  final month = date.month.toString().padLeft(2, '0');
-  final day = date.day.toString().padLeft(2, '0');
-  return 'subchg-$subscriptionId-${date.year}$month$day';
-}
-
 /// The earliest payment date an entry may be written for.
 ///
 /// - An opening balance is a stated truth at its date, so charges before it are
 ///   already inside it and writing them would take the money twice.
 /// - Before the app knew the subscription, nothing is known: a plan started in
 ///   2019 must not suddenly produce six years of rows.
-/// - Before the last edit, the amount is no longer knowable. 390 ended when it
-///   became 490, and writing 490 for a period that cost 390 would bake a wrong
-///   history into the ledger permanently, which is worse than not writing it.
+///
+/// The last edit is deliberately **not** a bound. It was, while charges were
+/// written without asking: an amount changed mid-month made the earlier
+/// period unknowable, so writing it would have baked a wrong figure into the
+/// ledger. Now that every charge is confirmed first, the question itself is
+/// the safeguard — the owner reads the amount and says no if it is wrong. As a
+/// bound it was actively harmful, because `updatedAt` moves on *any* edit, so
+/// correcting a name silently dropped every unanswered charge for good.
 DateTime _earliestWritableDate(Subscription s, DateTime? openingBalanceDate) {
   var earliest = s.startDate.isAfter(s.createdAt) ? s.startDate : s.createdAt;
-  if (s.updatedAt.isAfter(earliest)) earliest = s.updatedAt;
   if (openingBalanceDate != null && openingBalanceDate.isAfter(earliest)) {
     earliest = openingBalanceDate;
   }

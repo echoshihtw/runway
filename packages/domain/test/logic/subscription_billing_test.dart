@@ -100,11 +100,34 @@ void main() {
     });
   });
 
-  group('subscriptionsDueLaterThisMonth', () {
-    test('a bill already past this month is not owed again', () {
+  group('subscriptionsUnpaidThisMonth', () {
+    test('a bill nobody has answered for is owed, even once its date passed', () {
+      // Counting only the bills still ahead left it in neither cash nor the
+      // month's cost, so the runway read long.
       expect(
-        subscriptionsDueLaterThisMonth(
+        subscriptionsUnpaidThisMonth(
           subscriptions: [_sub(startDate: DateTime(2026, 1, 3))],
+          transactions: const [],
+          now: september,
+        ),
+        980,
+      );
+    });
+
+    test('a confirmed bill is out of cash already, so it is not owed twice', () {
+      final confirmed = Transaction(
+        id: subscriptionChargeId('sub-1', DateTime(2026, 9, 3)),
+        type: TransactionType.subscriptionCharge,
+        amount: Money(980),
+        date: DateTime(2026, 9, 3),
+        createdAt: september,
+        updatedAt: september,
+      );
+
+      expect(
+        subscriptionsUnpaidThisMonth(
+          subscriptions: [_sub(startDate: DateTime(2026, 1, 3))],
+          transactions: [confirmed],
           now: september,
         ),
         0,
@@ -113,21 +136,35 @@ void main() {
 
     test('a bill still ahead is owed in full, not pro-rated', () {
       expect(
-        subscriptionsDueLaterThisMonth(
+        subscriptionsUnpaidThisMonth(
           subscriptions: [_sub(startDate: DateTime(2026, 1, 28))],
+          transactions: const [],
           now: september,
         ),
         980,
       );
     });
 
-    test('a bill due today has already been taken', () {
+    test('a mistyped start date decades back still bills today', () {
+      // The walk used to stop after a fixed number of periods, so a weekly
+      // plan starting 40 years ago ran out before reaching this month and
+      // then never billed at all.
       expect(
-        subscriptionsDueLaterThisMonth(
-          subscriptions: [_sub(startDate: DateTime(2026, 1, 17))],
+        subscriptionsUnpaidThisMonth(
+          subscriptions: [
+            _sub(cycle: BillingCycle.weekly, startDate: DateTime(1986, 9, 3)),
+          ],
+          transactions: const [],
           now: september,
         ),
-        0,
+        greaterThan(0),
+      );
+      expect(
+        nextBillingDateAfter(
+          _sub(cycle: BillingCycle.weekly, startDate: DateTime(1986, 9, 3)),
+          september,
+        ).isAfter(september),
+        isTrue,
       );
     });
   });

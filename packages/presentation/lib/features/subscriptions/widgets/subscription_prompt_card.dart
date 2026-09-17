@@ -134,8 +134,35 @@ class _SubscriptionPromptCardState
   }
 
   Future<void> _confirmAll(List<Transaction> pending) async {
-    for (final charge in pending) {
-      await _confirm(charge);
+    await _write(() async {
+      for (final charge in pending) {
+        await ref.read(addTransactionUseCaseProvider).execute(charge);
+      }
+    });
+  }
+
+  /// Records entries, and says so when it cannot.
+  ///
+  /// A silent failure is the worst outcome here: the entry is missing, the
+  /// prompt returns every launch, and the button appears to do nothing. An
+  /// amount of zero does exactly that, because AddTransactionUseCase rejects
+  /// it. The guard also stops a second tap racing the ledger stream.
+  Future<void> _write(Future<void> Function() record) async {
+    if (_writing) return;
+    _writing = true;
+    try {
+      await record();
+    } catch (_) {
+      if (!mounted) return;
+      final l10n = context.l10n;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l10n.subscriptionChargeFailed),
+          backgroundColor: AppColors.surfaceHigh,
+        ),
+      );
+    } finally {
+      _writing = false;
     }
   }
 
@@ -148,13 +175,15 @@ class _SubscriptionPromptCardState
     return null;
   }
 
+  /// Guards against a second tap landing before the ledger stream catches up.
+  /// A duplicate would collide with the derived id's primary key, and a failure
+  /// must not be mistaken for success.
+  bool _writing = false;
+
   Future<void> _confirm(Transaction charge) async {
-    try {
+    await _write(() async {
       await ref.read(addTransactionUseCaseProvider).execute(charge);
-    } catch (_) {
-      // Already recorded. The derived id collides with the primary key, which
-      // is the point: a second confirmation cannot double the money.
-    }
+    });
   }
 
   Future<void> _askWhy(

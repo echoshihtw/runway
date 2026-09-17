@@ -575,6 +575,12 @@ abstract class AppLocalizations {
   /// **'Yes, log it'**
   String get subscriptionPaidYes;
 
+  /// No description provided for @subscriptionChargeFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t record that. Check the amount on the subscription.'**
+  String get subscriptionChargeFailed;
+
   /// No description provided for @subscriptionPaidNo.
   ///
   /// In en, this message translates to:

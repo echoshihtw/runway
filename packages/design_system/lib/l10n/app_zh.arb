@@ -99,6 +99,7 @@
     }
   },
   "subscriptionPaidYes": "是，記錄下來",
+  "subscriptionChargeFailed": "無法記錄。請檢查訂閱金額。",
   "subscriptionPaidNo": "否",
   "subscriptionWhatHappened": "發生了什麼？",
   "subscriptionReasonCancelled": "我已取消",

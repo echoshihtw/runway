@@ -67,9 +67,10 @@ class MonthlyBurn {
   /// Scheduled loan payments not yet covered by repayments logged this month.
   final double loanPaymentsLeftThisMonth;
 
-  /// Subscription charges whose billing date has not arrived yet this month.
-  /// Charges already billed are out of cash, so they are not counted again.
-  final double subscriptionsDueLater;
+  /// Subscription bills dated this month with no confirmed entry: owed, and
+  /// not yet out of cash. A confirmed charge is a transaction, so it is
+  /// already in the balance and is not counted here as well.
+  final double subscriptionsUnpaid;
 
   const MonthlyBurn({
     required this.month,
@@ -79,7 +80,7 @@ class MonthlyBurn {
     required this.subscriptions,
     required this.loanPayments,
     required this.loanPaymentsLeftThisMonth,
-    this.subscriptionsDueLater = 0,
+    this.subscriptionsUnpaid = 0,
   });
 
   /// Rent and living, without subscriptions or loans.
@@ -101,7 +102,7 @@ class MonthlyBurn {
   double get dueThisMonth =>
       rent.remainingThisMonth +
       living.remainingThisMonth +
-      subscriptionsDueLater +
+      subscriptionsUnpaid +
       loanPaymentsLeftThisMonth;
 }
 
@@ -178,8 +179,9 @@ MonthlyBurn computeMonthlyBurn({
       0.0,
       (sum, l) => sum + math.max(l.loan.monthlyPayment - l.paidThisMonth, 0),
     ),
-    subscriptionsDueLater: subscriptionsDueLaterThisMonth(
+    subscriptionsUnpaid: subscriptionsUnpaidThisMonth(
       subscriptions: subscriptions,
+      transactions: transactions,
       now: now,
     ),
   );
