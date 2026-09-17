@@ -184,4 +184,48 @@ void main() {
       );
     });
   });
+
+  _countdownTests();
+}
+
+void _countdownTests() {
+  final now = DateTime(2026, 9, 17, 10);
+
+  group('daysUntilNextBilling', () {
+    test('a stored date long past still counts forward', () {
+      // The whole of #85: nothing advances nextBillingDate, so reading it left
+      // the countdown clamped at 0 for ever once its date went by.
+      final stale = Subscription(
+        id: 'sub-1',
+        name: 'Music',
+        category: SubscriptionCategory.personal,
+        amount: 980,
+        cycle: BillingCycle.monthly,
+        startDate: DateTime(2026, 1, 3),
+        nextBillingDate: DateTime(2026, 1, 3),
+        createdAt: DateTime(2026, 1, 3),
+        updatedAt: DateTime(2026, 1, 3),
+      );
+
+      // The next 3rd after 17 September is 3 October: 16 days.
+      expect(daysUntilNextBilling(stale, now), 16);
+    });
+
+    test('counts calendar days, not a floored part-day', () {
+      final sub = Subscription(
+        id: 'sub-1',
+        name: 'Music',
+        category: SubscriptionCategory.personal,
+        amount: 980,
+        cycle: BillingCycle.monthly,
+        startDate: DateTime(2026, 1, 25),
+        nextBillingDate: DateTime(2026, 1, 25),
+        createdAt: DateTime(2026, 1, 25),
+        updatedAt: DateTime(2026, 1, 25),
+      );
+
+      // 17th at 10:00 to the 25th is 8 days, not 7.
+      expect(daysUntilNextBilling(sub, now), 8);
+    });
+  });
 }

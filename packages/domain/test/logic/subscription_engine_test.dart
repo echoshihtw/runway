@@ -78,27 +78,34 @@ void main() {
   });
 
   group('sortedByNextBilling', () {
-    test('returns active subscriptions sorted by next billing date ascending', () {
+    final now = DateTime(2025, 6, 1);
+
+    test('orders by the bill that comes next, derived not stored', () {
+      // The stored date is deliberately misleading here: it is never advanced
+      // in the app, so ordering by it froze the list in creation order.
       final subs = [
-        _sub(id: '3', nextBillingDate: DateTime(2025, 6, 15)),
-        _sub(id: '1', nextBillingDate: DateTime(2025, 6, 3)),
-        _sub(id: '2', nextBillingDate: DateTime(2025, 6, 8)),
+        _sub(id: '3', startDate: DateTime(2025, 6, 15), nextBillingDate: DateTime(2025, 6, 2)),
+        _sub(id: '1', startDate: DateTime(2025, 6, 3), nextBillingDate: DateTime(2025, 6, 20)),
+        _sub(id: '2', startDate: DateTime(2025, 6, 8), nextBillingDate: DateTime(2025, 6, 9)),
       ];
-      final sorted = sortedByNextBilling(subs);
-      expect(sorted.map((s) => s.id).toList(), ['1', '2', '3']);
+      expect(sortedByNextBilling(subs, now: now).map((s) => s.id).toList(), [
+        '1',
+        '2',
+        '3',
+      ]);
     });
 
     test('excludes inactive subscriptions from sorted result', () {
       final subs = [
-        _sub(id: '1', nextBillingDate: DateTime(2025, 6, 3)),
-        _sub(id: '2', nextBillingDate: DateTime(2025, 6, 1), isActive: false),
+        _sub(id: '1', startDate: DateTime(2025, 6, 3)),
+        _sub(id: '2', startDate: DateTime(2025, 6, 1), isActive: false),
       ];
-      expect(sortedByNextBilling(subs).map((s) => s.id).toList(), ['1']);
+      expect(sortedByNextBilling(subs, now: now).map((s) => s.id).toList(), ['1']);
     });
 
     test('returns empty list when all subscriptions are inactive', () {
       final subs = [_sub(isActive: false), _sub(id: '2', isActive: false)];
-      expect(sortedByNextBilling(subs), isEmpty);
+      expect(sortedByNextBilling(subs, now: DateTime(2025, 6, 1)), isEmpty);
     });
   });
 
@@ -140,6 +147,7 @@ Subscription _sub({
   SubscriptionCategory category = SubscriptionCategory.personal,
   bool isActive = true,
   DateTime? nextBillingDate,
+  DateTime? startDate,
 }) {
   final anchor = DateTime(2025, 6, 1);
   return Subscription(
@@ -148,7 +156,7 @@ Subscription _sub({
     category: category,
     amount: amount,
     cycle: cycle,
-    startDate: anchor,
+    startDate: startDate ?? anchor,
     nextBillingDate: nextBillingDate ?? anchor.add(const Duration(days: 30)),
     isActive: isActive,
     createdAt: anchor,
