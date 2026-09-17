@@ -9,8 +9,7 @@ List<LoanSummary> computeLoanSummaries({
   required DateTime now,
 }) {
   // A repayment dated later this month has not been paid. Counting it zeroed
-  // what the month still owed, cut the remaining balance, and could free the
-  // free-plan loan slot early.
+  // what the month still owed and cut the remaining balance.
   final endOfToday = DateTime(now.year, now.month, now.day, 23, 59, 59, 999);
   final repayments = transactions.where(
     (t) =>
@@ -51,20 +50,6 @@ double totalMonthlyPayment(List<Loan> loans) {
       .fold(0.0, (sum, l) => sum + l.monthlyPayment);
 }
 
-/// Whether the user has a loan that is still active and not paid off. The free
-/// plan allows one such loan at a time, so paying a loan off frees the slot.
-bool hasActiveLoan({
-  required List<Loan> loans,
-  required List<Transaction> transactions,
-  DateTime? now,
-}) => activeLoanSummaries(
-  computeLoanSummaries(
-    loans: loans,
-    transactions: transactions,
-    now: now ?? DateTime.now(),
-  ),
-).isNotEmpty;
-
 /// The month after the last scheduled payment, or null when no term is set.
 DateTime? loanTermEnd(Loan loan) => loan.originalTermMonths > 0
     ? DateTime(
@@ -97,9 +82,8 @@ List<LoanSummary> costingLoanSummaries(
   return end == null ? !summary.isFullyPaid : now.isBefore(end);
 }).toList();
 
-/// Loans to show and to count against the free-plan limit. Repaying the
-/// principal frees the slot, which is deliberately more generous than the
-/// costing rule above.
+/// Loans to show. Repaying the principal ends one here, which is deliberately
+/// more generous than the costing rule above.
 List<LoanSummary> activeLoanSummaries(List<LoanSummary> summaries) {
   return summaries
       .where((summary) => summary.loan.isActive && !summary.isFullyPaid)

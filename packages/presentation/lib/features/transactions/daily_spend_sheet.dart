@@ -2,6 +2,7 @@ import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../shared/entry_gate.dart';
 import 'show_entry_sheet.dart';
 
 /// What the add button asks now: not which kind of record this is, but what
@@ -16,6 +17,7 @@ import 'show_entry_sheet.dart';
 /// log money in a single tap, and one tap that writes money needs an undo,
 /// which does not exist yet.
 Future<void> showDailySpendSheet(BuildContext context, WidgetRef ref) {
+  if (!allowsNewEntry(context, ref)) return Future<void>.value();
   return showModalBottomSheet<void>(
     context: context,
     useRootNavigator: true,

@@ -47,6 +47,17 @@ class _Transactions implements TransactionRepository {
 }
 
 /// Free tier: the store says no, and nothing is cached.
+/// The Keychain counter, in memory. Fresh per pump, so every test starts free.
+class _EntryCount implements EntryCountStore {
+  int count = 0;
+
+  @override
+  Future<int> read() async => count;
+
+  @override
+  Future<void> write(int value) async => count = value;
+}
+
 class _FreeTier implements PurchaseService {
   @override
   Stream<bool> get proEntitlementUpdates => const Stream<bool>.empty();
@@ -87,6 +98,7 @@ Future<void> _pump(
         loanRepositoryProvider.overrideWithValue(_Loans(loans.toList())),
         transactionRepositoryProvider.overrideWithValue(_Transactions([])),
         purchaseServiceProvider.overrideWithValue(_FreeTier()),
+        entryCountStoreProvider.overrideWithValue(_EntryCount()),
       ],
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -138,10 +150,10 @@ void main() {
     expect(find.text('+ LOAN'), findsOneWidget);
   });
 
-  testWidgets('the Pro gate still guards a second loan', (tester) async {
-    // The gate is the reason loan creation must have exactly one
-    // implementation: it was duplicated across app_router and
-    // transactions_screen, so a new door could easily have skipped it.
+  testWidgets('a second loan is free, so the wizard opens', (tester) async {
+    // The Pro gate is simulations and entries, not loans (#80, decided
+    // 2026-09-16). The one-active-loan limit that used to live here is gone;
+    // a free owner with an active loan reaches the wizard like anyone else.
     await _pump(tester, [_loan()]);
     await tester.tap(find.text('LIABILITIES'));
     await tester.pumpAndSettle();
@@ -149,12 +161,8 @@ void main() {
     await tester.tap(find.text('+ LOAN'));
     await tester.pumpAndSettle();
 
-    expect(
-      find.byType(PaywallScreen),
-      findsOneWidget,
-      reason: 'a free owner with an active loan has to meet the paywall',
-    );
-    expect(find.byType(LoanWizard), findsNothing);
+    expect(find.byType(LoanWizard), findsOneWidget);
+    expect(find.byType(PaywallScreen), findsNothing);
   });
 
   testWidgets('the empty state fits a narrow screen at double text size', (

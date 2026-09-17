@@ -52,8 +52,10 @@ void main() {
   testWidgets('lists only Pro features that ship', (tester) async {
     await _pumpPaywall(tester);
 
-    expect(find.text('Unlimited loans'), findsOneWidget);
+    expect(find.text('Unlimited entries'), findsOneWidget);
     expect(find.text('Unlimited scenario simulations'), findsOneWidget);
+    // Loans are free (#80): selling them as Pro would be a lie in the listing.
+    expect(find.text('Unlimited loans'), findsNothing);
     expect(find.text('Cash timeline chart'), findsNothing);
     expect(find.text('Priority support'), findsNothing);
     expect(find.text('Subscriptions tracker'), findsNothing);

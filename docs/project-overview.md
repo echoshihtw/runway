@@ -71,7 +71,7 @@ presentation → application → domain ← data
 
 ## Monetization
 
-Free tier: transactions, basic runway, budget, sharing, one loan, one simulation.
+Free tier: five entries and three simulations, then Pro; loans, subscriptions, budget and sharing are free without limit. Pro: unlimited entries and simulations.
 Pro tier: subscriptions, multiple loans, timeline, unlimited simulations.
 
 Policy lives in `EntitlementState` (`application`); enforcement is currently inline at three presentation call sites (`loan_limit`, `subscriptions`, `simulation`). Entitlement resolution is offline-first — a cached `is_pro` flag wins, and a network failure never revokes Pro.

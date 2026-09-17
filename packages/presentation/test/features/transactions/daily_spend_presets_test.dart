@@ -4,6 +4,7 @@ import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:presentation/features/paywall/paywall_screen.dart';
 import 'package:presentation/features/transactions/transactions_screen.dart';
 import 'package:presentation/features/transactions/widgets/transaction_form.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,6 +43,17 @@ class _Loans implements LoanRepository {
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
+/// The Keychain counter, in memory. Fresh per pump, so every test starts free.
+class _EntryCount implements EntryCountStore {
+  int count = 0;
+
+  @override
+  Future<int> read() async => count;
+
+  @override
+  Future<void> write(int value) async => count = value;
+}
+
 class _FreeTier implements PurchaseService {
   @override
   Stream<bool> get proEntitlementUpdates => const Stream<bool>.empty();
@@ -78,6 +90,7 @@ Future<_Transactions> _pump(
         transactionRepositoryProvider.overrideWithValue(written),
         loanRepositoryProvider.overrideWithValue(_Loans()),
         purchaseServiceProvider.overrideWithValue(_FreeTier()),
+        entryCountStoreProvider.overrideWithValue(_EntryCount()),
       ],
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -198,6 +211,40 @@ void main() {
           'the largest text size',
     );
     expect(find.text('LUNCH'), findsOneWidget);
+  });
+
+  testWidgets('the first five entries are free; the sixth meets the paywall', (
+    tester,
+  ) async {
+    // The app is free and the planning tool is the paid part (#80). Five
+    // entries let someone see the number move; the sixth asks for Pro at the
+    // button itself, before any preset is offered.
+    await _pump(tester);
+
+    Future<void> logLunch() async {
+      await tester.tap(_addButton);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('LUNCH'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField).at(0), '980');
+      await tester.tap(find.text('CONFIRM'));
+      await tester.pumpAndSettle();
+    }
+
+    for (var i = 0; i < 5; i++) {
+      await logLunch();
+    }
+    expect(find.byType(TransactionForm), findsNothing);
+
+    await tester.tap(_addButton);
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byType(PaywallScreen),
+      findsOneWidget,
+      reason: 'the sixth entry is where the free plan ends',
+    );
+    expect(find.text('LUNCH'), findsNothing, reason: 'no preset is offered');
   });
 
   testWidgets('every tile is big enough to hit', (tester) async {

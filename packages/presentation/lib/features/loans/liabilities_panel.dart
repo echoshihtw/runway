@@ -6,6 +6,7 @@ import 'package:application/application.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
 import '../../shared/add_strip.dart';
+import '../../shared/entry_gate.dart';
 import 'loan_card.dart';
 import 'start_loan_creation.dart';
 
@@ -137,6 +138,7 @@ class LiabilitiesPanel extends ConsumerWidget {
   }
 
   void _showRepay(BuildContext context, WidgetRef ref, LoanSummary summary) {
+    if (!allowsNewEntry(context, ref)) return;
     final l10n = context.l10n;
     final amountCtrl = TextEditingController(
       text: summary.loan.monthlyPayment.toStringAsFixed(0),

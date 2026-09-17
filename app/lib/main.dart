@@ -59,6 +59,9 @@ void main() async {
           simulationCountStoreProvider.overrideWithValue(
             const KeychainSimulationCountStore(),
           ),
+          entryCountStoreProvider.overrideWithValue(
+            const KeychainEntryCountStore(),
+          ),
           reviewPrompterProvider.overrideWithValue(
             const InAppReviewPrompter(),
           ),
