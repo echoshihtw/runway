@@ -23,23 +23,31 @@ const kDatabaseKeyStorage = FlutterSecureStorage(
 /// The database file and every SQLite sidecar that can hold its pages.
 const _databaseFileSuffixes = ['', '-wal', '-shm', '-journal'];
 
-/// Permanently removes the encrypted database and its key.
+/// Permanently removes the encrypted database, keeping its key.
 ///
-/// Closes [database] first so no connection writes to a deleted file. Files
-/// go before the key: if a file cannot be deleted, the key survives and the
-/// remaining data stays readable instead of becoming undecryptable.
+/// Closing [database] first stops a live connection writing to a deleted file,
+/// but a failure to close must not stop the delete: drift's `LazyDatabase`
+/// rethrows a failed open, so a database that cannot be opened cannot be
+/// closed either — and deletion is the recovery path for exactly that state.
 ///
-/// The next [AppDatabase] opened afterwards starts empty with a new key.
+/// The key is deliberately left alone. It is infrastructure rather than user
+/// data, and keeping it means "database present, key missing" — the state that
+/// cannot be recovered from — can never be caused by deleting data. This
+/// function has no access to the key store, so that guarantee is structural.
+///
+/// The next [AppDatabase] opened afterwards starts empty with the same key.
 Future<void> deleteEncryptedDatabase({
   required AppDatabase database,
   Directory? directory,
-  FlutterSecureStorage storage = kDatabaseKeyStorage,
 }) async {
-  await database.close();
+  try {
+    await database.close();
+  } catch (_) {
+    // An unopenable database is the reason this is being called.
+  }
   final dir = directory ?? await getApplicationDocumentsDirectory();
   for (final suffix in _databaseFileSuffixes) {
     final file = File(p.join(dir.path, '$kDatabaseFileName$suffix'));
     if (await file.exists()) await file.delete();
   }
-  await storage.delete(key: kDatabaseKeyName);
 }

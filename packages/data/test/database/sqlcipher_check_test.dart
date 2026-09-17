@@ -15,14 +15,14 @@ void main() {
     expect(() => ensureSqlCipher('4.6.1 community', fatal: true), returnsNormally);
   });
 
-  test('a missing cipher version is fatal in debug builds', () {
+  test('a missing cipher version throws', () {
     expect(
       () => ensureSqlCipher(null, fatal: true),
       throwsA(isA<SqlCipherUnavailableError>()),
     );
   });
 
-  test('a missing cipher version is reported in release builds', () {
+  test('reporting instead of throwing is available, but is not the default', () {
     final reported = <Object>[];
     final previous = FlutterError.onError;
     FlutterError.onError = (details) => reported.add(details.exception);
@@ -31,5 +31,15 @@ void main() {
     ensureSqlCipher(null, fatal: false);
 
     expect(reported.single, isA<SqlCipherUnavailableError>());
+  });
+
+  test('the default is fatal, in release as much as in debug', () {
+    // It used to default to kDebugMode, so a release build whose SQLCipher
+    // linkage regressed wrote plaintext and only filed a report nobody reads,
+    // while the listing promised the data was encrypted on the device.
+    expect(
+      () => ensureSqlCipher(null),
+      throwsA(isA<SqlCipherUnavailableError>()),
+    );
   });
 }
