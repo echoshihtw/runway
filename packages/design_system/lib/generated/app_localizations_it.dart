@@ -225,6 +225,54 @@ class AppLocalizationsIt extends AppLocalizations {
   String get typeOpening => 'SALDO INIZIALE';
 
   @override
+  String get typeSubscription => 'ABBONAMENTO';
+
+  @override
+  String subscriptionPaidQuestion(String amount, String name, String date) {
+    return 'Hai pagato $amount per $name il $date?';
+  }
+
+  @override
+  String subscriptionChargesDue(int count, String amount) {
+    return '$count addebiti di abbonamento da confermare — $amount';
+  }
+
+  @override
+  String get subscriptionConfirmAll => 'Conferma tutto';
+
+  @override
+  String get subscriptionReviewEach => 'Rivedi uno a uno';
+
+  @override
+  String get subscriptionPaidYes => 'Sì, registralo';
+
+  @override
+  String get subscriptionChargeFailed =>
+      'Non è stato possibile registrarlo. Controlla l\'importo dell\'abbonamento.';
+
+  @override
+  String get subscriptionPaidNo => 'No';
+
+  @override
+  String get subscriptionWhatHappened => 'Cosa è successo?';
+
+  @override
+  String get subscriptionReasonCancelled => 'L\'ho disdetto';
+
+  @override
+  String get subscriptionReasonPriceChanged => 'Il prezzo è cambiato';
+
+  @override
+  String get subscriptionReasonNotPaid => 'Non l\'ho pagato';
+
+  @override
+  String get deleteSubscription => 'Elimina abbonamento';
+
+  @override
+  String get deleteSubscriptionKeepsEntries =>
+      'Interrompe le voci future. I pagamenti già registrati vengono mantenuti.';
+
+  @override
   String get liabilities => 'DEBITI';
 
   @override

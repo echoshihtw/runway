@@ -3,7 +3,8 @@ enum TransactionType {
   income,
   loan,
   repayment,
-  openingBalance;
+  openingBalance,
+  subscriptionCharge;
 
   String get label => switch (this) {
     TransactionType.expense => 'EXPENSE',
@@ -11,6 +12,7 @@ enum TransactionType {
     TransactionType.loan => 'LOAN',
     TransactionType.repayment => 'REPAY',
     TransactionType.openingBalance => 'OPENING',
+    TransactionType.subscriptionCharge => 'SUBSCRIPTION',
   };
 
   bool get isInflow => switch (this) {

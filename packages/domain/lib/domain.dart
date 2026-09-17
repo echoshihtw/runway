@@ -30,5 +30,7 @@ export 'logic/runway_engine.dart';
 export 'logic/runway_goal_progress.dart';
 export 'logic/loan_engine.dart';
 export 'logic/subscription_engine.dart';
+export 'logic/subscription_billing.dart';
+export 'logic/subscription_charges.dart';
 
 export 'failures/domain_failure.dart';

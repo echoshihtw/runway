@@ -95,6 +95,43 @@ class SubscriptionsPanel extends ConsumerWidget {
     );
   }
 
+  /// A reminder has to be stoppable. Deleting it ends future entries; the
+  /// payments already written stay in the log, because they happened.
+  Future<void> _confirmDelete(
+    BuildContext context,
+    WidgetRef ref,
+    Subscription subscription,
+  ) async {
+    final l10n = context.l10n;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      useRootNavigator: true,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        title: Text(l10n.deleteSubscription, style: AppTextStyles.label),
+        content: Text(
+          l10n.deleteSubscriptionKeepsEntries,
+          style: AppTextStyles.bodySmall,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l10n.abort, style: AppTextStyles.label),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(
+              l10n.deleteSubscription,
+              style: AppTextStyles.label.copyWith(color: SC.cost),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    await ref.read(deleteSubscriptionUseCaseProvider).execute(subscription.id);
+  }
+
   void _showEditSubscription(
     BuildContext context,
     WidgetRef ref,
@@ -129,6 +166,7 @@ class SubscriptionsPanel extends ConsumerWidget {
           await ref.read(editSubscriptionUseCaseProvider).execute(updated);
           return true;
         },
+        onDelete: () => _confirmDelete(context, ref, subscription),
       ),
     );
   }

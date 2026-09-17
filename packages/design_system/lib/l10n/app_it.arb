@@ -81,6 +81,45 @@
   "typeLoan": "PRESTITO",
   "typeRepay": "RIMBORSO",
   "typeOpening": "SALDO INIZIALE",
+  "typeSubscription": "ABBONAMENTO",
+  "subscriptionPaidQuestion": "Hai pagato {amount} per {name} il {date}?",
+  "subscriptionChargesDue": "{count} addebiti di abbonamento da confermare — {amount}",
+  "subscriptionConfirmAll": "Conferma tutto",
+  "subscriptionReviewEach": "Rivedi uno a uno",
+  "@subscriptionChargesDue": {
+    "description": "How many subscription charges are waiting to be confirmed, and their total",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionPaidYes": "Sì, registralo",
+  "subscriptionChargeFailed": "Non è stato possibile registrarlo. Controlla l'importo dell'abbonamento.",
+  "subscriptionPaidNo": "No",
+  "subscriptionWhatHappened": "Cosa è successo?",
+  "subscriptionReasonCancelled": "L'ho disdetto",
+  "subscriptionReasonPriceChanged": "Il prezzo è cambiato",
+  "subscriptionReasonNotPaid": "Non l'ho pagato",
+  "@subscriptionPaidQuestion": {
+    "description": "Asks whether a subscription charge was actually paid",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteSubscription": "Elimina abbonamento",
+  "deleteSubscriptionKeepsEntries": "Interrompe le voci future. I pagamenti già registrati vengono mantenuti.",
   "liabilities": "DEBITI",
   "noActiveLoans": "> NESSUN PRESTITO ATTIVO",
   "settled": "SALDATO",

@@ -225,6 +225,54 @@ class AppLocalizationsEs extends AppLocalizations {
   String get typeOpening => 'SALDO INICIAL';
 
   @override
+  String get typeSubscription => 'SUSCRIPCIÓN';
+
+  @override
+  String subscriptionPaidQuestion(String amount, String name, String date) {
+    return '¿Pagaste $amount de $name el $date?';
+  }
+
+  @override
+  String subscriptionChargesDue(int count, String amount) {
+    return '$count cargos de suscripción pendientes — $amount';
+  }
+
+  @override
+  String get subscriptionConfirmAll => 'Confirmar todo';
+
+  @override
+  String get subscriptionReviewEach => 'Revisar uno a uno';
+
+  @override
+  String get subscriptionPaidYes => 'Sí, regístralo';
+
+  @override
+  String get subscriptionChargeFailed =>
+      'No se pudo registrar. Comprueba el importe de la suscripción.';
+
+  @override
+  String get subscriptionPaidNo => 'No';
+
+  @override
+  String get subscriptionWhatHappened => '¿Qué pasó?';
+
+  @override
+  String get subscriptionReasonCancelled => 'La cancelé';
+
+  @override
+  String get subscriptionReasonPriceChanged => 'Cambió el precio';
+
+  @override
+  String get subscriptionReasonNotPaid => 'No la pagué';
+
+  @override
+  String get deleteSubscription => 'Eliminar suscripción';
+
+  @override
+  String get deleteSubscriptionKeepsEntries =>
+      'Detiene las entradas futuras. Los pagos ya registrados se conservan.';
+
+  @override
   String get liabilities => 'DEUDAS';
 
   @override

@@ -533,6 +533,90 @@ abstract class AppLocalizations {
   /// **'OPENING'**
   String get typeOpening;
 
+  /// No description provided for @typeSubscription.
+  ///
+  /// In en, this message translates to:
+  /// **'SUBSCRIPTION'**
+  String get typeSubscription;
+
+  /// Asks whether a subscription charge was actually paid
+  ///
+  /// In en, this message translates to:
+  /// **'Did you pay {amount} for {name} on {date}?'**
+  String subscriptionPaidQuestion(String amount, String name, String date);
+
+  /// How many subscription charges are waiting to be confirmed, and their total
+  ///
+  /// In en, this message translates to:
+  /// **'{count} subscription charges due — {amount}'**
+  String subscriptionChargesDue(int count, String amount);
+
+  /// No description provided for @subscriptionConfirmAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm all'**
+  String get subscriptionConfirmAll;
+
+  /// No description provided for @subscriptionReviewEach.
+  ///
+  /// In en, this message translates to:
+  /// **'Review each'**
+  String get subscriptionReviewEach;
+
+  /// No description provided for @subscriptionPaidYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, log it'**
+  String get subscriptionPaidYes;
+
+  /// No description provided for @subscriptionChargeFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t record that. Check the amount on the subscription.'**
+  String get subscriptionChargeFailed;
+
+  /// No description provided for @subscriptionPaidNo.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get subscriptionPaidNo;
+
+  /// No description provided for @subscriptionWhatHappened.
+  ///
+  /// In en, this message translates to:
+  /// **'What happened?'**
+  String get subscriptionWhatHappened;
+
+  /// No description provided for @subscriptionReasonCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'I cancelled it'**
+  String get subscriptionReasonCancelled;
+
+  /// No description provided for @subscriptionReasonPriceChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'The price changed'**
+  String get subscriptionReasonPriceChanged;
+
+  /// No description provided for @subscriptionReasonNotPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'I didn\'t pay it'**
+  String get subscriptionReasonNotPaid;
+
+  /// No description provided for @deleteSubscription.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete subscription'**
+  String get deleteSubscription;
+
+  /// No description provided for @deleteSubscriptionKeepsEntries.
+  ///
+  /// In en, this message translates to:
+  /// **'Stops future entries. The payments already logged are kept.'**
+  String get deleteSubscriptionKeepsEntries;
+
   /// No description provided for @liabilities.
   ///
   /// In en, this message translates to:

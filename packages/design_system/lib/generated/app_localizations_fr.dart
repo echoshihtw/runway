@@ -225,6 +225,54 @@ class AppLocalizationsFr extends AppLocalizations {
   String get typeOpening => 'OUVERTURE';
 
   @override
+  String get typeSubscription => 'ABONNEMENT';
+
+  @override
+  String subscriptionPaidQuestion(String amount, String name, String date) {
+    return 'Avez-vous payé $amount pour $name le $date ?';
+  }
+
+  @override
+  String subscriptionChargesDue(int count, String amount) {
+    return '$count prélèvements d\'abonnement à confirmer — $amount';
+  }
+
+  @override
+  String get subscriptionConfirmAll => 'Tout confirmer';
+
+  @override
+  String get subscriptionReviewEach => 'Vérifier un par un';
+
+  @override
+  String get subscriptionPaidYes => 'Oui, enregistrer';
+
+  @override
+  String get subscriptionChargeFailed =>
+      'Enregistrement impossible. Vérifiez le montant de l\'abonnement.';
+
+  @override
+  String get subscriptionPaidNo => 'Non';
+
+  @override
+  String get subscriptionWhatHappened => 'Que s\'est-il passé ?';
+
+  @override
+  String get subscriptionReasonCancelled => 'Je l\'ai résilié';
+
+  @override
+  String get subscriptionReasonPriceChanged => 'Le prix a changé';
+
+  @override
+  String get subscriptionReasonNotPaid => 'Je ne l\'ai pas payé';
+
+  @override
+  String get deleteSubscription => 'Supprimer l\'abonnement';
+
+  @override
+  String get deleteSubscriptionKeepsEntries =>
+      'Arrête les prochaines écritures. Les paiements déjà enregistrés sont conservés.';
+
+  @override
   String get liabilities => 'DETTES';
 
   @override

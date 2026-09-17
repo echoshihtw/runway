@@ -81,6 +81,45 @@
   "typeLoan": "PRÉSTAMO",
   "typeRepay": "PAGAR",
   "typeOpening": "SALDO INICIAL",
+  "typeSubscription": "SUSCRIPCIÓN",
+  "subscriptionPaidQuestion": "¿Pagaste {amount} de {name} el {date}?",
+  "subscriptionChargesDue": "{count} cargos de suscripción pendientes — {amount}",
+  "subscriptionConfirmAll": "Confirmar todo",
+  "subscriptionReviewEach": "Revisar uno a uno",
+  "@subscriptionChargesDue": {
+    "description": "How many subscription charges are waiting to be confirmed, and their total",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionPaidYes": "Sí, regístralo",
+  "subscriptionChargeFailed": "No se pudo registrar. Comprueba el importe de la suscripción.",
+  "subscriptionPaidNo": "No",
+  "subscriptionWhatHappened": "¿Qué pasó?",
+  "subscriptionReasonCancelled": "La cancelé",
+  "subscriptionReasonPriceChanged": "Cambió el precio",
+  "subscriptionReasonNotPaid": "No la pagué",
+  "@subscriptionPaidQuestion": {
+    "description": "Asks whether a subscription charge was actually paid",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteSubscription": "Eliminar suscripción",
+  "deleteSubscriptionKeepsEntries": "Detiene las entradas futuras. Los pagos ya registrados se conservan.",
   "liabilities": "DEUDAS",
   "noActiveLoans": "> SIN PRÉSTAMOS ACTIVOS",
   "settled": "LIQUIDADO",

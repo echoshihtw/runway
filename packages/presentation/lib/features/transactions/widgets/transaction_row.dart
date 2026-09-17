@@ -23,6 +23,7 @@ class TransactionRow extends ConsumerWidget {
     TransactionType.loan => SC.txLoan,
     TransactionType.expense => SC.txExpense,
     TransactionType.repayment => SC.txRepayment,
+    TransactionType.subscriptionCharge => SC.subscr,
   };
 
   IconData get _typeIcon => switch (transaction.type) {
@@ -31,6 +32,7 @@ class TransactionRow extends ConsumerWidget {
     TransactionType.loan => Icons.credit_score_rounded,
     TransactionType.expense => Icons.arrow_upward_rounded,
     TransactionType.repayment => Icons.replay_rounded,
+    TransactionType.subscriptionCharge => Icons.autorenew_rounded,
   };
 
   String _typeLabel(AppLocalizations l10n) => switch (transaction.type) {
@@ -39,6 +41,7 @@ class TransactionRow extends ConsumerWidget {
     TransactionType.loan => l10n.typeLoan,
     TransactionType.repayment => l10n.typeRepay,
     TransactionType.openingBalance => l10n.typeOpening,
+    TransactionType.subscriptionCharge => l10n.typeSubscription,
   };
 
   bool get _isPlanned => transaction.date.isAfter(DateTime.now());

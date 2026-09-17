@@ -81,6 +81,45 @@
   "typeLoan": "貸款",
   "typeRepay": "還款",
   "typeOpening": "初始",
+  "typeSubscription": "訂閱",
+  "subscriptionPaidQuestion": "你在{date}支付了{name}的{amount}嗎？",
+  "subscriptionChargesDue": "{count} 筆訂閱費用待確認 — {amount}",
+  "subscriptionConfirmAll": "全部確認",
+  "subscriptionReviewEach": "逐筆確認",
+  "@subscriptionChargesDue": {
+    "description": "How many subscription charges are waiting to be confirmed, and their total",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionPaidYes": "是，記錄下來",
+  "subscriptionChargeFailed": "無法記錄。請檢查訂閱金額。",
+  "subscriptionPaidNo": "否",
+  "subscriptionWhatHappened": "發生了什麼？",
+  "subscriptionReasonCancelled": "我已取消",
+  "subscriptionReasonPriceChanged": "價格變了",
+  "subscriptionReasonNotPaid": "我沒有支付",
+  "@subscriptionPaidQuestion": {
+    "description": "Asks whether a subscription charge was actually paid",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteSubscription": "刪除訂閱",
+  "deleteSubscriptionKeepsEntries": "停止未來的記錄。已記錄的付款會保留。",
   "liabilities": "負債",
   "noActiveLoans": "> 目前沒有貸款",
   "settled": "已結清",

@@ -8,6 +8,7 @@ import '../enums/expense_category.dart';
 import '../enums/transaction_type.dart';
 import '../value_objects/ledger_month.dart';
 import 'loan_engine.dart';
+import 'subscription_billing.dart';
 import 'subscription_engine.dart';
 
 /// Logged spending against one budget.
@@ -66,6 +67,11 @@ class MonthlyBurn {
   /// Scheduled loan payments not yet covered by repayments logged this month.
   final double loanPaymentsLeftThisMonth;
 
+  /// Subscription bills dated this month with no confirmed entry: owed, and
+  /// not yet out of cash. A confirmed charge is a transaction, so it is
+  /// already in the balance and is not counted here as well.
+  final double subscriptionsUnpaid;
+
   const MonthlyBurn({
     required this.month,
     required this.fractionOfMonthLeft,
@@ -74,6 +80,7 @@ class MonthlyBurn {
     required this.subscriptions,
     required this.loanPayments,
     required this.loanPaymentsLeftThisMonth,
+    this.subscriptionsUnpaid = 0,
   });
 
   /// Rent and living, without subscriptions or loans.
@@ -95,7 +102,7 @@ class MonthlyBurn {
   double get dueThisMonth =>
       rent.remainingThisMonth +
       living.remainingThisMonth +
-      subscriptions * fractionOfMonthLeft +
+      subscriptionsUnpaid +
       loanPaymentsLeftThisMonth;
 }
 
@@ -171,6 +178,11 @@ MonthlyBurn computeMonthlyBurn({
     loanPaymentsLeftThisMonth: activeLoans.fold(
       0.0,
       (sum, l) => sum + math.max(l.loan.monthlyPayment - l.paidThisMonth, 0),
+    ),
+    subscriptionsUnpaid: subscriptionsUnpaidThisMonth(
+      subscriptions: subscriptions,
+      transactions: transactions,
+      now: now,
     ),
   );
 }

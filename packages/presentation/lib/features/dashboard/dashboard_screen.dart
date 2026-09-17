@@ -12,6 +12,7 @@ import '../../shared/status_color.dart';
 import '../config/config_screen.dart';
 import '../loans/liabilities_panel.dart';
 import '../subscriptions/subscriptions_panel.dart';
+import '../subscriptions/widgets/subscription_prompt_card.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -69,6 +70,8 @@ class DashboardScreen extends ConsumerWidget {
                   const SizedBox(height: AppSpacing.cardGap),
                   // Adds its own bottom gap, and none once dismissed.
                   const GettingStartedCard(),
+                  // Asks before any subscription charge is recorded.
+                  const SubscriptionPromptCard(),
                   GoalCard(model: model),
                   const SizedBox(height: AppSpacing.cardGap),
                   const ThisMonthCard(),

@@ -224,6 +224,52 @@ class AppLocalizationsJa extends AppLocalizations {
   String get typeOpening => '開始残高';
 
   @override
+  String get typeSubscription => 'サブスク';
+
+  @override
+  String subscriptionPaidQuestion(String amount, String name, String date) {
+    return '$dateに$nameの$amountを支払いましたか？';
+  }
+
+  @override
+  String subscriptionChargesDue(int count, String amount) {
+    return '未確認のサブスク請求 $count 件 — $amount';
+  }
+
+  @override
+  String get subscriptionConfirmAll => 'すべて記録する';
+
+  @override
+  String get subscriptionReviewEach => '1件ずつ確認';
+
+  @override
+  String get subscriptionPaidYes => 'はい、記録する';
+
+  @override
+  String get subscriptionChargeFailed => '記録できませんでした。サブスクの金額を確認してください。';
+
+  @override
+  String get subscriptionPaidNo => 'いいえ';
+
+  @override
+  String get subscriptionWhatHappened => '理由は？';
+
+  @override
+  String get subscriptionReasonCancelled => '解約した';
+
+  @override
+  String get subscriptionReasonPriceChanged => '料金が変わった';
+
+  @override
+  String get subscriptionReasonNotPaid => '支払っていない';
+
+  @override
+  String get deleteSubscription => 'サブスクを削除';
+
+  @override
+  String get deleteSubscriptionKeepsEntries => '今後の記録を停止します。すでに記録された支払いは残ります。';
+
+  @override
   String get liabilities => '負債';
 
   @override

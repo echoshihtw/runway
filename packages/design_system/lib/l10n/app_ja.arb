@@ -81,6 +81,45 @@
   "typeLoan": "ローン",
   "typeRepay": "返済",
   "typeOpening": "開始残高",
+  "typeSubscription": "サブスク",
+  "subscriptionPaidQuestion": "{date}に{name}の{amount}を支払いましたか？",
+  "subscriptionChargesDue": "未確認のサブスク請求 {count} 件 — {amount}",
+  "subscriptionConfirmAll": "すべて記録する",
+  "subscriptionReviewEach": "1件ずつ確認",
+  "@subscriptionChargesDue": {
+    "description": "How many subscription charges are waiting to be confirmed, and their total",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionPaidYes": "はい、記録する",
+  "subscriptionChargeFailed": "記録できませんでした。サブスクの金額を確認してください。",
+  "subscriptionPaidNo": "いいえ",
+  "subscriptionWhatHappened": "理由は？",
+  "subscriptionReasonCancelled": "解約した",
+  "subscriptionReasonPriceChanged": "料金が変わった",
+  "subscriptionReasonNotPaid": "支払っていない",
+  "@subscriptionPaidQuestion": {
+    "description": "Asks whether a subscription charge was actually paid",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteSubscription": "サブスクを削除",
+  "deleteSubscriptionKeepsEntries": "今後の記録を停止します。すでに記録された支払いは残ります。",
   "liabilities": "負債",
   "noActiveLoans": "> アクティブなローンなし",
   "settled": "完済",
