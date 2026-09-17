@@ -18,9 +18,10 @@ class EntitlementNotifier extends AsyncNotifier<EntitlementState> {
       return EntitlementState(isPro: true);
     }
 
-    // Try to verify with RevenueCat if configured
+    // Try to verify with RevenueCat if configured. Read outside the try: a
+    // missing override is a programming error, not an offline store.
+    final service = ref.read(purchaseServiceProvider);
     try {
-      final service = ref.read(purchaseServiceProvider);
       final serverPro = await service.checkProEntitlement();
       if (serverPro) {
         await prefs.setBool(_kIsPro, true);
@@ -29,6 +30,13 @@ class EntitlementNotifier extends AsyncNotifier<EntitlementState> {
       }
       return EntitlementState(isPro: _effectiveIsPro(serverPro));
     } catch (_) {
+      // Offline, or the store is down. Listen anyway: when connectivity
+      // returns and RevenueCat reports the entitlement, the unlock has to
+      // land without a relaunch. This branch used to return without
+      // attaching — the listener was wired only after a *successful* check —
+      // so a paying customer who opened the app offline stayed locked out for
+      // the whole session.
+      _unlockOnExternalPurchase(service);
       return EntitlementState(isPro: _effectiveIsPro(cached));
     }
   }
