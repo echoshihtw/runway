@@ -282,6 +282,42 @@ class AppLocalizationsJa extends AppLocalizations {
   String get newLoan => '+ ローン';
 
   @override
+  String get spendOnWhat => '何に使った？';
+
+  @override
+  String get presetCoffee => 'コーヒー';
+
+  @override
+  String get presetCoffeeNote => 'コーヒー';
+
+  @override
+  String get presetLunch => 'ランチ';
+
+  @override
+  String get presetLunchNote => 'ランチ';
+
+  @override
+  String get presetDinner => 'ディナー';
+
+  @override
+  String get presetDinnerNote => 'ディナー';
+
+  @override
+  String get presetTransport => '交通費';
+
+  @override
+  String get presetTransportNote => '交通費';
+
+  @override
+  String get presetGroceries => '食料品';
+
+  @override
+  String get presetGroceriesNote => '食料品';
+
+  @override
+  String get presetSomethingElse => 'その他';
+
+  @override
   String get settled => '完済';
 
   @override

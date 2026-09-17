@@ -282,6 +282,42 @@ class AppLocalizationsZh extends AppLocalizations {
   String get newLoan => '+ 貸款';
 
   @override
+  String get spendOnWhat => '這筆花在什麼？';
+
+  @override
+  String get presetCoffee => '咖啡';
+
+  @override
+  String get presetCoffeeNote => '咖啡';
+
+  @override
+  String get presetLunch => '午餐';
+
+  @override
+  String get presetLunchNote => '午餐';
+
+  @override
+  String get presetDinner => '晚餐';
+
+  @override
+  String get presetDinnerNote => '晚餐';
+
+  @override
+  String get presetTransport => '交通';
+
+  @override
+  String get presetTransportNote => '交通';
+
+  @override
+  String get presetGroceries => '採買';
+
+  @override
+  String get presetGroceriesNote => '採買';
+
+  @override
+  String get presetSomethingElse => '其他';
+
+  @override
   String get settled => '已結清';
 
   @override
@@ -1058,6 +1094,42 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get newLoan => '+ 貸款';
+
+  @override
+  String get spendOnWhat => '這筆花在什麼？';
+
+  @override
+  String get presetCoffee => '咖啡';
+
+  @override
+  String get presetCoffeeNote => '咖啡';
+
+  @override
+  String get presetLunch => '午餐';
+
+  @override
+  String get presetLunchNote => '午餐';
+
+  @override
+  String get presetDinner => '晚餐';
+
+  @override
+  String get presetDinnerNote => '晚餐';
+
+  @override
+  String get presetTransport => '交通';
+
+  @override
+  String get presetTransportNote => '交通';
+
+  @override
+  String get presetGroceries => '採買';
+
+  @override
+  String get presetGroceriesNote => '採買';
+
+  @override
+  String get presetSomethingElse => '其他';
 
   @override
   String get settled => '已結清';

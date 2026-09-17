@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
 import 'package:design_system/design_system.dart';
 import 'package:application/application.dart';
 import 'package:domain/domain.dart';
 import 'widgets/transaction_row.dart';
-import 'widgets/transaction_form.dart';
-import '../loans/start_loan_creation.dart';
-import '../subscriptions/add_subscription_sheet.dart';
-import '../../shared/speed_dial_fab.dart';
+import 'daily_spend_sheet.dart';
+import 'show_entry_sheet.dart';
 
 class TransactionsScreen extends ConsumerStatefulWidget {
   final bool openAddOnLoad;
@@ -25,7 +22,6 @@ class TransactionsScreen extends ConsumerStatefulWidget {
 }
 
 class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
-  final _fabKey = GlobalKey<SpeedDialFabState>();
 
   @override
   Widget build(BuildContext context) {
@@ -35,152 +31,172 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      floatingActionButton: SpeedDialFab(
-        key: _fabKey,
-        onEntry: () => _showForm(context, ref, null),
-        onLoan: () => startLoanCreation(context, ref),
-        onSubscription: () => showAddSubscriptionSheet(context, ref),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      body: GestureDetector(
-        onTap: () => _fabKey.currentState?.close(),
-        behavior: HitTestBehavior.translucent,
-        child: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: asyncTxs.when(
-                  loading: () => const Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.green,
-                      strokeWidth: 1.5,
-                    ),
-                  ),
-                  error: (e, _) => Center(
-                    child: Text(
-                      'ERROR: $e',
-                      style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.red,
-                      ),
-                    ),
-                  ),
-                  data: (txs) {
-                    if (txs.isEmpty) {
-                      return Center(
-                        child: GestureDetector(
-                          onTap: () => _showFormWithType(
-                            context,
-                            ref,
-                            TransactionType.openingBalance,
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(
-                                Icons.receipt_long_outlined,
-                                color: AppColors.textDim,
-                                size: 40,
-                              ),
-                              const SizedBox(height: AppSpacing.sm),
-                              Text(
-                                l10n.noEntries,
-                                textAlign: TextAlign.center,
-                                style: AppTextStyles.bodySmall,
-                              ),
-                              const SizedBox(height: AppSpacing.md),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: AppSpacing.lg,
-                                  vertical: AppSpacing.sm,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppColors.neonGreen,
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                                child: Text(
-                                  '+ ADD OPENING BALANCE',
-                                  style: AppTextStyles.caption.copyWith(
-                                    color: AppColors.background,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }
-
-                    final sorted = [...txs]
-                      ..sort((a, b) => b.date.compareTo(a.date));
-
-                    final grouped = <String, List<Transaction>>{};
-                    for (final tx in sorted) {
-                      grouped
-                          .putIfAbsent(_monthKey(tx.date), () => [])
-                          .add(tx);
-                    }
-                    final monthKeys = grouped.keys.toList()
-                      ..sort((a, b) => b.compareTo(a));
-
-                    final items = <_ListItem>[];
-                    for (final key in monthKeys) {
-                      items.add(_MonthItem(key, grouped[key]!));
-                      for (final tx in grouped[key]!) {
-                        items.add(_TxItem(tx));
-                      }
-                    }
-
-                    return ListView.builder(
-                      padding: const EdgeInsets.only(bottom: 80),
-                      itemCount: items.length,
-                      itemBuilder: (_, i) {
-                        final item = items[i];
-                        if (item is _MonthItem) {
-                          return _MonthSectionHeader(
-                            monthKey: item.key,
-                            transactions: item.txs,
-                            symbol: symbol,
-                          );
-                        }
-                        final tx = (item as _TxItem).tx;
-                        return Dismissible(
-                          key: Key(tx.id),
-                          direction: DismissDirection.endToStart,
-                          background: Container(
-                            alignment: Alignment.centerRight,
-                            padding: const EdgeInsets.only(
-                              right: AppSpacing.lg,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.hotPink.withAlpha(30),
-                              borderRadius: BorderRadius.circular(
-                                AppSpacing.cardRadius,
-                              ),
-                            ),
-                            child: const Icon(
-                              Icons.delete_rounded,
-                              color: AppColors.hotPink,
-                              size: 22,
-                            ),
-                          ),
-                          confirmDismiss: (_) async {
-                            _confirmDelete(context, ref, tx);
-                            return false;
-                          },
-                          child: TransactionRow(
-                            transaction: tx,
-                            onEdit: () => _showForm(context, ref, tx),
-                            onDelete: () => _confirmDelete(context, ref, tx),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
+      // One button, one job: ask what was bought. Loans and subscriptions
+      // are created from the cards that own them.
+      floatingActionButton: GestureDetector(
+        key: const Key('add-fab'),
+        onTap: () => showDailySpendSheet(context, ref),
+        child: Container(
+          width: 56,
+          height: 56,
+          decoration: BoxDecoration(
+            color: AppColors.neonGreen,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.neonGreen.withAlpha(80),
+                blurRadius: 20,
+                offset: const Offset(0, 4),
               ),
             ],
           ),
+          child: const Icon(
+            Icons.add_rounded,
+            color: AppColors.background,
+            size: 26,
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: asyncTxs.when(
+                loading: () => const Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.green,
+                    strokeWidth: 1.5,
+                  ),
+                ),
+                error: (e, _) => Center(
+                  child: Text(
+                    'ERROR: $e',
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: AppColors.red,
+                    ),
+                  ),
+                ),
+                data: (txs) {
+                  if (txs.isEmpty) {
+                    return Center(
+                      child: GestureDetector(
+                        onTap: () => showEntrySheet(
+                          context,
+                          ref,
+                          preselectedType: TransactionType.openingBalance,
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.receipt_long_outlined,
+                              color: AppColors.textDim,
+                              size: 40,
+                            ),
+                            const SizedBox(height: AppSpacing.sm),
+                            Text(
+                              l10n.noEntries,
+                              textAlign: TextAlign.center,
+                              style: AppTextStyles.bodySmall,
+                            ),
+                            const SizedBox(height: AppSpacing.md),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: AppSpacing.lg,
+                                vertical: AppSpacing.sm,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.neonGreen,
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              child: Text(
+                                '+ ADD OPENING BALANCE',
+                                style: AppTextStyles.caption.copyWith(
+                                  color: AppColors.background,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
+                  final sorted = [...txs]
+                    ..sort((a, b) => b.date.compareTo(a.date));
+
+                  final grouped = <String, List<Transaction>>{};
+                  for (final tx in sorted) {
+                    grouped
+                        .putIfAbsent(_monthKey(tx.date), () => [])
+                        .add(tx);
+                  }
+                  final monthKeys = grouped.keys.toList()
+                    ..sort((a, b) => b.compareTo(a));
+
+                  final items = <_ListItem>[];
+                  for (final key in monthKeys) {
+                    items.add(_MonthItem(key, grouped[key]!));
+                    for (final tx in grouped[key]!) {
+                      items.add(_TxItem(tx));
+                    }
+                  }
+
+                  return ListView.builder(
+                    padding: const EdgeInsets.only(bottom: 80),
+                    itemCount: items.length,
+                    itemBuilder: (_, i) {
+                      final item = items[i];
+                      if (item is _MonthItem) {
+                        return _MonthSectionHeader(
+                          monthKey: item.key,
+                          transactions: item.txs,
+                          symbol: symbol,
+                        );
+                      }
+                      final tx = (item as _TxItem).tx;
+                      return Dismissible(
+                        key: Key(tx.id),
+                        direction: DismissDirection.endToStart,
+                        background: Container(
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.only(
+                            right: AppSpacing.lg,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.hotPink.withAlpha(30),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.cardRadius,
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.delete_rounded,
+                            color: AppColors.hotPink,
+                            size: 22,
+                          ),
+                        ),
+                        confirmDismiss: (_) async {
+                          _confirmDelete(context, ref, tx);
+                          return false;
+                        },
+                        child: TransactionRow(
+                          transaction: tx,
+                          onEdit: () => showEntrySheet(
+                            context,
+                            ref,
+                            existing: tx,
+                          ),
+                          onDelete: () => _confirmDelete(context, ref, tx),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -188,118 +204,6 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
 
   String _monthKey(DateTime date) =>
       '${date.year}-${date.month.toString().padLeft(2, '0')}';
-
-  void _showFormWithType(
-    BuildContext context,
-    WidgetRef ref,
-    TransactionType preselectedType,
-  ) {
-    final loans = _loanChoices(ref);
-    showModalBottomSheet(
-      context: context,
-      useRootNavigator: true,
-      isScrollControlled: true,
-      backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppSpacing.cardRadius),
-        ),
-      ),
-      builder: (_) => TransactionForm(
-        existing: null,
-        preselectedType: preselectedType,
-        loans: loans,
-        onSubmit: (type, amount, date, note, category, loanId) async {
-          final now = DateTime.now();
-          final tx = Transaction(
-            id: const Uuid().v4(),
-            date: date,
-            type: type,
-            amount: Money(amount),
-            note: note,
-            loanId: type == TransactionType.repayment ? loanId : null,
-            category: category,
-            createdAt: now,
-            updatedAt: now,
-          );
-          await ref.read(addTransactionUseCaseProvider).execute(tx);
-        },
-      ),
-    );
-  }
-
-  void _showForm(BuildContext context, WidgetRef ref, Transaction? existing) {
-    final loans = _loanChoices(ref, existing: existing);
-    showModalBottomSheet(
-      context: context,
-      useRootNavigator: true,
-      isScrollControlled: true,
-      backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppSpacing.cardRadius),
-        ),
-      ),
-      builder: (_) => TransactionForm(
-        existing: existing,
-        loans: loans,
-        onSubmit: (type, amount, date, note, category, loanId) async {
-          final now = DateTime.now();
-          if (existing == null) {
-            final tx = Transaction(
-              id: const Uuid().v4(),
-              date: date,
-              type: type,
-              amount: Money(amount),
-              note: note,
-              loanId: type == TransactionType.repayment ? loanId : null,
-              category: category,
-              createdAt: now,
-              updatedAt: now,
-            );
-            await ref.read(addTransactionUseCaseProvider).execute(tx);
-          } else {
-            final tx = existing.copyWith(
-              date: date,
-              type: type,
-              amount: Money(amount),
-              note: note,
-              loanId: type == TransactionType.repayment ? loanId : null,
-              clearLoanId: type != TransactionType.repayment,
-              category: category,
-              clearCategory: category == null,
-              updatedAt: now,
-            );
-            await ref.read(editTransactionUseCaseProvider).execute(tx);
-          }
-        },
-      ),
-    );
-  }
-
-  List<Loan> _loanChoices(WidgetRef ref, {Transaction? existing}) {
-    final summaries = ref.read(loanSummariesProvider);
-    final loans = activeLoanSummaries(
-      summaries,
-    ).map((summary) => summary.loan).toList();
-    final existingLoanId = existing?.loanId;
-    if (existingLoanId != null &&
-        !loans.any((loan) => loan.id == existingLoanId)) {
-      LoanSummary? existingSummary;
-      for (final summary in summaries) {
-        if (summary.loan.id == existingLoanId) {
-          existingSummary = summary;
-          break;
-        }
-      }
-      if (existingSummary != null) loans.add(existingSummary.loan);
-    }
-    loans.sort((a, b) {
-      if (a.isActive != b.isActive) return a.isActive ? -1 : 1;
-      return a.name.compareTo(b.name);
-    });
-    return loans;
-  }
 
   void _confirmDelete(BuildContext context, WidgetRef ref, Transaction tx) {
     final l10n = context.l10n;

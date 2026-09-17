@@ -286,6 +286,42 @@ class AppLocalizationsEs extends AppLocalizations {
   String get newLoan => '+ PRÉSTAMO';
 
   @override
+  String get spendOnWhat => '¿EN QUÉ HAS GASTADO?';
+
+  @override
+  String get presetCoffee => 'CAFÉ';
+
+  @override
+  String get presetCoffeeNote => 'Café';
+
+  @override
+  String get presetLunch => 'ALMUERZO';
+
+  @override
+  String get presetLunchNote => 'Almuerzo';
+
+  @override
+  String get presetDinner => 'CENA';
+
+  @override
+  String get presetDinnerNote => 'Cena';
+
+  @override
+  String get presetTransport => 'TRANSPORTE';
+
+  @override
+  String get presetTransportNote => 'Transporte';
+
+  @override
+  String get presetGroceries => 'COMPRA';
+
+  @override
+  String get presetGroceriesNote => 'Compra';
+
+  @override
+  String get presetSomethingElse => 'OTRA COSA';
+
+  @override
   String get settled => 'LIQUIDADO';
 
   @override

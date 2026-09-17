@@ -1,0 +1,102 @@
+import 'package:application/application.dart';
+import 'package:design_system/design_system.dart';
+import 'package:domain/domain.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
+
+import 'widgets/transaction_form.dart';
+
+/// The one way to open the entry form.
+///
+/// This existed in three near-identical copies — `_showForm` and
+/// `_showFormWithType` in `transactions_screen`, and `_showForm` in
+/// `app_router` — each carrying its own copy of the loan-choice logic, and
+/// those two copies had already drifted apart in how they recover the loan an
+/// existing repayment names. The preset grid would have been a fourth.
+Future<void> showEntrySheet(
+  BuildContext context,
+  WidgetRef ref, {
+  Transaction? existing,
+  String? prefillNote,
+  TransactionType? preselectedType,
+}) {
+  final loans = _loanChoices(ref, existing: existing);
+
+  return showModalBottomSheet<void>(
+    context: context,
+    useRootNavigator: true,
+    isScrollControlled: true,
+    backgroundColor: AppColors.surface,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(
+        top: Radius.circular(AppSpacing.cardRadius),
+      ),
+    ),
+    builder: (_) => TransactionForm(
+      existing: existing,
+      prefillNote: prefillNote,
+      preselectedType: preselectedType,
+      loans: loans,
+      onSubmit: (type, amount, date, note, category, loanId) async {
+        final now = DateTime.now();
+        if (existing == null) {
+          await ref.read(addTransactionUseCaseProvider).execute(
+            Transaction(
+              id: const Uuid().v4(),
+              date: date,
+              type: type,
+              amount: Money(amount),
+              note: note,
+              loanId: type == TransactionType.repayment ? loanId : null,
+              category: category,
+              createdAt: now,
+              updatedAt: now,
+            ),
+          );
+        } else {
+          await ref.read(editTransactionUseCaseProvider).execute(
+            existing.copyWith(
+              date: date,
+              type: type,
+              amount: Money(amount),
+              note: note,
+              loanId: type == TransactionType.repayment ? loanId : null,
+              clearLoanId: type != TransactionType.repayment,
+              category: category,
+              clearCategory: category == null,
+              updatedAt: now,
+            ),
+          );
+        }
+      },
+    ),
+  );
+}
+
+/// The loans a repayment may point at: the active ones, plus the loan an
+/// existing repayment already names even once it is closed — otherwise
+/// editing such an entry would silently drop its link.
+List<Loan> _loanChoices(WidgetRef ref, {Transaction? existing}) {
+  final summaries = ref.read(loanSummariesProvider);
+  final loans = activeLoanSummaries(
+    summaries,
+  ).map((summary) => summary.loan).toList();
+
+  final existingLoanId = existing?.loanId;
+  if (existingLoanId != null &&
+      !loans.any((loan) => loan.id == existingLoanId)) {
+    for (final summary in summaries) {
+      if (summary.loan.id == existingLoanId) {
+        loans.add(summary.loan);
+        break;
+      }
+    }
+  }
+
+  loans.sort((a, b) {
+    if (a.isActive != b.isActive) return a.isActive ? -1 : 1;
+    return a.name.compareTo(b.name);
+  });
+  return loans;
+}

@@ -6,6 +6,11 @@ import 'package:intl/intl.dart';
 class TransactionForm extends StatefulWidget {
   final Transaction? existing;
   final TransactionType? preselectedType;
+
+  /// A note written for the owner, from a daily-spend preset. Only the note:
+  /// the amount is the one thing the preset cannot know, and it stays empty
+  /// and focused.
+  final String? prefillNote;
   final List<Loan> loans;
   final void Function(
     TransactionType type,
@@ -20,6 +25,7 @@ class TransactionForm extends StatefulWidget {
     super.key,
     this.existing,
     this.preselectedType,
+    this.prefillNote,
     this.loans = const [],
     required this.onSubmit,
   });
@@ -58,7 +64,7 @@ class _TransactionFormState extends State<TransactionForm> {
     _date = widget.existing?.date ?? DateTime.now();
     _amountCtrl.text =
         widget.existing?.amount.value.toStringAsFixed(0) ?? '';
-    _noteCtrl.text = widget.existing?.note ?? '';
+    _noteCtrl.text = widget.existing?.note ?? widget.prefillNote ?? '';
     _selectedLoanId = widget.existing?.loanId;
     _outKind = switch (widget.existing) {
       Transaction(type: TransactionType.repayment) => _OutKind.loan,

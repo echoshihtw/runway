@@ -641,6 +641,78 @@ abstract class AppLocalizations {
   /// **'+ LOAN'**
   String get newLoan;
 
+  /// No description provided for @spendOnWhat.
+  ///
+  /// In en, this message translates to:
+  /// **'WHAT DID YOU SPEND ON?'**
+  String get spendOnWhat;
+
+  /// No description provided for @presetCoffee.
+  ///
+  /// In en, this message translates to:
+  /// **'COFFEE'**
+  String get presetCoffee;
+
+  /// No description provided for @presetCoffeeNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Coffee'**
+  String get presetCoffeeNote;
+
+  /// No description provided for @presetLunch.
+  ///
+  /// In en, this message translates to:
+  /// **'LUNCH'**
+  String get presetLunch;
+
+  /// No description provided for @presetLunchNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Lunch'**
+  String get presetLunchNote;
+
+  /// No description provided for @presetDinner.
+  ///
+  /// In en, this message translates to:
+  /// **'DINNER'**
+  String get presetDinner;
+
+  /// No description provided for @presetDinnerNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Dinner'**
+  String get presetDinnerNote;
+
+  /// No description provided for @presetTransport.
+  ///
+  /// In en, this message translates to:
+  /// **'TRANSPORT'**
+  String get presetTransport;
+
+  /// No description provided for @presetTransportNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Transport'**
+  String get presetTransportNote;
+
+  /// No description provided for @presetGroceries.
+  ///
+  /// In en, this message translates to:
+  /// **'GROCERIES'**
+  String get presetGroceries;
+
+  /// No description provided for @presetGroceriesNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Groceries'**
+  String get presetGroceriesNote;
+
+  /// No description provided for @presetSomethingElse.
+  ///
+  /// In en, this message translates to:
+  /// **'SOMETHING ELSE'**
+  String get presetSomethingElse;
+
   /// No description provided for @settled.
   ///
   /// In en, this message translates to:
