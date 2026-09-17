@@ -4,6 +4,7 @@ import 'package:design_system/design_system.dart';
 import 'package:application/application.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
+import 'add_subscription_sheet.dart';
 import 'subscription_form.dart';
 
 class SubscriptionsPanel extends ConsumerWidget {
@@ -31,7 +32,10 @@ class SubscriptionsPanel extends ConsumerWidget {
     final showCatLabel = hasPersonal && hasBusiness;
 
     final summary = active.isEmpty
-        ? _EmptySummary(l10n: l10n)
+        ? _EmptySummary(
+            l10n: l10n,
+            onAdd: () => showAddSubscriptionSheet(context, ref),
+          )
         : Column(
             children: [
               Row(
@@ -77,6 +81,10 @@ class SubscriptionsPanel extends ConsumerWidget {
                   showDivider: i < sorted.length - 1,
                   onEdit: () => _showEditSubscription(context, ref, sorted[i]),
                 ),
+              _AddStrip(
+                label: l10n.newSubscription,
+                onTap: () => showAddSubscriptionSheet(context, ref),
+              ),
             ],
           );
 
@@ -174,32 +182,57 @@ class SubscriptionsPanel extends ConsumerWidget {
 
 class _EmptySummary extends StatelessWidget {
   final AppLocalizations l10n;
+  final VoidCallback onAdd;
 
-  const _EmptySummary({required this.l10n});
+  const _EmptySummary({required this.l10n, required this.onAdd});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 34,
-          height: 34,
-          decoration: BoxDecoration(
-            color: SC.subscr.withAlpha(16),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: SC.subscr.withAlpha(45)),
+    // With nothing subscribed the card has no expanded section, so this row is
+    // the only way in. It was inert text, which meant the only door was the
+    // add menu — and the one place someone learns the feature exists could not
+    // act on it.
+    return GestureDetector(
+      onTap: onAdd,
+      behavior: HitTestBehavior.opaque,
+      child: Row(
+        children: [
+          Container(
+            width: 34,
+            height: 34,
+            decoration: BoxDecoration(
+              color: SC.subscr.withAlpha(16),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: SC.subscr.withAlpha(45)),
+            ),
+            // One glyph per concept: the rows and the logged charge both use
+            // autorenew, so the card uses it too.
+            child: const Icon(
+              Icons.autorenew_rounded,
+              color: SC.subscr,
+              size: 18,
+            ),
           ),
-          child: const Icon(
-            Icons.subscriptions_rounded,
-            color: SC.subscr,
-            size: 18,
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            flex: 3,
+            child: Text(l10n.noSubscriptions, style: AppTextStyles.bodySmall),
           ),
-        ),
-        const SizedBox(width: AppSpacing.sm),
-        Expanded(
-          child: Text(l10n.noSubscriptions, style: AppTextStyles.bodySmall),
-        ),
-      ],
+          // The label is the only thing in this row that can be shortened
+          // without losing meaning, so it takes the smaller share and
+          // ellipsises instead of pushing the row past the screen edge.
+          Expanded(
+            flex: 2,
+            child: Text(
+              l10n.newSubscription,
+              textAlign: TextAlign.right,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.label.copyWith(color: SC.subscr),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -409,6 +442,41 @@ class _SubRow extends StatelessWidget {
             const SizedBox(width: AppSpacing.xs),
             const Icon(Icons.edit_rounded, color: AppColors.textDim, size: 14),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+
+/// "One more" at the foot of a list, rather than a control in the header where
+/// the tap already toggles the card.
+class _AddStrip extends StatelessWidget {
+  final String label;
+  final VoidCallback onTap;
+
+  const _AddStrip({required this.label, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        width: double.infinity,
+        // 44pt is Apple's minimum. The strip reads as one control all the way
+        // down to the gap beneath the label, so the gap belongs inside the
+        // target rather than just outside it.
+        constraints: const BoxConstraints(minHeight: 44),
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm + 2),
+        decoration: const BoxDecoration(
+          border: Border(top: BorderSide(color: AppColors.cardBorder)),
+        ),
+        child: Center(
+          child: Text(
+            label,
+            style: AppTextStyles.label.copyWith(color: SC.subscr),
+          ),
         ),
       ),
     );

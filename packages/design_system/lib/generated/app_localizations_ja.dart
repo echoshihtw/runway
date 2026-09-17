@@ -249,6 +249,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get subscriptionChargeFailed => '記録できませんでした。サブスクの金額を確認してください。';
 
   @override
+  String get subscriptionSaveFailed => 'サブスクを保存できませんでした。追加されていません。';
+
+  @override
   String get subscriptionPaidNo => 'いいえ';
 
   @override

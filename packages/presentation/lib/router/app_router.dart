@@ -13,8 +13,8 @@ import '../features/dashboard/dashboard_screen.dart';
 import '../features/transactions/transactions_screen.dart';
 import '../features/transactions/widgets/transaction_form.dart';
 import '../features/transactions/widgets/loan_wizard.dart';
-import '../features/subscriptions/subscription_form.dart';
 import '../features/paywall/paywall_screen.dart';
+import '../features/subscriptions/add_subscription_sheet.dart';
 import '../features/scenarios/scenarios_screen.dart';
 import 'page_indicator.dart';
 
@@ -128,7 +128,7 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
                       onTap: () {
                         Navigator.pop(ctx);
                         WidgetsBinding.instance.addPostFrameCallback(
-                          (_) => _showSubscriptionForm(),
+                          (_) => showAddSubscriptionSheet(context, ref),
                         );
                       },
                     ),
@@ -249,40 +249,6 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
               updatedAt: now,
             ),
           );
-        },
-      ),
-    );
-  }
-
-  void _showSubscriptionForm() {
-    showModalBottomSheet(
-      context: context,
-      useRootNavigator: true,
-      isScrollControlled: true,
-      backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppSpacing.cardRadius),
-        ),
-      ),
-      builder: (_) => SubscriptionForm(
-        onSubmit: (name, category, amount, cycle, startDate, note) async {
-          final now = DateTime.now();
-          await ref.read(addSubscriptionUseCaseProvider).execute(
-            Subscription(
-              id: const Uuid().v4(),
-              name: name,
-              category: category,
-              amount: amount,
-              cycle: cycle,
-              startDate: startDate,
-              nextBillingDate: computeNextBillingDate(startDate, cycle),
-              note: note,
-              createdAt: now,
-              updatedAt: now,
-            ),
-          );
-          return true;
         },
       ),
     );

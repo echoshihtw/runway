@@ -249,6 +249,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get subscriptionChargeFailed => '無法記錄。請檢查訂閱金額。';
 
   @override
+  String get subscriptionSaveFailed => '無法儲存訂閱。尚未新增。';
+
+  @override
   String get subscriptionPaidNo => '否';
 
   @override
@@ -1019,6 +1022,9 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get subscriptionChargeFailed => '無法記錄。請檢查訂閱金額。';
+
+  @override
+  String get subscriptionSaveFailed => '無法儲存訂閱。尚未新增。';
 
   @override
   String get subscriptionPaidNo => '否';
