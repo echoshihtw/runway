@@ -229,6 +229,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String get typeOpening => 'OPENING';
 
   @override
+  String get typeSubscription => 'SUBSCRIPTION';
+
+  @override
+  String subscriptionPaidQuestion(String amount, String name, String date) {
+    return 'Did you pay $amount for $name on $date?';
+  }
+
+  @override
+  String get subscriptionPaidYes => 'Yes, log it';
+
+  @override
+  String get subscriptionPaidNo => 'No';
+
+  @override
+  String get subscriptionWhatHappened => 'What happened?';
+
+  @override
+  String get subscriptionReasonCancelled => 'I cancelled it';
+
+  @override
+  String get subscriptionReasonPriceChanged => 'The price changed';
+
+  @override
+  String get subscriptionReasonNotPaid => 'I didn\'t pay it';
+
+  @override
+  String get deleteSubscription => 'Delete subscription';
+
+  @override
+  String get deleteSubscriptionKeepsEntries =>
+      'Stops future entries. The payments already logged are kept.';
+
+  @override
   String get liabilities => 'LIABILITIES';
 
   @override

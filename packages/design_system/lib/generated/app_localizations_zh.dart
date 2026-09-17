@@ -227,6 +227,38 @@ class AppLocalizationsZh extends AppLocalizations {
   String get typeOpening => '初始';
 
   @override
+  String get typeSubscription => '訂閱';
+
+  @override
+  String subscriptionPaidQuestion(String amount, String name, String date) {
+    return '你在$date支付了$name的$amount嗎？';
+  }
+
+  @override
+  String get subscriptionPaidYes => '是，記錄下來';
+
+  @override
+  String get subscriptionPaidNo => '否';
+
+  @override
+  String get subscriptionWhatHappened => '發生了什麼？';
+
+  @override
+  String get subscriptionReasonCancelled => '我已取消';
+
+  @override
+  String get subscriptionReasonPriceChanged => '價格變了';
+
+  @override
+  String get subscriptionReasonNotPaid => '我沒有支付';
+
+  @override
+  String get deleteSubscription => '刪除訂閱';
+
+  @override
+  String get deleteSubscriptionKeepsEntries => '停止未來的記錄。已記錄的付款會保留。';
+
+  @override
   String get liabilities => '負債';
 
   @override
@@ -954,6 +986,38 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get typeOpening => '初始';
+
+  @override
+  String get typeSubscription => '訂閱';
+
+  @override
+  String subscriptionPaidQuestion(String amount, String name, String date) {
+    return '你在$date支付了$name的$amount嗎？';
+  }
+
+  @override
+  String get subscriptionPaidYes => '是，記錄下來';
+
+  @override
+  String get subscriptionPaidNo => '否';
+
+  @override
+  String get subscriptionWhatHappened => '發生了什麼？';
+
+  @override
+  String get subscriptionReasonCancelled => '我已取消';
+
+  @override
+  String get subscriptionReasonPriceChanged => '價格變了';
+
+  @override
+  String get subscriptionReasonNotPaid => '我沒有支付';
+
+  @override
+  String get deleteSubscription => '刪除訂閱';
+
+  @override
+  String get deleteSubscriptionKeepsEntries => '停止未來的記錄。已記錄的付款會保留。';
 
   @override
   String get liabilities => '負債';

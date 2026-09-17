@@ -82,6 +82,30 @@
   "typeLoan": "LOAN",
   "typeRepay": "REPAY",
   "typeOpening": "OPENING",
+  "typeSubscription": "SUBSCRIPTION",
+  "subscriptionPaidQuestion": "Did you pay {amount} for {name} on {date}?",
+  "subscriptionPaidYes": "Yes, log it",
+  "subscriptionPaidNo": "No",
+  "subscriptionWhatHappened": "What happened?",
+  "subscriptionReasonCancelled": "I cancelled it",
+  "subscriptionReasonPriceChanged": "The price changed",
+  "subscriptionReasonNotPaid": "I didn't pay it",
+  "@subscriptionPaidQuestion": {
+    "description": "Asks whether a subscription charge was actually paid",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteSubscription": "Delete subscription",
+  "deleteSubscriptionKeepsEntries": "Stops future entries. The payments already logged are kept.",
   "liabilities": "LIABILITIES",
   "noActiveLoans": "> NO ACTIVE LOANS",
   "settled": "SETTLED",

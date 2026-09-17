@@ -15,7 +15,16 @@ class SubscriptionForm extends StatefulWidget {
   )
   onSubmit;
 
-  const SubscriptionForm({super.key, this.existing, required this.onSubmit});
+  /// Stopping the reminder. Null while creating one, since there is nothing
+  /// to delete yet.
+  final VoidCallback? onDelete;
+
+  const SubscriptionForm({
+    super.key,
+    this.existing,
+    required this.onSubmit,
+    this.onDelete,
+  });
 
   @override
   State<SubscriptionForm> createState() => _SubscriptionFormState();
@@ -300,6 +309,21 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
                 ),
               ],
             ),
+
+            // A reminder has to be stoppable. Only offered while editing one,
+            // because there is nothing to delete while creating it.
+            if (widget.onDelete != null) ...[
+              const SizedBox(height: AppSpacing.sm),
+              NeoButton(
+                label: l10n.deleteSubscription,
+                variant: NeoButtonVariant.danger,
+                fullWidth: true,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  widget.onDelete!();
+                },
+              ),
+            ],
           ],
         ),
       ),

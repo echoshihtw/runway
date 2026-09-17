@@ -24,7 +24,7 @@ final modelProvider = Provider<ModelState>((ref) {
       const FinancialAssumptions();
 
   return computeModel(
-    currentCash: _currentCash(ref),
+    currentCash: _currentCash(ref.watch(transactionsProvider).value ?? const []),
     burn: ref.watch(monthlyBurnProvider),
     expectedMonthlyInflow: assumptions.expectedMonthlyInflow,
     expectedMonthlyBurnOverride: assumptions.expectedMonthlyBurnOverride,
@@ -43,7 +43,7 @@ final scenarioModelProvider = Provider<ModelState?>((ref) {
       const FinancialAssumptions();
 
   return modelForScenario(
-    currentCash: _currentCash(ref),
+    currentCash: _currentCash(transactions),
     burn: ref.watch(monthlyBurnProvider),
     monthlyCostOverride: scenario.burnRateOverride,
     simulatedIncome: scenario.simulatedIncome,
@@ -52,13 +52,5 @@ final scenarioModelProvider = Provider<ModelState?>((ref) {
   );
 });
 
-/// Cash the runway is divided into: the ledger balance, less the subscription
-/// charges that have fallen due without leaving an entry.
-///
-/// Burn has always counted subscriptions while the balance ignored them, so the
-/// figure drifted above the bank by the subscription total every month.
-double _currentCash(Ref ref) => cashAsOf(
-  transactions: ref.watch(transactionsProvider).value ?? const [],
-  subscriptions: ref.watch(subscriptionsProvider).value ?? const [],
-  now: DateTime.now(),
-);
+double _currentCash(List<Transaction> transactions) =>
+    currentCashAsOf(transactions: transactions, now: DateTime.now());

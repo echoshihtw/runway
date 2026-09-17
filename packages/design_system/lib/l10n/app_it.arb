@@ -82,6 +82,30 @@
   "typeLoan": "PRESTITO",
   "typeRepay": "RIMBORSO",
   "typeOpening": "SALDO INIZIALE",
+  "typeSubscription": "ABBONAMENTO",
+  "subscriptionPaidQuestion": "Hai pagato {amount} per {name} il {date}?",
+  "subscriptionPaidYes": "Sì, registralo",
+  "subscriptionPaidNo": "No",
+  "subscriptionWhatHappened": "Cosa è successo?",
+  "subscriptionReasonCancelled": "L'ho disdetto",
+  "subscriptionReasonPriceChanged": "Il prezzo è cambiato",
+  "subscriptionReasonNotPaid": "Non l'ho pagato",
+  "@subscriptionPaidQuestion": {
+    "description": "Asks whether a subscription charge was actually paid",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteSubscription": "Elimina abbonamento",
+  "deleteSubscriptionKeepsEntries": "Interrompe le voci future. I pagamenti già registrati vengono mantenuti.",
   "liabilities": "DEBITI",
   "noActiveLoans": "> NESSUN PRESTITO ATTIVO",
   "settled": "SALDATO",

@@ -82,6 +82,30 @@
   "typeLoan": "PRÊT",
   "typeRepay": "REMBOURSER",
   "typeOpening": "OUVERTURE",
+  "typeSubscription": "ABONNEMENT",
+  "subscriptionPaidQuestion": "Avez-vous payé {amount} pour {name} le {date} ?",
+  "subscriptionPaidYes": "Oui, enregistrer",
+  "subscriptionPaidNo": "Non",
+  "subscriptionWhatHappened": "Que s'est-il passé ?",
+  "subscriptionReasonCancelled": "Je l'ai résilié",
+  "subscriptionReasonPriceChanged": "Le prix a changé",
+  "subscriptionReasonNotPaid": "Je ne l'ai pas payé",
+  "@subscriptionPaidQuestion": {
+    "description": "Asks whether a subscription charge was actually paid",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteSubscription": "Supprimer l'abonnement",
+  "deleteSubscriptionKeepsEntries": "Arrête les prochaines écritures. Les paiements déjà enregistrés sont conservés.",
   "liabilities": "DETTES",
   "noActiveLoans": "> AUCUN PRÊT ACTIF",
   "settled": "RÉGLÉ",
