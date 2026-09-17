@@ -251,6 +251,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Enregistrement impossible. Vérifiez le montant de l\'abonnement.';
 
   @override
+  String get subscriptionSaveFailed =>
+      'Enregistrement de l\'abonnement impossible. Rien n\'a été ajouté.';
+
+  @override
   String get subscriptionPaidNo => 'Non';
 
   @override

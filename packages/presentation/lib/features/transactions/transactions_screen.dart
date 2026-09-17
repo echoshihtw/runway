@@ -8,8 +8,8 @@ import 'package:domain/domain.dart';
 import 'widgets/transaction_row.dart';
 import 'widgets/transaction_form.dart';
 import 'widgets/loan_wizard.dart';
-import '../subscriptions/subscription_form.dart';
 import '../paywall/paywall_screen.dart';
+import '../subscriptions/add_subscription_sheet.dart';
 import '../../shared/speed_dial_fab.dart';
 
 class TransactionsScreen extends ConsumerStatefulWidget {
@@ -40,7 +40,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
         key: _fabKey,
         onEntry: () => _showForm(context, ref, null),
         onLoan: () => _showLoanWizard(context, ref),
-        onSubscription: () => _showSubscriptionForm(context, ref),
+        onSubscription: () => showAddSubscriptionSheet(context, ref),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: GestureDetector(
@@ -247,42 +247,6 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
             updatedAt: now,
           );
           await ref.read(addTransactionUseCaseProvider).execute(tx);
-        },
-      ),
-    );
-  }
-
-  void _showSubscriptionForm(BuildContext context, WidgetRef ref) {
-    showModalBottomSheet(
-      context: context,
-      useRootNavigator: true,
-      isScrollControlled: true,
-      backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppSpacing.cardRadius),
-        ),
-      ),
-      builder: (_) => SubscriptionForm(
-        onSubmit: (name, category, amount, cycle, startDate, note) async {
-          final now = DateTime.now();
-          await ref
-              .read(addSubscriptionUseCaseProvider)
-              .execute(
-                Subscription(
-                  id: const Uuid().v4(),
-                  name: name,
-                  category: category,
-                  amount: amount,
-                  cycle: cycle,
-                  startDate: startDate,
-                  nextBillingDate: computeNextBillingDate(startDate, cycle),
-                  note: note,
-                  createdAt: now,
-                  updatedAt: now,
-                ),
-              );
-          return true;
         },
       ),
     );

@@ -251,6 +251,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Couldn\'t record that. Check the amount on the subscription.';
 
   @override
+  String get subscriptionSaveFailed =>
+      'Couldn\'t save that subscription. Nothing was added.';
+
+  @override
   String get subscriptionPaidNo => 'No';
 
   @override

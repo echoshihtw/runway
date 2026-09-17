@@ -4,7 +4,7 @@ import 'package:design_system/design_system.dart';
 import 'package:application/application.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
-import 'package:uuid/uuid.dart';
+import 'add_subscription_sheet.dart';
 import 'subscription_form.dart';
 
 class SubscriptionsPanel extends ConsumerWidget {
@@ -34,7 +34,7 @@ class SubscriptionsPanel extends ConsumerWidget {
     final summary = active.isEmpty
         ? _EmptySummary(
             l10n: l10n,
-            onAdd: () => _showAddSubscription(context, ref),
+            onAdd: () => showAddSubscriptionSheet(context, ref),
           )
         : Column(
             children: [
@@ -83,7 +83,7 @@ class SubscriptionsPanel extends ConsumerWidget {
                 ),
               _AddStrip(
                 label: l10n.newSubscription,
-                onTap: () => _showAddSubscription(context, ref),
+                onTap: () => showAddSubscriptionSheet(context, ref),
               ),
             ],
           );
@@ -138,42 +138,6 @@ class SubscriptionsPanel extends ConsumerWidget {
     );
     if (confirmed != true) return;
     await ref.read(deleteSubscriptionUseCaseProvider).execute(subscription.id);
-  }
-
-  /// Creating a subscription belongs with the subscriptions, not in a menu of
-  /// record types. The add menu keeps working; this is an additional door.
-  void _showAddSubscription(BuildContext context, WidgetRef ref) {
-    showModalBottomSheet(
-      context: context,
-      useRootNavigator: true,
-      isScrollControlled: true,
-      backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppSpacing.cardRadius),
-        ),
-      ),
-      builder: (_) => SubscriptionForm(
-        onSubmit: (name, category, amount, cycle, startDate, note) async {
-          final now = DateTime.now();
-          await ref.read(addSubscriptionUseCaseProvider).execute(
-            Subscription(
-              id: const Uuid().v4(),
-              name: name,
-              category: category,
-              amount: amount,
-              cycle: cycle,
-              startDate: startDate,
-              nextBillingDate: computeNextBillingDate(startDate, cycle),
-              note: note,
-              createdAt: now,
-              updatedAt: now,
-            ),
-          );
-          return true;
-        },
-      ),
-    );
   }
 
   void _showEditSubscription(
@@ -251,11 +215,21 @@ class _EmptySummary extends StatelessWidget {
           ),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
+            flex: 3,
             child: Text(l10n.noSubscriptions, style: AppTextStyles.bodySmall),
           ),
-          Text(
-            l10n.newSubscription,
-            style: AppTextStyles.label.copyWith(color: SC.subscr),
+          // The label is the only thing in this row that can be shortened
+          // without losing meaning, so it takes the smaller share and
+          // ellipsises instead of pushing the row past the screen edge.
+          Expanded(
+            flex: 2,
+            child: Text(
+              l10n.newSubscription,
+              textAlign: TextAlign.right,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.label.copyWith(color: SC.subscr),
+            ),
           ),
         ],
       ),
@@ -490,7 +464,11 @@ class _AddStrip extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.only(top: AppSpacing.sm + 2),
+        // 44pt is Apple's minimum. The strip reads as one control all the way
+        // down to the gap beneath the label, so the gap belongs inside the
+        // target rather than just outside it.
+        constraints: const BoxConstraints(minHeight: 44),
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm + 2),
         decoration: const BoxDecoration(
           border: Border(top: BorderSide(color: AppColors.cardBorder)),
         ),

@@ -575,6 +575,12 @@ abstract class AppLocalizations {
   /// **'Couldn\'t record that. Check the amount on the subscription.'**
   String get subscriptionChargeFailed;
 
+  /// No description provided for @subscriptionSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t save that subscription. Nothing was added.'**
+  String get subscriptionSaveFailed;
+
   /// No description provided for @subscriptionPaidNo.
   ///
   /// In en, this message translates to:

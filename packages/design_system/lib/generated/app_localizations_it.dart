@@ -251,6 +251,10 @@ class AppLocalizationsIt extends AppLocalizations {
       'Non è stato possibile registrarlo. Controlla l\'importo dell\'abbonamento.';
 
   @override
+  String get subscriptionSaveFailed =>
+      'Non è stato possibile salvare l\'abbonamento. Non è stato aggiunto nulla.';
+
+  @override
   String get subscriptionPaidNo => 'No';
 
   @override

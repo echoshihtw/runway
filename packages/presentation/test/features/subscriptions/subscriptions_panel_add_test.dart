@@ -22,7 +22,19 @@ class _Subscriptions implements SubscriptionRepository {
   Future<List<Subscription>> getAll() async => items;
 
   @override
+  Future<void> add(Subscription subscription) async => items.add(subscription);
+
+  @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+/// A ledger that refuses the write: a full disk, a locked database.
+class _FailingSubscriptions extends _Subscriptions {
+  _FailingSubscriptions() : super([]);
+
+  @override
+  Future<void> add(Subscription subscription) async =>
+      throw Exception('the write failed');
 }
 
 Subscription _sub() => Subscription(
@@ -37,16 +49,29 @@ Subscription _sub() => Subscription(
   updatedAt: DateTime(2026, 6, 3),
 );
 
-Future<void> _pump(WidgetTester tester, List<Subscription> subs) async {
+Future<void> _pump(
+  WidgetTester tester,
+  List<Subscription> subs, {
+  double textScale = 1.0,
+  SubscriptionRepository? repository,
+}) async {
   SharedPreferences.setMockInitialValues({});
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
-        subscriptionRepositoryProvider.overrideWithValue(_Subscriptions(subs)),
+        subscriptionRepositoryProvider.overrideWithValue(
+          repository ?? _Subscriptions(subs.toList()),
+        ),
       ],
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(
+            context,
+          ).copyWith(textScaler: TextScaler.linear(textScale)),
+          child: child!,
+        ),
         home: const Scaffold(
           body: SingleChildScrollView(child: SubscriptionsPanel()),
         ),
@@ -91,5 +116,78 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(SubscriptionForm), findsOneWidget);
+  });
+
+  testWidgets('the empty state fits a narrow screen at double text size', (
+    tester,
+  ) async {
+    // "> NO ACTIVE SUBSCRIPTIONS" and "+ SUBSCRIPTION" share one row, and the
+    // label was the only child of that row without a flex, so it kept its
+    // full intrinsic width and pushed the row past the screen. Italian is
+    // longer still: "> NESSUN ABBONAMENTO ATTIVO" beside "+ ABBONAMENTO".
+    tester.view.physicalSize = const Size(320, 640);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    await _pump(tester, const [], textScale: 2.0);
+
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'the empty state must lay out on the smallest screen we support '
+          'at the largest text size, not overflow',
+    );
+    expect(find.text('+ SUBSCRIPTION'), findsOneWidget);
+  });
+
+  testWidgets('the add strip is big enough to hit', (tester) async {
+    await _pump(tester, [_sub()]);
+    await tester.tap(find.text('SUBSCRIPTIONS'));
+    await tester.pumpAndSettle();
+
+    final strip = find
+        .ancestor(
+          of: find.text('+ SUBSCRIPTION'),
+          matching: find.byType(GestureDetector),
+        )
+        .first;
+
+    // Apple's minimum is 44pt. The strip padded only its top, so the tappable
+    // area was the label's own height plus 10 — and the visible gap beneath
+    // the label, which reads as part of the control, was outside it.
+    expect(
+      tester.getSize(strip).height,
+      greaterThanOrEqualTo(44),
+      reason: 'a control that looks tappable has to be reachable',
+    );
+  });
+
+  testWidgets('a write that fails leaves the form open and says so', (
+    tester,
+  ) async {
+    // onSubmit returned true unconditionally, so a failed write closed the
+    // sheet exactly like a successful one: the subscription was silently not
+    // created, and the only place that would have shown it is the card the
+    // sheet just closed over.
+    await _pump(tester, const [], repository: _FailingSubscriptions());
+
+    await tester.tap(find.text('+ SUBSCRIPTION'));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField).at(0), 'Netflix');
+    await tester.enterText(find.byType(TextField).at(1), '1990');
+    await tester.tap(find.text('CONFIRM'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byType(SubscriptionForm),
+      findsOneWidget,
+      reason: 'nothing was written, so the sheet must not close as if it was',
+    );
+    expect(
+      find.byType(SnackBar),
+      findsOneWidget,
+      reason: 'and the failure has to be said out loud',
+    );
   });
 }

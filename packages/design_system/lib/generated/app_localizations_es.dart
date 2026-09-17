@@ -251,6 +251,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'No se pudo registrar. Comprueba el importe de la suscripción.';
 
   @override
+  String get subscriptionSaveFailed =>
+      'No se pudo guardar la suscripción. No se añadió nada.';
+
+  @override
   String get subscriptionPaidNo => 'No';
 
   @override
