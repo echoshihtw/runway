@@ -55,9 +55,9 @@ Brand trio: **Turkish Blue `#5B9DC4`**, **Mint `#8FDDAA`** (`neonGreen`), **Rose
 | Numbers | `numberPrimary/Life/Cost/Subscr` |
 | Status | `statusStable` (mint), `statusCaution` (gold), `statusCritical` (pink) |
 | Section accents | `accentLife`, `accentCost` (gold), `accentSubscription`, `accentNeutral` |
-| Transaction icons | `txExpense/Income/Loan/Investment/Repayment/OpeningBalance` |
+| Transaction icons | `txExpense/Income/Loan/Repayment/OpeningBalance` |
 | Buttons | `btnPrimary`, `btnDestructive`, `btnLoan` |
-| Metrics | `metricCash/Runway/Total/BurnRate/Budget/Debt/Subscr/Investable/Safety/RunOut` |
+| Metrics | `metricCash/Runway/Total/BurnRate/Budget/Debt/Subscr/Safety/RunOut` |
 | UI | `labelColor`, `captionColor`, `dividerColor` |
 
 The rule encoded here: color a number only when it belongs to a distinct mental category; everything else stays neutral smoke.

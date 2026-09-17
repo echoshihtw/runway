@@ -63,10 +63,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get clear => 'CANCELLA';
 
   @override
-  String get loanAffectsInfo =>
-      '> PRESTITO/MESE INFLUISCE SUL RATIO DI PRESSIONE E INVESTIBILE';
-
-  @override
   String get transactionLog => 'REGISTRO TRANSAZIONI';
 
   @override

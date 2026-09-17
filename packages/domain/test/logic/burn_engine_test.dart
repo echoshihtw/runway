@@ -156,13 +156,12 @@ void main() {
     expect(burn.total, 72000);
   });
 
-  test('income, loans received, investments and opening balances are not burn', () {
+  test('income, loans received and opening balances are not burn', () {
     final burn = _burn(
       transactions: [
         _tx('open', TransactionType.openingBalance, 500000, DateTime(2026, 8, 1)),
         _tx('salary', TransactionType.income, 90000, _now),
         _tx('loan', TransactionType.loan, 100000, _now),
-        _tx('etf', TransactionType.investment, 20000, _now),
       ],
     );
 

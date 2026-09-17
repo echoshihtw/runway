@@ -63,10 +63,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get clear => 'CLEAR';
 
   @override
-  String get loanAffectsInfo =>
-      'Loan payments add to your fixed costs and reduce runway.';
-
-  @override
   String get transactionLog => 'TRANSACTION LOG';
 
   @override

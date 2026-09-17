@@ -66,7 +66,7 @@ monthlyBurn = max(rentBudget, typicalRent)
 - Expenses with the RENT category count as rent. Every other expense, including uncategorized ones, counts as living.
 - A logged expense uses up its budget and never adds on top of it. Burn only rises when a bucket goes over budget.
 - `typicalRent` and `typicalLiving` = average logged spending per completed month in that bucket, or this month's spending when there is no earlier month.
-- Loan repayments count only against their loan's scheduled payment. Income, loans received, investments and opening balances are not burn.
+- Loan repayments count only against their loan's scheduled payment. Income, loans received and opening balances are not burn.
 - A loan with a term keeps costing its monthly payment until that term ends. Repaid principal does not end it, because `remainingBalance` ignores interest and stopping there would raise the runway while the user is still paying. A loan with no term falls back to repaid principal, which is correct for an interest-free loan. The free-plan limit is deliberately more generous and frees the slot on repaid principal.
 - An expected burn override in Forecast replaces `monthlyBurn`.
 
@@ -99,9 +99,6 @@ runwayCash = max(currentCash - reserve, 0)   // runway is measured on this
 - A reserve of 0, the default, leaves every number exactly as it is today.
 
 The earlier `investable` formula (`safetyMonths`, `riskCapacity`, `pressureFactor`, and the SAFETY FUND / INVESTABLE pockets) is dropped, not deferred. It sized how much to put at risk from inputs the app does not hold — income stability, dependents, debt rates, insurance, time horizon — and sizing an investment is advice, not measurement. Runway states a position.
-
-### 3.4 Investment Transactions
-Investment transactions reduce cash balance but are excluded from burn rate calculation. They are not expenses.
 
 ### 3.5 Subscription Normalization
 All billing cycles normalize to monthly equivalent:
@@ -197,7 +194,6 @@ enum TransactionType {
   expense,        // reduces cash, counts in burn rate
   income,         // increases cash
   loan,           // increases cash (loan proceeds)
-  investment,     // reduces cash, EXCLUDED from burn rate
   repayment,      // reduces cash, counts in burn rate
   openingBalance, // sets starting cash
 }
@@ -297,7 +293,6 @@ Answer these questions:
 
 | Date | Decision | Reason |
 |---|---|---|
-| 2026-04 | No investment in burn rate | Investment ≠ expense, would inflate burn |
 | 2026-04 | Adaptive safety buffer (6-18mo) | Balance conservative vs aggressive |
 | 2026-04 | max(actual, budget) formula | Reality wins, budget is floor not ceiling |
 | 2026-09 | Rent and living budget buckets | Logged spending uses up its budget instead of being compared with the whole budget, so nothing is counted twice or missed |
@@ -307,7 +302,6 @@ Answer these questions:
 | 2026-09 | Cash excludes entries dated in the future | The log already marks them planned. Counting them let a future bonus lengthen the runway today |
 | 2026-09 | Caution runway status is amber `#FFC978`, not gold | Gold means debt. A gold runway number above the gold liabilities card read as one category |
 | 2026-04 | Mathematical runway (no 120mo cap) | Artificial caps mislead users |
-| 2026-04 | Two pockets (safety + investable) | Mental model clarity |
 | 2026-04 | JetBrains Mono for numbers | Gaming soul, readability |
 | 2026-04 | Color = semantic meaning only | Reduce visual noise |
 | 2026-04 | Runway as hero metric | App purpose = survival timer |
