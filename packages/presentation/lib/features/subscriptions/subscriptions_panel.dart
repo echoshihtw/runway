@@ -4,6 +4,7 @@ import 'package:design_system/design_system.dart';
 import 'package:application/application.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 import 'subscription_form.dart';
 
 class SubscriptionsPanel extends ConsumerWidget {
@@ -31,7 +32,10 @@ class SubscriptionsPanel extends ConsumerWidget {
     final showCatLabel = hasPersonal && hasBusiness;
 
     final summary = active.isEmpty
-        ? _EmptySummary(l10n: l10n)
+        ? _EmptySummary(
+            l10n: l10n,
+            onAdd: () => _showAddSubscription(context, ref),
+          )
         : Column(
             children: [
               Row(
@@ -77,6 +81,10 @@ class SubscriptionsPanel extends ConsumerWidget {
                   showDivider: i < sorted.length - 1,
                   onEdit: () => _showEditSubscription(context, ref, sorted[i]),
                 ),
+              _AddStrip(
+                label: l10n.newSubscription,
+                onTap: () => _showAddSubscription(context, ref),
+              ),
             ],
           );
 
@@ -132,6 +140,42 @@ class SubscriptionsPanel extends ConsumerWidget {
     await ref.read(deleteSubscriptionUseCaseProvider).execute(subscription.id);
   }
 
+  /// Creating a subscription belongs with the subscriptions, not in a menu of
+  /// record types. The add menu keeps working; this is an additional door.
+  void _showAddSubscription(BuildContext context, WidgetRef ref) {
+    showModalBottomSheet(
+      context: context,
+      useRootNavigator: true,
+      isScrollControlled: true,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppSpacing.cardRadius),
+        ),
+      ),
+      builder: (_) => SubscriptionForm(
+        onSubmit: (name, category, amount, cycle, startDate, note) async {
+          final now = DateTime.now();
+          await ref.read(addSubscriptionUseCaseProvider).execute(
+            Subscription(
+              id: const Uuid().v4(),
+              name: name,
+              category: category,
+              amount: amount,
+              cycle: cycle,
+              startDate: startDate,
+              nextBillingDate: computeNextBillingDate(startDate, cycle),
+              note: note,
+              createdAt: now,
+              updatedAt: now,
+            ),
+          );
+          return true;
+        },
+      ),
+    );
+  }
+
   void _showEditSubscription(
     BuildContext context,
     WidgetRef ref,
@@ -174,32 +218,47 @@ class SubscriptionsPanel extends ConsumerWidget {
 
 class _EmptySummary extends StatelessWidget {
   final AppLocalizations l10n;
+  final VoidCallback onAdd;
 
-  const _EmptySummary({required this.l10n});
+  const _EmptySummary({required this.l10n, required this.onAdd});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 34,
-          height: 34,
-          decoration: BoxDecoration(
-            color: SC.subscr.withAlpha(16),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: SC.subscr.withAlpha(45)),
+    // With nothing subscribed the card has no expanded section, so this row is
+    // the only way in. It was inert text, which meant the only door was the
+    // add menu — and the one place someone learns the feature exists could not
+    // act on it.
+    return GestureDetector(
+      onTap: onAdd,
+      behavior: HitTestBehavior.opaque,
+      child: Row(
+        children: [
+          Container(
+            width: 34,
+            height: 34,
+            decoration: BoxDecoration(
+              color: SC.subscr.withAlpha(16),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: SC.subscr.withAlpha(45)),
+            ),
+            // One glyph per concept: the rows and the logged charge both use
+            // autorenew, so the card uses it too.
+            child: const Icon(
+              Icons.autorenew_rounded,
+              color: SC.subscr,
+              size: 18,
+            ),
           ),
-          child: const Icon(
-            Icons.subscriptions_rounded,
-            color: SC.subscr,
-            size: 18,
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Text(l10n.noSubscriptions, style: AppTextStyles.bodySmall),
           ),
-        ),
-        const SizedBox(width: AppSpacing.sm),
-        Expanded(
-          child: Text(l10n.noSubscriptions, style: AppTextStyles.bodySmall),
-        ),
-      ],
+          Text(
+            l10n.newSubscription,
+            style: AppTextStyles.label.copyWith(color: SC.subscr),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -409,6 +468,37 @@ class _SubRow extends StatelessWidget {
             const SizedBox(width: AppSpacing.xs),
             const Icon(Icons.edit_rounded, color: AppColors.textDim, size: 14),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+
+/// "One more" at the foot of a list, rather than a control in the header where
+/// the tap already toggles the card.
+class _AddStrip extends StatelessWidget {
+  final String label;
+  final VoidCallback onTap;
+
+  const _AddStrip({required this.label, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.only(top: AppSpacing.sm + 2),
+        decoration: const BoxDecoration(
+          border: Border(top: BorderSide(color: AppColors.cardBorder)),
+        ),
+        child: Center(
+          child: Text(
+            label,
+            style: AppTextStyles.label.copyWith(color: SC.subscr),
+          ),
         ),
       ),
     );
