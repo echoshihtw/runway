@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,9 +7,6 @@ import '../features/boot/boot_screen.dart';
 import '../features/onboarding/onboarding_screen.dart';
 import '../features/dashboard/dashboard_screen.dart';
 import '../features/transactions/transactions_screen.dart';
-import '../features/loans/start_loan_creation.dart';
-import '../features/transactions/daily_spend_sheet.dart';
-import '../features/subscriptions/add_subscription_sheet.dart';
 import '../features/scenarios/scenarios_screen.dart';
 import 'page_indicator.dart';
 
@@ -62,82 +58,6 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
     if (v > threshold && i > 0) widget.shell.goBranch(i - 1);
   }
 
-  void _onUpwardSwipe(DragEndDetails details) {
-    if ((details.primaryVelocity ?? 0) < -400) _showActionSheet();
-  }
-
-  void _showActionSheet() {
-    showModalBottomSheet(
-      context: context,
-      useRootNavigator: true,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (ctx) {
-        return Padding(
-          padding: EdgeInsets.fromLTRB(
-            AppSpacing.lg,
-            0,
-            AppSpacing.lg,
-            MediaQuery.paddingOf(ctx).bottom + AppSpacing.md,
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: AppColors.surface.withAlpha(230),
-                  borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
-                  border: Border.all(color: AppColors.cardBorder),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _ActionRow(
-                      label: 'ENTRY',
-                      icon: Icons.add_rounded,
-                      color: AppColors.neonGreen,
-                      onTap: () {
-                        Navigator.pop(ctx);
-                        WidgetsBinding.instance.addPostFrameCallback(
-                          (_) => showDailySpendSheet(context, ref),
-                        );
-                      },
-                    ),
-                    const Divider(color: AppColors.cardBorder, height: 1),
-                    _ActionRow(
-                      label: 'NEW LOAN',
-                      icon: Icons.credit_score_rounded,
-                      color: AppColors.gold,
-                      onTap: () {
-                        Navigator.pop(ctx);
-                        WidgetsBinding.instance.addPostFrameCallback(
-                          (_) => startLoanCreation(context, ref),
-                        );
-                      },
-                    ),
-                    const Divider(color: AppColors.cardBorder, height: 1),
-                    _ActionRow(
-                      label: 'SUBSCRIPTIONS',
-                      icon: Icons.loop_rounded,
-                      color: AppColors.purple,
-                      onTap: () {
-                        Navigator.pop(ctx);
-                        WidgetsBinding.instance.addPostFrameCallback(
-                          (_) => showAddSubscriptionSheet(context, ref),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final bottomSafe = MediaQuery.paddingOf(context).bottom;
@@ -160,7 +80,6 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
               bottom: bottomSafe,
               height: 64,
               child: GestureDetector(
-                onVerticalDragEnd: _onUpwardSwipe,
                 behavior: HitTestBehavior.translucent,
                 child: const SizedBox.expand(),
               ),
@@ -176,59 +95,6 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
                 onSelect: widget.shell.goBranch,
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ActionRow extends StatelessWidget {
-  final String label;
-  final IconData icon;
-  final Color color;
-  final VoidCallback onTap;
-
-  const _ActionRow({
-    required this.label,
-    required this.icon,
-    required this.color,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.lg,
-          vertical: AppSpacing.md,
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                color: color.withAlpha(22),
-                shape: BoxShape.circle,
-                border: Border.all(color: color.withAlpha(80), width: 1),
-              ),
-              child: Icon(icon, color: color, size: 18),
-            ),
-            const SizedBox(width: AppSpacing.md),
-            Text(
-              label,
-              style: AppTextStyles.body.copyWith(
-                color: color,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1,
-              ),
-            ),
-            const Spacer(),
-            Icon(Icons.chevron_right_rounded, color: color.withAlpha(120), size: 18),
           ],
         ),
       ),
