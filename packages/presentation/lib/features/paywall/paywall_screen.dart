@@ -102,17 +102,25 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
               loading: true,
               onPressed: null,
             ),
-            error: (_, __) => _PriceButton(
+            // Reachable now that fetchOffering lets a failed call propagate
+            // instead of swallowing it to null.
+            error: (_, __) => const _PriceButton(
               label: 'UNLOCK RUNWAY PRO',
-              priceLabel: 'Price unavailable',
+              priceLabel:
+                  "Couldn't reach the store. Check your connection and try "
+                  'again.',
               loading: false,
               onPressed: null,
             ),
             data: (offering) {
               final pkg = _lifetimePackage(offering);
+              // No package means RevenueCat has no offering marked Current, or
+              // it holds none — a configuration state, not a product. It used
+              // to render as "One-time purchase · Unlock forever" over a
+              // disabled button: a price line with no price.
               final priceLabel = pkg != null
                   ? '${pkg.priceString} · One-time purchase'
-                  : 'One-time purchase · Unlock forever';
+                  : "Pro isn't available right now. Please try again later.";
               return _PriceButton(
                 label: 'UNLOCK RUNWAY PRO',
                 priceLabel: priceLabel,

@@ -6,9 +6,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class _FakePurchaseService implements PurchaseService {
-  _FakePurchaseService({this.serverPro = false});
+  _FakePurchaseService({this.serverPro = false, this.offline = false});
 
   final bool serverPro;
+
+  /// The store cannot be reached: the check throws instead of answering.
+  final bool offline;
   final updates = StreamController<bool>.broadcast();
   int entitlementChecks = 0;
 
@@ -18,6 +21,7 @@ class _FakePurchaseService implements PurchaseService {
   @override
   Future<bool> checkProEntitlement() async {
     entitlementChecks++;
+    if (offline) throw Exception('no network');
     return serverPro;
   }
 
@@ -79,6 +83,25 @@ void main() {
     await _settle();
 
     expect(container.read(entitlementProvider).value?.isPro, isTrue);
+  });
+
+  test('an offline first launch still unlocks when the store later reports Pro', () async {
+    // The throw path returned isPro: false and never attached the update
+    // listener — that was only wired on a *successful* check — so regaining
+    // connectivity mid-session changed nothing, and a paying customer stayed
+    // locked out until relaunch.
+    final service = _FakePurchaseService(offline: true);
+    final container = _containerWith(service);
+    expect((await container.read(entitlementProvider.future)).isPro, isFalse);
+
+    service.updates.add(true);
+    await _settle();
+
+    expect(
+      container.read(entitlementProvider).value?.isPro,
+      isTrue,
+      reason: 'the store said Pro; nobody was listening',
+    );
   });
 
   test('uses a cached unlock without asking RevenueCat', () async {
