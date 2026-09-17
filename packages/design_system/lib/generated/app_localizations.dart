@@ -551,6 +551,24 @@ abstract class AppLocalizations {
   /// **'Did you pay {amount} for {name} on {date}?'**
   String subscriptionPaidQuestion(String amount, String name, String date);
 
+  /// How many subscription charges are waiting to be confirmed, and their total
+  ///
+  /// In en, this message translates to:
+  /// **'{count} subscription charges due — {amount}'**
+  String subscriptionChargesDue(int count, String amount);
+
+  /// No description provided for @subscriptionConfirmAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm all'**
+  String get subscriptionConfirmAll;
+
+  /// No description provided for @subscriptionReviewEach.
+  ///
+  /// In en, this message translates to:
+  /// **'Review each'**
+  String get subscriptionReviewEach;
+
   /// No description provided for @subscriptionPaidYes.
   ///
   /// In en, this message translates to:

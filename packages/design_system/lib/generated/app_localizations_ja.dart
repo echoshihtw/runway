@@ -235,6 +235,17 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String subscriptionChargesDue(int count, String amount) {
+    return '未確認のサブスク請求 $count 件 — $amount';
+  }
+
+  @override
+  String get subscriptionConfirmAll => 'すべて記録する';
+
+  @override
+  String get subscriptionReviewEach => '1件ずつ確認';
+
+  @override
   String get subscriptionPaidYes => 'はい、記録する';
 
   @override

@@ -84,6 +84,20 @@
   "typeOpening": "SALDO INIZIALE",
   "typeSubscription": "ABBONAMENTO",
   "subscriptionPaidQuestion": "Hai pagato {amount} per {name} il {date}?",
+  "subscriptionChargesDue": "{count} addebiti di abbonamento da confermare — {amount}",
+  "subscriptionConfirmAll": "Conferma tutto",
+  "subscriptionReviewEach": "Rivedi uno a uno",
+  "@subscriptionChargesDue": {
+    "description": "How many subscription charges are waiting to be confirmed, and their total",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "subscriptionPaidYes": "Sì, registralo",
   "subscriptionPaidNo": "No",
   "subscriptionWhatHappened": "Cosa è successo?",

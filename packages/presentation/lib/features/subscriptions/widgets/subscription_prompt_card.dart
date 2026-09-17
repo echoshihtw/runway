@@ -11,11 +11,21 @@ import '../subscription_form.dart';
 /// The reminder knows what should have billed; only the owner knows what
 /// actually left the account. So the app asks, and records only the answer —
 /// it never asserts a payment on the owner's behalf.
-class SubscriptionPromptCard extends ConsumerWidget {
+class SubscriptionPromptCard extends ConsumerStatefulWidget {
   const SubscriptionPromptCard({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SubscriptionPromptCard> createState() =>
+      _SubscriptionPromptCardState();
+}
+
+class _SubscriptionPromptCardState
+    extends ConsumerState<SubscriptionPromptCard> {
+  /// Set once the owner asks to see the charges one at a time.
+  bool _reviewEach = false;
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final dismissed = ref.watch(dismissedSubscriptionPromptsProvider);
     final pending = ref
@@ -24,8 +34,13 @@ class SubscriptionPromptCard extends ConsumerWidget {
         .toList();
     if (pending.isEmpty) return const SizedBox.shrink();
 
+    // Most subscriptions are on a card that deducts automatically, so the
+    // answer is almost always yes. Asking once for the lot beats asking a
+    // dozen times — and a returning owner meets a queue, not one question.
+    if (pending.length > 1 && !_reviewEach) return _batch(context, pending);
+
     final charge = pending.first;
-    final subscription = _subscriptionFor(ref, charge);
+    final subscription = _subscriptionFor(charge);
     if (subscription == null) return const SizedBox.shrink();
 
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
@@ -51,7 +66,7 @@ class SubscriptionPromptCard extends ConsumerWidget {
                     label: l10n.subscriptionPaidYes,
                     variant: NeoButtonVariant.primary,
                     fullWidth: true,
-                    onPressed: () => _confirm(ref, charge),
+                    onPressed: () => _confirm(charge),
                   ),
                 ),
                 const SizedBox(width: AppSpacing.sm),
@@ -60,7 +75,7 @@ class SubscriptionPromptCard extends ConsumerWidget {
                     label: l10n.subscriptionPaidNo,
                     variant: NeoButtonVariant.ghost,
                     fullWidth: true,
-                    onPressed: () => _askWhy(context, ref, charge, subscription),
+                    onPressed: () => _askWhy(context, charge, subscription),
                   ),
                 ),
               ],
@@ -71,22 +86,79 @@ class SubscriptionPromptCard extends ConsumerWidget {
     );
   }
 
+  /// One question for the whole queue. Confirming writes every charge; the
+  /// owner can still take them one at a time.
+  Widget _batch(BuildContext context, List<Transaction> pending) {
+    final l10n = context.l10n;
+    final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
+    final total = pending.fold<double>(0, (sum, c) => sum + c.amount.value);
+    final amount = '$symbol ${NumberFormat('#,##0', 'en_US').format(total)}';
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.cardGap),
+      child: NeoCard(
+        accentColor: SC.subscr,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.subscriptionChargesDue(pending.length, amount),
+              style: AppTextStyles.body,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Row(
+              children: [
+                Expanded(
+                  child: NeoButton(
+                    label: l10n.subscriptionConfirmAll,
+                    variant: NeoButtonVariant.primary,
+                    fullWidth: true,
+                    onPressed: () => _confirmAll(pending),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  child: NeoButton(
+                    label: l10n.subscriptionReviewEach,
+                    variant: NeoButtonVariant.ghost,
+                    fullWidth: true,
+                    onPressed: () => setState(() => _reviewEach = true),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _confirmAll(List<Transaction> pending) async {
+    for (final charge in pending) {
+      await _confirm(charge);
+    }
+  }
+
   /// The charge id carries its subscription, so the two stay linked without a
   /// column on the table.
-  Subscription? _subscriptionFor(WidgetRef ref, Transaction charge) {
+  Subscription? _subscriptionFor(Transaction charge) {
     for (final s in ref.watch(subscriptionsProvider).value ?? const <Subscription>[]) {
       if (charge.id.startsWith('subchg-${s.id}-')) return s;
     }
     return null;
   }
 
-  Future<void> _confirm(WidgetRef ref, Transaction charge) async {
-    await ref.read(addTransactionUseCaseProvider).execute(charge);
+  Future<void> _confirm(Transaction charge) async {
+    try {
+      await ref.read(addTransactionUseCaseProvider).execute(charge);
+    } catch (_) {
+      // Already recorded. The derived id collides with the primary key, which
+      // is the point: a second confirmation cannot double the money.
+    }
   }
 
   Future<void> _askWhy(
     BuildContext context,
-    WidgetRef ref,
     Transaction charge,
     Subscription subscription,
   ) async {
@@ -146,7 +218,7 @@ class SubscriptionPromptCard extends ConsumerWidget {
         );
       case _NotPaidReason.priceChanged:
         if (!context.mounted) return;
-        await _editSubscription(context, ref, subscription);
+        await _editSubscription(context, subscription);
       case _NotPaidReason.notPaid:
         // Nothing is written. The question is unresolved, so it comes back
         // next launch rather than being answered on the owner's behalf.
@@ -158,7 +230,6 @@ class SubscriptionPromptCard extends ConsumerWidget {
 
   Future<void> _editSubscription(
     BuildContext context,
-    WidgetRef ref,
     Subscription subscription,
   ) {
     return showModalBottomSheet<void>(

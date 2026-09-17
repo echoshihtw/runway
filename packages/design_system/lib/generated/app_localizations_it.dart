@@ -237,6 +237,17 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String subscriptionChargesDue(int count, String amount) {
+    return '$count addebiti di abbonamento da confermare — $amount';
+  }
+
+  @override
+  String get subscriptionConfirmAll => 'Conferma tutto';
+
+  @override
+  String get subscriptionReviewEach => 'Rivedi uno a uno';
+
+  @override
   String get subscriptionPaidYes => 'Sì, registralo';
 
   @override

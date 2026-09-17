@@ -237,6 +237,17 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String subscriptionChargesDue(int count, String amount) {
+    return '$count subscription charges due — $amount';
+  }
+
+  @override
+  String get subscriptionConfirmAll => 'Confirm all';
+
+  @override
+  String get subscriptionReviewEach => 'Review each';
+
+  @override
   String get subscriptionPaidYes => 'Yes, log it';
 
   @override

@@ -84,6 +84,20 @@
   "typeOpening": "OPENING",
   "typeSubscription": "SUBSCRIPTION",
   "subscriptionPaidQuestion": "Did you pay {amount} for {name} on {date}?",
+  "subscriptionChargesDue": "{count} subscription charges due — {amount}",
+  "subscriptionConfirmAll": "Confirm all",
+  "subscriptionReviewEach": "Review each",
+  "@subscriptionChargesDue": {
+    "description": "How many subscription charges are waiting to be confirmed, and their total",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "subscriptionPaidYes": "Yes, log it",
   "subscriptionPaidNo": "No",
   "subscriptionWhatHappened": "What happened?",

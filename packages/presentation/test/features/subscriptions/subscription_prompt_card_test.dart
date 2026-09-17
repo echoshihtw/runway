@@ -77,6 +77,60 @@ Future<_FakeTransactionRepository> _pump(
   return repository;
 }
 
+Transaction _chargeOn(DateTime date) => Transaction(
+  id: subscriptionChargeId('sub-1', date),
+  type: TransactionType.subscriptionCharge,
+  amount: Money(980),
+  date: date,
+  note: 'Spotify',
+  createdAt: DateTime(2026, 9, 17),
+  updatedAt: DateTime(2026, 9, 17),
+);
+
+void _batchTests() {
+  final queue = [
+    _chargeOn(DateTime(2026, 7, 3)),
+    _chargeOn(DateTime(2026, 8, 3)),
+    _chargeOn(DateTime(2026, 9, 3)),
+  ];
+
+  testWidgets('a queue is one question, not three', (tester) async {
+    await _pump(tester, pending: queue);
+
+    expect(find.textContaining('3'), findsWidgets);
+    expect(find.textContaining('2,940'), findsOneWidget);
+    expect(find.text('Confirm all'), findsOneWidget);
+    // The single question is not shown while there is a queue.
+    expect(find.text('Yes, log it'), findsNothing);
+  });
+
+  testWidgets('confirm all records every charge that was due', (tester) async {
+    final repository = await _pump(tester, pending: queue);
+
+    await tester.tap(find.text('Confirm all'));
+    await tester.pumpAndSettle();
+
+    expect(repository.added.map((t) => t.date), [
+      DateTime(2026, 7, 3),
+      DateTime(2026, 8, 3),
+      DateTime(2026, 9, 3),
+    ]);
+  });
+
+  testWidgets('review each falls through to one question at a time', (
+    tester,
+  ) async {
+    final repository = await _pump(tester, pending: queue);
+
+    await tester.tap(find.text('Review each'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Yes, log it'), findsOneWidget);
+    expect(find.textContaining('3 Jul'), findsOneWidget);
+    expect(repository.added, isEmpty, reason: 'reviewing writes nothing');
+  });
+}
+
 void main() {
   testWidgets('asks before recording, naming the amount, plan and date', (
     tester,
@@ -129,4 +183,6 @@ void main() {
     expect(find.text("I didn't pay it"), findsOneWidget);
     expect(repository.added, isEmpty, reason: 'no answer means no entry');
   });
+
+  _batchTests();
 }

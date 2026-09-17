@@ -84,6 +84,20 @@
   "typeOpening": "開始残高",
   "typeSubscription": "サブスク",
   "subscriptionPaidQuestion": "{date}に{name}の{amount}を支払いましたか？",
+  "subscriptionChargesDue": "未確認のサブスク請求 {count} 件 — {amount}",
+  "subscriptionConfirmAll": "すべて記録する",
+  "subscriptionReviewEach": "1件ずつ確認",
+  "@subscriptionChargesDue": {
+    "description": "How many subscription charges are waiting to be confirmed, and their total",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "subscriptionPaidYes": "はい、記録する",
   "subscriptionPaidNo": "いいえ",
   "subscriptionWhatHappened": "理由は？",
