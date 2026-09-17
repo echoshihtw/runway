@@ -16,7 +16,7 @@ class SubscriptionsPanel extends ConsumerWidget {
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
     final nf = NumberFormat('#,##0', 'en_US');
     final active = subs.where((s) => s.isActive).toList();
-    final sorted = sortedByNextBilling(active);
+    final sorted = sortedByNextBilling(active, now: DateTime.now());
     final monthly = totalSubscriptionMonthlyCost(active);
     final yearly = totalSubscriptionYearlyCost(active);
     final next = sorted.isEmpty ? null : sorted.first;
@@ -240,7 +240,7 @@ class _NextBillingStrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final days = sub.daysUntilNextBilling;
+    final days = daysUntilNextBilling(sub, DateTime.now());
     final color = days <= 7
         ? AppColors.hotPink
         : days <= 14
@@ -320,7 +320,7 @@ class _SubRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final days = sub.daysUntilNextBilling;
+    final days = daysUntilNextBilling(sub, DateTime.now());
     final daysColor = days <= 7
         ? AppColors.hotPink
         : days <= 14

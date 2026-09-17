@@ -98,6 +98,20 @@ double subscriptionsUnpaidThisMonth({
   return owed;
 }
 
+/// Calendar days until the next bill.
+///
+/// Derived, because the stored `nextBillingDate` is written once and never
+/// advanced: once its date passed, the countdown clamped to 0 and stayed there
+/// for good. Measured from the start of today, so a bill eight days away reads
+/// as 8 rather than flooring a part-day to 7.
+int daysUntilNextBilling(Subscription s, DateTime now) {
+  final startOfToday = DateTime(now.year, now.month, now.day);
+  return nextBillingDateAfter(s, now)
+      .difference(startOfToday)
+      .inDays
+      .clamp(0, 9999);
+}
+
 /// The first billing date still ahead of [now].
 ///
 /// The stored `nextBillingDate` is never advanced after creation, so once a
