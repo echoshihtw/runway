@@ -297,6 +297,7 @@
   "expectedInflow": "Expected income",
   "expectedBurn": "Expected costs",
   "notSet": "Not set",
+  "settingsFailedToLoad": "Couldn't load these settings. Editing is off so nothing overwrites them.",
   "usingCurrentBurn": "Using current costs",
   "assumptionsProjectionOnly": "Assumptions affect future projections only. They do not create transactions.",
   "setAssumptions": "SET FORECAST",

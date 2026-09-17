@@ -648,6 +648,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get notSet => 'Non impostato';
 
   @override
+  String get settingsFailedToLoad =>
+      'Non è stato possibile caricare queste impostazioni. La modifica è disattivata per non sovrascriverle.';
+
+  @override
   String get usingCurrentBurn => 'Uso della spesa attuale';
 
   @override

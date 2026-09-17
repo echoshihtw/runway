@@ -238,6 +238,7 @@
   "expectedInflow": "Entrate previste",
   "expectedBurn": "Spesa prevista",
   "notSet": "Non impostato",
+  "settingsFailedToLoad": "Non è stato possibile caricare queste impostazioni. La modifica è disattivata per non sovrascriverle.",
   "usingCurrentBurn": "Uso della spesa attuale",
   "assumptionsProjectionOnly": "Le ipotesi influenzano solo le proiezioni future. Non creano transazioni.",
   "setAssumptions": "IMPOSTA PREVISIONE",

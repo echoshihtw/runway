@@ -640,6 +640,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get notSet => '未设置';
 
   @override
+  String get settingsFailedToLoad => '无法加载这些设置。为避免覆盖，暂时无法编辑。';
+
+  @override
   String get usingCurrentBurn => '使用当前支出';
 
   @override
@@ -1452,6 +1455,9 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get notSet => '未設定';
+
+  @override
+  String get settingsFailedToLoad => '無法載入這些設定。為避免覆寫，暫時無法編輯。';
 
   @override
   String get usingCurrentBurn => '先用目前支出估算';

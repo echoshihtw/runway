@@ -642,6 +642,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get notSet => '未設定';
 
   @override
+  String get settingsFailedToLoad => 'この設定を読み込めませんでした。上書きを防ぐため編集はできません。';
+
+  @override
   String get usingCurrentBurn => '現在の支出を使用';
 
   @override
