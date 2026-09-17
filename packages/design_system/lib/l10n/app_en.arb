@@ -123,6 +123,7 @@
   "deleteSubscriptionKeepsEntries": "Stops future entries. The payments already logged are kept.",
   "liabilities": "LIABILITIES",
   "noActiveLoans": "> NO ACTIVE LOANS",
+  "newLoan": "+ LOAN",
   "settled": "SETTLED",
   "totalDebtPerMonth": "TOTAL DEBT/MO",
   "remaining": "REMAINING",

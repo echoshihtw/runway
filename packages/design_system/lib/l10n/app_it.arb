@@ -123,6 +123,7 @@
   "deleteSubscriptionKeepsEntries": "Interrompe le voci future. I pagamenti già registrati vengono mantenuti.",
   "liabilities": "DEBITI",
   "noActiveLoans": "> NESSUN PRESTITO ATTIVO",
+  "newLoan": "+ PRESTITO",
   "settled": "SALDATO",
   "totalDebtPerMonth": "DEBITO TOTALE/MESE",
   "remaining": "RIMANENTE",

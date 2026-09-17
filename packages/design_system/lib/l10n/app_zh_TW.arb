@@ -123,6 +123,7 @@
   "deleteSubscriptionKeepsEntries": "停止未來的記錄。已記錄的付款會保留。",
   "liabilities": "負債",
   "noActiveLoans": "> 目前沒有貸款",
+  "newLoan": "+ 貸款",
   "settled": "已結清",
   "totalDebtPerMonth": "每月債務",
   "remaining": "剩餘",

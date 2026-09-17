@@ -283,6 +283,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get noActiveLoans => '> NESSUN PRESTITO ATTIVO';
 
   @override
+  String get newLoan => '+ PRESTITO';
+
+  @override
   String get settled => 'SALDATO';
 
   @override

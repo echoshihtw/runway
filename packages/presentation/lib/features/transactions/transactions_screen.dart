@@ -7,8 +7,7 @@ import 'package:application/application.dart';
 import 'package:domain/domain.dart';
 import 'widgets/transaction_row.dart';
 import 'widgets/transaction_form.dart';
-import 'widgets/loan_wizard.dart';
-import '../paywall/paywall_screen.dart';
+import '../loans/start_loan_creation.dart';
 import '../subscriptions/add_subscription_sheet.dart';
 import '../../shared/speed_dial_fab.dart';
 
@@ -39,7 +38,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
       floatingActionButton: SpeedDialFab(
         key: _fabKey,
         onEntry: () => _showForm(context, ref, null),
-        onLoan: () => _showLoanWizard(context, ref),
+        onLoan: () => startLoanCreation(context, ref),
         onSubscription: () => showAddSubscriptionSheet(context, ref),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -189,68 +188,6 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
 
   String _monthKey(DateTime date) =>
       '${date.year}-${date.month.toString().padLeft(2, '0')}';
-
-  Future<void> _showLoanWizard(BuildContext context, WidgetRef ref) async {
-    final isPro =
-        FeatureFlags.devProEntitlement ||
-        (ref.read(entitlementProvider).value?.isPro ?? false);
-    if (!isPro) {
-      final loans = await ref.read(loansProvider.future);
-      final transactions = await ref.read(transactionsProvider.future);
-      if (!context.mounted) return;
-      if (hasActiveLoan(loans: loans, transactions: transactions)) {
-        showPaywall(context, trigger: 'loan_limit');
-        return;
-      }
-    }
-    showModalBottomSheet(
-      context: context,
-      useRootNavigator: true,
-      isScrollControlled: true,
-      backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppSpacing.cardRadius),
-        ),
-      ),
-      builder: (_) => LoanWizard(
-        onSubmit: (loanAmount, monthlyPayment, termMonths, date, note) async {
-          final now = DateTime.now();
-          final loanId = const Uuid().v4();
-          final parts = (note ?? '').split(' — ');
-          final source = parts.isNotEmpty
-              ? parts[0].replaceAll(' LOAN', '')
-              : 'OTHER';
-          final name = parts.length > 1 ? parts[1] : 'LOAN';
-
-          final loan = Loan(
-            id: loanId,
-            name: name,
-            source: source,
-            originalAmount: loanAmount,
-            monthlyPayment: monthlyPayment,
-            originalTermMonths: termMonths,
-            startDate: date,
-            createdAt: now,
-            updatedAt: now,
-          );
-          await ref.read(addLoanUseCaseProvider).execute(loan);
-
-          final tx = Transaction(
-            id: const Uuid().v4(),
-            date: date,
-            type: TransactionType.loan,
-            amount: Money(loanAmount),
-            note: note,
-            loanId: loanId,
-            createdAt: now,
-            updatedAt: now,
-          );
-          await ref.read(addTransactionUseCaseProvider).execute(tx);
-        },
-      ),
-    );
-  }
 
   void _showFormWithType(
     BuildContext context,

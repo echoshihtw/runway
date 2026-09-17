@@ -5,7 +5,9 @@ import 'package:design_system/design_system.dart';
 import 'package:application/application.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
+import '../../shared/add_strip.dart';
 import 'loan_card.dart';
+import 'start_loan_creation.dart';
 
 class LiabilitiesPanel extends ConsumerWidget {
   const LiabilitiesPanel({super.key});
@@ -19,27 +21,54 @@ class LiabilitiesPanel extends ConsumerWidget {
     final active = ref.watch(activeLoanSummariesProvider);
 
     final summary = active.isEmpty
-        ? Row(
-            children: [
-              Container(
-                width: 34,
-                height: 34,
-                decoration: BoxDecoration(
-                  color: AppColors.gold.withAlpha(16),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColors.gold.withAlpha(45)),
+        // With nothing borrowed the card has no expanded section, so this row
+        // is the only way in. It was inert text, seen exactly when someone
+        // does not yet know loans are tracked here at all.
+        ? GestureDetector(
+            onTap: () => startLoanCreation(context, ref),
+            behavior: HitTestBehavior.opaque,
+            child: Row(
+              children: [
+                Container(
+                  width: 34,
+                  height: 34,
+                  decoration: BoxDecoration(
+                    color: AppColors.gold.withAlpha(16),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: AppColors.gold.withAlpha(45)),
+                  ),
+                  // One glyph per concept: loans wear account_balance
+                  // everywhere, card and empty state alike.
+                  child: const Icon(
+                    Icons.account_balance_rounded,
+                    color: AppColors.gold,
+                    size: 18,
+                  ),
                 ),
-                child: const Icon(
-                  Icons.account_balance_rounded,
-                  color: AppColors.gold,
-                  size: 18,
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  flex: 3,
+                  child: Text(
+                    l10n.noActiveLoans,
+                    style: AppTextStyles.bodySmall,
+                  ),
                 ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: Text(l10n.noActiveLoans, style: AppTextStyles.bodySmall),
-              ),
-            ],
+                // The label is the only thing here that can be shortened
+                // without losing meaning, so it takes the smaller share.
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    l10n.newLoan,
+                    textAlign: TextAlign.right,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.label.copyWith(
+                      color: AppColors.gold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           )
         : Row(
             children: [
@@ -79,18 +108,23 @@ class LiabilitiesPanel extends ConsumerWidget {
     final details = active.isEmpty
         ? null
         : Column(
-            children: active
-                .map(
-                  (s) => Padding(
-                    padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                    child: LoanCard(
-                      summary: s,
-                      onTap: () {},
-                      onRepay: () => _showRepay(context, ref, s),
-                    ),
+            children: [
+              ...active.map(
+                (s) => Padding(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                  child: LoanCard(
+                    summary: s,
+                    onTap: () {},
+                    onRepay: () => _showRepay(context, ref, s),
                   ),
-                )
-                .toList(),
+                ),
+              ),
+              AddStrip(
+                label: l10n.newLoan,
+                color: AppColors.gold,
+                onTap: () => startLoanCreation(context, ref),
+              ),
+            ],
           );
 
     return NeoExpandableCard(

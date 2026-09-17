@@ -279,6 +279,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noActiveLoans => '> 無有效貸款';
 
   @override
+  String get newLoan => '+ 貸款';
+
+  @override
   String get settled => '已結清';
 
   @override
@@ -1052,6 +1055,9 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get noActiveLoans => '> 目前沒有貸款';
+
+  @override
+  String get newLoan => '+ 貸款';
 
   @override
   String get settled => '已結清';

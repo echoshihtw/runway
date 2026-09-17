@@ -123,6 +123,7 @@
   "deleteSubscriptionKeepsEntries": "Detiene las entradas futuras. Los pagos ya registrados se conservan.",
   "liabilities": "DEUDAS",
   "noActiveLoans": "> SIN PRÉSTAMOS ACTIVOS",
+  "newLoan": "+ PRÉSTAMO",
   "settled": "LIQUIDADO",
   "totalDebtPerMonth": "DEUDA TOTAL/MES",
   "remaining": "RESTANTE",

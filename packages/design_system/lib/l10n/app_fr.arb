@@ -123,6 +123,7 @@
   "deleteSubscriptionKeepsEntries": "Arrête les prochaines écritures. Les paiements déjà enregistrés sont conservés.",
   "liabilities": "DETTES",
   "noActiveLoans": "> AUCUN PRÊT ACTIF",
+  "newLoan": "+ PRÊT",
   "settled": "RÉGLÉ",
   "totalDebtPerMonth": "DETTE TOTALE/MO",
   "remaining": "RESTANT",
