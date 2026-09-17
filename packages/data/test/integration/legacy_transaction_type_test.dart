@@ -19,8 +19,10 @@ void main() {
     final entries = await DriftTransactionRepository(db).getAll();
 
     expect(entries, hasLength(1), reason: 'the row must still be readable');
-    expect(entries.single.type, TransactionType.expense);
     expect(entries.single.amount.value, 20000);
     expect(entries.single.type.isInflow, isFalse, reason: 'it was money out');
+    // It was never an expense, so it must not start consuming a budget.
+    expect(countsAsLiving(entries.single), isFalse);
+    expect(countsAsRent(entries.single), isFalse);
   });
 }
