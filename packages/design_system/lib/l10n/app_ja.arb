@@ -238,6 +238,7 @@
   "expectedInflow": "想定流入",
   "expectedBurn": "想定支出",
   "notSet": "未設定",
+  "settingsFailedToLoad": "この設定を読み込めませんでした。上書きを防ぐため編集はできません。",
   "usingCurrentBurn": "現在の支出を使用",
   "assumptionsProjectionOnly": "前提は将来予測だけに影響します。取引記録は作成されません。",
   "setAssumptions": "予測を設定",

@@ -32,8 +32,28 @@ class _InMemorySettingsRepository implements FinancialSettingsRepository {
   Future<void> saveRunwayGoal(RunwayGoal? value) async => goal = value;
 }
 
-ProviderContainer _container(FinancialSettingsRepository repository) {
+/// A database that cannot be read but can still be written to — the shape
+/// that actually loses data. The read fails, the screen shows "not set", and
+/// the next save persists that emptiness over what is really stored.
+class _UnreadableSettingsRepository extends _InMemorySettingsRepository {
+  @override
+  Future<Budget> getBudget() async => throw Exception('database is locked');
+
+  @override
+  Future<FinancialAssumptions> getFinancialAssumptions() async =>
+      throw Exception('database is locked');
+
+  @override
+  Future<RunwayGoal?> getRunwayGoal() async =>
+      throw Exception('database is locked');
+}
+
+ProviderContainer _container(
+  FinancialSettingsRepository repository, {
+  Duration? Function(int retryCount, Object error)? retry,
+}) {
   final container = ProviderContainer(
+    retry: retry,
     overrides: [
       financialSettingsRepositoryProvider.overrideWithValue(repository),
     ],
@@ -167,6 +187,113 @@ void main() {
 
       await notifier.clearGoal();
       expect(repository.goal, isNull);
+    });
+  });
+
+  // Riverpod 3 retries a failing build ten times with exponential backoff —
+  // about 38 seconds of AsyncLoading before it ever reaches AsyncError. On a
+  // broken database the settings providers are therefore *loading*, not
+  // errored, for the whole first half-minute of every launch. These tests
+  // cover both: the error state, with retry switched off so it is reached at
+  // once, and the loading window, which is where a real save actually lands.
+  Duration? noRetry(int retryCount, Object error) => null;
+
+  group('a read that failed is not an empty setting', () {
+    test('a budget save cannot zero the field it never read', () async {
+      final stored = _UnreadableSettingsRepository()
+        ..budget = const Budget(rent: 1500, living: 900);
+      final container = _container(stored, retry: noRetry);
+
+      await expectLater(
+        container.read(budgetProvider.future),
+        throwsA(isA<Exception>()),
+      );
+
+      // Refusing by throwing and refusing by doing nothing are both fine.
+      // A write is what must never happen: setRent fell back to
+      // const Budget(), so living went to 0 on disk.
+      try {
+        await container.read(budgetProvider.notifier).setRent(1100);
+      } catch (_) {
+        // A notifier that never read may refuse loudly.
+      }
+
+      expect(
+        stored.budget.living,
+        900,
+        reason: 'living was never read, so nothing may overwrite it',
+      );
+      expect(stored.budget.rent, 1500, reason: 'and rent is untouched too');
+    });
+
+    test('an assumptions save cannot null out values it never read', () async {
+      final stored = _UnreadableSettingsRepository()
+        ..assumptions = const FinancialAssumptions(
+          expectedMonthlyInflow: 3000,
+          expectedMonthlyBurnOverride: 2100,
+        );
+      final container = _container(stored, retry: noRetry);
+
+      await expectLater(
+        container.read(financialAssumptionsProvider.future),
+        throwsA(isA<Exception>()),
+      );
+
+      // The screen seeds its fields from
+      // `.value ?? const FinancialAssumptions()`, so a failed read presents
+      // empty inputs and saving writes nulls over the real figures.
+      try {
+        await container.read(financialAssumptionsProvider.notifier).save();
+      } catch (_) {
+        // Refusing loudly is acceptable.
+      }
+
+      expect(stored.assumptions.expectedMonthlyInflow, 3000);
+      expect(stored.assumptions.expectedMonthlyBurnOverride, 2100);
+    });
+
+    test('a save during the load window cannot write either', () async {
+      final stored = _UnreadableSettingsRepository()
+        ..budget = const Budget(rent: 1500, living: 900);
+      final container = _container(stored); // default retry: loading for ~38 s
+      container.read(budgetProvider); // start the build, do not wait for it
+
+      try {
+        await container.read(budgetProvider.notifier).setRent(1100);
+      } catch (_) {
+        // Refusing loudly is acceptable.
+      }
+
+      expect(
+        stored.budget.living,
+        900,
+        reason: 'still loading means still unknown; unknown must not be written',
+      );
+      expect(stored.budget.rent, 1500);
+    });
+
+    test('a goal save cannot replace the stored goal with a new id', () async {
+      final stored = _UnreadableSettingsRepository()
+        ..goal = const RunwayGoal(id: 'goal-1', name: 'Trip', targetMonths: 6);
+      final container = _container(stored, retry: noRetry);
+
+      await expectLater(
+        container.read(runwayGoalProvider.future),
+        throwsA(isA<Exception>()),
+      );
+
+      // `existing?.id` is null after a failed read, so saveGoal mints a new
+      // uuid and the stored goal loses its identity.
+      try {
+        await container
+            .read(runwayGoalProvider.notifier)
+            .saveGoal(name: 'Longer trip', targetMonths: 9);
+      } catch (_) {
+        // Refusing loudly is acceptable.
+      }
+
+      expect(stored.goal?.id, 'goal-1');
+      expect(stored.goal?.name, 'Trip');
     });
   });
 }

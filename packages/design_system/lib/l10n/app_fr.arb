@@ -238,6 +238,7 @@
   "expectedInflow": "Entrées attendues",
   "expectedBurn": "Dépenses attendues",
   "notSet": "Non défini",
+  "settingsFailedToLoad": "Impossible de charger ces réglages. L'édition est désactivée pour ne rien écraser.",
   "usingCurrentBurn": "Dépense actuelle utilisée",
   "assumptionsProjectionOnly": "Les hypothèses affectent seulement les projections futures. Elles ne créent pas de transactions.",
   "setAssumptions": "DÉFINIR LES PRÉVISIONS",

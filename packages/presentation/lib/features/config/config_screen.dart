@@ -133,14 +133,18 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
     final budgetAsync = ref.watch(budgetProvider);
     final subCost = ref.watch(subscriptionMonthlyTotalProvider);
     final debtCost = ref.watch(totalMonthlyLoanPaymentProvider);
-    final runwayGoal = ref.watch(runwayGoalProvider).value;
-    final assumptions =
-        ref.watch(financialAssumptionsProvider).value ??
-        const FinancialAssumptions();
+    final goalAsync = ref.watch(runwayGoalProvider);
+    final assumptionsAsync = ref.watch(financialAssumptionsProvider);
 
+    // Null means the read has not succeeded: still running, or failed. These
+    // used to fall back to the defaults, which rendered as "Not set" beside an
+    // EDIT button — and saving that form wrote the defaults over the real
+    // values. Unknown is not the same as unset.
+    final runwayGoal = goalAsync.value;
+    final assumptions = assumptionsAsync.value;
     final currentLocale = localeAsync.value;
     final currentCurr = currAsync.value;
-    final budget = budgetAsync.value ?? const Budget();
+    final budget = budgetAsync.value;
     final symbol = currentCurr?.symbol ?? '¥';
     final nf = NumberFormat('#,##0', 'en_US');
 
@@ -195,7 +199,9 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (!_editingAssumptions) ...[
+                          if (assumptions == null) ...[
+                            _Unavailable(assumptionsAsync),
+                          ] else if (!_editingAssumptions) ...[
                             _budgetRow(
                               l10n.expectedInflow,
                               assumptions.expectedMonthlyInflow == null
@@ -293,7 +299,9 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (!_editingBudget) ...[
+                          if (budget == null) ...[
+                            _Unavailable(budgetAsync),
+                          ] else if (!_editingBudget) ...[
                             if (budget.isSet) ...[
                               _budgetRow(
                                 l10n.rentFixed,
@@ -401,7 +409,9 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (!_editingGoal) ...[
+                          if (!goalAsync.hasValue) ...[
+                            _Unavailable(goalAsync),
+                          ] else if (!_editingGoal) ...[
                             if (runwayGoal != null) ...[
                               _budgetRow(
                                 l10n.goal,
@@ -628,6 +638,29 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// What a card shows in place of its settings while their read has not
+/// succeeded. Editing is withheld in both states: a form seeded from nothing
+/// saves nothing over whatever is really stored, and Riverpod retries a
+/// failing read for about 38 seconds before it errors, so "loading" is the
+/// state for the whole first half-minute on a database that will not open.
+class _Unavailable extends StatelessWidget {
+  final AsyncValue<Object?> value;
+
+  const _Unavailable(this.value);
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+      child: Text(
+        value.isLoading ? l10n.loading : l10n.settingsFailedToLoad,
+        style: AppTextStyles.caption,
       ),
     );
   }

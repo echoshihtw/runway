@@ -23,6 +23,12 @@ class RunwayGoalNotifier extends AsyncNotifier<RunwayGoal?> {
     DateTime? targetDate,
   }) async {
     if (targetMonths <= 0) return;
+    if (!state.hasValue) {
+      // A null value legitimately means "no goal yet" — but only once the
+      // read has completed. Before that, minting a new id here replaced the
+      // stored goal's identity with a fresh uuid.
+      throw StateError('Refusing to write a goal that was never read.');
+    }
     final existing = state.value;
     final goal = RunwayGoal(
       id: existing?.id ?? const Uuid().v4(),
@@ -35,6 +41,9 @@ class RunwayGoalNotifier extends AsyncNotifier<RunwayGoal?> {
   }
 
   Future<void> clearGoal() async {
+    if (!state.hasValue) {
+      throw StateError('Refusing to clear a goal that was never read.');
+    }
     await ref.read(financialSettingsRepositoryProvider).saveRunwayGoal(null);
     state = const AsyncData(null);
   }

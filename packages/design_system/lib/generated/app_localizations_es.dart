@@ -649,6 +649,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get notSet => 'Sin definir';
 
   @override
+  String get settingsFailedToLoad =>
+      'No se pudieron cargar estos ajustes. La edición está desactivada para no sobrescribirlos.';
+
+  @override
   String get usingCurrentBurn => 'Usando gasto actual';
 
   @override

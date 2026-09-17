@@ -648,6 +648,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get notSet => 'Non défini';
 
   @override
+  String get settingsFailedToLoad =>
+      'Impossible de charger ces réglages. L\'édition est désactivée pour ne rien écraser.';
+
+  @override
   String get usingCurrentBurn => 'Dépense actuelle utilisée';
 
   @override

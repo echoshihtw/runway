@@ -1325,6 +1325,12 @@ abstract class AppLocalizations {
   /// **'Not set'**
   String get notSet;
 
+  /// No description provided for @settingsFailedToLoad.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load these settings. Editing is off so nothing overwrites them.'**
+  String get settingsFailedToLoad;
+
   /// No description provided for @usingCurrentBurn.
   ///
   /// In en, this message translates to:

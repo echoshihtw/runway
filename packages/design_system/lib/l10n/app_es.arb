@@ -238,6 +238,7 @@
   "expectedInflow": "Entrada esperada",
   "expectedBurn": "Gasto esperado",
   "notSet": "Sin definir",
+  "settingsFailedToLoad": "No se pudieron cargar estos ajustes. La edición está desactivada para no sobrescribirlos.",
   "usingCurrentBurn": "Usando gasto actual",
   "assumptionsProjectionOnly": "Los supuestos solo afectan las proyecciones futuras. No crean transacciones.",
   "setAssumptions": "DEFINIR PREVISIÓN",

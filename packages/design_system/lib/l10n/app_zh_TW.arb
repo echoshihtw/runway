@@ -238,6 +238,7 @@
   "expectedInflow": "預計每月收入",
   "expectedBurn": "預計每月支出",
   "notSet": "未設定",
+  "settingsFailedToLoad": "無法載入這些設定。為避免覆寫，暫時無法編輯。",
   "usingCurrentBurn": "先用目前支出估算",
   "assumptionsProjectionOnly": "這些數字只用來預估未來，不會變成交易紀錄。",
   "setAssumptions": "設定預測",

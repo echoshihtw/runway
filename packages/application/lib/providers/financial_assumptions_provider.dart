@@ -23,6 +23,11 @@ class FinancialAssumptionsNotifier extends AsyncNotifier<FinancialAssumptions> {
     double? expectedMonthlyInflow,
     double? expectedMonthlyBurnOverride,
   }) async {
+    // The screen seeds its fields from what was read. If nothing was read the
+    // fields are empty, and saving them writes nulls over the real figures.
+    if (state.value == null) {
+      throw StateError('Refusing to write assumptions that were never read.');
+    }
     final assumptions = FinancialAssumptions(
       expectedMonthlyInflow: _positiveOrNull(expectedMonthlyInflow),
       expectedMonthlyBurnOverride: _positiveOrNull(expectedMonthlyBurnOverride),
