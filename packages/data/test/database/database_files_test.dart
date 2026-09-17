@@ -1,24 +1,10 @@
 import 'dart:io';
 
 import 'package:data/data.dart';
+import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
-
-/// Records deleted keys without touching a real Keychain.
-class _RecordingStorage implements FlutterSecureStorage {
-  final deletedKeys = <String>[];
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) {
-    if (invocation.memberName == #delete) {
-      deletedKeys.add(invocation.namedArguments[#key] as String);
-      return Future<void>.value();
-    }
-    return super.noSuchMethod(invocation);
-  }
-}
 
 void main() {
   late Directory dir;
@@ -31,7 +17,7 @@ void main() {
     if (await dir.exists()) await dir.delete(recursive: true);
   });
 
-  test('closes the database, deletes its files, then deletes the key', () async {
+  test('closes the database and deletes every file it left behind', () async {
     final file = File(p.join(dir.path, kDatabaseFileName));
     final db = AppDatabase.forTesting(
       NativeDatabase(
@@ -43,27 +29,44 @@ void main() {
     await File('${file.path}-journal').writeAsString('stale');
     expect(await file.exists(), isTrue);
 
-    final storage = _RecordingStorage();
-    await deleteEncryptedDatabase(
-      database: db,
-      directory: dir,
-      storage: storage,
-    );
+    await deleteEncryptedDatabase(database: db, directory: dir);
 
     final remaining = await dir.list().map((e) => p.basename(e.path)).toList();
     expect(remaining, isEmpty);
-    expect(storage.deletedKeys, [kDatabaseKeyName]);
   });
 
   test('succeeds when no database file was ever created', () async {
-    final storage = _RecordingStorage();
-
     await deleteEncryptedDatabase(
       database: AppDatabase.forTesting(NativeDatabase.memory()),
       directory: dir,
-      storage: storage,
     );
 
-    expect(storage.deletedKeys, [kDatabaseKeyName]);
+    expect(await dir.list().isEmpty, isTrue);
+  });
+
+  test('deletes the data even when the database cannot be opened', () async {
+    // This is the state deletion exists for. Drift's LazyDatabase rethrows a
+    // failed open, so awaiting close() aborted the delete and left the owner
+    // with no escape but removing the app.
+    final file = File(p.join(dir.path, kDatabaseFileName));
+    await file.writeAsString('not a database at all');
+    final unopenable = AppDatabase.forTesting(
+      LazyDatabase(() async => throw StateError('file is not a database')),
+    );
+
+    await deleteEncryptedDatabase(database: unopenable, directory: dir);
+
+    expect(await file.exists(), isFalse);
+  });
+
+  test('the key store is out of reach, so data deletion cannot orphan it', () {
+    // "Database present, key missing" is the one unrecoverable state. Keeping
+    // the key means deleting data can never cause it, and the guarantee is
+    // structural: this function takes no storage to delete from.
+    expect(kDatabaseKeyName, 'awareness_db_key');
+    expect(
+      deleteEncryptedDatabase,
+      isA<Future<void> Function({required AppDatabase database, Directory? directory})>(),
+    );
   });
 }

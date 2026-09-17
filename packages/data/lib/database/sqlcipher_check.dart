@@ -20,9 +20,15 @@ Future<String?> readCipherVersion(DatabaseConnectionUser db) async {
 
 /// Fails loudly when [cipherVersion] shows SQLCipher is not active.
 ///
-/// Throws when [fatal] is true, the default in debug builds. Otherwise it
-/// reports the error through [FlutterError.reportError] and lets the app run.
-void ensureSqlCipher(String? cipherVersion, {bool fatal = kDebugMode}) {
+/// Fatal by default, in release as well as debug. It used to default to
+/// [kDebugMode], so a release build whose SQLCipher linkage regressed wrote
+/// plaintext and only filed an error report nobody sees — while the store
+/// listing promised the data was encrypted on the device. This project has
+/// shipped that exact linker failure once before.
+///
+/// Refusing to run is recoverable: "Delete all data" no longer needs a
+/// healthy database.
+void ensureSqlCipher(String? cipherVersion, {bool fatal = true}) {
   if (cipherVersion != null) return;
   final error = SqlCipherUnavailableError();
   if (fatal) throw error;
