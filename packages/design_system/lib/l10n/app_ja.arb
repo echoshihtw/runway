@@ -123,6 +123,7 @@
   "deleteSubscriptionKeepsEntries": "今後の記録を停止します。すでに記録された支払いは残ります。",
   "liabilities": "負債",
   "noActiveLoans": "> アクティブなローンなし",
+  "newLoan": "+ ローン",
   "settled": "完済",
   "totalDebtPerMonth": "月間債務合計",
   "remaining": "残高",

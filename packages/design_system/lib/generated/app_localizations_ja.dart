@@ -279,6 +279,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get noActiveLoans => '> アクティブなローンなし';
 
   @override
+  String get newLoan => '+ ローン';
+
+  @override
   String get settled => '完済';
 
   @override

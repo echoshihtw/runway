@@ -635,6 +635,12 @@ abstract class AppLocalizations {
   /// **'> NO ACTIVE LOANS'**
   String get noActiveLoans;
 
+  /// No description provided for @newLoan.
+  ///
+  /// In en, this message translates to:
+  /// **'+ LOAN'**
+  String get newLoan;
+
   /// No description provided for @settled.
   ///
   /// In en, this message translates to:

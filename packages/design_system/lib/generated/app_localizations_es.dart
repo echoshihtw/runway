@@ -283,6 +283,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get noActiveLoans => '> SIN PRÉSTAMOS ACTIVOS';
 
   @override
+  String get newLoan => '+ PRÉSTAMO';
+
+  @override
   String get settled => 'LIQUIDADO';
 
   @override

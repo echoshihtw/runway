@@ -12,8 +12,7 @@ import '../features/onboarding/onboarding_screen.dart';
 import '../features/dashboard/dashboard_screen.dart';
 import '../features/transactions/transactions_screen.dart';
 import '../features/transactions/widgets/transaction_form.dart';
-import '../features/transactions/widgets/loan_wizard.dart';
-import '../features/paywall/paywall_screen.dart';
+import '../features/loans/start_loan_creation.dart';
 import '../features/subscriptions/add_subscription_sheet.dart';
 import '../features/scenarios/scenarios_screen.dart';
 import 'page_indicator.dart';
@@ -116,7 +115,7 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
                       onTap: () {
                         Navigator.pop(ctx);
                         WidgetsBinding.instance.addPostFrameCallback(
-                          (_) => _showLoanWizard(),
+                          (_) => startLoanCreation(context, ref),
                         );
                       },
                     ),
@@ -188,67 +187,6 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
               ),
             );
           }
-        },
-      ),
-    );
-  }
-
-  Future<void> _showLoanWizard() async {
-    final isPro =
-        FeatureFlags.devProEntitlement ||
-        (ref.read(entitlementProvider).value?.isPro ?? false);
-    if (!isPro) {
-      final loans = await ref.read(loansProvider.future);
-      final transactions = await ref.read(transactionsProvider.future);
-      if (!mounted) return;
-      if (hasActiveLoan(loans: loans, transactions: transactions)) {
-        showPaywall(context, trigger: 'loan_limit');
-        return;
-      }
-    }
-    showModalBottomSheet(
-      context: context,
-      useRootNavigator: true,
-      isScrollControlled: true,
-      backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppSpacing.cardRadius),
-        ),
-      ),
-      builder: (_) => LoanWizard(
-        onSubmit: (loanAmount, monthlyPayment, termMonths, date, note) async {
-          final now = DateTime.now();
-          final loanId = const Uuid().v4();
-          final parts = (note ?? '').split(' — ');
-          final source =
-              parts.isNotEmpty ? parts[0].replaceAll(' LOAN', '') : 'OTHER';
-          final name = parts.length > 1 ? parts[1] : 'LOAN';
-          await ref.read(addLoanUseCaseProvider).execute(
-            Loan(
-              id: loanId,
-              name: name,
-              source: source,
-              originalAmount: loanAmount,
-              monthlyPayment: monthlyPayment,
-              originalTermMonths: termMonths,
-              startDate: date,
-              createdAt: now,
-              updatedAt: now,
-            ),
-          );
-          await ref.read(addTransactionUseCaseProvider).execute(
-            Transaction(
-              id: const Uuid().v4(),
-              date: date,
-              type: TransactionType.loan,
-              amount: Money(loanAmount),
-              note: note,
-              loanId: loanId,
-              createdAt: now,
-              updatedAt: now,
-            ),
-          );
         },
       ),
     );

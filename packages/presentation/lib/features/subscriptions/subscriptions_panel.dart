@@ -4,6 +4,7 @@ import 'package:design_system/design_system.dart';
 import 'package:application/application.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
+import '../../shared/add_strip.dart';
 import 'add_subscription_sheet.dart';
 import 'subscription_form.dart';
 
@@ -81,8 +82,9 @@ class SubscriptionsPanel extends ConsumerWidget {
                   showDivider: i < sorted.length - 1,
                   onEdit: () => _showEditSubscription(context, ref, sorted[i]),
                 ),
-              _AddStrip(
+              AddStrip(
                 label: l10n.newSubscription,
+                color: SC.subscr,
                 onTap: () => showAddSubscriptionSheet(context, ref),
               ),
             ],
@@ -449,36 +451,3 @@ class _SubRow extends StatelessWidget {
 }
 
 
-/// "One more" at the foot of a list, rather than a control in the header where
-/// the tap already toggles the card.
-class _AddStrip extends StatelessWidget {
-  final String label;
-  final VoidCallback onTap;
-
-  const _AddStrip({required this.label, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        width: double.infinity,
-        // 44pt is Apple's minimum. The strip reads as one control all the way
-        // down to the gap beneath the label, so the gap belongs inside the
-        // target rather than just outside it.
-        constraints: const BoxConstraints(minHeight: 44),
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm + 2),
-        decoration: const BoxDecoration(
-          border: Border(top: BorderSide(color: AppColors.cardBorder)),
-        ),
-        child: Center(
-          child: Text(
-            label,
-            style: AppTextStyles.label.copyWith(color: SC.subscr),
-          ),
-        ),
-      ),
-    );
-  }
-}
