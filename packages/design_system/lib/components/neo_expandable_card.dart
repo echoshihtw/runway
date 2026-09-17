@@ -93,11 +93,17 @@ class _NeoExpandableCardState extends State<NeoExpandableCard>
                     ),
                     const SizedBox(width: AppSpacing.sm),
                   ],
-                  Text(
-                    widget.title.toUpperCase(),
-                    style: AppTextStyles.sectionTitle,
+                  // Expanded, not a Text beside a Spacer: the title is the
+                  // one thing here that can be shortened, and at large text
+                  // sizes an unflexed title pushes the chevron off the card.
+                  Expanded(
+                    child: Text(
+                      widget.title.toUpperCase(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.sectionTitle,
+                    ),
                   ),
-                  const Spacer(),
                   if (widget.trailing != null) ...[
                     widget.trailing!,
                     const SizedBox(width: AppSpacing.sm),
