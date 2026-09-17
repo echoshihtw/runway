@@ -3,16 +3,13 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:uuid/uuid.dart';
 import 'package:design_system/design_system.dart';
-import 'package:application/application.dart';
-import 'package:domain/domain.dart';
 import '../features/boot/boot_screen.dart';
 import '../features/onboarding/onboarding_screen.dart';
 import '../features/dashboard/dashboard_screen.dart';
 import '../features/transactions/transactions_screen.dart';
-import '../features/transactions/widgets/transaction_form.dart';
 import '../features/loans/start_loan_creation.dart';
+import '../features/transactions/daily_spend_sheet.dart';
 import '../features/subscriptions/add_subscription_sheet.dart';
 import '../features/scenarios/scenarios_screen.dart';
 import 'page_indicator.dart';
@@ -103,7 +100,7 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
                       onTap: () {
                         Navigator.pop(ctx);
                         WidgetsBinding.instance.addPostFrameCallback(
-                          (_) => _showForm(null),
+                          (_) => showDailySpendSheet(context, ref),
                         );
                       },
                     ),
@@ -139,78 +136,6 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
         );
       },
     );
-  }
-
-  void _showForm(Transaction? existing) {
-    final loans = _loanChoices(existing: existing);
-    showModalBottomSheet(
-      context: context,
-      useRootNavigator: true,
-      isScrollControlled: true,
-      backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppSpacing.cardRadius),
-        ),
-      ),
-      builder: (_) => TransactionForm(
-        existing: existing,
-        loans: loans,
-        onSubmit: (type, amount, date, note, category, loanId) async {
-          final now = DateTime.now();
-          if (existing == null) {
-            await ref.read(addTransactionUseCaseProvider).execute(
-              Transaction(
-                id: const Uuid().v4(),
-                date: date,
-                type: type,
-                amount: Money(amount),
-                note: note,
-                loanId: type == TransactionType.repayment ? loanId : null,
-                category: category,
-                createdAt: now,
-                updatedAt: now,
-              ),
-            );
-          } else {
-            await ref.read(editTransactionUseCaseProvider).execute(
-              existing.copyWith(
-                date: date,
-                type: type,
-                amount: Money(amount),
-                note: note,
-                loanId: type == TransactionType.repayment ? loanId : null,
-                clearLoanId: type != TransactionType.repayment,
-                category: category,
-                clearCategory: category == null,
-                updatedAt: now,
-              ),
-            );
-          }
-        },
-      ),
-    );
-  }
-
-  List<Loan> _loanChoices({Transaction? existing}) {
-    final summaries = ref.read(loanSummariesProvider);
-    final loans =
-        activeLoanSummaries(summaries).map((s) => s.loan).toList();
-    final existingLoanId = existing?.loanId;
-    if (existingLoanId != null &&
-        !loans.any((l) => l.id == existingLoanId)) {
-      for (final s in summaries) {
-        if (s.loan.id == existingLoanId) {
-          loans.add(s.loan);
-          break;
-        }
-      }
-    }
-    loans.sort((a, b) {
-      if (a.isActive != b.isActive) return a.isActive ? -1 : 1;
-      return a.name.compareTo(b.name);
-    });
-    return loans;
   }
 
   @override
