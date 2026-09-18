@@ -108,7 +108,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get overrideInputs => 'Planning inputs';
 
   @override
-  String get burnRateOverride => 'Monthly costs';
+  String get burnRateOverride => 'Rent + living / month';
 
   @override
   String get simulatedIncome => 'Income change / month';
@@ -580,7 +580,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get simHint =>
-      'CHANGE MONTHLY COSTS OR ADD INCOME TO SEE THE IMPACT ON RUNWAY';
+      'CHANGE RENT + LIVING OR ADD INCOME TO SEE THE IMPACT ON RUNWAY';
 
   @override
   String get simulation => 'Scenario';
@@ -955,6 +955,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get optionalBadge => 'OPTIONAL';
+
+  @override
+  String fixedCostsUnchanged(String amount) {
+    return 'Fixed costs unchanged: $amount';
+  }
 
   @override
   String get paywallTermsOfUse => 'Terms of Use';

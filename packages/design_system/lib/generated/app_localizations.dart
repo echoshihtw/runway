@@ -308,7 +308,7 @@ abstract class AppLocalizations {
   /// No description provided for @burnRateOverride.
   ///
   /// In en, this message translates to:
-  /// **'Monthly costs'**
+  /// **'Rent + living / month'**
   String get burnRateOverride;
 
   /// No description provided for @simulatedIncome.
@@ -1208,7 +1208,7 @@ abstract class AppLocalizations {
   /// No description provided for @simHint.
   ///
   /// In en, this message translates to:
-  /// **'CHANGE MONTHLY COSTS OR ADD INCOME TO SEE THE IMPACT ON RUNWAY'**
+  /// **'CHANGE RENT + LIVING OR ADD INCOME TO SEE THE IMPACT ON RUNWAY'**
   String get simHint;
 
   /// No description provided for @simulation.
@@ -1870,6 +1870,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'OPTIONAL'**
   String get optionalBadge;
+
+  /// No description provided for @fixedCostsUnchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Fixed costs unchanged: {amount}'**
+  String fixedCostsUnchanged(String amount);
 
   /// Link on the paywall to Apple's standard end user license agreement
   ///

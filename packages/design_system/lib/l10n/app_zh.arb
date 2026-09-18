@@ -33,7 +33,7 @@
   "purgeEntry": "> 刪除此記錄？",
   "scenarioSimulator": "情境模擬器",
   "overrideInputs": "覆蓋輸入",
-  "burnRateOverride": "支出覆蓋",
+  "burnRateOverride": "房租 + 生活费 / 月",
   "simulatedIncome": "模擬月收入",
   "simResults": "模擬結果",
   "simRunway": "模擬存活期",
@@ -350,6 +350,7 @@
   "stepSimShort": "模拟器",
   "stepsDone": "搞定：{steps}",
   "optionalBadge": "可选",
+  "fixedCostsUnchanged": "固定支出照旧：{amount}",
   "paywallTermsOfUse": "使用条款",
   "paywallPrivacyPolicy": "隐私政策"
 }

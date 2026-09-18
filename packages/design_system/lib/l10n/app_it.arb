@@ -33,7 +33,7 @@
   "purgeEntry": "> ELIMINARE QUESTA VOCE?",
   "scenarioSimulator": "SIMULATORE DI SCENARI",
   "overrideInputs": "INPUT DI SOSTITUZIONE",
-  "burnRateOverride": "SOSTITUZIONE SPESA",
+  "burnRateOverride": "Affitto + spese quotidiane / mese",
   "simulatedIncome": "REDDITO SIMULATO/MESE",
   "simResults": "RISULTATI SIM",
   "simRunway": "AUTONOMIA SIM",
@@ -350,6 +350,7 @@
   "stepSimShort": "Simulatore",
   "stepsDone": "Fatto: {steps}",
   "optionalBadge": "FACOLTATIVO",
+  "fixedCostsUnchanged": "Costi fissi invariati: {amount}",
   "paywallTermsOfUse": "Termini di utilizzo",
   "paywallPrivacyPolicy": "Informativa sulla privacy"
 }

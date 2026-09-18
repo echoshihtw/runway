@@ -108,7 +108,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get overrideInputs => 'オーバーライド入力';
 
   @override
-  String get burnRateOverride => '支出オーバーライド';
+  String get burnRateOverride => '家賃＋生活費 / 月';
 
   @override
   String get simulatedIncome => 'シミュレート収入/月';
@@ -938,6 +938,11 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get optionalBadge => '任意';
+
+  @override
+  String fixedCostsUnchanged(String amount) {
+    return '固定費は変わりません: $amount';
+  }
 
   @override
   String get paywallTermsOfUse => '利用規約';

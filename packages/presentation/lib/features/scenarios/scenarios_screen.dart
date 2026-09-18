@@ -31,6 +31,18 @@ class ScenariosScreen extends ConsumerWidget {
 
     Color runwayColor(RunwayStatus s) => statusColor(s);
 
+    final variableBurn = burn.variableBurn > 0 ? burn.variableBurn : null;
+    final fixedCosts = burn.subscriptions + burn.loanPayments;
+    // The button exists only while it has a job. Disabled, it rendered as a
+    // dimmed primary fill both before any input and underneath the result it
+    // had just produced, which reads as broken at the one moment the product
+    // is trying to impress (#108).
+    final canRun =
+        realModel.currentCash != 0 &&
+        scenario.hasInput &&
+        !scenario.isCalculating &&
+        !scenario.isActive;
+
     return GradientScaffold(
       body: SingleChildScrollView(
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -100,12 +112,16 @@ class ScenariosScreen extends ConsumerWidget {
                 children: [
                   Text(l10n.simHint, style: AppTextStyles.caption),
                   const SizedBox(height: AppSpacing.md),
+                  // The field changes rent + living only; subscriptions and
+                  // loans survive it (CONTRACTS §3.2). It starts at the
+                  // current value so the number the user edits is the one
+                  // the field means, not the TOTAL/MO figure two rows up,
+                  // which includes the fixed costs (#116).
                   _SimInput(
                     label: l10n.burnRateOverride,
-                    hint: burn.variableBurn > 0
-                        ? burn.variableBurn.toStringAsFixed(0)
-                        : '0',
-                    initialValue: scenario.burnRateOverride?.toStringAsFixed(0),
+                    hint: '0',
+                    initialValue: (scenario.burnRateOverride ?? variableBurn)
+                        ?.toStringAsFixed(0),
                     resetVersion: scenario.resetVersion,
                     focusOnReset: true,
                     onChanged: (v) {
@@ -115,6 +131,13 @@ class ScenariosScreen extends ConsumerWidget {
                           .setBurnRateOverride(value);
                     },
                   ),
+                  if (fixedCosts > 0) ...[
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      l10n.fixedCostsUnchanged(fmt(fixedCosts)),
+                      style: AppTextStyles.caption,
+                    ),
+                  ],
                   const SizedBox(height: AppSpacing.md),
                   _SimInput(
                     label: l10n.simulatedIncome,
@@ -138,22 +161,18 @@ class ScenariosScreen extends ConsumerWidget {
                     fmtRunway: fmtRunway,
                     runwayColor: runwayColor,
                   ),
-                  const SizedBox(height: AppSpacing.md),
-                  NeoButton(
-                    label: 'RUN SIMULATION',
-                    variant: NeoButtonVariant.primary,
-                    fullWidth: true,
-                    onPressed:
-                        realModel.currentCash == 0 ||
-                            !scenario.hasInput ||
-                            scenario.isCalculating ||
-                            scenario.isActive
-                        ? null
-                        : () {
-                            if (!allowsSimulation(context, ref)) return;
-                            ref.read(scenarioProvider.notifier).activate();
-                          },
-                  ),
+                  if (canRun) ...[
+                    const SizedBox(height: AppSpacing.md),
+                    NeoButton(
+                      label: 'RUN SIMULATION',
+                      variant: NeoButtonVariant.primary,
+                      fullWidth: true,
+                      onPressed: () {
+                        if (!allowsSimulation(context, ref)) return;
+                        ref.read(scenarioProvider.notifier).activate();
+                      },
+                    ),
+                  ],
                   // Shown once the first is spent, so the paywall never
                   // arrives unannounced.
                   if (simulationsRun > 0 && !isProOwner(ref)) ...[
@@ -363,7 +382,7 @@ class _SimInputState extends State<_SimInput> {
   void didUpdateWidget(covariant _SimInput oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.resetVersion != oldWidget.resetVersion) {
-      _ctrl.clear();
+      _ctrl.text = widget.initialValue ?? '';
       if (widget.focusOnReset) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) _focusNode.requestFocus();
@@ -371,6 +390,10 @@ class _SimInputState extends State<_SimInput> {
       }
       return;
     }
+    // A cleared field reads as "no change", which resolves back to the
+    // starting value; writing that into a field being typed in would snap
+    // the user's deletion straight back.
+    if (_focusNode.hasFocus) return;
     final value = widget.initialValue ?? '';
     if (value != _ctrl.text) {
       _ctrl.text = value;

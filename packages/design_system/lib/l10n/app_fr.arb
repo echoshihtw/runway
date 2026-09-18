@@ -33,7 +33,7 @@
   "purgeEntry": "> SUPPRIMER CETTE ENTRÉE?",
   "scenarioSimulator": "SIMULATEUR DE SCÉNARIO",
   "overrideInputs": "ENTRÉES DE REMPLACEMENT",
-  "burnRateOverride": "REMPLACEMENT DÉPENSE",
+  "burnRateOverride": "Loyer + vie courante / mois",
   "simulatedIncome": "REVENU SIMULÉ/MO",
   "simResults": "RÉSULTATS SIM",
   "simRunway": "AUTONOMIE SIM",
@@ -350,6 +350,7 @@
   "stepSimShort": "Simulateur",
   "stepsDone": "Terminé : {steps}",
   "optionalBadge": "FACULTATIF",
+  "fixedCostsUnchanged": "Coûts fixes inchangés : {amount}",
   "paywallTermsOfUse": "Conditions d’utilisation",
   "paywallPrivacyPolicy": "Politique de confidentialité"
 }
