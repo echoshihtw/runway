@@ -5,6 +5,7 @@ import 'package:application/application.dart';
 import '../../product_config.dart';
 import '../../shared/pro_gate.dart';
 import '../../shared/status_color.dart';
+import '../transactions/show_entry_sheet.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
 
@@ -154,6 +155,8 @@ class ScenariosScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: AppSpacing.md),
                   _simulationResult(
+                    context: context,
+                    ref: ref,
                     l10n: l10n,
                     scenario: scenario,
                     realModel: realModel,
@@ -164,7 +167,7 @@ class ScenariosScreen extends ConsumerWidget {
                   if (canRun) ...[
                     const SizedBox(height: AppSpacing.md),
                     NeoButton(
-                      label: 'RUN SIMULATION',
+                      label: l10n.runSimulation,
                       variant: NeoButtonVariant.primary,
                       fullWidth: true,
                       onPressed: () {
@@ -222,6 +225,8 @@ class ScenariosScreen extends ConsumerWidget {
   }
 
   Widget _simulationResult({
+    required BuildContext context,
+    required WidgetRef ref,
     required AppLocalizations l10n,
     required ScenarioState scenario,
     required ModelState realModel,
@@ -230,20 +235,35 @@ class ScenariosScreen extends ConsumerWidget {
     required Color Function(RunwayStatus) runwayColor,
   }) {
     if (realModel.currentCash == 0) {
+      // This used to read "Go to LOG → + ADD → Opening Balance", a route that
+      // stopped existing when the add sheet was replaced by the preset grid
+      // (#134, #135). The panel now opens the form itself, the way the
+      // Getting Started steps do (#142, #153).
       return _simulationPanel(
         icon: Icons.account_balance_wallet_outlined,
         child: Column(
           children: [
             Text(
-              'Add your opening balance first',
+              l10n.simNeedsBalance,
               style: AppTextStyles.bodySmall,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              'Go to LOG → + ADD → Opening Balance',
+              l10n.simNeedsBalanceWhy,
               style: AppTextStyles.caption,
               textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            NeoButton(
+              label: l10n.addOpeningBalance,
+              variant: NeoButtonVariant.primary,
+              fullWidth: true,
+              onPressed: () => showEntrySheet(
+                context,
+                ref,
+                preselectedType: TransactionType.openingBalance,
+              ),
             ),
           ],
         ),

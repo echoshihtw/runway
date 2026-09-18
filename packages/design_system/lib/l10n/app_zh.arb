@@ -351,6 +351,10 @@
   "stepsDone": "搞定：{steps}",
   "optionalBadge": "可选",
   "fixedCostsUnchanged": "固定支出照旧：{amount}",
+  "simNeedsBalance": "先添加你的初始余额",
+  "simNeedsBalanceWhy": "可用月数要从一个起始余额开始算。",
+  "addOpeningBalance": "添加我的余额",
+  "runSimulation": "开始模拟",
   "paywallTermsOfUse": "使用条款",
   "paywallPrivacyPolicy": "隐私政策"
 }

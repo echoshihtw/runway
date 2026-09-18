@@ -450,6 +450,10 @@
   "optionalBadge": "OPTIONAL",
   "fixedCostsUnchanged": "Fixed costs unchanged: {amount}",
   "@fixedCostsUnchanged": {"placeholders": {"amount": {"type": "String"}}},
+  "simNeedsBalance": "Add your opening balance first",
+  "simNeedsBalanceWhy": "A runway needs a starting balance to count down from.",
+  "addOpeningBalance": "ADD MY BALANCE",
+  "runSimulation": "RUN SIMULATION",
   "paywallTermsOfUse": "Terms of Use",
   "paywallPrivacyPolicy": "Privacy Policy",
   "@paywallTermsOfUse": {

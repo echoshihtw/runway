@@ -351,6 +351,10 @@
   "stepsDone": "Hecho: {steps}",
   "optionalBadge": "OPCIONAL",
   "fixedCostsUnchanged": "Costes fijos sin cambios: {amount}",
+  "simNeedsBalance": "Añade primero tu saldo inicial",
+  "simNeedsBalanceWhy": "Tu margen necesita un saldo de partida desde el que contar.",
+  "addOpeningBalance": "AÑADIR MI SALDO",
+  "runSimulation": "SIMULAR",
   "paywallTermsOfUse": "Términos de uso",
   "paywallPrivacyPolicy": "Política de privacidad"
 }

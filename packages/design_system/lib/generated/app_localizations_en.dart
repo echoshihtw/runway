@@ -962,6 +962,19 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get simNeedsBalance => 'Add your opening balance first';
+
+  @override
+  String get simNeedsBalanceWhy =>
+      'A runway needs a starting balance to count down from.';
+
+  @override
+  String get addOpeningBalance => 'ADD MY BALANCE';
+
+  @override
+  String get runSimulation => 'RUN SIMULATION';
+
+  @override
   String get paywallTermsOfUse => 'Terms of Use';
 
   @override

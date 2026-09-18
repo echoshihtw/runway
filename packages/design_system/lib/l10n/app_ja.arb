@@ -351,6 +351,10 @@
   "stepsDone": "完了: {steps}",
   "optionalBadge": "任意",
   "fixedCostsUnchanged": "固定費は変わりません: {amount}",
+  "simNeedsBalance": "まず期初残高を入力してください",
+  "simNeedsBalanceWhy": "残り月数は、この残高から数え始めます。",
+  "addOpeningBalance": "残高を入力",
+  "runSimulation": "シミュレーション",
   "paywallTermsOfUse": "利用規約",
   "paywallPrivacyPolicy": "プライバシーポリシー"
 }

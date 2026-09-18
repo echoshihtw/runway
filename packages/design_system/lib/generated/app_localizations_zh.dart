@@ -943,6 +943,18 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get simNeedsBalance => '先添加你的初始余额';
+
+  @override
+  String get simNeedsBalanceWhy => '可用月数要从一个起始余额开始算。';
+
+  @override
+  String get addOpeningBalance => '添加我的余额';
+
+  @override
+  String get runSimulation => '开始模拟';
+
+  @override
   String get paywallTermsOfUse => '使用条款';
 
   @override
@@ -1886,6 +1898,18 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String fixedCostsUnchanged(String amount) {
     return '固定支出照舊：$amount';
   }
+
+  @override
+  String get simNeedsBalance => '先新增你的期初餘額';
+
+  @override
+  String get simNeedsBalanceWhy => '可用月數要從一個起始餘額開始算。';
+
+  @override
+  String get addOpeningBalance => '新增我的餘額';
+
+  @override
+  String get runSimulation => '開始模擬';
 
   @override
   String get paywallTermsOfUse => '使用條款';

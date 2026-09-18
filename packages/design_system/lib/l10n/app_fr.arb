@@ -351,6 +351,10 @@
   "stepsDone": "Terminé : {steps}",
   "optionalBadge": "FACULTATIF",
   "fixedCostsUnchanged": "Coûts fixes inchangés : {amount}",
+  "simNeedsBalance": "Ajoutez d'abord votre solde initial",
+  "simNeedsBalanceWhy": "Votre marge a besoin d'un solde de départ d'où partir.",
+  "addOpeningBalance": "SAISIR MON SOLDE",
+  "runSimulation": "LANCER LA SIMULATION",
   "paywallTermsOfUse": "Conditions d’utilisation",
   "paywallPrivacyPolicy": "Politique de confidentialité"
 }
