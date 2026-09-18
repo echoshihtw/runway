@@ -1,14 +1,22 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:presentation/features/onboarding/onboarding_screen.dart';
 
-Future<void> _pumpOnboarding(WidgetTester tester) async {
+Future<void> _pumpOnboarding(WidgetTester tester, {Locale? locale}) async {
   tester.view.physicalSize = const Size(1170, 2532);
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
   await tester.pumpWidget(
-    const ProviderScope(child: MaterialApp(home: OnboardingScreen())),
+    ProviderScope(
+      child: MaterialApp(
+        locale: locale,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: const OnboardingScreen(),
+      ),
+    ),
   );
   await tester.pumpAndSettle();
 }
@@ -54,5 +62,24 @@ void main() {
       expect(find.text('Three steps\nto clarity.'), findsNothing);
       expect(find.text('Lock it\ndown.'), findsNothing);
     }
+  });
+
+  testWidgets('the first run speaks the device language, not English', (
+    tester,
+  ) async {
+    // #96: every title, body, bullet and button was a Dart literal, so a
+    // phone set to 日本語 met an English first run. The paywall's legal links
+    // were the only strings on either judged screen that translated.
+    await _pumpOnboarding(tester, locale: const Locale('ja'));
+
+    expect(find.text('GET STARTED'), findsNothing);
+    expect(find.text('SKIP'), findsNothing);
+    expect(find.text('はじめる'), findsOneWidget);
+    expect(find.text('スキップ'), findsOneWidget);
+
+    await tester.tap(find.text('はじめる'));
+    await tester.pumpAndSettle();
+    expect(find.text('Encrypted on device'), findsNothing);
+    expect(find.text('端末内で暗号化'), findsOneWidget);
   });
 }

@@ -839,6 +839,130 @@ class AppLocalizationsEs extends AppLocalizations {
   String get noActivityThisMonth => 'Sin actividad este mes';
 
   @override
+  String get onboardingSkip => 'OMITIR';
+
+  @override
+  String get onboardingWelcomeTitle => 'Conoce tu\nmargen.';
+
+  @override
+  String get onboardingWelcomeBody =>
+      'Un solo número muestra dónde estás.\n¿Cuántos meses cubre tu dinero?';
+
+  @override
+  String get onboardingGetStarted => 'EMPEZAR';
+
+  @override
+  String get onboardingPrivacyTitle => 'Tus datos,\ntu dispositivo.';
+
+  @override
+  String get onboardingPrivacyBody =>
+      'Todo se cifra en tu dispositivo.\nNo podemos leer tus datos financieros.\nNi siquiera nosotros conocemos tus cifras.';
+
+  @override
+  String get onboardingPrivacyEncrypted => 'Cifrado en el dispositivo';
+
+  @override
+  String get onboardingPrivacyOnDevice => 'Tus cifras no salen del dispositivo';
+
+  @override
+  String get onboardingPrivacyHidden => 'Oculto al cambiar de app';
+
+  @override
+  String get onboardingPrivacyDelete => 'Bórralo cuando quieras, al instante';
+
+  @override
+  String get onboardingIUnderstand => 'ENTENDIDO';
+
+  @override
+  String get onboardingFirstActionTitle => '¿Listo para ver\ntu margen?';
+
+  @override
+  String get onboardingFirstActionBody =>
+      'Empieza añadiendo tu saldo actual.\nEs todo lo que necesitas para ver tu número.';
+
+  @override
+  String get onboardingAddMyBalance => 'AÑADIR MI SALDO';
+
+  @override
+  String get paywallUnlock => 'DESBLOQUEAR RUNWAY PRO';
+
+  @override
+  String get paywallLoadingPrice => 'Cargando precio...';
+
+  @override
+  String get paywallStoreUnreachable =>
+      'No se pudo conectar con la tienda. Revisa tu conexión e inténtalo de nuevo.';
+
+  @override
+  String paywallOneTimePurchase(String price) {
+    return '$price · Pago único';
+  }
+
+  @override
+  String get paywallUnavailable =>
+      'Pro no está disponible ahora mismo. Inténtalo más tarde.';
+
+  @override
+  String get paywallRestore => 'Restaurar compra';
+
+  @override
+  String get paywallMaybeLater => 'Quizá más tarde';
+
+  @override
+  String get paywallPurchaseFailed => 'La compra falló. Inténtalo de nuevo.';
+
+  @override
+  String get paywallSomethingWrong => 'Algo salió mal. Inténtalo de nuevo.';
+
+  @override
+  String get paywallNoPreviousPurchase =>
+      'No se encontró ninguna compra anterior.';
+
+  @override
+  String get paywallRestoreFailed =>
+      'La restauración falló. Inténtalo de nuevo.';
+
+  @override
+  String paywallTitleEntries(int count) {
+    return 'Has registrado tus $count entradas gratis.\nLas entradas ilimitadas son Pro.';
+  }
+
+  @override
+  String paywallTitleSimulations(int count) {
+    return 'Has usado tus $count simulaciones gratis.\nLas simulaciones ilimitadas son Pro.';
+  }
+
+  @override
+  String get paywallTitleDefault => 'Desbloquea Runway Pro.';
+
+  @override
+  String get paywallFeatureEntries => 'Entradas ilimitadas';
+
+  @override
+  String get paywallFeatureSimulations =>
+      'Simulaciones de escenarios ilimitadas';
+
+  @override
+  String get stepBalanceShort => 'Saldo';
+
+  @override
+  String get stepBudgetShort => 'Presupuesto';
+
+  @override
+  String get stepExpenseShort => 'Primer gasto';
+
+  @override
+  String get stepSimShort => 'Simulador';
+
+  @override
+  String stepsDone(String steps) {
+    return 'Hecho: $steps';
+  }
+
+  @override
+  String get optionalBadge => 'OPCIONAL';
+
+  @override
   String get paywallTermsOfUse => 'Términos de uso';
 
   @override

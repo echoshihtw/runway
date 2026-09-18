@@ -836,6 +836,127 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noActivityThisMonth => 'No activity yet this month';
 
   @override
+  String get onboardingSkip => 'SKIP';
+
+  @override
+  String get onboardingWelcomeTitle => 'Know your\nrunway.';
+
+  @override
+  String get onboardingWelcomeBody =>
+      'One number shows where you stand.\nHow many months does your money cover?';
+
+  @override
+  String get onboardingGetStarted => 'GET STARTED';
+
+  @override
+  String get onboardingPrivacyTitle => 'Your data,\nyour device.';
+
+  @override
+  String get onboardingPrivacyBody =>
+      'Everything is encrypted on your device.\nWe cannot read your financial data.\nEven we don\'t know your numbers.';
+
+  @override
+  String get onboardingPrivacyEncrypted => 'Encrypted on device';
+
+  @override
+  String get onboardingPrivacyOnDevice => 'Numbers stay on your device';
+
+  @override
+  String get onboardingPrivacyHidden => 'Hidden when you switch apps';
+
+  @override
+  String get onboardingPrivacyDelete => 'Delete anytime, instantly';
+
+  @override
+  String get onboardingIUnderstand => 'I UNDERSTAND';
+
+  @override
+  String get onboardingFirstActionTitle => 'Ready to find\nyour runway?';
+
+  @override
+  String get onboardingFirstActionBody =>
+      'Start by adding your current cash balance.\nThat\'s all you need to see your number.';
+
+  @override
+  String get onboardingAddMyBalance => 'ADD MY BALANCE';
+
+  @override
+  String get paywallUnlock => 'UNLOCK RUNWAY PRO';
+
+  @override
+  String get paywallLoadingPrice => 'Loading price...';
+
+  @override
+  String get paywallStoreUnreachable =>
+      'Couldn\'t reach the store. Check your connection and try again.';
+
+  @override
+  String paywallOneTimePurchase(String price) {
+    return '$price · One-time purchase';
+  }
+
+  @override
+  String get paywallUnavailable =>
+      'Pro isn\'t available right now. Please try again later.';
+
+  @override
+  String get paywallRestore => 'Restore purchase';
+
+  @override
+  String get paywallMaybeLater => 'Maybe later';
+
+  @override
+  String get paywallPurchaseFailed => 'Purchase failed. Please try again.';
+
+  @override
+  String get paywallSomethingWrong => 'Something went wrong. Please try again.';
+
+  @override
+  String get paywallNoPreviousPurchase => 'No previous purchase found.';
+
+  @override
+  String get paywallRestoreFailed => 'Restore failed. Please try again.';
+
+  @override
+  String paywallTitleEntries(int count) {
+    return 'You\'ve logged your $count free entries.\nUnlimited entries is Pro.';
+  }
+
+  @override
+  String paywallTitleSimulations(int count) {
+    return 'You\'ve run your $count free simulations.\nUnlimited simulations is Pro.';
+  }
+
+  @override
+  String get paywallTitleDefault => 'Unlock Runway Pro.';
+
+  @override
+  String get paywallFeatureEntries => 'Unlimited entries';
+
+  @override
+  String get paywallFeatureSimulations => 'Unlimited scenario simulations';
+
+  @override
+  String get stepBalanceShort => 'Cash balance';
+
+  @override
+  String get stepBudgetShort => 'Budget';
+
+  @override
+  String get stepExpenseShort => 'First expense';
+
+  @override
+  String get stepSimShort => 'Simulator';
+
+  @override
+  String stepsDone(String steps) {
+    return 'Done: $steps';
+  }
+
+  @override
+  String get optionalBadge => 'OPTIONAL';
+
+  @override
   String get paywallTermsOfUse => 'Terms of Use';
 
   @override

@@ -823,6 +823,123 @@ class AppLocalizationsJa extends AppLocalizations {
   String get noActivityThisMonth => '今月はまだ活動がありません';
 
   @override
+  String get onboardingSkip => 'スキップ';
+
+  @override
+  String get onboardingWelcomeTitle => 'あなたの\n残り月数を知る。';
+
+  @override
+  String get onboardingWelcomeBody => 'ひとつの数字で今の立ち位置がわかります。\nあなたのお金は何か月もちますか？';
+
+  @override
+  String get onboardingGetStarted => 'はじめる';
+
+  @override
+  String get onboardingPrivacyTitle => 'あなたのデータは、\nあなたの端末に。';
+
+  @override
+  String get onboardingPrivacyBody =>
+      'すべて端末内で暗号化されます。\n私たちはあなたの金融データを読めません。\n私たちでさえ、あなたの数字を知りません。';
+
+  @override
+  String get onboardingPrivacyEncrypted => '端末内で暗号化';
+
+  @override
+  String get onboardingPrivacyOnDevice => '数字は端末の外に出ません';
+
+  @override
+  String get onboardingPrivacyHidden => 'アプリ切替時は非表示';
+
+  @override
+  String get onboardingPrivacyDelete => 'いつでも即時に削除';
+
+  @override
+  String get onboardingIUnderstand => 'わかりました';
+
+  @override
+  String get onboardingFirstActionTitle => '残り月数を\n確かめますか？';
+
+  @override
+  String get onboardingFirstActionBody => 'まず今の現金残高を入力してください。\nそれだけで数字が見えます。';
+
+  @override
+  String get onboardingAddMyBalance => '残高を入力';
+
+  @override
+  String get paywallUnlock => 'RUNWAY PROをアンロック';
+
+  @override
+  String get paywallLoadingPrice => '価格を読み込み中...';
+
+  @override
+  String get paywallStoreUnreachable => 'ストアに接続できませんでした。通信状態を確認してもう一度お試しください。';
+
+  @override
+  String paywallOneTimePurchase(String price) {
+    return '$price · 買い切り';
+  }
+
+  @override
+  String get paywallUnavailable => 'Proは現在ご利用いただけません。しばらくしてからお試しください。';
+
+  @override
+  String get paywallRestore => '購入を復元';
+
+  @override
+  String get paywallMaybeLater => 'あとで';
+
+  @override
+  String get paywallPurchaseFailed => '購入に失敗しました。もう一度お試しください。';
+
+  @override
+  String get paywallSomethingWrong => '問題が発生しました。もう一度お試しください。';
+
+  @override
+  String get paywallNoPreviousPurchase => '以前の購入は見つかりませんでした。';
+
+  @override
+  String get paywallRestoreFailed => '復元に失敗しました。もう一度お試しください。';
+
+  @override
+  String paywallTitleEntries(int count) {
+    return '無料の記録$count件を使い切りました。\n無制限の記録はProです。';
+  }
+
+  @override
+  String paywallTitleSimulations(int count) {
+    return '無料のシミュレーション$count回を使い切りました。\n無制限のシミュレーションはProです。';
+  }
+
+  @override
+  String get paywallTitleDefault => 'Runway Proをアンロック。';
+
+  @override
+  String get paywallFeatureEntries => '記録は無制限';
+
+  @override
+  String get paywallFeatureSimulations => 'シナリオシミュレーションは無制限';
+
+  @override
+  String get stepBalanceShort => '残高';
+
+  @override
+  String get stepBudgetShort => '予算';
+
+  @override
+  String get stepExpenseShort => '最初の支出';
+
+  @override
+  String get stepSimShort => 'シミュレーター';
+
+  @override
+  String stepsDone(String steps) {
+    return '完了: $steps';
+  }
+
+  @override
+  String get optionalBadge => '任意';
+
+  @override
   String get paywallTermsOfUse => '利用規約';
 
   @override

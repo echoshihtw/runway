@@ -821,6 +821,123 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noActivityThisMonth => '本月暂无活动';
 
   @override
+  String get onboardingSkip => '跳过';
+
+  @override
+  String get onboardingWelcomeTitle => '你的跑道，\n一眼看懂。';
+
+  @override
+  String get onboardingWelcomeBody => '一个数字，告诉你现在站在哪。\n你的钱还能撑几个月？';
+
+  @override
+  String get onboardingGetStarted => '开始吧';
+
+  @override
+  String get onboardingPrivacyTitle => '你的数据，\n只在你手机里。';
+
+  @override
+  String get onboardingPrivacyBody =>
+      '所有数据都在你手机上加密。\n我们看不到你的财务数据。\n连我们都不知道你的数字。';
+
+  @override
+  String get onboardingPrivacyEncrypted => '在手机上加密';
+
+  @override
+  String get onboardingPrivacyOnDevice => '数字不会离开你的手机';
+
+  @override
+  String get onboardingPrivacyHidden => '切到别的 App 就自动遮起来';
+
+  @override
+  String get onboardingPrivacyDelete => '想删就删，马上清空';
+
+  @override
+  String get onboardingIUnderstand => '了解';
+
+  @override
+  String get onboardingFirstActionTitle => '准备好看看\n自己的跑道了吗？';
+
+  @override
+  String get onboardingFirstActionBody => '先输入你现在手上有多少钱。\n这样就够了，马上看到你的数字。';
+
+  @override
+  String get onboardingAddMyBalance => '输入我的余额';
+
+  @override
+  String get paywallUnlock => '解锁 RUNWAY PRO';
+
+  @override
+  String get paywallLoadingPrice => '价格加载中...';
+
+  @override
+  String get paywallStoreUnreachable => '连不上商店，看看网络再试一次。';
+
+  @override
+  String paywallOneTimePurchase(String price) {
+    return '$price · 买断，一次付清';
+  }
+
+  @override
+  String get paywallUnavailable => 'Pro 现在暂时买不到，晚点再试试。';
+
+  @override
+  String get paywallRestore => '恢复购买';
+
+  @override
+  String get paywallMaybeLater => '下次再说';
+
+  @override
+  String get paywallPurchaseFailed => '购买没成功，再试一次吧。';
+
+  @override
+  String get paywallSomethingWrong => '出了点问题，再试一次吧。';
+
+  @override
+  String get paywallNoPreviousPurchase => '找不到之前的购买记录。';
+
+  @override
+  String get paywallRestoreFailed => '恢复没成功，再试一次吧。';
+
+  @override
+  String paywallTitleEntries(int count) {
+    return '$count 条免费记录用完了。\n想继续记，就是 Pro。';
+  }
+
+  @override
+  String paywallTitleSimulations(int count) {
+    return '$count 次免费模拟用完了。\n想继续模拟，就是 Pro。';
+  }
+
+  @override
+  String get paywallTitleDefault => '解锁 Runway Pro。';
+
+  @override
+  String get paywallFeatureEntries => '记录不限条数';
+
+  @override
+  String get paywallFeatureSimulations => '情景模拟不限次数';
+
+  @override
+  String get stepBalanceShort => '现金余额';
+
+  @override
+  String get stepBudgetShort => '预算';
+
+  @override
+  String get stepExpenseShort => '第一笔支出';
+
+  @override
+  String get stepSimShort => '模拟器';
+
+  @override
+  String stepsDone(String steps) {
+    return '搞定：$steps';
+  }
+
+  @override
+  String get optionalBadge => '可选';
+
+  @override
   String get paywallTermsOfUse => '使用条款';
 
   @override
@@ -1642,6 +1759,123 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get noActivityThisMonth => '本月暫無活動';
+
+  @override
+  String get onboardingSkip => '跳過';
+
+  @override
+  String get onboardingWelcomeTitle => '你的跑道，\n一眼看懂。';
+
+  @override
+  String get onboardingWelcomeBody => '一個數字，告訴你現在站在哪。\n你的錢還能撐幾個月？';
+
+  @override
+  String get onboardingGetStarted => '開始吧';
+
+  @override
+  String get onboardingPrivacyTitle => '你的資料，\n只在你手機裡。';
+
+  @override
+  String get onboardingPrivacyBody =>
+      '所有資料都在你手機上加密。\n我們看不到你的財務資料。\n連我們都不知道你的數字。';
+
+  @override
+  String get onboardingPrivacyEncrypted => '在手機上加密';
+
+  @override
+  String get onboardingPrivacyOnDevice => '數字不會離開你的手機';
+
+  @override
+  String get onboardingPrivacyHidden => '切到別的 App 就自動遮起來';
+
+  @override
+  String get onboardingPrivacyDelete => '想刪就刪，馬上清光';
+
+  @override
+  String get onboardingIUnderstand => '了解';
+
+  @override
+  String get onboardingFirstActionTitle => '準備好看看\n自己的跑道了嗎？';
+
+  @override
+  String get onboardingFirstActionBody => '先輸入你現在手上有多少錢。\n這樣就夠了，馬上看到你的數字。';
+
+  @override
+  String get onboardingAddMyBalance => '輸入我的餘額';
+
+  @override
+  String get paywallUnlock => '解鎖 RUNWAY PRO';
+
+  @override
+  String get paywallLoadingPrice => '價格載入中...';
+
+  @override
+  String get paywallStoreUnreachable => '連不上商店，看看網路再試一次。';
+
+  @override
+  String paywallOneTimePurchase(String price) {
+    return '$price · 買斷，一次付清';
+  }
+
+  @override
+  String get paywallUnavailable => 'Pro 現在暫時買不到，晚點再試試。';
+
+  @override
+  String get paywallRestore => '恢復購買';
+
+  @override
+  String get paywallMaybeLater => '下次再說';
+
+  @override
+  String get paywallPurchaseFailed => '購買沒成功，再試一次吧。';
+
+  @override
+  String get paywallSomethingWrong => '出了點問題，再試一次吧。';
+
+  @override
+  String get paywallNoPreviousPurchase => '找不到之前的購買紀錄。';
+
+  @override
+  String get paywallRestoreFailed => '恢復沒成功，再試一次吧。';
+
+  @override
+  String paywallTitleEntries(int count) {
+    return '$count 筆免費紀錄用完了。\n想繼續記，就是 Pro。';
+  }
+
+  @override
+  String paywallTitleSimulations(int count) {
+    return '$count 次免費模擬用完了。\n想繼續模擬，就是 Pro。';
+  }
+
+  @override
+  String get paywallTitleDefault => '解鎖 Runway Pro。';
+
+  @override
+  String get paywallFeatureEntries => '紀錄不限筆數';
+
+  @override
+  String get paywallFeatureSimulations => '情境模擬不限次數';
+
+  @override
+  String get stepBalanceShort => '現金餘額';
+
+  @override
+  String get stepBudgetShort => '預算';
+
+  @override
+  String get stepExpenseShort => '第一筆支出';
+
+  @override
+  String get stepSimShort => '模擬器';
+
+  @override
+  String stepsDone(String steps) {
+    return '搞定：$steps';
+  }
+
+  @override
+  String get optionalBadge => '可選';
 
   @override
   String get paywallTermsOfUse => '使用條款';

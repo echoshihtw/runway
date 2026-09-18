@@ -1655,6 +1655,222 @@ abstract class AppLocalizations {
   /// **'No activity yet this month'**
   String get noActivityThisMonth;
 
+  /// No description provided for @onboardingSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'SKIP'**
+  String get onboardingSkip;
+
+  /// No description provided for @onboardingWelcomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Know your\nrunway.'**
+  String get onboardingWelcomeTitle;
+
+  /// No description provided for @onboardingWelcomeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'One number shows where you stand.\nHow many months does your money cover?'**
+  String get onboardingWelcomeBody;
+
+  /// No description provided for @onboardingGetStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'GET STARTED'**
+  String get onboardingGetStarted;
+
+  /// No description provided for @onboardingPrivacyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data,\nyour device.'**
+  String get onboardingPrivacyTitle;
+
+  /// No description provided for @onboardingPrivacyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything is encrypted on your device.\nWe cannot read your financial data.\nEven we don\'t know your numbers.'**
+  String get onboardingPrivacyBody;
+
+  /// No description provided for @onboardingPrivacyEncrypted.
+  ///
+  /// In en, this message translates to:
+  /// **'Encrypted on device'**
+  String get onboardingPrivacyEncrypted;
+
+  /// No description provided for @onboardingPrivacyOnDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Numbers stay on your device'**
+  String get onboardingPrivacyOnDevice;
+
+  /// No description provided for @onboardingPrivacyHidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden when you switch apps'**
+  String get onboardingPrivacyHidden;
+
+  /// No description provided for @onboardingPrivacyDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete anytime, instantly'**
+  String get onboardingPrivacyDelete;
+
+  /// No description provided for @onboardingIUnderstand.
+  ///
+  /// In en, this message translates to:
+  /// **'I UNDERSTAND'**
+  String get onboardingIUnderstand;
+
+  /// No description provided for @onboardingFirstActionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to find\nyour runway?'**
+  String get onboardingFirstActionTitle;
+
+  /// No description provided for @onboardingFirstActionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Start by adding your current cash balance.\nThat\'s all you need to see your number.'**
+  String get onboardingFirstActionBody;
+
+  /// No description provided for @onboardingAddMyBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'ADD MY BALANCE'**
+  String get onboardingAddMyBalance;
+
+  /// No description provided for @paywallUnlock.
+  ///
+  /// In en, this message translates to:
+  /// **'UNLOCK RUNWAY PRO'**
+  String get paywallUnlock;
+
+  /// No description provided for @paywallLoadingPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading price...'**
+  String get paywallLoadingPrice;
+
+  /// No description provided for @paywallStoreUnreachable.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t reach the store. Check your connection and try again.'**
+  String get paywallStoreUnreachable;
+
+  /// No description provided for @paywallOneTimePurchase.
+  ///
+  /// In en, this message translates to:
+  /// **'{price} · One-time purchase'**
+  String paywallOneTimePurchase(String price);
+
+  /// No description provided for @paywallUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Pro isn\'t available right now. Please try again later.'**
+  String get paywallUnavailable;
+
+  /// No description provided for @paywallRestore.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore purchase'**
+  String get paywallRestore;
+
+  /// No description provided for @paywallMaybeLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Maybe later'**
+  String get paywallMaybeLater;
+
+  /// No description provided for @paywallPurchaseFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase failed. Please try again.'**
+  String get paywallPurchaseFailed;
+
+  /// No description provided for @paywallSomethingWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get paywallSomethingWrong;
+
+  /// No description provided for @paywallNoPreviousPurchase.
+  ///
+  /// In en, this message translates to:
+  /// **'No previous purchase found.'**
+  String get paywallNoPreviousPurchase;
+
+  /// No description provided for @paywallRestoreFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore failed. Please try again.'**
+  String get paywallRestoreFailed;
+
+  /// No description provided for @paywallTitleEntries.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve logged your {count} free entries.\nUnlimited entries is Pro.'**
+  String paywallTitleEntries(int count);
+
+  /// No description provided for @paywallTitleSimulations.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve run your {count} free simulations.\nUnlimited simulations is Pro.'**
+  String paywallTitleSimulations(int count);
+
+  /// No description provided for @paywallTitleDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Runway Pro.'**
+  String get paywallTitleDefault;
+
+  /// No description provided for @paywallFeatureEntries.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited entries'**
+  String get paywallFeatureEntries;
+
+  /// No description provided for @paywallFeatureSimulations.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited scenario simulations'**
+  String get paywallFeatureSimulations;
+
+  /// No description provided for @stepBalanceShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash balance'**
+  String get stepBalanceShort;
+
+  /// No description provided for @stepBudgetShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget'**
+  String get stepBudgetShort;
+
+  /// No description provided for @stepExpenseShort.
+  ///
+  /// In en, this message translates to:
+  /// **'First expense'**
+  String get stepExpenseShort;
+
+  /// No description provided for @stepSimShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Simulator'**
+  String get stepSimShort;
+
+  /// No description provided for @stepsDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done: {steps}'**
+  String stepsDone(String steps);
+
+  /// No description provided for @optionalBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'OPTIONAL'**
+  String get optionalBadge;
+
   /// Link on the paywall to Apple's standard end user license agreement
   ///
   /// In en, this message translates to:
