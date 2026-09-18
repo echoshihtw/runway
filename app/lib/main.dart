@@ -56,11 +56,8 @@ void main() async {
             DriftFinancialSettingsRepository(db),
           ),
           purchaseServiceProvider.overrideWithValue(rcService),
-          simulationCountStoreProvider.overrideWithValue(
-            const KeychainSimulationCountStore(),
-          ),
-          entryCountStoreProvider.overrideWithValue(
-            const KeychainEntryCountStore(),
+          usageCountStoreProvider.overrideWithValue(
+            const KeychainUsageCountStore(),
           ),
           reviewPrompterProvider.overrideWithValue(
             const InAppReviewPrompter(),

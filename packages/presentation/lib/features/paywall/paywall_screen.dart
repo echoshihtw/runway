@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../product_config.dart';
 import 'package:design_system/design_system.dart';
 import 'package:application/application.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -212,8 +213,14 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
   }
 
   String _titleFor(String trigger) => switch (trigger) {
-    'entry_limit' => 'Unlimited entries\nis a Pro feature.',
-    'simulation' => 'Unlimited simulations\nis a Pro feature.',
+    // The wall names what was used, so it arrives as the end of something
+    // rather than out of nowhere.
+    'entry_limit' =>
+      "You've logged your ${ProductConfig.freeEntries} free entries.\n"
+          'Unlimited entries is Pro.',
+    'simulation' =>
+      "You've run your ${ProductConfig.freeSimulations} free simulations.\n"
+          'Unlimited simulations is Pro.',
     _ => 'Unlock Runway Pro.',
   };
 

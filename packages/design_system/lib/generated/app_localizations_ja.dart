@@ -318,6 +318,16 @@ class AppLocalizationsJa extends AppLocalizations {
   String get presetSomethingElse => 'その他';
 
   @override
+  String freeEntriesUsed(int used, int free) {
+    return '無料の記録 $free 件のうち $used 件を使用';
+  }
+
+  @override
+  String freeSimulationsUsed(int used, int free) {
+    return '無料のシミュレーション $free 回のうち $used 回を使用';
+  }
+
+  @override
   String get settled => '完済';
 
   @override

@@ -4,21 +4,29 @@ import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:go_router/go_router.dart';
-import 'package:presentation/features/dashboard/widgets/getting_started_card.dart';
-import 'package:presentation/features/transactions/widgets/transaction_form.dart';
+import 'package:presentation/features/scenarios/scenarios_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// "Log your first expense" navigated to the Log tab and stopped, leaving a
-/// new user to find the + button on their own. The step is the instruction;
-/// tapping it should do the thing — open the grid, right here, so the number
-/// moves on the screen they are looking at.
+/// The paywall arrived with no warning: the Plan screen read the simulation
+/// count only to feed the gate and never showed it, so the fourth run felt
+/// arbitrary even to someone who knew the rule. Count down in the open.
 class _Transactions implements TransactionRepository {
-  @override
-  Stream<List<Transaction>> watchAll() => Stream.value(const []);
+  final items = [
+    Transaction(
+      id: 'ob',
+      date: DateTime(2026, 9, 1),
+      type: TransactionType.openingBalance,
+      amount: Money(34000),
+      createdAt: DateTime(2026, 9, 1),
+      updatedAt: DateTime(2026, 9, 1),
+    ),
+  ];
 
   @override
-  Future<List<Transaction>> getAll() async => const [];
+  Stream<List<Transaction>> watchAll() => Stream.value(items);
+
+  @override
+  Future<List<Transaction>> getAll() async => items;
 
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
@@ -35,9 +43,20 @@ class _Loans implements LoanRepository {
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
+class _Subscriptions implements SubscriptionRepository {
+  @override
+  Stream<List<Subscription>> watchAll() => Stream.value(const []);
+
+  @override
+  Future<List<Subscription>> getAll() async => const [];
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
 class _Settings implements FinancialSettingsRepository {
   @override
-  Future<Budget> getBudget() async => const Budget();
+  Future<Budget> getBudget() async => const Budget(living: 1100);
 
   @override
   Future<FinancialAssumptions> getFinancialAssumptions() async =>
@@ -77,77 +96,42 @@ class _FreeTier implements PurchaseService {
   Future<bool> restorePurchases() async => false;
 }
 
-/// The card lives on the dashboard inside a real router, so `context.go` has
-/// somewhere to go: a red here means "it navigated away", not a missing router.
-Future<GoRouter> _pump(WidgetTester tester) async {
+Future<void> _pump(WidgetTester tester, {required int simulationsRun}) async {
   SharedPreferences.setMockInitialValues({});
-  final router = GoRouter(
-    initialLocation: '/dashboard',
-    routes: [
-      GoRoute(
-        path: '/dashboard',
-        builder: (_, __) => const Scaffold(
-          body: SingleChildScrollView(child: GettingStartedCard()),
-        ),
-      ),
-      GoRoute(
-        path: '/transactions',
-        builder: (_, __) => const Scaffold(body: Text('LOG TAB')),
-      ),
-    ],
-  );
-  addTearDown(router.dispose);
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
         transactionRepositoryProvider.overrideWithValue(_Transactions()),
         loanRepositoryProvider.overrideWithValue(_Loans()),
+        subscriptionRepositoryProvider.overrideWithValue(_Subscriptions()),
         financialSettingsRepositoryProvider.overrideWithValue(_Settings()),
-        usageCountStoreProvider.overrideWithValue(_Count()),
+        usageCountStoreProvider.overrideWithValue(
+          _Count()..counts[UsageKind.simulations.key] = simulationsRun,
+        ),
         purchaseServiceProvider.overrideWithValue(_FreeTier()),
       ],
-      child: MaterialApp.router(
-        routerConfig: router,
+      child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
+        home: const ScenariosScreen(),
       ),
     ),
   );
   await tester.pumpAndSettle();
-  return router;
 }
 
 void main() {
-  testWidgets('"Log your first expense" opens the grid, right here', (
+  testWidgets('the Plan screen says how many free simulations are used', (
     tester,
   ) async {
-    await _pump(tester);
-    expect(find.text('Log your first expense'), findsOneWidget);
+    await _pump(tester, simulationsRun: 1);
 
-    await tester.tap(find.text('Log your first expense'));
-    await tester.pumpAndSettle();
-
-    expect(
-      find.text('WHAT DID YOU SPEND ON?'),
-      findsOneWidget,
-      reason: 'the step is the instruction; tapping it should do the thing',
-    );
-    expect(
-      find.text('LOG TAB'),
-      findsNothing,
-      reason: 'the number should move on the screen the user is looking at',
-    );
+    expect(find.text('1 of 3 free simulations used'), findsOneWidget);
   });
 
-  testWidgets('"Add your cash balance" opens the form with the balance chosen', (
-    tester,
-  ) async {
-    await _pump(tester);
+  testWidgets('and is quiet before any is spent', (tester) async {
+    await _pump(tester, simulationsRun: 0);
 
-    await tester.tap(find.text('Add your cash balance'));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(TransactionForm), findsOneWidget);
-    expect(find.text('LOG TAB'), findsNothing);
+    expect(find.textContaining('free simulations used'), findsNothing);
   });
 }

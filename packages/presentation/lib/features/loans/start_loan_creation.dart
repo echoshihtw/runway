@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../shared/entry_gate.dart';
+import '../../shared/pro_gate.dart';
 import '../transactions/widgets/loan_wizard.dart';
 
 /// The one way to create a loan.

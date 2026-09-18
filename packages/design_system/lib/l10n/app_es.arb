@@ -136,6 +136,28 @@
   "presetGroceries": "COMPRA",
   "presetGroceriesNote": "Compra",
   "presetSomethingElse": "OTRA COSA",
+  "freeEntriesUsed": "{used} de {free} entradas gratis usadas",
+  "@freeEntriesUsed": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "free": {
+        "type": "int"
+      }
+    }
+  },
+  "freeSimulationsUsed": "{used} de {free} simulaciones gratis usadas",
+  "@freeSimulationsUsed": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "free": {
+        "type": "int"
+      }
+    }
+  },
   "settled": "LIQUIDADO",
   "totalDebtPerMonth": "DEUDA TOTAL/MES",
   "remaining": "RESTANTE",

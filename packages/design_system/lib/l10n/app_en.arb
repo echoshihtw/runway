@@ -136,6 +136,28 @@
   "presetGroceries": "GROCERIES",
   "presetGroceriesNote": "Groceries",
   "presetSomethingElse": "SOMETHING ELSE",
+  "freeEntriesUsed": "{used} of {free} free entries used",
+  "@freeEntriesUsed": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "free": {
+        "type": "int"
+      }
+    }
+  },
+  "freeSimulationsUsed": "{used} of {free} free simulations used",
+  "@freeSimulationsUsed": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "free": {
+        "type": "int"
+      }
+    }
+  },
   "settled": "SETTLED",
   "totalDebtPerMonth": "TOTAL DEBT/MO",
   "remaining": "REMAINING",

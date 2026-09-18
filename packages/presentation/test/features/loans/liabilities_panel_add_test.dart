@@ -48,14 +48,14 @@ class _Transactions implements TransactionRepository {
 
 /// Free tier: the store says no, and nothing is cached.
 /// The Keychain counter, in memory. Fresh per pump, so every test starts free.
-class _EntryCount implements EntryCountStore {
-  int count = 0;
+class _EntryCount implements UsageCountStore {
+  final counts = <String, int>{};
 
   @override
-  Future<int> read() async => count;
+  Future<int> read(String key) async => counts[key] ?? 0;
 
   @override
-  Future<void> write(int value) async => count = value;
+  Future<void> write(String key, int count) async => counts[key] = count;
 }
 
 class _FreeTier implements PurchaseService {
@@ -98,7 +98,7 @@ Future<void> _pump(
         loanRepositoryProvider.overrideWithValue(_Loans(loans.toList())),
         transactionRepositoryProvider.overrideWithValue(_Transactions([])),
         purchaseServiceProvider.overrideWithValue(_FreeTier()),
-        entryCountStoreProvider.overrideWithValue(_EntryCount()),
+        usageCountStoreProvider.overrideWithValue(_EntryCount()),
       ],
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,

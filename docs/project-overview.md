@@ -73,7 +73,7 @@ presentation → application → domain ← data
 
 Free tier: five entries and three simulations, then Pro; loans, subscriptions, budget and sharing are free without limit. Pro: unlimited entries and simulations (#80, decided 2026-09-16; the entry limit added 2026-09-18).
 
-Policy is the two gate functions in `application` — `needsProForEntry` and `needsProForSimulation` — and nothing else restates it. Enforcement: `shared/entry_gate.dart` (`allowsNewEntry`) is asked by every door that writes an entry, and `scenarios_screen.dart` asks before a simulation. Both counts live in the Keychain and survive reinstall. Entitlement resolution is offline-first — a cached `is_pro` flag wins, and a network failure never revokes Pro.
+The numbers live in `presentation/lib/product_config.dart` (`ProductConfig.freeEntries`, `freeSimulations`), beside the daily-spend presets — one place for every product decision. The rule is one function, `needsPro` (`application`); enforcement is one helper, `shared/pro_gate.dart` (`allowsNewEntry`, `allowsSimulation`), asked at every door. Both counts live in one Keychain-backed `UsageCountStore` and survive reinstall; the Plan screen and the add sheet show the count once the first is spent. Entitlement resolution is offline-first — a cached `is_pro` flag wins, and a network failure never revokes Pro.
 
 ## Current State (as of this scan)
 

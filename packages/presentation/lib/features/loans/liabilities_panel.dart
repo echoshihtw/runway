@@ -6,7 +6,7 @@ import 'package:application/application.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
 import '../../shared/add_strip.dart';
-import '../../shared/entry_gate.dart';
+import '../../shared/pro_gate.dart';
 import 'loan_card.dart';
 import 'start_loan_creation.dart';
 
