@@ -6,6 +6,8 @@ import 'package:application/application.dart';
 import 'package:domain/domain.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../config/config_screen.dart';
+import '../../transactions/daily_spend_sheet.dart';
+import '../../transactions/show_entry_sheet.dart';
 
 const _kDismissedKey = 'getting_started_dismissed';
 
@@ -52,7 +54,13 @@ class _GettingStartedCardState extends ConsumerState<GettingStartedCard> {
         shortLabel: 'Cash balance',
         hint: 'How much do you have right now?',
         done: hasBalance,
-        onTap: () => context.go('/transactions'),
+        // The step is the instruction; tapping it does the thing. Going to
+        // the Log tab and stopping left a new user to find the door alone.
+        onTap: () => showEntrySheet(
+          context,
+          ref,
+          preselectedType: TransactionType.openingBalance,
+        ),
       ),
       _Step(
         icon: Icons.tune_rounded,
@@ -93,7 +101,9 @@ class _GettingStartedCardState extends ConsumerState<GettingStartedCard> {
         shortLabel: 'First expense',
         hint: 'Track where your money goes',
         done: hasExpense,
-        onTap: () => context.go('/transactions'),
+        // Opens the grid right here rather than on the Log tab, so the first
+        // entry is saved on the screen where the number then moves.
+        onTap: () => showDailySpendSheet(context, ref),
       ),
       _Step(
         icon: Icons.science_rounded,

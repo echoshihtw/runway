@@ -9,13 +9,7 @@ import 'daily_spend_sheet.dart';
 import 'show_entry_sheet.dart';
 
 class TransactionsScreen extends ConsumerStatefulWidget {
-  final bool openAddOnLoad;
-  final String? firstTransactionType;
-  const TransactionsScreen({
-    super.key,
-    this.openAddOnLoad = false,
-    this.firstTransactionType,
-  });
+  const TransactionsScreen({super.key});
 
   @override
   ConsumerState<TransactionsScreen> createState() => _TransactionsScreenState();
