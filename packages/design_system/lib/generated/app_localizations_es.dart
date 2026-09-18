@@ -722,22 +722,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get runwayBrand => 'RUNWAY';
 
   @override
-  String get bootRunwayCheck => '> COMPROBANDO AUTONOMÍA...';
-
-  @override
-  String get bootIncomeStopped => '> SI TU INGRESO SE DETUVIERA HOY...';
-
-  @override
-  String get bootCountingCashDays => '> CONTANDO DÍAS DE EFECTIVO...';
-
-  @override
-  String get bootRemovingComfortFilter =>
-      '> QUITANDO EL FILTRO DE COMODIDAD...';
-
-  @override
-  String get bootRealityCheckReady => '> REALIDAD LISTA.';
-
-  @override
   String get ifIncomePausedToday => 'Si tu ingreso se detuviera hoy';
 
   @override

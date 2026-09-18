@@ -709,21 +709,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get runwayBrand => 'RUNWAY';
 
   @override
-  String get bootRunwayCheck => '> RUNWAY 检查...';
-
-  @override
-  String get bootIncomeStopped => '> 如果你的收入今天停止...';
-
-  @override
-  String get bootCountingCashDays => '> 正在计算现金天数...';
-
-  @override
-  String get bootRemovingComfortFilter => '> 正在移除舒适滤镜...';
-
-  @override
-  String get bootRealityCheckReady => '> 现实检查就绪。';
-
-  @override
   String get ifIncomePausedToday => '如果收入今天暂停';
 
   @override
@@ -1534,21 +1519,6 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get runwayBrand => 'RUNWAY';
-
-  @override
-  String get bootRunwayCheck => '正在檢查你的跑道...';
-
-  @override
-  String get bootIncomeStopped => '看看如果收入暫停會怎樣...';
-
-  @override
-  String get bootCountingCashDays => '正在計算你的錢可以支應幾個月...';
-
-  @override
-  String get bootRemovingComfortFilter => '把必要支出和雜訊分開...';
-
-  @override
-  String get bootRealityCheckReady => '你的財務狀況整理好了。';
 
   @override
   String get ifIncomePausedToday => '如果今天收入暫停';
