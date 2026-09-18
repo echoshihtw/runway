@@ -1811,14 +1811,14 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get paywallSomethingWrong => '出了點問題，再試一次吧。';
 
   @override
-  String get paywallNoPreviousPurchase => '找不到之前的購買記錄。';
+  String get paywallNoPreviousPurchase => '找不到之前的購買紀錄。';
 
   @override
   String get paywallRestoreFailed => '恢復沒成功，再試一次吧。';
 
   @override
   String paywallTitleEntries(int count) {
-    return '$count 筆免費記錄用完了。\n想繼續記，就是 Pro。';
+    return '$count 筆免費紀錄用完了。\n想繼續記，就是 Pro。';
   }
 
   @override
@@ -1830,7 +1830,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get paywallTitleDefault => '解鎖 Runway Pro。';
 
   @override
-  String get paywallFeatureEntries => '記錄不限筆數';
+  String get paywallFeatureEntries => '紀錄不限筆數';
 
   @override
   String get paywallFeatureSimulations => '情境模擬不限次數';
