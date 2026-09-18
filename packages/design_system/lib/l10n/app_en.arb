@@ -79,7 +79,7 @@
   "typeExpense": "EXPENSE",
   "typeIncome": "INCOME",
   "typeLoan": "LOAN",
-  "typeRepay": "REPAY",
+  "typeRepay": "LOAN PAYMENT",
   "typeOpening": "OPENING",
   "typeSubscription": "SUBSCRIPTION",
   "subscriptionPaidQuestion": "Did you pay {amount} for {name} on {date}?",

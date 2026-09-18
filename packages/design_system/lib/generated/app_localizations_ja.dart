@@ -218,7 +218,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get typeLoan => 'ローン';
 
   @override
-  String get typeRepay => '返済';
+  String get typeRepay => 'ローン返済';
 
   @override
   String get typeOpening => '開始残高';

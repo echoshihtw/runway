@@ -79,7 +79,7 @@
   "typeExpense": "GASTO",
   "typeIncome": "INGRESO",
   "typeLoan": "PRÉSTAMO",
-  "typeRepay": "PAGAR",
+  "typeRepay": "PAGO DEL PRÉSTAMO",
   "typeOpening": "SALDO INICIAL",
   "typeSubscription": "SUSCRIPCIÓN",
   "subscriptionPaidQuestion": "¿Pagaste {amount} de {name} el {date}?",

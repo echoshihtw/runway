@@ -79,7 +79,7 @@
   "typeExpense": "SPESA",
   "typeIncome": "REDDITO",
   "typeLoan": "PRESTITO",
-  "typeRepay": "RIMBORSO",
+  "typeRepay": "RATA DEL PRESTITO",
   "typeOpening": "SALDO INIZIALE",
   "typeSubscription": "ABBONAMENTO",
   "subscriptionPaidQuestion": "Hai pagato {amount} per {name} il {date}?",

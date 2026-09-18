@@ -6,6 +6,7 @@ import 'package:application/application.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
 import '../../shared/add_strip.dart';
+import '../../shared/ledger_glyphs.dart';
 import '../../shared/pro_gate.dart';
 import 'loan_card.dart';
 import 'start_loan_creation.dart';
@@ -41,7 +42,7 @@ class LiabilitiesPanel extends ConsumerWidget {
                   // One glyph per concept: loans wear account_balance
                   // everywhere, card and empty state alike.
                   child: const Icon(
-                    Icons.account_balance_rounded,
+                    LedgerGlyphs.lender,
                     color: AppColors.gold,
                     size: 18,
                   ),

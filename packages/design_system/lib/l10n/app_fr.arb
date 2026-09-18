@@ -79,7 +79,7 @@
   "typeExpense": "DÉPENSE",
   "typeIncome": "REVENU",
   "typeLoan": "PRÊT",
-  "typeRepay": "REMBOURSER",
+  "typeRepay": "REMBOURSEMENT",
   "typeOpening": "OUVERTURE",
   "typeSubscription": "ABONNEMENT",
   "subscriptionPaidQuestion": "Avez-vous payé {amount} pour {name} le {date} ?",

@@ -79,7 +79,7 @@
   "typeExpense": "支出",
   "typeIncome": "收入",
   "typeLoan": "貸款",
-  "typeRepay": "還款",
+  "typeRepay": "貸款還款",
   "typeOpening": "初始",
   "typeSubscription": "訂閱",
   "subscriptionPaidQuestion": "你在{date}支付了{name}的{amount}嗎？",

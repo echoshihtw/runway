@@ -219,7 +219,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get typeLoan => 'PRÉSTAMO';
 
   @override
-  String get typeRepay => 'PAGAR';
+  String get typeRepay => 'PAGO DEL PRÉSTAMO';
 
   @override
   String get typeOpening => 'SALDO INICIAL';
