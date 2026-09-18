@@ -90,7 +90,7 @@ class NeoInput extends StatelessWidget {
           style: AppTextStyles.body,
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: AppTextStyles.body.copyWith(color: AppColors.textDim),
+            hintStyle: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
             filled: true,
             fillColor: AppColors.surfaceHigh,
             border: OutlineInputBorder(

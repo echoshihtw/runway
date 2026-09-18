@@ -43,7 +43,7 @@ abstract final class AppTheme {
           borderSide: const BorderSide(color: AppColors.green, width: 1.5),
         ),
         labelStyle: TextStyle(color: AppColors.textSecondary),
-        hintStyle: TextStyle(color: AppColors.textDim),
+        hintStyle: TextStyle(color: AppColors.textSecondary),
       ),
       dividerColor: AppColors.cardBorder,
       appBarTheme: const AppBarTheme(

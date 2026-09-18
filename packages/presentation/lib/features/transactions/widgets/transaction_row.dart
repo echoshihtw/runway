@@ -122,7 +122,7 @@ class TransactionRow extends ConsumerWidget {
                         const SizedBox(width: AppSpacing.xs),
                         PixelBadge(
                           label: l10n.planned,
-                          color: AppColors.textDim,
+                          color: AppColors.textSecondary,
                         ),
                       ],
                     ],
