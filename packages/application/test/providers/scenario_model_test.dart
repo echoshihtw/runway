@@ -4,14 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class _MemoryStore implements SimulationCountStore {
-  int count = 0;
+class _MemoryStore implements UsageCountStore {
+  final counts = <String, int>{};
 
   @override
-  Future<int> read() async => count;
+  Future<int> read(String key) async => counts[key] ?? 0;
 
   @override
-  Future<void> write(int value) async => count = value;
+  Future<void> write(String key, int count) async => counts[key] = count;
 }
 
 class _Transactions implements TransactionRepository {
@@ -81,7 +81,7 @@ void main() {
         ),
         loanRepositoryProvider.overrideWithValue(_Loans()),
         subscriptionRepositoryProvider.overrideWithValue(_Subscriptions()),
-        simulationCountStoreProvider.overrideWithValue(_MemoryStore()),
+        usageCountStoreProvider.overrideWithValue(_MemoryStore()),
       ],
     );
     addTearDown(container.dispose);

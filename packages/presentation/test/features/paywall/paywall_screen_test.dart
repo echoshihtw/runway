@@ -14,6 +14,7 @@ Future<void> _pumpPaywall(
   WidgetTester tester, {
   Locale? locale,
   Future<ProOffering?> Function()? offering,
+  String trigger = 'default',
 }) async {
   final container = ProviderContainer(
     retry: _noRetry,
@@ -31,8 +32,8 @@ Future<void> _pumpPaywall(
         locale: locale,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: const Scaffold(
-          body: SingleChildScrollView(child: PaywallScreen(trigger: 'default')),
+        home: Scaffold(
+          body: SingleChildScrollView(child: PaywallScreen(trigger: trigger)),
         ),
       ),
     ),
@@ -79,6 +80,20 @@ void main() {
 
     expect(find.textContaining("Couldn't reach the store"), findsOneWidget);
     expect(find.text('Price unavailable'), findsNothing);
+  });
+
+  testWidgets('the entry paywall says what was used, and how many', (
+    tester,
+  ) async {
+    await _pumpPaywall(tester, trigger: 'entry_limit');
+    expect(find.textContaining('5 free entries'), findsOneWidget);
+  });
+
+  testWidgets('the simulation paywall says what was used, and how many', (
+    tester,
+  ) async {
+    await _pumpPaywall(tester, trigger: 'simulation');
+    expect(find.textContaining('3 free simulations'), findsOneWidget);
   });
 
   testWidgets('translates the legal links', (tester) async {

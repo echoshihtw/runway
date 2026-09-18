@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:design_system/design_system.dart';
 import 'package:application/application.dart';
+import '../../product_config.dart';
+import '../../shared/pro_gate.dart';
 import '../../shared/status_color.dart';
-import '../paywall/paywall_screen.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
 
@@ -149,20 +150,23 @@ class ScenariosScreen extends ConsumerWidget {
                             scenario.isActive
                         ? null
                         : () {
-                            final isPro =
-                                FeatureFlags.devProEntitlement ||
-                                (ref.read(entitlementProvider).value?.isPro ??
-                                    false);
-                            if (needsProForSimulation(
-                              isPro: isPro,
-                              simulationsRun: simulationsRun,
-                            )) {
-                              showPaywall(context, trigger: 'simulation');
-                              return;
-                            }
+                            if (!allowsSimulation(context, ref)) return;
                             ref.read(scenarioProvider.notifier).activate();
                           },
                   ),
+                  // Shown once the first is spent, so the paywall never
+                  // arrives unannounced.
+                  if (simulationsRun > 0 && !isProOwner(ref)) ...[
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      l10n.freeSimulationsUsed(
+                        simulationsRun,
+                        ProductConfig.freeSimulations,
+                      ),
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.caption,
+                    ),
+                  ],
                   const SizedBox(height: AppSpacing.md),
                   NeoButton(
                     label: l10n.resetSim,

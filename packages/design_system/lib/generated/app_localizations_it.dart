@@ -322,6 +322,16 @@ class AppLocalizationsIt extends AppLocalizations {
   String get presetSomethingElse => 'QUALCOS’ALTRO';
 
   @override
+  String freeEntriesUsed(int used, int free) {
+    return '$used di $free voci gratuite usate';
+  }
+
+  @override
+  String freeSimulationsUsed(int used, int free) {
+    return '$used di $free simulazioni gratuite usate';
+  }
+
+  @override
   String get settled => 'SALDATO';
 
   @override

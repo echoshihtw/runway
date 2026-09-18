@@ -136,6 +136,28 @@
   "presetGroceries": "食料品",
   "presetGroceriesNote": "食料品",
   "presetSomethingElse": "その他",
+  "freeEntriesUsed": "無料の記録 {free} 件のうち {used} 件を使用",
+  "@freeEntriesUsed": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "free": {
+        "type": "int"
+      }
+    }
+  },
+  "freeSimulationsUsed": "無料のシミュレーション {free} 回のうち {used} 回を使用",
+  "@freeSimulationsUsed": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "free": {
+        "type": "int"
+      }
+    }
+  },
   "settled": "完済",
   "totalDebtPerMonth": "月間債務合計",
   "remaining": "残高",

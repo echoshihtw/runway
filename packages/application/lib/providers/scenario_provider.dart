@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../state/scenario_state.dart';
-import 'simulation_count_provider.dart';
+import 'usage_count_provider.dart';
 
 class ScenarioNotifier extends Notifier<ScenarioState> {
   int _calculationId = 0;
@@ -17,7 +17,13 @@ class ScenarioNotifier extends Notifier<ScenarioState> {
     if (calculationId != _calculationId) return;
     // Show result
     state = state.copyWith(isActive: true, isCalculating: false);
-    await ref.read(simulationCountProvider.notifier).increment();
+    // The result is the user's; the count is ours. The screen does not await
+    // this, so a Keychain refusal used to surface as an unhandled error.
+    try {
+      await ref.read(simulationCountProvider.notifier).increment();
+    } catch (_) {
+      // Counting failed; the simulation did not.
+    }
   }
 
   void setBurnRateOverride(double? value) {

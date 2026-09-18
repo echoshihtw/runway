@@ -136,6 +136,28 @@
   "presetGroceries": "採買",
   "presetGroceriesNote": "採買",
   "presetSomethingElse": "其他",
+  "freeEntriesUsed": "免费记录 {free} 笔已用 {used} 笔",
+  "@freeEntriesUsed": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "free": {
+        "type": "int"
+      }
+    }
+  },
+  "freeSimulationsUsed": "免费模拟 {free} 次已用 {used} 次",
+  "@freeSimulationsUsed": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "free": {
+        "type": "int"
+      }
+    }
+  },
   "settled": "已結清",
   "totalDebtPerMonth": "月債務合計",
   "remaining": "剩餘",

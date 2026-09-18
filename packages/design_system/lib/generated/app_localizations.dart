@@ -713,6 +713,18 @@ abstract class AppLocalizations {
   /// **'SOMETHING ELSE'**
   String get presetSomethingElse;
 
+  /// No description provided for @freeEntriesUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'{used} of {free} free entries used'**
+  String freeEntriesUsed(int used, int free);
+
+  /// No description provided for @freeSimulationsUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'{used} of {free} free simulations used'**
+  String freeSimulationsUsed(int used, int free);
+
   /// No description provided for @settled.
   ///
   /// In en, this message translates to:

@@ -318,6 +318,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get presetSomethingElse => '其他';
 
   @override
+  String freeEntriesUsed(int used, int free) {
+    return '免费记录 $free 笔已用 $used 笔';
+  }
+
+  @override
+  String freeSimulationsUsed(int used, int free) {
+    return '免费模拟 $free 次已用 $used 次';
+  }
+
+  @override
   String get settled => '已結清';
 
   @override
@@ -1133,6 +1143,16 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get presetSomethingElse => '其他';
+
+  @override
+  String freeEntriesUsed(int used, int free) {
+    return '免費記錄 $free 筆已用 $used 筆';
+  }
+
+  @override
+  String freeSimulationsUsed(int used, int free) {
+    return '免費模擬 $free 次已用 $used 次';
+  }
 
   @override
   String get settled => '已結清';

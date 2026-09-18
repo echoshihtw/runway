@@ -136,6 +136,28 @@
   "presetGroceries": "COURSES",
   "presetGroceriesNote": "Courses",
   "presetSomethingElse": "AUTRE CHOSE",
+  "freeEntriesUsed": "{used} entrées gratuites sur {free} utilisées",
+  "@freeEntriesUsed": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "free": {
+        "type": "int"
+      }
+    }
+  },
+  "freeSimulationsUsed": "{used} simulations gratuites sur {free} utilisées",
+  "@freeSimulationsUsed": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "free": {
+        "type": "int"
+      }
+    }
+  },
   "settled": "RÉGLÉ",
   "totalDebtPerMonth": "DETTE TOTALE/MO",
   "remaining": "RESTANT",

@@ -9,12 +9,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:presentation/features/dashboard/dashboard_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class _MemoryStore implements SimulationCountStore {
-  @override
-  Future<int> read() async => 0;
+class _MemoryStore implements UsageCountStore {
+  final counts = <String, int>{};
 
   @override
-  Future<void> write(int count) async {}
+  Future<int> read(String key) async => counts[key] ?? 0;
+
+  @override
+  Future<void> write(String key, int count) async => counts[key] = count;
 }
 
 /// A 6.1-inch iPhone: 390 x 844 points, 47 pt status bar, 34 pt home indicator.
@@ -55,7 +57,7 @@ Future<void> _pumpDashboard(
         subscriptionRepositoryProvider.overrideWithValue(
           DriftSubscriptionRepository(db),
         ),
-        simulationCountStoreProvider.overrideWithValue(_MemoryStore()),
+        usageCountStoreProvider.overrideWithValue(_MemoryStore()),
       ],
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,

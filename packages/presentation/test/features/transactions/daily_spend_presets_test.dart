@@ -44,14 +44,14 @@ class _Loans implements LoanRepository {
 }
 
 /// The Keychain counter, in memory. Fresh per pump, so every test starts free.
-class _EntryCount implements EntryCountStore {
-  int count = 0;
+class _EntryCount implements UsageCountStore {
+  final counts = <String, int>{};
 
   @override
-  Future<int> read() async => count;
+  Future<int> read(String key) async => counts[key] ?? 0;
 
   @override
-  Future<void> write(int value) async => count = value;
+  Future<void> write(String key, int count) async => counts[key] = count;
 }
 
 class _FreeTier implements PurchaseService {
@@ -81,16 +81,19 @@ String _fieldText(WidgetTester tester, int index) =>
 Future<_Transactions> _pump(
   WidgetTester tester, {
   double textScale = 1.0,
+  int entriesAlreadyLogged = 0,
 }) async {
   SharedPreferences.setMockInitialValues({});
   final written = _Transactions([]);
+  final entryCount = _EntryCount()
+    ..counts[UsageKind.entries.key] = entriesAlreadyLogged;
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
         transactionRepositoryProvider.overrideWithValue(written),
         loanRepositoryProvider.overrideWithValue(_Loans()),
         purchaseServiceProvider.overrideWithValue(_FreeTier()),
-        entryCountStoreProvider.overrideWithValue(_EntryCount()),
+        usageCountStoreProvider.overrideWithValue(entryCount),
       ],
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -245,6 +248,24 @@ void main() {
       reason: 'the sixth entry is where the free plan ends',
     );
     expect(find.text('LUNCH'), findsNothing, reason: 'no preset is offered');
+  });
+
+  testWidgets('the sheet says how many free entries are used', (tester) async {
+    // The paywall arriving with no warning read as arbitrary, even to someone
+    // who knew the rule. Count down in the open, once the first is spent.
+    await _pump(tester, entriesAlreadyLogged: 2);
+    await tester.tap(_addButton);
+    await tester.pumpAndSettle();
+
+    expect(find.text('2 of 5 free entries used'), findsOneWidget);
+  });
+
+  testWidgets('the sheet is quiet before anything is spent', (tester) async {
+    await _pump(tester);
+    await tester.tap(_addButton);
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('free entries used'), findsNothing);
   });
 
   testWidgets('every tile is big enough to hit', (tester) async {

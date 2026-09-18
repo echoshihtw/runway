@@ -136,6 +136,28 @@
   "presetGroceries": "SPESA",
   "presetGroceriesNote": "Spesa",
   "presetSomethingElse": "QUALCOS’ALTRO",
+  "freeEntriesUsed": "{used} di {free} voci gratuite usate",
+  "@freeEntriesUsed": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "free": {
+        "type": "int"
+      }
+    }
+  },
+  "freeSimulationsUsed": "{used} di {free} simulazioni gratuite usate",
+  "@freeSimulationsUsed": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "free": {
+        "type": "int"
+      }
+    }
+  },
   "settled": "SALDATO",
   "totalDebtPerMonth": "DEBITO TOTALE/MESE",
   "remaining": "RIMANENTE",

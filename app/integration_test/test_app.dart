@@ -28,7 +28,7 @@ Widget buildTestApp({AppDatabase? database}) {
       ),
       // Nothing is bought, counted or prompted for in a test.
       purchaseServiceProvider.overrideWithValue(const _NoPurchases()),
-      simulationCountStoreProvider.overrideWithValue(_MemorySimulationCount()),
+      usageCountStoreProvider.overrideWithValue(_MemorySimulationCount()),
       reviewPrompterProvider.overrideWithValue(const _NoReviewPrompt()),
     ],
     // The real root widget, so tests see the app's theme and localizations.
@@ -72,14 +72,12 @@ class _NoReviewPrompt implements ReviewPrompter {
   Future<void> requestReview() async {}
 }
 
-class _MemorySimulationCount implements SimulationCountStore {
-  int _count = 0;
+class _MemorySimulationCount implements UsageCountStore {
+  final counts = <String, int>{};
 
   @override
-  Future<int> read() async => _count;
+  Future<int> read(String key) async => counts[key] ?? 0;
 
   @override
-  Future<void> write(int count) async {
-    _count = count;
-  }
+  Future<void> write(String key, int count) async => counts[key] = count;
 }
