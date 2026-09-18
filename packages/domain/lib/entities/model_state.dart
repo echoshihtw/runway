@@ -1,5 +1,18 @@
 import '../enums/runway_status.dart';
 
+/// What the monthly cost behind the runway is made of, so the card can say
+/// which of the user's inputs is doing the work.
+enum RunwayBasis {
+  /// Budgets, plus any loan and subscription commitments.
+  budget,
+
+  /// Logged spending has overtaken the budget and now sets the cost.
+  spending,
+
+  /// An expected-cost assumption replaces the computed figure.
+  assumption,
+}
+
 class ModelState {
   final double currentCash;
   final double burnRate;
@@ -21,6 +34,9 @@ class ModelState {
   /// true so only the engines decide it.
   final bool hasCostBasis;
 
+  /// Defaults to budget so only the engines decide it.
+  final RunwayBasis basis;
+
   const ModelState({
     required this.currentCash,
     required this.burnRate,
@@ -33,6 +49,7 @@ class ModelState {
     required this.runwayDays,
     this.runOutDate,
     this.hasCostBasis = true,
+    this.basis = RunwayBasis.budget,
   });
 
   double get totalMonthlyOutflow => effectiveBurnRate;

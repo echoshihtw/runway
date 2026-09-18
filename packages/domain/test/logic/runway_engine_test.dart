@@ -36,6 +36,8 @@ Transaction _lunch(DateTime date) => Transaction(
 void main() {
   _unknownRunwayTests();
 
+  _runwayBasisTests();
+
   _scenarioBasisTests();
 
   _cashAndStatusTests();
@@ -423,6 +425,55 @@ void _unknownRunwayTests() {
 
       expect(scenario.hasCostBasis, isTrue);
       expect(scenario.runwayMonths, 9999);
+    });
+  });
+}
+
+void _runwayBasisTests() {
+  group('the model names what its cost is made of', () {
+    final now = DateTime(2026, 9, 15);
+    Transaction spent(double amount) => Transaction(
+      id: 'spent',
+      date: DateTime(2026, 9, 10),
+      type: TransactionType.expense,
+      amount: Money(amount),
+      createdAt: now,
+      updatedAt: now,
+    );
+
+    test('a budget above logged spending is the basis', () {
+      final m = _model(
+        cash: 10000,
+        now: now,
+        budget: const Budget(living: 1100),
+        transactions: [spent(210)],
+      );
+      expect(m.basis, RunwayBasis.budget);
+    });
+
+    test('spending past the budget takes over', () {
+      final m = _model(
+        cash: 10000,
+        now: now,
+        budget: const Budget(),
+        transactions: [spent(800)],
+      );
+      expect(m.basis, RunwayBasis.spending);
+    });
+
+    test('an assumption wins over both', () {
+      final m = _model(
+        cash: 10000,
+        now: now,
+        transactions: [spent(800)],
+        expectedMonthlyBurnOverride: 2300,
+      );
+      expect(m.basis, RunwayBasis.assumption);
+    });
+
+    test('an assumption of zero is no assumption', () {
+      final m = _model(cash: 10000, now: now, expectedMonthlyBurnOverride: 0);
+      expect(m.basis, RunwayBasis.budget);
     });
   });
 }

@@ -61,6 +61,19 @@ class _NoTransactions implements TransactionRepository {
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
+/// Settings that read fine: a living budget and an active cost assumption.
+class _Readable extends _Unreadable {
+  @override
+  Future<Budget> getBudget() async => const Budget(living: 1100);
+
+  @override
+  Future<FinancialAssumptions> getFinancialAssumptions() async =>
+      const FinancialAssumptions(expectedMonthlyBurnOverride: 2300);
+
+  @override
+  Future<RunwayGoal?> getRunwayGoal() async => null;
+}
+
 Duration? _noRetry(int retryCount, Object error) => null;
 
 const _failure =
@@ -73,12 +86,15 @@ Future<ProviderContainer> _pump(
   WidgetTester tester, {
   required bool retry,
   required bool settle,
+  FinancialSettingsRepository? settings,
 }) async {
   SharedPreferences.setMockInitialValues({});
   final container = ProviderContainer(
     retry: retry ? null : _noRetry,
     overrides: [
-      financialSettingsRepositoryProvider.overrideWithValue(_Unreadable()),
+      financialSettingsRepositoryProvider.overrideWithValue(
+        settings ?? _Unreadable(),
+      ),
       subscriptionRepositoryProvider.overrideWithValue(_NoSubscriptions()),
       loanRepositoryProvider.overrideWithValue(_NoLoans()),
       transactionRepositoryProvider.overrideWithValue(_NoTransactions()),
@@ -142,5 +158,27 @@ void main() {
     // cancelled rather than reported as leaked.
     container.dispose();
     await tester.pump();
+  });
+
+  testWidgets('while an assumption is active, the computed cost stays visible', (
+    tester,
+  ) async {
+    // #87: the assumption replaces the computed figure in the runway, so the
+    // one place the owner can compare them is here. It used to show only the
+    // assumption.
+    final container = await _pump(
+      tester,
+      retry: false,
+      settle: true,
+      settings: _Readable(),
+    );
+    addTearDown(container.dispose);
+
+    expect(find.textContaining('2,300'), findsOneWidget, reason: 'the assumption');
+    expect(
+      find.textContaining('Computed'),
+      findsOneWidget,
+      reason: 'and what the budget and log actually come to',
+    );
   });
 }

@@ -711,7 +711,18 @@ class AppLocalizationsJa extends AppLocalizations {
   String get runwayBrand => 'RUNWAY';
 
   @override
-  String get ifIncomePausedToday => '今日、収入が止まったら';
+  String get runwayBasisBudget => '予算ベース。今日収入が止まった場合';
+
+  @override
+  String get runwayBasisSpending => '支出実績ベース。今日収入が止まった場合';
+
+  @override
+  String get runwayBasisAssumption => 'コスト想定ベース。今日収入が止まった場合';
+
+  @override
+  String computedCost(String amount) {
+    return '予算と記録からの計算値: $amount';
+  }
 
   @override
   String get runwayNeedsCosts => '毎月のコストを設定すると残り月数がわかります';

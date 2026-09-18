@@ -30,7 +30,20 @@ ModelState computeModel({
     expectedMonthlyInflow: expectedMonthlyInflow,
     expectedMonthlyBurnOverride: expectedMonthlyBurnOverride,
     hasCostBasis: (override ?? burn.total) > 0,
+    basis: _basisFor(burn, override),
   );
+}
+
+/// An assumption replaces the computed cost outright. Otherwise the variable
+/// part is the budget until logged spending overtakes it, which is exactly
+/// when [BudgetBucket.monthlyEstimate] switches to spending.
+RunwayBasis _basisFor(MonthlyBurn burn, double? assumption) {
+  if (assumption != null) return RunwayBasis.assumption;
+  final spending = burn.typicalSpending;
+  if (spending > 0 && burn.variableBurn <= spending) {
+    return RunwayBasis.spending;
+  }
+  return RunwayBasis.budget;
 }
 
 /// Builds the model for a given [monthlyBurn], so the dashboard and the
@@ -43,6 +56,7 @@ ModelState modelForMonthlyBurn({
   double? expectedMonthlyInflow,
   double? expectedMonthlyBurnOverride,
   bool hasCostBasis = true,
+  RunwayBasis basis = RunwayBasis.budget,
 }) {
   final runway = _runwayFromToday(
     cash: currentCash,
@@ -66,6 +80,7 @@ ModelState modelForMonthlyBurn({
         : math.min((runway.months * 30).floor(), _unlimitedDays),
     runOutDate: runway.runOutMonth,
     hasCostBasis: hasCostBasis,
+    basis: basis,
   );
 }
 
@@ -111,6 +126,7 @@ ModelState modelForScenario({
     // The underlying cost, before income offsets it. Income covering costs is
     // a real unlimited runway, not an unknown one.
     hasCostBasis: baseMonthly > 0,
+    basis: _basisFor(burn, assumption),
     // Carried through so the scenario reports sustainability on the same
     // footing as the dashboard. It does not move the runway: the number
     // answers what happens if income stopped today.

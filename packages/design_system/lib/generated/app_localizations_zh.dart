@@ -709,7 +709,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get runwayBrand => 'RUNWAY';
 
   @override
-  String get ifIncomePausedToday => '如果收入今天暂停';
+  String get runwayBasisBudget => '照你的预算算，假设今天起没收入';
+
+  @override
+  String get runwayBasisSpending => '照你实际花的算，假设今天起没收入';
+
+  @override
+  String get runwayBasisAssumption => '照你设定的成本算，假设今天起没收入';
+
+  @override
+  String computedCost(String amount) {
+    return '照预算和记录算出来是：$amount';
+  }
 
   @override
   String get runwayNeedsCosts => '設定每月支出後即可看到可用月數';
@@ -1521,7 +1532,18 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get runwayBrand => 'RUNWAY';
 
   @override
-  String get ifIncomePausedToday => '如果今天收入暫停';
+  String get runwayBasisBudget => '照你的預算算，假設今天起沒收入';
+
+  @override
+  String get runwayBasisSpending => '照你實際花的算，假設今天起沒收入';
+
+  @override
+  String get runwayBasisAssumption => '照你設定的成本算，假設今天起沒收入';
+
+  @override
+  String computedCost(String amount) {
+    return '照預算和記錄算出來是：$amount';
+  }
 
   @override
   String get runwayNeedsCosts => '設定每月支出後即可看到可用月數';

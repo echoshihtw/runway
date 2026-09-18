@@ -721,7 +721,21 @@ class AppLocalizationsIt extends AppLocalizations {
   String get runwayBrand => 'RUNWAY';
 
   @override
-  String get ifIncomePausedToday => 'Se il reddito si fermasse oggi';
+  String get runwayBasisBudget =>
+      'Sul tuo budget, se il reddito si fermasse oggi';
+
+  @override
+  String get runwayBasisSpending =>
+      'Sulle tue spese, se il reddito si fermasse oggi';
+
+  @override
+  String get runwayBasisAssumption =>
+      'Sulla tua ipotesi di costi, se il reddito si fermasse oggi';
+
+  @override
+  String computedCost(String amount) {
+    return 'Calcolato da budget e registro: $amount';
+  }
 
   @override
   String get runwayNeedsCosts =>
