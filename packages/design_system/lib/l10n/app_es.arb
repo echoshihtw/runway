@@ -33,7 +33,7 @@
   "purgeEntry": "> ¿ELIMINAR ESTA ENTRADA?",
   "scenarioSimulator": "SIMULADOR DE ESCENARIOS",
   "overrideInputs": "ENTRADAS DE REEMPLAZO",
-  "burnRateOverride": "REEMPLAZO DE GASTO",
+  "burnRateOverride": "Alquiler + vida / mes",
   "simulatedIncome": "INGRESO SIMULADO/MES",
   "simResults": "RESULTADOS SIM",
   "simRunway": "AUTONOMÍA SIM",
@@ -350,6 +350,7 @@
   "stepSimShort": "Simulador",
   "stepsDone": "Hecho: {steps}",
   "optionalBadge": "OPCIONAL",
+  "fixedCostsUnchanged": "Costes fijos sin cambios: {amount}",
   "paywallTermsOfUse": "Términos de uso",
   "paywallPrivacyPolicy": "Política de privacidad"
 }

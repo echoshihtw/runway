@@ -33,7 +33,7 @@
   "purgeEntry": "> 要刪除這筆嗎？",
   "scenarioSimulator": "情境規劃",
   "overrideInputs": "規劃用數字",
-  "burnRateOverride": "每月支出",
+  "burnRateOverride": "房租 + 生活費 / 月",
   "simulatedIncome": "每月收入變化",
   "simResults": "預估結果",
   "simRunway": "預估跑道",
@@ -350,6 +350,7 @@
   "stepSimShort": "模擬器",
   "stepsDone": "搞定：{steps}",
   "optionalBadge": "可選",
+  "fixedCostsUnchanged": "固定支出照舊：{amount}",
   "paywallTermsOfUse": "使用條款",
   "paywallPrivacyPolicy": "隱私權政策"
 }

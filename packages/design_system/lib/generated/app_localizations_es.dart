@@ -108,7 +108,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get overrideInputs => 'ENTRADAS DE REEMPLAZO';
 
   @override
-  String get burnRateOverride => 'REEMPLAZO DE GASTO';
+  String get burnRateOverride => 'Alquiler + vida / mes';
 
   @override
   String get simulatedIncome => 'INGRESO SIMULADO/MES';
@@ -961,6 +961,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get optionalBadge => 'OPCIONAL';
+
+  @override
+  String fixedCostsUnchanged(String amount) {
+    return 'Costes fijos sin cambios: $amount';
+  }
 
   @override
   String get paywallTermsOfUse => 'Términos de uso';

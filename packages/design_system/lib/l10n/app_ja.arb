@@ -33,7 +33,7 @@
   "purgeEntry": "> このエントリーを削除？",
   "scenarioSimulator": "シナリオシミュレーター",
   "overrideInputs": "オーバーライド入力",
-  "burnRateOverride": "支出オーバーライド",
+  "burnRateOverride": "家賃＋生活費 / 月",
   "simulatedIncome": "シミュレート収入/月",
   "simResults": "シム結果",
   "simRunway": "シム生存期間",
@@ -350,6 +350,7 @@
   "stepSimShort": "シミュレーター",
   "stepsDone": "完了: {steps}",
   "optionalBadge": "任意",
+  "fixedCostsUnchanged": "固定費は変わりません: {amount}",
   "paywallTermsOfUse": "利用規約",
   "paywallPrivacyPolicy": "プライバシーポリシー"
 }

@@ -108,7 +108,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get overrideInputs => '覆蓋輸入';
 
   @override
-  String get burnRateOverride => '支出覆蓋';
+  String get burnRateOverride => '房租 + 生活费 / 月';
 
   @override
   String get simulatedIncome => '模擬月收入';
@@ -938,6 +938,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get optionalBadge => '可选';
 
   @override
+  String fixedCostsUnchanged(String amount) {
+    return '固定支出照旧：$amount';
+  }
+
+  @override
   String get paywallTermsOfUse => '使用条款';
 
   @override
@@ -1048,7 +1053,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get overrideInputs => '規劃用數字';
 
   @override
-  String get burnRateOverride => '每月支出';
+  String get burnRateOverride => '房租 + 生活費 / 月';
 
   @override
   String get simulatedIncome => '每月收入變化';
@@ -1876,6 +1881,11 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get optionalBadge => '可選';
+
+  @override
+  String fixedCostsUnchanged(String amount) {
+    return '固定支出照舊：$amount';
+  }
 
   @override
   String get paywallTermsOfUse => '使用條款';
