@@ -71,10 +71,9 @@ presentation → application → domain ← data
 
 ## Monetization
 
-Free tier: five entries and three simulations, then Pro; loans, subscriptions, budget and sharing are free without limit. Pro: unlimited entries and simulations.
-Pro tier: subscriptions, multiple loans, timeline, unlimited simulations.
+Free tier: five entries and three simulations, then Pro; loans, subscriptions, budget and sharing are free without limit. Pro: unlimited entries and simulations (#80, decided 2026-09-16; the entry limit added 2026-09-18).
 
-Policy lives in `EntitlementState` (`application`); enforcement is currently inline at three presentation call sites (`loan_limit`, `subscriptions`, `simulation`). Entitlement resolution is offline-first — a cached `is_pro` flag wins, and a network failure never revokes Pro.
+Policy is the two gate functions in `application` — `needsProForEntry` and `needsProForSimulation` — and nothing else restates it. Enforcement: `shared/entry_gate.dart` (`allowsNewEntry`) is asked by every door that writes an entry, and `scenarios_screen.dart` asks before a simulation. Both counts live in the Keychain and survive reinstall. Entitlement resolution is offline-first — a cached `is_pro` flag wins, and a network failure never revokes Pro.
 
 ## Current State (as of this scan)
 
