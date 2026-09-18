@@ -29,7 +29,7 @@ Concurrency is grouped per workflow+ref with `cancel-in-progress: true`.
 
 ### CD — `.github/workflows/cd.yml`
 
-Called by `release.yml` with the new tag, or run by hand from the Actions tab with an existing tag. Build name comes from the tag (`v1.0.1` → `1.0.1`), build number from `git rev-list --count HEAD`. Two independent jobs:
+Called by `release.yml` with the new tag, or run by hand from the Actions tab with an existing tag. Build name comes from the tag (`v1.0.0` → `1.0.0`), build number from `git rev-list --count HEAD`. Two independent jobs:
 
 **`release-ios` → TestFlight**
 1. Bootstrap + codegen + pod install.
@@ -110,7 +110,7 @@ There is no `.env` mechanism. Configuration is compile-time:
 | RevenueCat keys + entitlement id | `app/lib/revenuecat_config.dart` (source-committed constants) |
 | Firebase | `app/lib/firebase_options.dart` (flutterfire-generated) |
 | Dev Pro unlock | `--dart-define=DEV_PRO_ENTITLEMENT=true` (non-release builds only) |
-| Version / build number | CD passes `--build-name` from the tag (`v1.0.1` → `1.0.1`) and `--build-number` as the commit count; local builds use `BUILD_NAME`/`BUILD_NUMBER` via the Makefile |
+| Version / build number | CD passes `--build-name` from the tag (`v1.0.0` → `1.0.0`) and `--build-number` as the commit count. `make build-testflight` resolves both the same way without being told: the version from the open release PR's title (which is `release-pr.yml`'s own computation) or, with no release PR open, the newest `v*` tag; the build number from the same commit count CD uses, so local and pipeline builds share one increasing sequence. It refuses to build when neither source exists rather than guess, because a build attaches to an App Store Connect version record by `CFBundleShortVersionString` and a mismatch is refused at upload |
 
 The RevenueCat keys in `revenuecat_config.dart` are *public SDK keys*, which are designed to be shipped in the client — but they are committed to the repo rather than injected, so rotating one requires a code change and release.
 
