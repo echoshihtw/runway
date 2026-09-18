@@ -5,6 +5,8 @@ import 'package:domain/domain.dart';
 import 'package:application/application.dart';
 import 'package:intl/intl.dart';
 
+import '../../../shared/ledger_glyphs.dart';
+
 class TransactionRow extends ConsumerWidget {
   final Transaction transaction;
   final VoidCallback onEdit;
@@ -19,7 +21,8 @@ class TransactionRow extends ConsumerWidget {
 
   Color get _typeColor => switch (transaction.type) {
     TransactionType.income => SC.txIncome,
-    TransactionType.openingBalance => SC.txOpeningBalance,
+    // A starting line, not a category of money: it takes no category colour.
+    TransactionType.openingBalance => AppColors.textSecondary,
     TransactionType.loan => SC.txLoan,
     TransactionType.expense => SC.txExpense,
     TransactionType.repayment => SC.txRepayment,
@@ -27,12 +30,15 @@ class TransactionRow extends ConsumerWidget {
   };
 
   IconData get _typeIcon => switch (transaction.type) {
-    TransactionType.income => Icons.arrow_downward_rounded,
-    TransactionType.openingBalance => Icons.account_balance_rounded,
-    TransactionType.loan => Icons.credit_score_rounded,
-    TransactionType.expense => Icons.arrow_upward_rounded,
-    TransactionType.repayment => Icons.replay_rounded,
-    TransactionType.subscriptionCharge => Icons.autorenew_rounded,
+    TransactionType.income => LedgerGlyphs.inflow,
+    TransactionType.openingBalance => LedgerGlyphs.start,
+    // The loan and each payment on it are the same concept, so they wear the
+    // same mark as the liabilities card — and colour, not shape, says which
+    // commitment a scheduled payment belongs to.
+    TransactionType.loan => LedgerGlyphs.lender,
+    TransactionType.repayment => LedgerGlyphs.lender,
+    TransactionType.expense => LedgerGlyphs.spent,
+    TransactionType.subscriptionCharge => LedgerGlyphs.recurring,
   };
 
   String _typeLabel(AppLocalizations l10n) => switch (transaction.type) {
@@ -157,7 +163,11 @@ class TransactionRow extends ConsumerWidget {
                     child: Text(
                       '$sign$symbol $amount',
                       style: AppTextStyles.metricSmall.copyWith(
-                        color: AppColors.textPrimary,
+                        // The opening balance is where counting starts, not
+                        // money that moved; it must not sum with the day.
+                        color: transaction.type == TransactionType.openingBalance
+                            ? AppColors.textSecondary
+                            : AppColors.textPrimary,
                       ),
                       maxLines: 1,
                     ),

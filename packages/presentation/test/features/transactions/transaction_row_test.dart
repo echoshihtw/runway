@@ -20,6 +20,25 @@ Transaction _expense({String? note, ExpenseCategory? category}) {
   );
 }
 
+Transaction _of(TransactionType type, {String? note, double amount = 210}) {
+  final date = DateTime(2026, 9, 2);
+  return Transaction(
+    id: 'tx-${type.name}',
+    date: date,
+    type: type,
+    amount: Money(amount),
+    note: note,
+    loanId: type == TransactionType.repayment ? 'loan-1' : null,
+    createdAt: date,
+    updatedAt: date,
+  );
+}
+
+/// By the digits, not the symbol: '¥' is only the currency provider's
+/// loading fallback, and by the time the row has settled it reads '$'.
+Color _amountColor(WidgetTester tester, String digits) =>
+    tester.widget<Text>(find.textContaining(digits)).style!.color!;
+
 Future<void> _pumpRow(WidgetTester tester, Transaction transaction) async {
   SharedPreferences.setMockInitialValues({});
   await tester.pumpWidget(
@@ -95,5 +114,38 @@ void main() {
     );
 
     expect(find.text('EXPENSE · RENT'), findsOneWidget);
+  });
+
+  // One glyph per concept (#136). A loan is the bank wherever it appears —
+  // the card, the money arriving, each payment — so nothing in the log has to
+  // be compared with a near-twin to be read.
+  group('one glyph per concept', () {
+    testWidgets('a loan payment wears the bank, and says what it is', (
+      tester,
+    ) async {
+      await _pumpRow(tester, _of(TransactionType.repayment, note: 'Student loan'));
+
+      expect(find.byIcon(Icons.account_balance_rounded), findsOneWidget);
+      expect(find.byIcon(Icons.replay_rounded), findsNothing);
+      expect(find.text('LOAN PAYMENT'), findsOneWidget, reason: 'a noun, not a verb');
+    });
+
+    testWidgets('money arriving from a loan wears the bank too', (tester) async {
+      await _pumpRow(tester, _of(TransactionType.loan, note: 'Bank loan', amount: 5000));
+
+      expect(find.byIcon(Icons.account_balance_rounded), findsOneWidget);
+      expect(find.byIcon(Icons.credit_score_rounded), findsNothing);
+    });
+
+    testWidgets('the opening balance is a starting line, not a bank', (
+      tester,
+    ) async {
+      await _pumpRow(tester, _of(TransactionType.openingBalance, amount: 34000));
+
+      expect(find.byIcon(Icons.flag_rounded), findsOneWidget);
+      expect(find.byIcon(Icons.account_balance_rounded), findsNothing);
+      // Not money that moved this month, so it must not read like it.
+      expect(_amountColor(tester, '34,000'), AppColors.textSecondary);
+    });
   });
 }

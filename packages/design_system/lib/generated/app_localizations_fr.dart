@@ -219,7 +219,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get typeLoan => 'PRÊT';
 
   @override
-  String get typeRepay => 'REMBOURSER';
+  String get typeRepay => 'REMBOURSEMENT';
 
   @override
   String get typeOpening => 'OUVERTURE';

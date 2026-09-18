@@ -524,7 +524,7 @@ abstract class AppLocalizations {
   /// No description provided for @typeRepay.
   ///
   /// In en, this message translates to:
-  /// **'REPAY'**
+  /// **'LOAN PAYMENT'**
   String get typeRepay;
 
   /// No description provided for @typeOpening.

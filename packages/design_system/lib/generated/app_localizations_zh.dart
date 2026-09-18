@@ -218,7 +218,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get typeLoan => '貸款';
 
   @override
-  String get typeRepay => '還款';
+  String get typeRepay => '貸款還款';
 
   @override
   String get typeOpening => '初始';
@@ -1045,7 +1045,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get typeLoan => '貸款';
 
   @override
-  String get typeRepay => '還款';
+  String get typeRepay => '貸款還款';
 
   @override
   String get typeOpening => '初始';

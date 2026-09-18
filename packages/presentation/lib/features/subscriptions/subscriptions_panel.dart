@@ -5,6 +5,7 @@ import 'package:application/application.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
 import '../../shared/add_strip.dart';
+import '../../shared/ledger_glyphs.dart';
 import 'add_subscription_sheet.dart';
 import 'subscription_form.dart';
 
@@ -210,7 +211,7 @@ class _EmptySummary extends StatelessWidget {
             // One glyph per concept: the rows and the logged charge both use
             // autorenew, so the card uses it too.
             child: const Icon(
-              Icons.autorenew_rounded,
+              LedgerGlyphs.recurring,
               color: SC.subscr,
               size: 18,
             ),
@@ -383,7 +384,7 @@ class _SubRow extends StatelessWidget {
                 border: Border.all(color: daysColor.withAlpha(55)),
               ),
               margin: const EdgeInsets.only(right: AppSpacing.sm),
-              child: Icon(Icons.autorenew_rounded, color: daysColor, size: 15),
+              child: Icon(LedgerGlyphs.recurring, color: daysColor, size: 15),
             ),
             Expanded(
               child: Column(

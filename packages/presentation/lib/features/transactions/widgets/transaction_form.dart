@@ -3,6 +3,8 @@ import 'package:design_system/design_system.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
 
+import '../../../shared/ledger_glyphs.dart';
+
 class TransactionForm extends StatefulWidget {
   final Transaction? existing;
   final TransactionType? preselectedType;
@@ -306,7 +308,7 @@ class _InOutToggle extends StatelessWidget {
         Expanded(
           child: _ToggleTile(
             label: 'IN',
-            icon: Icons.arrow_downward_rounded,
+            icon: LedgerGlyphs.inflow,
             color: SC.txIncome,
             active: isInflow,
             onTap: () => onChanged(true),
@@ -316,7 +318,7 @@ class _InOutToggle extends StatelessWidget {
         Expanded(
           child: _ToggleTile(
             label: 'OUT',
-            icon: Icons.arrow_upward_rounded,
+            icon: LedgerGlyphs.spent,
             color: SC.txExpense,
             active: !isInflow,
             onTap: () => onChanged(false),
@@ -370,7 +372,7 @@ class _OutKindToggle extends StatelessWidget {
         tile(_OutKind.rent, 'RENT', Icons.home_rounded, SC.txExpense),
         if (showLoan) ...[
           const SizedBox(width: AppSpacing.sm),
-          tile(_OutKind.loan, 'LOAN', Icons.replay_rounded, SC.txRepayment),
+          tile(_OutKind.loan, 'LOAN', LedgerGlyphs.lender, SC.txRepayment),
         ],
       ],
     );

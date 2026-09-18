@@ -79,7 +79,7 @@
   "typeExpense": "支出",
   "typeIncome": "収入",
   "typeLoan": "ローン",
-  "typeRepay": "返済",
+  "typeRepay": "ローン返済",
   "typeOpening": "開始残高",
   "typeSubscription": "サブスク",
   "subscriptionPaidQuestion": "{date}に{name}の{amount}を支払いましたか？",
