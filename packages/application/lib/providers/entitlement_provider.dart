@@ -75,17 +75,10 @@ class EntitlementState {
   final bool isPro;
   const EntitlementState({required this.isPro});
 
-  // Feature gates — what's free vs pro
-  bool get canAddMultipleLoans => isPro;
-  bool get canUseUnlimitedSims => isPro;
-
-  // Always free
-  bool get canAddTransactions => true;
-  bool get canUseBasicRunway => true;
-  bool get canShare => true;
-  bool get canUseBudget => true;
-  bool get canAddFirstLoan => true;
-  bool get canUseOneSim => true;
+  // What is free and what is Pro is decided by the gates themselves —
+  // needsProForEntry and needsProForSimulation — not restated here. A second
+  // statement of the rule drifted: this block still said entries were always
+  // free and loans were the paid part.
 }
 
 final entitlementProvider =

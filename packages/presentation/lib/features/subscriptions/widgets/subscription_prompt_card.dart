@@ -4,6 +4,7 @@ import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import '../../../shared/entry_gate.dart';
 import '../subscription_form.dart';
 
 /// Asks before recording a subscription charge.
@@ -149,6 +150,8 @@ class _SubscriptionPromptCardState
   /// it. The guard also stops a second tap racing the ledger stream.
   Future<void> _write(Future<void> Function() record) async {
     if (_writing) return;
+    // A confirmed charge is an entry like any other, and counts as one.
+    if (!allowsNewEntry(context, ref)) return;
     _writing = true;
     try {
       await record();

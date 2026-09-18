@@ -212,13 +212,14 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
   }
 
   String _titleFor(String trigger) => switch (trigger) {
-    'loan_limit' => 'Multiple loans is\na Pro feature.',
+    'entry_limit' => 'Unlimited entries\nis a Pro feature.',
     'simulation' => 'Unlimited simulations\nis a Pro feature.',
     _ => 'Unlock Runway Pro.',
   };
 
+  // Loans are free (#80). The app is free; the planning tool is the paid part.
   static const _proFeatures = [
-    'Unlimited loans',
+    'Unlimited entries',
     'Unlimited scenario simulations',
   ];
 }

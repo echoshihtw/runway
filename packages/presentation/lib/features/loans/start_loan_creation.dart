@@ -5,29 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
-import '../paywall/paywall_screen.dart';
+import '../../shared/entry_gate.dart';
 import '../transactions/widgets/loan_wizard.dart';
 
 /// The one way to create a loan.
 ///
-/// This lived in two near-identical copies, in `app_router` and
-/// `transactions_screen`, each carrying its own entitlement check. The
-/// liabilities card's door would have been a third, and a third copy that
-/// forgot the gate would hand every free owner unlimited loans.
+/// Loans are free (#80, decided 2026-09-16: the Pro gate is simulations and
+/// entries, not loans). The one-active-loan limit that lived here is gone.
+/// What remains gated is the entry itself — a loan writes the money arriving
+/// as an entry, and that counts like any other.
 Future<void> startLoanCreation(BuildContext context, WidgetRef ref) async {
-  final isPro =
-      FeatureFlags.devProEntitlement ||
-      (ref.read(entitlementProvider).value?.isPro ?? false);
-  if (!isPro) {
-    final loans = await ref.read(loansProvider.future);
-    final transactions = await ref.read(transactionsProvider.future);
-    if (!context.mounted) return;
-    if (hasActiveLoan(loans: loans, transactions: transactions)) {
-      showPaywall(context, trigger: 'loan_limit');
-      return;
-    }
-  }
-  if (!context.mounted) return;
+  if (!allowsNewEntry(context, ref)) return;
 
   showModalBottomSheet(
     context: context,
