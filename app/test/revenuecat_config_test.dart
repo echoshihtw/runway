@@ -80,4 +80,24 @@ void main() {
     expect(isRevenueCatKeySet(kRevenueCatAppleKey), isTrue);
     expect(isRevenueCatKeySet(kRevenueCatGoogleKey), isFalse);
   });
+
+  group('the store identifiers this build ships', () {
+    // These four values have to equal what App Store Connect and RevenueCat
+    // hold. A purchase against a mismatched entitlement succeeds and leaves
+    // the app locked, so they are pinned here rather than left to a reader.
+    test('the entitlement is exactly "pro", not "Pro" or "pro_lifetime"', () {
+      expect(kProEntitlementId, 'pro');
+    });
+
+    test('the product is the lifetime non-consumable', () {
+      expect(kProProductId, 'com.silverfern.survivaloptimizer.pro.lifetime');
+    });
+
+    test('the product id is namespaced under the app bundle', () {
+      // Not cosmetic: a product id from another app's namespace would import
+      // into RevenueCat and then never match a purchase from this build.
+      expect(kProProductId, startsWith('com.silverfern.survivaloptimizer.'));
+      expect(isRevenueCatKeySet(kProProductId), isTrue);
+    });
+  });
 }

@@ -15,6 +15,7 @@ class _HangingStore implements PurchaseService {
 
   static const _pkg = ProPackage(
     identifier: 'pro',
+    productId: 'com.silverfern.survivaloptimizer.pro.lifetime',
     priceString: r'$4.99',
     type: ProPackageType.lifetime,
     nativePackage: Object(),

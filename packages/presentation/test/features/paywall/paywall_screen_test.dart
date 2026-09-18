@@ -128,4 +128,30 @@ void main() {
       reason: 'the title still says how many were used',
     );
   });
+
+  testWidgets('a subscription-only offering is unavailable, not sold as Pro', (
+    tester,
+  ) async {
+    // _lifetimePackage used to fall back to packages.firstOrNull, so an
+    // offering holding only a monthly package rendered an enabled buy button
+    // under "one-time purchase" copy and charged for the wrong thing (#17).
+    await _pumpPaywall(
+      tester,
+      offering: () async => const ProOffering(
+        identifier: 'default',
+        packages: [
+          ProPackage(
+            identifier: r'$rc_monthly',
+            productId: 'com.silverfern.survivaloptimizer.pro.monthly',
+            priceString: r'$1.99',
+            type: ProPackageType.monthly,
+            nativePackage: Object(),
+          ),
+        ],
+      ),
+    );
+
+    expect(find.textContaining("Pro isn't available right now"), findsOneWidget);
+    expect(find.textContaining(r'$1.99'), findsNothing);
+  });
 }
