@@ -945,6 +945,18 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String get simNeedsBalance => 'まず期初残高を入力してください';
+
+  @override
+  String get simNeedsBalanceWhy => '残り月数は、この残高から数え始めます。';
+
+  @override
+  String get addOpeningBalance => '残高を入力';
+
+  @override
+  String get runSimulation => 'シミュレーション';
+
+  @override
   String get paywallTermsOfUse => '利用規約';
 
   @override

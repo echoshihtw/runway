@@ -968,6 +968,19 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get simNeedsBalance => 'Añade primero tu saldo inicial';
+
+  @override
+  String get simNeedsBalanceWhy =>
+      'Tu margen necesita un saldo de partida desde el que contar.';
+
+  @override
+  String get addOpeningBalance => 'AÑADIR MI SALDO';
+
+  @override
+  String get runSimulation => 'SIMULAR';
+
+  @override
   String get paywallTermsOfUse => 'Términos de uso';
 
   @override

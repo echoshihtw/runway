@@ -1877,6 +1877,30 @@ abstract class AppLocalizations {
   /// **'Fixed costs unchanged: {amount}'**
   String fixedCostsUnchanged(String amount);
 
+  /// No description provided for @simNeedsBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your opening balance first'**
+  String get simNeedsBalance;
+
+  /// No description provided for @simNeedsBalanceWhy.
+  ///
+  /// In en, this message translates to:
+  /// **'A runway needs a starting balance to count down from.'**
+  String get simNeedsBalanceWhy;
+
+  /// No description provided for @addOpeningBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'ADD MY BALANCE'**
+  String get addOpeningBalance;
+
+  /// No description provided for @runSimulation.
+  ///
+  /// In en, this message translates to:
+  /// **'RUN SIMULATION'**
+  String get runSimulation;
+
   /// Link on the paywall to Apple's standard end user license agreement
   ///
   /// In en, this message translates to:

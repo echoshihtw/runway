@@ -351,6 +351,10 @@
   "stepsDone": "Fatto: {steps}",
   "optionalBadge": "FACOLTATIVO",
   "fixedCostsUnchanged": "Costi fissi invariati: {amount}",
+  "simNeedsBalance": "Aggiungi prima il saldo iniziale",
+  "simNeedsBalanceWhy": "La tua autonomia parte da un saldo iniziale.",
+  "addOpeningBalance": "AGGIUNGI IL MIO SALDO",
+  "runSimulation": "AVVIA SIMULAZIONE",
   "paywallTermsOfUse": "Termini di utilizzo",
   "paywallPrivacyPolicy": "Informativa sulla privacy"
 }
