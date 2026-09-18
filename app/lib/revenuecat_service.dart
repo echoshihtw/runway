@@ -52,9 +52,22 @@ class RevenueCatService implements PurchaseService {
     final offerings = await Purchases.getOfferings();
     final current = offerings.current;
     if (current == null) return null;
+    final mapped = current.availablePackages.map(_toProPackage);
+    // The dashboard can be reconfigured without the app changing, so the
+    // product this build expects goes first and cannot lose a tie to another
+    // lifetime package. The assert makes a mismatch loud in development
+    // rather than a wrong sale in production.
+    final expected = mapped.where((p) => p.productId == kProProductId);
+    final others = mapped.where((p) => p.productId != kProProductId);
+    assert(
+      expected.isNotEmpty,
+      'RevenueCat offering "${current.identifier}" does not hold '
+      '$kProProductId. It offers: '
+      '${mapped.map((p) => p.productId).join(', ')}',
+    );
     return ProOffering(
       identifier: current.identifier,
-      packages: current.availablePackages.map(_toProPackage).toList(),
+      packages: [...expected, ...others],
     );
   }
 
@@ -136,6 +149,7 @@ class RevenueCatService implements PurchaseService {
     };
     return ProPackage(
       identifier: pkg.identifier,
+      productId: pkg.storeProduct.identifier,
       priceString: pkg.storeProduct.priceString,
       type: type,
       nativePackage: pkg,

@@ -155,13 +155,16 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
     );
   }
 
-  ProPackage? _lifetimePackage(ProOffering? offering) {
-    if (offering == null) return null;
-    final lifetime = offering.packages
-        .where((p) => p.type == ProPackageType.lifetime)
-        .firstOrNull;
-    return lifetime ?? offering.packages.firstOrNull;
-  }
+  /// The lifetime package, or nothing.
+  ///
+  /// This used to fall back to `packages.firstOrNull`, so an offering holding
+  /// only a subscription rendered an enabled buy button under copy promising a
+  /// one-time purchase — it sold the wrong thing rather than saying it could
+  /// not sell (#17). No lifetime package is a configuration problem, and the
+  /// screen already has honest words for that.
+  ProPackage? _lifetimePackage(ProOffering? offering) => offering?.packages
+      .where((p) => p.type == ProPackageType.lifetime)
+      .firstOrNull;
 
   Future<void> _purchase(ProPackage pkg) async {
     final l10n = context.l10n;
