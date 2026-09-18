@@ -80,17 +80,16 @@ Entity construction (including `Uuid().v4()` ids and `createdAt/updatedAt`) happ
 
 ## Entitlement Gating
 
-Gating is checked inline in the UI, not centrally:
+Gating is checked at the doors, through one helper per gate:
 
 | Trigger | Where | Rule |
 |---|---|---|
-| `loan_limit` | `app_router.dart`, `transactions_screen.dart` | Free users may add one loan; a second opens the paywall |
-| `subscriptions` | `app_router.dart`, `transactions_screen.dart` | Subscriptions are Pro-only |
-| `simulation` | `scenarios_screen.dart` | Repeat simulations are Pro-only |
+| `entry_limit` | `shared/entry_gate.dart` (`allowsNewEntry`), asked by `daily_spend_sheet.dart`, `start_loan_creation.dart`, `liabilities_panel.dart`, `subscription_prompt_card.dart` | Five free entries, ever; every kind counts except the opening balance. Editing an entry never asks |
+| `simulation` | `scenarios_screen.dart` | Three free simulations, then Pro |
 
-Each site reads `FeatureFlags.devProEntitlement || entitlementProvider.value?.isPro` and calls `showPaywall(context, trigger: ...)`. `ProLockedCard` is the reusable "locked" affordance.
+Loans and subscriptions are free without limit (#80). Each gate reads `FeatureFlags.devProEntitlement || entitlementProvider.value?.isPro` and the Keychain-backed count, then calls `showPaywall(context, trigger: ...)`. `ProLockedCard` is the reusable "locked" affordance.
 
-> The `EntitlementState` getters (`canUseSubscriptions`, `canAddMultipleLoans`, …) exist in the application layer but the UI mostly checks raw `isPro` instead. Routing all gates through those getters would put the policy in one place.
+> Policy lives in `needsProForEntry` and `needsProForSimulation` (`application`). The `EntitlementState` feature getters that once restated it were removed in #139: they had no readers and had drifted from the gates.
 
 ## Contract Compliance
 
