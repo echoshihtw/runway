@@ -55,6 +55,6 @@ abstract final class SC {
 
   // ── UI ────────────────────────────────────────
   static const labelColor   = AppColors.textSecondary;
-  static const captionColor = AppColors.textDim;
+  static const captionColor = AppColors.textSecondary;
   static const dividerColor = AppColors.cardBorder;
 }

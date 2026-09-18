@@ -81,6 +81,9 @@ jobs:
       - name: Test — application
         run: cd packages/application && flutter test --reporter=github
 
+      - name: Test — design_system
+        run: cd packages/design_system && flutter test --reporter=github
+
       - name: Test — presentation
         run: cd packages/presentation && flutter test --reporter=github
 
