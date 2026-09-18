@@ -89,10 +89,10 @@ jobs:
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
 
       # The version comes from app/pubspec.yaml, not from the tag. Deriving it
-      # from the tag let a commit-message analyzer decide what the store sees:
-      # with no tags yet it computed v1.0.0 and would have shipped
-      # CFBundleShortVersionString 1.0.1 as 1.0.0 (#99). Only the build number
-      # is generated, because it must increase and nothing else tracks it.
+      # from the tag let a commit-message analyzer decide what the store sees,
+      # which is how the shipped version and App Store Connect could disagree
+      # (#99). Only the build number is generated, because it must increase
+      # and nothing else tracks it.
       - name: Build iOS IPA
         run: |
           cd app && flutter build ipa \

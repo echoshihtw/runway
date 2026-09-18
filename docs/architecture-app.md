@@ -1,7 +1,7 @@
 # Architecture — `app` (Shell, DI Wiring, Platform Integrations)
 
 **Part ID:** `app` · **Path:** `app/` · **Type:** mobile (Flutter application)
-**Version:** `1.0.1+2` · **Generated:** 2026-08-04 · Deep scan
+**Version:** `1.0.0+1` · **Generated:** 2026-08-04 · Deep scan
 
 ---
 

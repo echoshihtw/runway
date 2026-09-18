@@ -90,7 +90,7 @@ runwayMonths = floor(fractionOfMonthLeft + (cash - dueThisMonth) / monthlyBurn)
 - No arbitrary cap. 9999 means unlimited; unknown (no cost basis) is a separate state and renders as `—`.
 - The dashboard and the simulator share this calculation. A simulation starts from the real `dueThisMonth` and applies only the difference over the days left, so a scenario with no changes returns the dashboard's runway.
 
-### 3.3 Cash Reserve — not implemented in 1.0.1
+### 3.3 Cash Reserve — not implemented in 1.0.0
 
 A reserve is cash the user has decided not to count as runway. It is a number
 they set, not one the app derives.
@@ -304,7 +304,8 @@ Answer these questions:
 | 2026-09 | Runway measured in months from today | The rest of the current month costs its unused budget, not a full month that was already partly paid |
 | 2026-09-16 | Rest of month charged on the monthly estimate | The budget remainder made the month free when no budget was set; the estimate is the basis every later month already uses (#93) |
 | 2026-09-17 | Subscription charges are entries, confirmed by the owner | A charge is owed until confirmed; once confirmed it is cash that moved. This Month reports actuals; the divisor keeps the normalised run rate (#122, #127) |
-| 2026-09-18 | The store version comes from `app/pubspec.yaml`, never from the git tag | `cd.yml` passed `--build-name="${TAG#v}"`, so a commit-message analyzer decided what the store saw: with no tags yet it computed v1.0.0 and would have shipped 1.0.1 as 1.0.0. Tags stay release bookkeeping; only the build number is generated, because it has to increase and nothing else tracks it (#99) |
+| 2026-09-18 | The store version comes from `app/pubspec.yaml`, never from the git tag | `cd.yml` passed `--build-name="${TAG#v}"`, so a commit-message analyzer decided what the store saw. One source of truth means a version can only change where someone edits it on purpose. Only the build number is generated, because it has to increase and nothing else tracks it (#99) |
+| 2026-09-18 | The first public release is 1.0.0, and the version name is semver | Echo set App Store Connect to 1.0.0, which is what semver reserves for a first public release, so pubspec, the tag `release-pr.yml` computes with no prior tag, and the store all read one number. The name changes only by change type — breaking major, feature minor, fix or perf patch. The `+n` build number is store plumbing that semver ignores for precedence: it increments per upload, carries no meaning, and restarts at 1 for a new version record. Earlier local archives were 1.0.1 and were never submitted (#99) |
 | 2026-09-18 | Pro is entries and simulations; loans are free | Five entries ever and three simulations free, counted in the Keychain; numbers in `product_config.dart` (#80, #139, #143) |
 | 2026-09 | Dropped the investable split; kept a user-set cash reserve | The formula recommended how much to put at risk, from inputs the app does not hold. Stating a position is measurement; sizing an investment is advice |
 | 2026-09 | Status bands are 3 and 6 months, not 12 and 24 | Three to six months of cover is the recognised adequacy range. The old bands called an 11-month runway critical, which the facts do not support |

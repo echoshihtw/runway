@@ -12,7 +12,7 @@
 - **Primary language:** Dart 3.11.5 / Flutter 3.41.7
 - **Architecture:** Clean Architecture + DDD — `presentation → application → domain ← data`, boundaries enforced by package separation
 - **Product:** Offline-first personal financial runway app. One question: how long can my money last?
-- **App version:** `1.0.1+2`
+- **App version:** `1.0.0+1`
 
 ## Quick Reference by Part
 
