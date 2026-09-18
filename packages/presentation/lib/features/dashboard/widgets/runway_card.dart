@@ -117,8 +117,14 @@ class RunwayCard extends ConsumerWidget {
                   Expanded(
                     child: _stat(
                       l10n.cash,
-                      '$symbol ${nf.format(model.currentCash)}',
-                      AppColors.green,
+                      // An unloaded ledger has no balance to state. The
+                      // runway already says so with the same mark.
+                      model.cashIsKnown
+                          ? '$symbol ${nf.format(model.currentCash)}'
+                          : '—',
+                      model.cashIsKnown
+                          ? AppColors.green
+                          : AppColors.textSecondary,
                     ),
                   ),
                   Expanded(

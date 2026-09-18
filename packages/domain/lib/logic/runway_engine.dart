@@ -15,6 +15,7 @@ ModelState computeModel({
   required MonthlyBurn burn,
   double? expectedMonthlyInflow,
   double? expectedMonthlyBurnOverride,
+  bool cashIsKnown = true,
 }) {
   final override =
       expectedMonthlyBurnOverride != null && expectedMonthlyBurnOverride > 0
@@ -31,6 +32,7 @@ ModelState computeModel({
     expectedMonthlyBurnOverride: expectedMonthlyBurnOverride,
     hasCostBasis: (override ?? burn.total) > 0,
     basis: _basisFor(burn, override),
+    cashIsKnown: cashIsKnown,
   );
 }
 
@@ -57,6 +59,7 @@ ModelState modelForMonthlyBurn({
   double? expectedMonthlyBurnOverride,
   bool hasCostBasis = true,
   RunwayBasis basis = RunwayBasis.budget,
+  bool cashIsKnown = true,
 }) {
   final runway = _runwayFromToday(
     cash: currentCash,
@@ -81,6 +84,7 @@ ModelState modelForMonthlyBurn({
     runOutDate: runway.runOutMonth,
     hasCostBasis: hasCostBasis,
     basis: basis,
+    cashIsKnown: cashIsKnown,
   );
 }
 
