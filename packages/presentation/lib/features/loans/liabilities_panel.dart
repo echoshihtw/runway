@@ -85,6 +85,8 @@ class LiabilitiesPanel extends ConsumerWidget {
                       style: AppTextStyles.metric.copyWith(
                         color: AppColors.gold,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
@@ -140,11 +142,6 @@ class LiabilitiesPanel extends ConsumerWidget {
 
   void _showRepay(BuildContext context, WidgetRef ref, LoanSummary summary) {
     if (!allowsNewEntry(context, ref)) return;
-    final l10n = context.l10n;
-    final amountCtrl = TextEditingController(
-      text: summary.loan.monthlyPayment.toStringAsFixed(0),
-    );
-
     showModalBottomSheet(
       context: context,
       useRootNavigator: true,
@@ -155,74 +152,101 @@ class LiabilitiesPanel extends ConsumerWidget {
           top: Radius.circular(AppSpacing.cardRadius),
         ),
       ),
-      builder: (ctx) => Padding(
-        padding: EdgeInsets.only(
-          left: AppSpacing.lg,
-          right: AppSpacing.lg,
-          top: AppSpacing.lg,
-          bottom: MediaQuery.of(ctx).viewInsets.bottom + AppSpacing.lg,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.repayLoan,
-              style: AppTextStyles.title.copyWith(color: SC.numberPrimary),
-            ),
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              summary.loan.name.toUpperCase(),
-              style: AppTextStyles.bodySmall,
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            NeoInput(
-              label: l10n.repaymentAmount,
-              controller: amountCtrl,
-              keyboardType: TextInputType.number,
-              hint: summary.loan.monthlyPayment.toStringAsFixed(0),
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            Row(
-              children: [
-                Expanded(
-                  child: NeoButton(
-                    label: l10n.confirm,
-                    variant: NeoButtonVariant.primary,
-                    color: AppColors.gold,
-                    fullWidth: true,
-                    onPressed: () async {
-                      final amount = double.tryParse(amountCtrl.text.trim());
-                      if (amount == null || amount <= 0) return;
-                      Navigator.of(ctx).pop();
-                      final now = DateTime.now();
-                      final tx = Transaction(
-                        id: const Uuid().v4(),
-                        date: now,
-                        type: TransactionType.repayment,
-                        amount: Money(amount),
-                        loanId: summary.loan.id,
-                        note: '${l10n.repay} — ${summary.loan.name}',
-                        createdAt: now,
-                        updatedAt: now,
-                      );
-                      await ref.read(addTransactionUseCaseProvider).execute(tx);
-                    },
-                  ),
+      builder: (_) => _RepaySheet(summary: summary),
+    );
+  }
+}
+
+/// Owns the amount controller, so it is disposed with the sheet. It used to
+/// be created in [_showRepay] and handed to a StatelessWidget that could not
+/// dispose it: one leaked controller per REPAY (#95).
+class _RepaySheet extends ConsumerStatefulWidget {
+  final LoanSummary summary;
+  const _RepaySheet({required this.summary});
+
+  @override
+  ConsumerState<_RepaySheet> createState() => _RepaySheetState();
+}
+
+class _RepaySheetState extends ConsumerState<_RepaySheet> {
+  late final _amountCtrl = TextEditingController(
+    text: widget.summary.loan.monthlyPayment.toStringAsFixed(0),
+  );
+
+  @override
+  void dispose() {
+    _amountCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final summary = widget.summary;
+    return Padding(
+      padding: EdgeInsets.only(
+        left: AppSpacing.lg,
+        right: AppSpacing.lg,
+        top: AppSpacing.lg,
+        bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.lg,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.repayLoan,
+            style: AppTextStyles.title.copyWith(color: SC.numberPrimary),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(summary.loan.name.toUpperCase(), style: AppTextStyles.bodySmall),
+          const SizedBox(height: AppSpacing.lg),
+          NeoInput(
+            label: l10n.repaymentAmount,
+            controller: _amountCtrl,
+            keyboardType: TextInputType.number,
+            hint: summary.loan.monthlyPayment.toStringAsFixed(0),
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          Row(
+            children: [
+              Expanded(
+                child: NeoButton(
+                  label: l10n.confirm,
+                  variant: NeoButtonVariant.primary,
+                  color: AppColors.gold,
+                  fullWidth: true,
+                  onPressed: () async {
+                    final amount = double.tryParse(_amountCtrl.text.trim());
+                    if (amount == null || amount <= 0) return;
+                    Navigator.of(context).pop();
+                    final now = DateTime.now();
+                    final tx = Transaction(
+                      id: const Uuid().v4(),
+                      date: now,
+                      type: TransactionType.repayment,
+                      amount: Money(amount),
+                      loanId: summary.loan.id,
+                      note: '${l10n.repay} — ${summary.loan.name}',
+                      createdAt: now,
+                      updatedAt: now,
+                    );
+                    await ref.read(addTransactionUseCaseProvider).execute(tx);
+                  },
                 ),
-                const SizedBox(width: AppSpacing.sm),
-                Expanded(
-                  child: NeoButton(
-                    label: l10n.cancel,
-                    variant: NeoButtonVariant.ghost,
-                    fullWidth: true,
-                    onPressed: () => Navigator.of(ctx).pop(),
-                  ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: NeoButton(
+                  label: l10n.cancel,
+                  variant: NeoButtonVariant.ghost,
+                  fullWidth: true,
+                  onPressed: () => Navigator.of(context).pop(),
                 ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

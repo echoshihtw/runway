@@ -38,20 +38,29 @@ class LoanCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Text(
-                      loan.source,
-                      style: AppTextStyles.label.copyWith(
-                        color: AppColors.textPrimary,
+                // The name input allows 50 characters. The name is the one
+                // thing here that can be shortened without losing meaning,
+                // so it yields; the source and the REPAY button never do.
+                Flexible(
+                  child: Row(
+                    children: [
+                      Text(
+                        loan.source,
+                        style: AppTextStyles.label.copyWith(
+                          color: AppColors.textPrimary,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: AppSpacing.sm),
-                    Text(
-                      loan.name.toUpperCase(),
-                      style: AppTextStyles.value.copyWith(color: color),
-                    ),
-                  ],
+                      const SizedBox(width: AppSpacing.sm),
+                      Flexible(
+                        child: Text(
+                          loan.name.toUpperCase(),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyles.value.copyWith(color: color),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 if (!summary.isFullyPaid)
                   GestureDetector(

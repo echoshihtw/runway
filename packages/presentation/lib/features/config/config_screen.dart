@@ -53,11 +53,14 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
     setState(() => _editingBudget = true);
   }
 
+  // Every save and clear awaits a write, and the sheet can be swiped away
+  // while it is in flight. The continuation must not touch a disposed State.
   Future<void> _saveBudget() async {
     final rent = double.tryParse(_rentCtrl.text.trim()) ?? 0;
     final living = double.tryParse(_livingCtrl.text.trim()) ?? 0;
     await ref.read(budgetProvider.notifier).setRent(rent);
     await ref.read(budgetProvider.notifier).setLiving(living);
+    if (!mounted) return;
     setState(() => _editingBudget = false);
     FocusScope.of(context).unfocus();
   }
@@ -66,6 +69,7 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
     await ref.read(budgetProvider.notifier).clear();
     _rentCtrl.clear();
     _livingCtrl.clear();
+    if (!mounted) return;
     setState(() => _editingBudget = false);
     FocusScope.of(context).unfocus();
   }
@@ -82,6 +86,7 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
     await ref
         .read(runwayGoalProvider.notifier)
         .saveGoal(name: _goalNameCtrl.text, targetMonths: targetMonths);
+    if (!mounted) return;
     setState(() => _editingGoal = false);
     FocusScope.of(context).unfocus();
   }
@@ -90,6 +95,7 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
     await ref.read(runwayGoalProvider.notifier).clearGoal();
     _goalNameCtrl.clear();
     _goalMonthsCtrl.clear();
+    if (!mounted) return;
     setState(() => _editingGoal = false);
     FocusScope.of(context).unfocus();
   }
@@ -113,6 +119,7 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
           expectedMonthlyInflow: expectedInflow,
           expectedMonthlyBurnOverride: expectedBurn,
         );
+    if (!mounted) return;
     setState(() => _editingAssumptions = false);
     FocusScope.of(context).unfocus();
   }
@@ -121,6 +128,7 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
     await ref.read(financialAssumptionsProvider.notifier).clear();
     _expectedInflowCtrl.clear();
     _expectedBurnCtrl.clear();
+    if (!mounted) return;
     setState(() => _editingAssumptions = false);
     FocusScope.of(context).unfocus();
   }

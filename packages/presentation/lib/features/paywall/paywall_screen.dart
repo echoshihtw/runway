@@ -179,11 +179,13 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
         if (mounted) Navigator.of(context).pop(true);
       }
     } on PurchaseException catch (e) {
-      if (!e.userCancelled) {
+      // The sheet can be dismissed while StoreKit is still deciding; the
+      // finally block already checked mounted, the catches did not.
+      if (!e.userCancelled && mounted) {
         setState(() => _errorMessage = l10n.paywallPurchaseFailed);
       }
     } catch (_) {
-      setState(() => _errorMessage = l10n.paywallSomethingWrong);
+      if (mounted) setState(() => _errorMessage = l10n.paywallSomethingWrong);
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -207,7 +209,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
         setState(() => _errorMessage = l10n.paywallNoPreviousPurchase);
       }
     } catch (_) {
-      setState(() => _errorMessage = l10n.paywallRestoreFailed);
+      if (mounted) setState(() => _errorMessage = l10n.paywallRestoreFailed);
     } finally {
       if (mounted) setState(() => _loading = false);
     }
