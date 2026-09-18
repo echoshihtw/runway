@@ -20,6 +20,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final offeringAsync = ref.watch(proOfferingProvider);
 
     return Container(
@@ -62,13 +63,13 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
           const SizedBox(height: AppSpacing.lg),
 
           Text(
-            _titleFor(widget.trigger),
+            _titleFor(l10n, widget.trigger),
             style: AppTextStyles.title,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: AppSpacing.md),
 
-          ..._proFeatures.map(
+          ..._proFeatures(l10n).map(
             (f) => Padding(
               padding: const EdgeInsets.only(bottom: AppSpacing.sm),
               child: Row(
@@ -97,19 +98,17 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
           ],
 
           offeringAsync.when(
-            loading: () => const _PriceButton(
-              label: 'UNLOCK RUNWAY PRO',
-              priceLabel: 'Loading price...',
+            loading: () => _PriceButton(
+              label: l10n.paywallUnlock,
+              priceLabel: l10n.paywallLoadingPrice,
               loading: true,
               onPressed: null,
             ),
             // Reachable now that fetchOffering lets a failed call propagate
             // instead of swallowing it to null.
-            error: (_, __) => const _PriceButton(
-              label: 'UNLOCK RUNWAY PRO',
-              priceLabel:
-                  "Couldn't reach the store. Check your connection and try "
-                  'again.',
+            error: (_, __) => _PriceButton(
+              label: l10n.paywallUnlock,
+              priceLabel: l10n.paywallStoreUnreachable,
               loading: false,
               onPressed: null,
             ),
@@ -120,10 +119,10 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
               // to render as "One-time purchase · Unlock forever" over a
               // disabled button: a price line with no price.
               final priceLabel = pkg != null
-                  ? '${pkg.priceString} · One-time purchase'
-                  : "Pro isn't available right now. Please try again later.";
+                  ? l10n.paywallOneTimePurchase(pkg.priceString)
+                  : l10n.paywallUnavailable;
               return _PriceButton(
-                label: 'UNLOCK RUNWAY PRO',
+                label: l10n.paywallUnlock,
                 priceLabel: priceLabel,
                 loading: _loading,
                 onPressed: pkg != null && !_loading
@@ -136,14 +135,14 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
           const SizedBox(height: AppSpacing.sm),
 
           NeoButton(
-            label: 'Restore purchase',
+            label: l10n.paywallRestore,
             variant: NeoButtonVariant.ghost,
             fullWidth: true,
             onPressed: _loading ? null : _restore,
           ),
           const SizedBox(height: AppSpacing.xs),
           NeoButton(
-            label: 'Maybe later',
+            label: l10n.paywallMaybeLater,
             variant: NeoButtonVariant.ghost,
             fullWidth: true,
             onPressed: () => Navigator.of(context).pop(),
@@ -165,6 +164,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
   }
 
   Future<void> _purchase(ProPackage pkg) async {
+    final l10n = context.l10n;
     setState(() {
       _loading = true;
       _errorMessage = null;
@@ -180,16 +180,17 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
       }
     } on PurchaseException catch (e) {
       if (!e.userCancelled) {
-        setState(() => _errorMessage = 'Purchase failed. Please try again.');
+        setState(() => _errorMessage = l10n.paywallPurchaseFailed);
       }
     } catch (_) {
-      setState(() => _errorMessage = 'Something went wrong. Please try again.');
+      setState(() => _errorMessage = l10n.paywallSomethingWrong);
     } finally {
       if (mounted) setState(() => _loading = false);
     }
   }
 
   Future<void> _restore() async {
+    final l10n = context.l10n;
     setState(() {
       _loading = true;
       _errorMessage = null;
@@ -203,31 +204,27 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
         await ref.read(entitlementProvider.notifier).unlockPro();
         if (mounted) Navigator.of(context).pop(true);
       } else {
-        setState(() => _errorMessage = 'No previous purchase found.');
+        setState(() => _errorMessage = l10n.paywallNoPreviousPurchase);
       }
     } catch (_) {
-      setState(() => _errorMessage = 'Restore failed. Please try again.');
+      setState(() => _errorMessage = l10n.paywallRestoreFailed);
     } finally {
       if (mounted) setState(() => _loading = false);
     }
   }
 
-  String _titleFor(String trigger) => switch (trigger) {
+  String _titleFor(AppLocalizations l10n, String trigger) => switch (trigger) {
     // The wall names what was used, so it arrives as the end of something
     // rather than out of nowhere.
-    'entry_limit' =>
-      "You've logged your ${ProductConfig.freeEntries} free entries.\n"
-          'Unlimited entries is Pro.',
-    'simulation' =>
-      "You've run your ${ProductConfig.freeSimulations} free simulations.\n"
-          'Unlimited simulations is Pro.',
-    _ => 'Unlock Runway Pro.',
+    'entry_limit' => l10n.paywallTitleEntries(ProductConfig.freeEntries),
+    'simulation' => l10n.paywallTitleSimulations(ProductConfig.freeSimulations),
+    _ => l10n.paywallTitleDefault,
   };
 
   // Loans are free (#80). The app is free; the planning tool is the paid part.
-  static const _proFeatures = [
-    'Unlimited entries',
-    'Unlimited scenario simulations',
+  List<String> _proFeatures(AppLocalizations l10n) => [
+    l10n.paywallFeatureEntries,
+    l10n.paywallFeatureSimulations,
   ];
 }
 

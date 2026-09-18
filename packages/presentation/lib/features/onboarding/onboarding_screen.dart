@@ -130,7 +130,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
                       if (_page < _totalPages - 1)
                         GestureDetector(
                           onTap: _skip,
-                          child: Text('SKIP',
+                          child: Text(context.l10n.onboardingSkip,
                               style: AppTextStyles.caption
                                   .copyWith(
                                       color: AppColors
@@ -155,14 +155,14 @@ class _PageWelcome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return _PageLayout(
       icon: '◈',
       iconData: Icons.radio_button_checked_rounded,
       iconColor: AppColors.neonGreen,
-      title: 'Know your\nrunway.',
-      subtitle:
-          'One number shows where you stand.\nHow many months does your money cover?',
-      cta: 'GET STARTED',
+      title: l10n.onboardingWelcomeTitle,
+      subtitle: l10n.onboardingWelcomeBody,
+      cta: l10n.onboardingGetStarted,
       onNext: onNext,
     );
   }
@@ -175,15 +175,15 @@ class _PagePrivacy extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return _PageLayout(
       icon: '🔒',
       iconData: Icons.lock_rounded,
       iconColor: AppColors.neonGreen,
-      title: 'Your data,\nyour device.',
-      subtitle:
-          'Everything is encrypted on your device.\nWe cannot read your financial data.\nEven we don\'t know your numbers.',
+      title: l10n.onboardingPrivacyTitle,
+      subtitle: l10n.onboardingPrivacyBody,
       extras: const _PrivacyPoints(),
-      cta: 'I UNDERSTAND',
+      cta: l10n.onboardingIUnderstand,
       onNext: onNext,
     );
   }
@@ -194,11 +194,12 @@ class _PrivacyPoints extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final points = [
-      ('🔐', 'Encrypted on device'),
-      ('📱', 'Numbers stay on your device'),
-      ('🙈', 'Hidden when you switch apps'),
-      ('🗑️', 'Delete anytime, instantly'),
+      ('🔐', l10n.onboardingPrivacyEncrypted),
+      ('📱', l10n.onboardingPrivacyOnDevice),
+      ('🙈', l10n.onboardingPrivacyHidden),
+      ('🗑️', l10n.onboardingPrivacyDelete),
     ];
 
     return Column(
@@ -226,14 +227,14 @@ class _PageFirstAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return _PageLayout(
       icon: '🚀',
       iconData: Icons.rocket_launch_rounded,
       iconColor: AppColors.neonGreen,
-      title: 'Ready to find\nyour runway?',
-      subtitle:
-          'Start by adding your current cash balance.\nThat\'s all you need to see your number.',
-      cta: 'ADD MY BALANCE',
+      title: l10n.onboardingFirstActionTitle,
+      subtitle: l10n.onboardingFirstActionBody,
+      cta: l10n.onboardingAddMyBalance,
       ctaColor: AppColors.neonGreen,
       onNext: onFinish,
     );

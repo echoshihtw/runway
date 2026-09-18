@@ -47,12 +47,13 @@ class _GettingStartedCardState extends ConsumerState<GettingStartedCard> {
     final hasExpense = txns.any((t) => t.type == TransactionType.expense);
     final hasSim = (ref.watch(simulationCountProvider).value ?? 0) > 0;
 
+    final l10n = context.l10n;
     final steps = [
       _Step(
         icon: Icons.account_balance_wallet_rounded,
-        label: 'Add your cash balance',
-        shortLabel: 'Cash balance',
-        hint: 'How much do you have right now?',
+        label: l10n.stepBalanceLabel,
+        shortLabel: l10n.stepBalanceShort,
+        hint: l10n.stepBalanceHint,
         done: hasBalance,
         // The step is the instruction; tapping it does the thing. Going to
         // the Log tab and stopping left a new user to find the door alone.
@@ -64,9 +65,9 @@ class _GettingStartedCardState extends ConsumerState<GettingStartedCard> {
       ),
       _Step(
         icon: Icons.tune_rounded,
-        label: 'Set your monthly budget',
-        shortLabel: 'Budget',
-        hint: 'Rent + living expenses',
+        label: l10n.stepBudgetLabel,
+        shortLabel: l10n.stepBudgetShort,
+        hint: l10n.stepBudgetHint,
         done: hasBudget,
         onTap: () => showModalBottomSheet(
           context: context,
@@ -97,9 +98,9 @@ class _GettingStartedCardState extends ConsumerState<GettingStartedCard> {
       ),
       _Step(
         icon: Icons.receipt_long_rounded,
-        label: 'Log your first expense',
-        shortLabel: 'First expense',
-        hint: 'Track where your money goes',
+        label: l10n.stepExpenseLabel,
+        shortLabel: l10n.stepExpenseShort,
+        hint: l10n.stepExpenseHint,
         done: hasExpense,
         // Opens the grid right here rather than on the Log tab, so the first
         // entry is saved on the screen where the number then moves.
@@ -107,9 +108,9 @@ class _GettingStartedCardState extends ConsumerState<GettingStartedCard> {
       ),
       _Step(
         icon: Icons.science_rounded,
-        label: 'Try the simulator',
-        shortLabel: 'Simulator',
-        hint: 'What if you cut expenses?',
+        label: l10n.stepSimLabel,
+        shortLabel: l10n.stepSimShort,
+        hint: l10n.stepSimHint,
         done: hasSim,
         isOptional: true,
         onTap: () => context.go('/scenarios'),
@@ -151,9 +152,9 @@ class _GettingStartedCardState extends ConsumerState<GettingStartedCard> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('GETTING STARTED', style: AppTextStyles.sectionTitle),
+                    Text(l10n.gettingStarted, style: AppTextStyles.sectionTitle),
                     Text(
-                      '$completedCount of ${steps.length} complete',
+                      l10n.stepsComplete(completedCount, steps.length),
                       style: AppTextStyles.caption,
                     ),
                   ],
@@ -248,7 +249,9 @@ class _CompletedSummary extends StatelessWidget {
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(
-              'Done: ${steps.map((s) => s.shortLabel).join(' · ')}',
+              context.l10n.stepsDone(
+                steps.map((s) => s.shortLabel).join(' · '),
+              ),
               style: AppTextStyles.caption.copyWith(
                 color: AppColors.textSecondary,
               ),
@@ -335,7 +338,7 @@ class _StepRow extends StatelessWidget {
                             borderRadius: BorderRadius.circular(3),
                           ),
                           child: Text(
-                            'OPTIONAL',
+                            context.l10n.optionalBadge,
                             style: AppTextStyles.caption.copyWith(
                               color: AppColors.turkishBlue,
                               fontSize: 9,

@@ -102,4 +102,30 @@ void main() {
     expect(find.text('利用規約'), findsOneWidget);
     expect(find.text('プライバシーポリシー'), findsOneWidget);
   });
+
+  testWidgets('the purchase screen speaks the device language, not English', (
+    tester,
+  ) async {
+    // #96: only the two legal links translated. The title, the feature list,
+    // the price line, both buttons and every error were Dart literals.
+    await _pumpPaywall(
+      tester,
+      locale: const Locale('ja'),
+      trigger: 'entry_limit',
+    );
+
+    expect(find.text('UNLOCK RUNWAY PRO'), findsNothing);
+    expect(find.text('Maybe later'), findsNothing);
+    expect(find.text('Restore purchase'), findsNothing);
+    expect(find.text('Unlimited entries'), findsNothing);
+    expect(find.text('RUNWAY PROをアンロック'), findsOneWidget);
+    expect(find.text('あとで'), findsOneWidget);
+    expect(find.text('購入を復元'), findsOneWidget);
+    expect(find.text('記録は無制限'), findsOneWidget);
+    expect(
+      find.textContaining('5件'),
+      findsOneWidget,
+      reason: 'the title still says how many were used',
+    );
+  });
 }

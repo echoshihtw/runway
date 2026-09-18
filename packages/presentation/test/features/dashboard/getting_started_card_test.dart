@@ -79,7 +79,7 @@ class _FreeTier implements PurchaseService {
 
 /// The card lives on the dashboard inside a real router, so `context.go` has
 /// somewhere to go: a red here means "it navigated away", not a missing router.
-Future<GoRouter> _pump(WidgetTester tester) async {
+Future<GoRouter> _pump(WidgetTester tester, {Locale? locale}) async {
   SharedPreferences.setMockInitialValues({});
   final router = GoRouter(
     initialLocation: '/dashboard',
@@ -108,6 +108,7 @@ Future<GoRouter> _pump(WidgetTester tester) async {
       ],
       child: MaterialApp.router(
         routerConfig: router,
+        locale: locale,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
       ),
@@ -149,5 +150,21 @@ void main() {
 
     expect(find.byType(TransactionForm), findsOneWidget);
     expect(find.text('LOG TAB'), findsNothing);
+  });
+
+  testWidgets('the card speaks the device language, not English', (
+    tester,
+  ) async {
+    // #96: the seven ARBs already carried stepBalanceLabel, stepBudgetHint,
+    // gettingStarted and stepsComplete, unused, while the card drew its own
+    // English. Wiring, not authoring.
+    await _pump(tester, locale: const Locale('ja'));
+
+    expect(find.text('GETTING STARTED'), findsNothing);
+    expect(find.text('Add your cash balance'), findsNothing);
+    expect(find.text('はじめに'), findsOneWidget);
+    expect(find.text('残高を追加する'), findsOneWidget);
+    expect(find.text('4中0完了'), findsOneWidget);
+    expect(find.text('OPTIONAL'), findsNothing);
   });
 }

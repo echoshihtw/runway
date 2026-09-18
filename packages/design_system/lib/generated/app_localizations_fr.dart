@@ -825,6 +825,131 @@ class AppLocalizationsFr extends AppLocalizations {
   String get noActivityThisMonth => 'Aucune activité ce mois-ci';
 
   @override
+  String get onboardingSkip => 'PASSER';
+
+  @override
+  String get onboardingWelcomeTitle => 'Connaissez votre\nmarge.';
+
+  @override
+  String get onboardingWelcomeBody =>
+      'Un seul chiffre montre où vous en êtes.\nCombien de mois votre argent couvre-t-il ?';
+
+  @override
+  String get onboardingGetStarted => 'COMMENCER';
+
+  @override
+  String get onboardingPrivacyTitle => 'Vos données,\nvotre appareil.';
+
+  @override
+  String get onboardingPrivacyBody =>
+      'Tout est chiffré sur votre appareil.\nNous ne pouvons pas lire vos données financières.\nMême nous ne connaissons pas vos chiffres.';
+
+  @override
+  String get onboardingPrivacyEncrypted => 'Chiffré sur l\'appareil';
+
+  @override
+  String get onboardingPrivacyOnDevice =>
+      'Vos chiffres restent sur votre appareil';
+
+  @override
+  String get onboardingPrivacyHidden => 'Masqué quand vous changez d\'app';
+
+  @override
+  String get onboardingPrivacyDelete =>
+      'Supprimez tout, à tout moment, instantanément';
+
+  @override
+  String get onboardingIUnderstand => 'COMPRIS';
+
+  @override
+  String get onboardingFirstActionTitle => 'Prêt à découvrir\nvotre marge ?';
+
+  @override
+  String get onboardingFirstActionBody =>
+      'Commencez par saisir votre solde actuel.\nC\'est tout ce qu\'il faut pour voir votre chiffre.';
+
+  @override
+  String get onboardingAddMyBalance => 'SAISIR MON SOLDE';
+
+  @override
+  String get paywallUnlock => 'DÉBLOQUER RUNWAY PRO';
+
+  @override
+  String get paywallLoadingPrice => 'Chargement du prix...';
+
+  @override
+  String get paywallStoreUnreachable =>
+      'Impossible de joindre la boutique. Vérifiez votre connexion et réessayez.';
+
+  @override
+  String paywallOneTimePurchase(String price) {
+    return '$price · Achat unique';
+  }
+
+  @override
+  String get paywallUnavailable =>
+      'Pro n\'est pas disponible pour le moment. Réessayez plus tard.';
+
+  @override
+  String get paywallRestore => 'Restaurer l\'achat';
+
+  @override
+  String get paywallMaybeLater => 'Plus tard';
+
+  @override
+  String get paywallPurchaseFailed => 'L\'achat a échoué. Veuillez réessayer.';
+
+  @override
+  String get paywallSomethingWrong =>
+      'Une erreur s\'est produite. Veuillez réessayer.';
+
+  @override
+  String get paywallNoPreviousPurchase => 'Aucun achat antérieur trouvé.';
+
+  @override
+  String get paywallRestoreFailed =>
+      'La restauration a échoué. Veuillez réessayer.';
+
+  @override
+  String paywallTitleEntries(int count) {
+    return 'Vous avez saisi vos $count entrées gratuites.\nLes entrées illimitées, c\'est Pro.';
+  }
+
+  @override
+  String paywallTitleSimulations(int count) {
+    return 'Vous avez lancé vos $count simulations gratuites.\nLes simulations illimitées, c\'est Pro.';
+  }
+
+  @override
+  String get paywallTitleDefault => 'Débloquez Runway Pro.';
+
+  @override
+  String get paywallFeatureEntries => 'Entrées illimitées';
+
+  @override
+  String get paywallFeatureSimulations => 'Simulations de scénarios illimitées';
+
+  @override
+  String get stepBalanceShort => 'Solde';
+
+  @override
+  String get stepBudgetShort => 'Budget';
+
+  @override
+  String get stepExpenseShort => 'Première dépense';
+
+  @override
+  String get stepSimShort => 'Simulateur';
+
+  @override
+  String stepsDone(String steps) {
+    return 'Terminé : $steps';
+  }
+
+  @override
+  String get optionalBadge => 'FACULTATIF';
+
+  @override
   String get paywallTermsOfUse => 'Conditions d’utilisation';
 
   @override
