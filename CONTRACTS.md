@@ -67,22 +67,27 @@ monthlyBurn = max(rentBudget, typicalRent)
 - A logged expense uses up its budget and never adds on top of it. Burn only rises when a bucket goes over budget.
 - `typicalRent` and `typicalLiving` = average logged spending per completed month in that bucket, or this month's spending when there is no earlier month.
 - Loan repayments count only against their loan's scheduled payment. Income, loans received and opening balances are not burn.
-- A loan with a term keeps costing its monthly payment until that term ends. Repaid principal does not end it, because `remainingBalance` ignores interest and stopping there would raise the runway while the user is still paying. A loan with no term falls back to repaid principal, which is correct for an interest-free loan. The free-plan limit is deliberately more generous and frees the slot on repaid principal.
+- A loan with a term keeps costing its monthly payment until that term ends. Repaid principal does not end it, because `remainingBalance` ignores interest and stopping there would raise the runway while the user is still paying. A loan with no term falls back to repaid principal, which is correct for an interest-free loan. (Loans are free at every tier — #80, #139; there is no slot.)
+- An entry dated after today is a plan. It counts in no bucket and moves no cash until its date arrives; a repayment dated later this month has not paid this month.
 - An expected burn override in Forecast replaces `monthlyBurn`.
+- When `monthlyBurn` is zero the runway is **unknown**, not unlimited (`hasCostBasis`): nothing has been budgeted, logged or committed, so dividing cash by it would tell a new user their money lasts for ever. The card shows `—` and no status. A scenario whose simulated income covers its costs is genuinely unlimited and keeps its cost basis.
 
 ### 3.2 Runway Calculation
 Runway is measured in months from today.
 ```dart
-dueThisMonth = rentLeft + livingLeft
-             + subscriptions * fractionOfMonthLeft
+remainingThisMonth(bucket) = max(bucket.monthlyEstimate - bucket.spentThisMonth, 0)
+dueThisMonth = remainingThisMonth(rent) + remainingThisMonth(living)
+             + subscription bills dated this month with no confirmed entry
              + loan payments not yet logged this month
 runwayMonths = floor(fractionOfMonthLeft + (cash - dueThisMonth) / monthlyBurn)
 ```
+- The rest of the month is charged against `monthlyEstimate`, the same basis every later month uses — not the budget remainder. Charging the remainder made the rest of the month free whenever no budget was set, because the remainder of zero is zero (#93).
+- A subscription is owed this month only until its charge is confirmed as an entry. Once confirmed it is a transaction, already out of cash, and is not counted here as well. The normalised monthly figure stays in `monthlyBurn` as the forward run rate; the two are never added into one number (#83, #122, #127).
 - Cash counts only entries dated today or earlier. An entry dated later is a plan: the log shows it, and it does not move cash or the runway until its date arrives.
 - `fractionOfMonthLeft` counts today, so it is 1.0 on the first day of the month.
 - If cash does not cover `dueThisMonth`, cash runs out this month.
 - `runOutDate` is the month cash reaches zero. It is null only when burn is zero.
-- No arbitrary cap. 9999 means unlimited.
+- No arbitrary cap. 9999 means unlimited; unknown (no cost basis) is a separate state and renders as `—`.
 - The dashboard and the simulator share this calculation. A simulation starts from the real `dueThisMonth` and applies only the difference over the days left, so a scenario with no changes returns the dashboard's runway.
 
 ### 3.3 Cash Reserve — not implemented in 1.0.1
@@ -297,6 +302,9 @@ Answer these questions:
 | 2026-04 | max(actual, budget) formula | Reality wins, budget is floor not ceiling |
 | 2026-09 | Rent and living budget buckets | Logged spending uses up its budget instead of being compared with the whole budget, so nothing is counted twice or missed |
 | 2026-09 | Runway measured in months from today | The rest of the current month costs its unused budget, not a full month that was already partly paid |
+| 2026-09-16 | Rest of month charged on the monthly estimate | The budget remainder made the month free when no budget was set; the estimate is the basis every later month already uses (#93) |
+| 2026-09-17 | Subscription charges are entries, confirmed by the owner | A charge is owed until confirmed; once confirmed it is cash that moved. This Month reports actuals; the divisor keeps the normalised run rate (#122, #127) |
+| 2026-09-18 | Pro is entries and simulations; loans are free | Five entries ever and three simulations free, counted in the Keychain; numbers in `product_config.dart` (#80, #139, #143) |
 | 2026-09 | Dropped the investable split; kept a user-set cash reserve | The formula recommended how much to put at risk, from inputs the app does not hold. Stating a position is measurement; sizing an investment is advice |
 | 2026-09 | Status bands are 3 and 6 months, not 12 and 24 | Three to six months of cover is the recognised adequacy range. The old bands called an 11-month runway critical, which the facts do not support |
 | 2026-09 | Cash excludes entries dated in the future | The log already marks them planned. Counting them let a future bonus lengthen the runway today |
