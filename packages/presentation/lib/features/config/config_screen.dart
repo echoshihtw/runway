@@ -53,17 +53,23 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
     setState(() => _editingBudget = true);
   }
 
+  // Every save and clear awaits a write, and the sheet can be swiped away
+  // while it is in flight. The continuation must not touch a disposed State.
   Future<void> _saveBudget() async {
     final rent = double.tryParse(_rentCtrl.text.trim()) ?? 0;
     final living = double.tryParse(_livingCtrl.text.trim()) ?? 0;
     await ref.read(budgetProvider.notifier).setRent(rent);
     await ref.read(budgetProvider.notifier).setLiving(living);
+    if (!mounted) return;
     setState(() => _editingBudget = false);
     FocusScope.of(context).unfocus();
   }
 
   Future<void> _clearBudget() async {
     await ref.read(budgetProvider.notifier).clear();
+    // Above the controllers, not below: dispose() has already disposed them
+    // if the sheet is gone, and clear() would notify a disposed notifier.
+    if (!mounted) return;
     _rentCtrl.clear();
     _livingCtrl.clear();
     setState(() => _editingBudget = false);
@@ -82,12 +88,14 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
     await ref
         .read(runwayGoalProvider.notifier)
         .saveGoal(name: _goalNameCtrl.text, targetMonths: targetMonths);
+    if (!mounted) return;
     setState(() => _editingGoal = false);
     FocusScope.of(context).unfocus();
   }
 
   Future<void> _clearGoal() async {
     await ref.read(runwayGoalProvider.notifier).clearGoal();
+    if (!mounted) return;
     _goalNameCtrl.clear();
     _goalMonthsCtrl.clear();
     setState(() => _editingGoal = false);
@@ -113,12 +121,14 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
           expectedMonthlyInflow: expectedInflow,
           expectedMonthlyBurnOverride: expectedBurn,
         );
+    if (!mounted) return;
     setState(() => _editingAssumptions = false);
     FocusScope.of(context).unfocus();
   }
 
   Future<void> _clearAssumptions() async {
     await ref.read(financialAssumptionsProvider.notifier).clear();
+    if (!mounted) return;
     _expectedInflowCtrl.clear();
     _expectedBurnCtrl.clear();
     setState(() => _editingAssumptions = false);
