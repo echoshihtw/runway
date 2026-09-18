@@ -10,17 +10,21 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// monthly cost of zero, which the engine turned into an unlimited runway. The
 /// card printed the infinity glyph and a mint STABLE badge, telling a new user
 /// their money lasts for ever.
-ModelState model({required bool hasCostBasis, int runwayMonths = 9999}) =>
-    ModelState(
-      currentCash: 34000,
-      burnRate: 0,
-      effectiveBurnRate: 0,
-      monthlyPayment: 0,
-      subscriptionMonthlyCost: 0,
-      runwayMonths: runwayMonths,
-      runwayDays: runwayMonths * 30,
-      hasCostBasis: hasCostBasis,
-    );
+ModelState model({
+  required bool hasCostBasis,
+  int runwayMonths = 9999,
+  bool cashIsKnown = true,
+}) => ModelState(
+  currentCash: 34000,
+  burnRate: 0,
+  effectiveBurnRate: 0,
+  monthlyPayment: 0,
+  subscriptionMonthlyCost: 0,
+  runwayMonths: runwayMonths,
+  runwayDays: runwayMonths * 30,
+  hasCostBasis: hasCostBasis,
+  cashIsKnown: cashIsKnown,
+);
 
 Future<void> pumpCard(WidgetTester tester, ModelState state) async {
   SharedPreferences.setMockInitialValues({});
@@ -72,5 +76,29 @@ void main() {
 
     expect(heroText(tester), '∞');
     expect(find.byType(PixelBadge), findsOneWidget);
+  });
+
+  testWidgets('an unloaded ledger shows no balance, rather than zero', (
+    tester,
+  ) async {
+    // #145: the model substituted an empty ledger for one that had not
+    // loaded, so the card printed a confident green "$ 0" beside a runway
+    // that correctly read "—". Riverpod retries a failing build for about
+    // 38 seconds, so that fabricated balance was on screen for most of a
+    // minute.
+    await pumpCard(
+      tester,
+      model(hasCostBasis: true, runwayMonths: 12, cashIsKnown: false),
+    );
+
+    expect(find.textContaining('34,000'), findsNothing);
+    expect(find.textContaining(r'$ 0'), findsNothing);
+    expect(find.text('—'), findsWidgets);
+  });
+
+  testWidgets('a loaded ledger still states the balance', (tester) async {
+    await pumpCard(tester, model(hasCostBasis: true, runwayMonths: 12));
+
+    expect(find.textContaining('34,000'), findsOneWidget);
   });
 }

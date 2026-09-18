@@ -23,8 +23,14 @@ final modelProvider = Provider<ModelState>((ref) {
       ref.watch(financialAssumptionsProvider).value ??
       const FinancialAssumptions();
 
+  // Null means the ledger has not loaded or failed to load. Riverpod retries
+  // a failing build for about 38 seconds before it errors, so substituting an
+  // empty list showed a fabricated balance for most of a minute.
+  final transactions = ref.watch(transactionsProvider).value;
+
   return computeModel(
-    currentCash: _currentCash(ref.watch(transactionsProvider).value ?? const []),
+    currentCash: _currentCash(transactions ?? const []),
+    cashIsKnown: transactions != null,
     burn: ref.watch(monthlyBurnProvider),
     expectedMonthlyInflow: assumptions.expectedMonthlyInflow,
     expectedMonthlyBurnOverride: assumptions.expectedMonthlyBurnOverride,

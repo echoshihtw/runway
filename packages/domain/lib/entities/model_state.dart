@@ -37,6 +37,15 @@ class ModelState {
   /// Defaults to budget so only the engines decide it.
   final RunwayBasis basis;
 
+  /// Whether the cash figure is real.
+  ///
+  /// An unloaded or failed ledger has no cash total, which is different from
+  /// a balance of zero. Substituting an empty list printed a confident
+  /// `$ 0` beside a runway that correctly read `—`, so the card stated a
+  /// balance nobody had entered. Defaults to true so only the providers,
+  /// which can see the load state, decide otherwise.
+  final bool cashIsKnown;
+
   const ModelState({
     required this.currentCash,
     required this.burnRate,
@@ -50,6 +59,7 @@ class ModelState {
     this.runOutDate,
     this.hasCostBasis = true,
     this.basis = RunwayBasis.budget,
+    this.cashIsKnown = true,
   });
 
   double get totalMonthlyOutflow => effectiveBurnRate;
