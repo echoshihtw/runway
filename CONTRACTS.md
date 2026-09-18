@@ -90,7 +90,7 @@ runwayMonths = floor(fractionOfMonthLeft + (cash - dueThisMonth) / monthlyBurn)
 - No arbitrary cap. 9999 means unlimited; unknown (no cost basis) is a separate state and renders as `—`.
 - The dashboard and the simulator share this calculation. A simulation starts from the real `dueThisMonth` and applies only the difference over the days left, so a scenario with no changes returns the dashboard's runway.
 
-### 3.3 Cash Reserve — not implemented in 1.0.1
+### 3.3 Cash Reserve — not implemented in 1.0.0
 
 A reserve is cash the user has decided not to count as runway. It is a number
 they set, not one the app derives.
