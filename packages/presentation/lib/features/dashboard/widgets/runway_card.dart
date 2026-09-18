@@ -83,7 +83,13 @@ class RunwayCard extends ConsumerWidget {
                 ],
               ),
               Text(
-                known ? l10n.ifIncomePausedToday : l10n.runwayNeedsCosts,
+                known
+                    ? switch (model.basis) {
+                        RunwayBasis.budget => l10n.runwayBasisBudget,
+                        RunwayBasis.spending => l10n.runwayBasisSpending,
+                        RunwayBasis.assumption => l10n.runwayBasisAssumption,
+                      }
+                    : l10n.runwayNeedsCosts,
                 textAlign: TextAlign.center,
                 style: AppTextStyles.bodySmall,
               ),

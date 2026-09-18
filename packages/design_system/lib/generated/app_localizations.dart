@@ -1451,11 +1451,29 @@ abstract class AppLocalizations {
   /// **'RUNWAY'**
   String get runwayBrand;
 
-  /// No description provided for @ifIncomePausedToday.
+  /// No description provided for @runwayBasisBudget.
   ///
   /// In en, this message translates to:
-  /// **'If income paused today'**
-  String get ifIncomePausedToday;
+  /// **'On your budget, if income paused today'**
+  String get runwayBasisBudget;
+
+  /// No description provided for @runwayBasisSpending.
+  ///
+  /// In en, this message translates to:
+  /// **'On your spending, if income paused today'**
+  String get runwayBasisSpending;
+
+  /// No description provided for @runwayBasisAssumption.
+  ///
+  /// In en, this message translates to:
+  /// **'On your cost assumption, if income paused today'**
+  String get runwayBasisAssumption;
+
+  /// No description provided for @computedCost.
+  ///
+  /// In en, this message translates to:
+  /// **'Computed from your budget and log: {amount}'**
+  String computedCost(String amount);
 
   /// No description provided for @runwayNeedsCosts.
   ///

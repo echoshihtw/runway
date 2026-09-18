@@ -61,7 +61,7 @@ void main() {
     await pumpCard(tester, model(hasCostBasis: true, runwayMonths: 12));
 
     expect(heroText(tester), '12');
-    expect(find.text('If income paused today'), findsOneWidget);
+    expect(find.text('On your budget, if income paused today'), findsOneWidget);
     expect(find.byType(PixelBadge), findsOneWidget);
   });
 

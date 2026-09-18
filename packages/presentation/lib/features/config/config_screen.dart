@@ -216,6 +216,14 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                                   : '$symbol ${nf.format(assumptions.expectedMonthlyBurnOverride)}',
                               AppColors.red,
                             ),
+                            if (assumptions.expectedMonthlyBurnOverride !=
+                                null)
+                              Text(
+                                l10n.computedCost(
+                                  '$symbol ${nf.format(ref.watch(monthlyBurnProvider).total)}',
+                                ),
+                                style: AppTextStyles.caption,
+                              ),
                             const SizedBox(height: AppSpacing.md),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
