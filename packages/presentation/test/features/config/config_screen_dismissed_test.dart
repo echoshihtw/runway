@@ -14,14 +14,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Tap SAVE, swipe the sheet down before the write lands, and the
 /// continuation runs against a disposed State.
 class _Slow implements FinancialSettingsRepository {
+  _Slow({this.seeded = const FinancialAssumptions()});
+
+  /// Seeded so CLEAR has something to clear; empty for the SAVE path.
+  final FinancialAssumptions seeded;
   final saved = Completer<void>();
 
   @override
   Future<Budget> getBudget() async => const Budget();
 
   @override
-  Future<FinancialAssumptions> getFinancialAssumptions() async =>
-      const FinancialAssumptions();
+  Future<FinancialAssumptions> getFinancialAssumptions() async => seeded;
 
   @override
   Future<RunwayGoal?> getRunwayGoal() async => null;
@@ -79,9 +82,12 @@ Widget _app(ProviderContainer container, Widget home) =>
       ),
     );
 
-Future<(ProviderContainer, _Slow)> _pump(WidgetTester tester) async {
+Future<(ProviderContainer, _Slow)> _pump(
+  WidgetTester tester, {
+  FinancialAssumptions seeded = const FinancialAssumptions(),
+}) async {
   SharedPreferences.setMockInitialValues({});
-  final settings = _Slow();
+  final settings = _Slow(seeded: seeded);
   final container = ProviderContainer(
     overrides: [
       financialSettingsRepositoryProvider.overrideWithValue(settings),
@@ -111,6 +117,29 @@ void main() {
     await tester.pump();
 
     // The sheet is swiped away while the write is still in flight.
+    await tester.pumpWidget(_app(container, const SizedBox()));
+    settings.saved.complete();
+    await tester.pump();
+
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('a clear that lands after the screen is gone does nothing', (
+    tester,
+  ) async {
+    // The guard has to sit above the controller mutations, not below them:
+    // dispose() has already disposed the controllers, and clear() notifies a
+    // disposed notifier. With the guard below, this fails with
+    // "A TextEditingController was used after being disposed."
+    final (container, settings) = await _pump(
+      tester,
+      seeded: const FinancialAssumptions(expectedMonthlyInflow: 5000),
+    );
+
+    await tester.ensureVisible(find.text('CLEAR').first);
+    await tester.tap(find.text('CLEAR').first);
+    await tester.pump();
+
     await tester.pumpWidget(_app(container, const SizedBox()));
     settings.saved.complete();
     await tester.pump();

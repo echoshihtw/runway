@@ -102,6 +102,8 @@ class LiabilitiesPanel extends ConsumerWidget {
                       style: AppTextStyles.metric.copyWith(
                         color: AppColors.textSecondary,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
@@ -204,6 +206,9 @@ class _RepaySheetState extends ConsumerState<_RepaySheet> {
           NeoInput(
             label: l10n.repaymentAmount,
             controller: _amountCtrl,
+            // Without this the field takes letters, and CONFIRM then parses
+            // null and silently does nothing.
+            inputType: NeoInputType.decimal,
             keyboardType: TextInputType.number,
             hint: summary.loan.monthlyPayment.toStringAsFixed(0),
           ),

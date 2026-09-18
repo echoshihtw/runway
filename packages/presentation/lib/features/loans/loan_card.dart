@@ -158,11 +158,29 @@ class LoanCard extends StatelessWidget {
   }
 
   Widget _row(String label, String value, Color valueColor) {
+    // Both sides yield. The label can be long once translated, the value can
+    // be twelve digits, and at large text sizes either overflows the card.
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: AppTextStyles.label),
-        Text(value, style: AppTextStyles.value.copyWith(color: valueColor)),
+        Flexible(
+          child: Text(
+            label,
+            style: AppTextStyles.label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        Flexible(
+          child: Text(
+            value,
+            style: AppTextStyles.value.copyWith(color: valueColor),
+            textAlign: TextAlign.right,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
       ],
     );
   }

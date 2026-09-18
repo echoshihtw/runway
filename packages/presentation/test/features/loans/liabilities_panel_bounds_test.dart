@@ -43,7 +43,6 @@ class _Transactions implements TransactionRepository {
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-/// Free tier: the store says no, and nothing is cached.
 /// The Keychain counter, in memory. Fresh per pump, so every test starts free.
 class _EntryCount implements UsageCountStore {
   final counts = <String, int>{};
@@ -55,6 +54,7 @@ class _EntryCount implements UsageCountStore {
   Future<void> write(String key, int count) async => counts[key] = count;
 }
 
+/// Free tier: the store says no, and nothing is cached.
 class _FreeTier implements PurchaseService {
   @override
   Stream<bool> get proEntitlementUpdates => const Stream<bool>.empty();
@@ -123,7 +123,7 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
 
-    await _pump(tester, [_loan(name: 'A' * 50)]);
+    await _pump(tester, [_loan(name: 'A' * 50)], textScale: 2.0);
     await tester.tap(find.text('LIABILITIES'));
     await tester.pumpAndSettle();
 
@@ -146,6 +146,22 @@ void main() {
     );
     expect(total.maxLines, 1);
     expect(total.overflow, TextOverflow.ellipsis);
+  });
+
+  testWidgets('a twelve-digit installment fits the expanded card', (
+    tester,
+  ) async {
+    // The card's own detail rows were unbounded, so the figure the test above
+    // uses overflowed them as soon as the card was expanded.
+    tester.view.physicalSize = const Size(320, 640);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    await _pump(tester, [_loan(monthlyPayment: 999999999999)]);
+    await tester.tap(find.text('LIABILITIES'));
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('the repay sheet opens and closes cleanly', (tester) async {

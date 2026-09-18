@@ -67,9 +67,11 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
 
   Future<void> _clearBudget() async {
     await ref.read(budgetProvider.notifier).clear();
+    // Above the controllers, not below: dispose() has already disposed them
+    // if the sheet is gone, and clear() would notify a disposed notifier.
+    if (!mounted) return;
     _rentCtrl.clear();
     _livingCtrl.clear();
-    if (!mounted) return;
     setState(() => _editingBudget = false);
     FocusScope.of(context).unfocus();
   }
@@ -93,9 +95,9 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
 
   Future<void> _clearGoal() async {
     await ref.read(runwayGoalProvider.notifier).clearGoal();
+    if (!mounted) return;
     _goalNameCtrl.clear();
     _goalMonthsCtrl.clear();
-    if (!mounted) return;
     setState(() => _editingGoal = false);
     FocusScope.of(context).unfocus();
   }
@@ -126,9 +128,9 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
 
   Future<void> _clearAssumptions() async {
     await ref.read(financialAssumptionsProvider.notifier).clear();
+    if (!mounted) return;
     _expectedInflowCtrl.clear();
     _expectedBurnCtrl.clear();
-    if (!mounted) return;
     setState(() => _editingAssumptions = false);
     FocusScope.of(context).unfocus();
   }
