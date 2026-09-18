@@ -246,20 +246,30 @@ class _Captioned extends StatelessWidget {
               valueListenable: caption,
               builder: (context, value, _) {
                 if (value == null) return const SizedBox.shrink();
+                // The ~150px empty band in three of the four frames sat
+                // *between* the caption and the app, so it comes off the
+                // bottom of this padding and out of the FittedBox's
+                // alignment below — not off the top margin, which the frame
+                // still needs to breathe (#110).
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(
                     AppSpacing.xl,
-                    AppSpacing.xxl,
                     AppSpacing.xl,
-                    AppSpacing.lg,
+                    AppSpacing.xl,
+                    AppSpacing.md,
                   ),
                   child: Column(
                     children: [
                       Text(
                         value.headline,
                         textAlign: TextAlign.center,
+                        // Not pure white. The app's own palette tops out at
+                        // textPrimary, and a white caption at title weight
+                        // outranked the mint runway number in its own
+                        // screenshot — the number is the product's argument,
+                        // so it has to own the highest contrast (#110).
                         style: AppTextStyles.title.copyWith(
-                          color: Colors.white,
+                          color: AppColors.textPrimary,
                           height: 1.2,
                         ),
                       ),
@@ -279,6 +289,9 @@ class _Captioned extends StatelessWidget {
             Expanded(
               child: FittedBox(
                 fit: BoxFit.contain,
+                // Any slack left by scaling goes below the app, not between
+                // the caption and it, where it read as a gap in the layout.
+                alignment: Alignment.topCenter,
                 child: SizedBox(
                   width: screen.width,
                   height: screen.height,
