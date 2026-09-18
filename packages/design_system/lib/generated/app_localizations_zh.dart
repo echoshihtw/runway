@@ -709,17 +709,17 @@ class AppLocalizationsZh extends AppLocalizations {
   String get runwayBrand => 'RUNWAY';
 
   @override
-  String get runwayBasisBudget => '以预算计算，若今天起没有收入';
+  String get runwayBasisBudget => '照你的预算算，假设今天起没收入';
 
   @override
-  String get runwayBasisSpending => '以实际支出计算，若今天起没有收入';
+  String get runwayBasisSpending => '照你实际花的算，假设今天起没收入';
 
   @override
-  String get runwayBasisAssumption => '以成本假设计算，若今天起没有收入';
+  String get runwayBasisAssumption => '照你设定的成本算，假设今天起没收入';
 
   @override
   String computedCost(String amount) {
-    return '由预算与记录计算：$amount';
+    return '照预算和记录算出来是：$amount';
   }
 
   @override
@@ -1532,17 +1532,17 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get runwayBrand => 'RUNWAY';
 
   @override
-  String get runwayBasisBudget => '以預算計算，若今天起沒有收入';
+  String get runwayBasisBudget => '照你的預算算，假設今天起沒收入';
 
   @override
-  String get runwayBasisSpending => '以實際支出計算，若今天起沒有收入';
+  String get runwayBasisSpending => '照你實際花的算，假設今天起沒收入';
 
   @override
-  String get runwayBasisAssumption => '以成本假設計算，若今天起沒有收入';
+  String get runwayBasisAssumption => '照你設定的成本算，假設今天起沒收入';
 
   @override
   String computedCost(String amount) {
-    return '由預算與記錄計算：$amount';
+    return '照預算和記錄算出來是：$amount';
   }
 
   @override
