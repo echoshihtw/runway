@@ -124,8 +124,12 @@ class _NeoButtonState extends State<NeoButton>
                   const SizedBox(width: AppSpacing.xs),
                 ],
                 // The label yields rather than pushing the button past its
-                // own edge: at large text sizes every caller overflowed, and
-                // the button is the thing that should shrink, not the row.
+                // own edge at large text sizes. This only bites where the
+                // button is given a width to fit inside: a non-fullWidth
+                // NeoButton laid out as a plain child of a Row gets unbounded
+                // constraints, the Flexible below is then treated as non-flex,
+                // and the label lays out at its intrinsic width regardless.
+                // Those callers have to bound the button themselves (#178).
                 Flexible(
                   child: Text(
                     widget.label,

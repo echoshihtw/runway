@@ -269,7 +269,15 @@ class _LoanWizardState extends State<LoanWizard>
             Row(
               children: [
                 if (_step > 0) ...[
+                  // A bare Flexible defaults to flex 1 and so claims half the
+                  // row from the Expanded beside it, whatever BACK actually
+                  // needs: at iPhone width that left CONFIRM at 191 of 390
+                  // points with a dead strip beside it. A quarter share is
+                  // more than BACK's own width at normal text and still small
+                  // enough to make it ellipsise rather than overflow when the
+                  // text is doubled.
                   Flexible(
+                    flex: 1,
                     child: NeoButton(
                       label: l10n.back,
                       variant: NeoButtonVariant.ghost,
@@ -279,6 +287,7 @@ class _LoanWizardState extends State<LoanWizard>
                   const SizedBox(width: AppSpacing.sm),
                 ],
                 Expanded(
+                  flex: 3,
                   child: _step < _totalSteps - 1
                       ? NeoButton(
                           label: '${l10n.next} →',

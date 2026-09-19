@@ -105,6 +105,43 @@ List<LoanSummary> activeLoanSummaries(
       .toList();
 }
 
+/// The loans a repayment may be pointed at, best target first.
+///
+/// [existingLoanId] is the loan an entry being edited already names: it is
+/// included even once that loan is closed, or editing the entry would
+/// silently drop its link.
+///
+/// A loan whose principal is repaid sorts last. It belongs on the list,
+/// because its term may still be charging, but it must not be what a
+/// repayment lands on by default: the form preselects the first of these, the
+/// remaining balance clamps at zero so a misdirected payment leaves no trace
+/// on the card, and the loan actually being repaid keeps its installment
+/// reserved against the runway.
+List<Loan> repaymentTargets(
+  List<LoanSummary> summaries, {
+  String? existingLoanId,
+  DateTime? now,
+}) {
+  final chosen = activeLoanSummaries(summaries, now: now).toList();
+
+  if (existingLoanId != null &&
+      !chosen.any((summary) => summary.loan.id == existingLoanId)) {
+    for (final summary in summaries) {
+      if (summary.loan.id == existingLoanId) {
+        chosen.add(summary);
+        break;
+      }
+    }
+  }
+
+  chosen.sort((a, b) {
+    if (a.loan.isActive != b.loan.isActive) return a.loan.isActive ? -1 : 1;
+    if (a.isFullyPaid != b.isFullyPaid) return a.isFullyPaid ? 1 : -1;
+    return a.loan.name.compareTo(b.loan.name);
+  });
+  return chosen.map((summary) => summary.loan).toList();
+}
+
 double totalMonthlyPaymentFromSummaries(
   List<LoanSummary> summaries, {
   DateTime? now,

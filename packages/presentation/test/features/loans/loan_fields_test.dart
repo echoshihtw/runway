@@ -5,16 +5,21 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:presentation/features/loans/loan_card.dart';
 import 'package:presentation/features/transactions/widgets/loan_wizard.dart';
 
-Loan _loan({int termMonths = 96}) => Loan(
+// The card reads its own DateTime.now(), so there is no clock to pin. The
+// start date is taken relative to today and the term set well past it, or the
+// test would start failing on a fixed date years from now.
+final _start = DateTime(DateTime.now().year - 2, 1, 1);
+
+Loan _loan({int termMonths = 120}) => Loan(
   id: 'l1',
   name: 'Fubon',
   source: 'BANK',
   originalAmount: 120000,
   monthlyPayment: 1500,
   originalTermMonths: termMonths,
-  startDate: DateTime(2020, 1, 1),
-  createdAt: DateTime(2020, 1, 1),
-  updatedAt: DateTime(2020, 1, 1),
+  startDate: _start,
+  createdAt: _start,
+  updatedAt: _start,
 );
 
 LoanSummary _summary({required double repaid, int termMonths = 96}) {
@@ -102,6 +107,46 @@ void main() {
     // and the burn reserves the payment for ever.
     expect(find.text('INSTALLMENT'), findsOneWidget);
     expect(find.text('REPAY'), findsOneWidget);
+  });
+
+  testWidgets('the still-paying card says how many months are left', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrap(
+        LoanCard(
+          summary: _summary(repaid: 120000),
+          onTap: () {},
+          onRepay: () {},
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // The caption promises payments to the end of the term, so the card has
+    // to say when that is. monthsRemaining used to return 0 the moment the
+    // principal was repaid, which is why the row was hidden.
+    expect(find.text('MONTHS LEFT'), findsOneWidget);
+    expect(find.text('0 MO'), findsNothing);
+  });
+
+  testWidgets('a loan past its term with principal still owing keeps its '
+      'installment on screen', (tester) async {
+    await tester.pumpWidget(
+      _wrap(
+        LoanCard(
+          summary: _summary(repaid: 40000, termMonths: 6),
+          onTap: () {},
+          onRepay: () {},
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // Gating the money rows on the costing rule took the installment away
+    // from exactly the loan whose cost the owner most needs to see.
+    expect(find.text('INSTALLMENT'), findsOneWidget);
+    expect(find.text('PAID THIS MO'), findsOneWidget);
   });
 
   testWidgets('a loan still being repaid says nothing of the sort', (
