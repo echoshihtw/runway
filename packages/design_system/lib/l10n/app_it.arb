@@ -361,10 +361,10 @@
   "runSimulation": "AVVIA SIMULAZIONE",
   "runwayUnlimitedHere": "Le entrate coprono i costi in questo piano",
   "runwayNoChange": "Nessun cambiamento",
-  "deltaDaysLonger": "{days} giorni in più",
-  "deltaDaysShorter": "{days} giorni in meno",
-  "deltaMonthsLonger": "{months} mesi in più",
-  "deltaMonthsShorter": "{months} mesi in meno",
+  "deltaDaysLonger": "{days, plural, =1{1 giorno in più} other{{days} giorni in più}}",
+  "deltaDaysShorter": "{days, plural, =1{1 giorno in meno} other{{days} giorni in meno}}",
+  "deltaMonthsLonger": "{months, plural, =1{1 mese in più} other{{months} mesi in più}}",
+  "deltaMonthsShorter": "{months, plural, =1{1 mese in meno} other{{months} mesi in meno}}",
   "paywallTermsOfUse": "Termini di utilizzo",
   "paywallPrivacyPolicy": "Informativa sulla privacy"
 }
