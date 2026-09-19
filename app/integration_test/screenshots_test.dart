@@ -192,6 +192,12 @@ Future<void> _seed(AppDatabase database) async {
       note: 'Phone and utilities',
     ),
     _entry('t9', day(9), TransactionType.expense, 35, note: 'Coffee'),
+    // A fortnight of ordinary spending, so the log frame reads like a log
+    // somebody keeps rather than one they opened twice. Living stays well
+    // inside its budget, which is the state the budget rows are there to show.
+    _entry('t10', day(10), TransactionType.expense, 26, note: 'Dinner out'),
+    _entry('t11', day(11), TransactionType.expense, 58, note: 'Groceries'),
+    _entry('t13', day(14), TransactionType.expense, 41, note: 'Pharmacy'),
   ];
   for (final entry in entries) {
     await transactions.add(entry);
