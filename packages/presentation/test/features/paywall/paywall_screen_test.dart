@@ -43,7 +43,9 @@ Future<void> _pumpPaywall(
 }
 
 void main() {
-  testWidgets('links to the Terms of Use and the Privacy Policy', (tester) async {
+  testWidgets('links to the Terms of Use and the Privacy Policy', (
+    tester,
+  ) async {
     await _pumpPaywall(tester);
 
     expect(find.text('Terms of Use'), findsOneWidget);
@@ -53,8 +55,11 @@ void main() {
   testWidgets('lists only Pro features that ship', (tester) async {
     await _pumpPaywall(tester);
 
-    expect(find.text('Unlimited entries'), findsOneWidget);
-    expect(find.text('Unlimited scenario simulations'), findsOneWidget);
+    expect(
+      find.text('Log everything, so the number never drifts'),
+      findsOneWidget,
+    );
+    expect(find.text('Ask what if as often as you like'), findsOneWidget);
     // Loans are free (#80): selling them as Pro would be a lie in the listing.
     expect(find.text('Unlimited loans'), findsNothing);
     expect(find.text('Cash timeline chart'), findsNothing);
@@ -72,11 +77,17 @@ void main() {
     await _pumpPaywall(tester);
 
     expect(find.text('One-time purchase · Unlock forever'), findsNothing);
-    expect(find.textContaining("Pro isn't available right now"), findsOneWidget);
+    expect(
+      find.textContaining("Pro isn't available right now"),
+      findsOneWidget,
+    );
   });
 
   testWidgets('a store that cannot be reached says so', (tester) async {
-    await _pumpPaywall(tester, offering: () async => throw Exception('offline'));
+    await _pumpPaywall(
+      tester,
+      offering: () async => throw Exception('offline'),
+    );
 
     expect(find.textContaining("Couldn't reach the store"), findsOneWidget);
     expect(find.text('Price unavailable'), findsNothing);
@@ -117,11 +128,14 @@ void main() {
     expect(find.text('UNLOCK RUNWAY PRO'), findsNothing);
     expect(find.text('Maybe later'), findsNothing);
     expect(find.text('Restore purchase'), findsNothing);
-    expect(find.text('Unlimited entries'), findsNothing);
+    expect(
+      find.text('Log everything, so the number never drifts'),
+      findsNothing,
+    );
     expect(find.text('RUNWAY PROをアンロック'), findsOneWidget);
     expect(find.text('あとで'), findsOneWidget);
     expect(find.text('購入を復元'), findsOneWidget);
-    expect(find.text('記録は無制限'), findsOneWidget);
+    expect(find.text('すべて記録できるから、数字がずれない'), findsOneWidget);
     expect(
       find.textContaining('5件'),
       findsOneWidget,
@@ -151,7 +165,10 @@ void main() {
       ),
     );
 
-    expect(find.textContaining("Pro isn't available right now"), findsOneWidget);
+    expect(
+      find.textContaining("Pro isn't available right now"),
+      findsOneWidget,
+    );
     expect(find.textContaining(r'$1.99'), findsNothing);
   });
 }

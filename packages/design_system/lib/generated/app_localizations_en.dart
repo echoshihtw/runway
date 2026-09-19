@@ -933,7 +933,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String paywallOneTimePurchase(String price) {
-    return '$price · One-time purchase';
+    return '$price once. This app counts your subscriptions — it will not be one.';
   }
 
   @override
@@ -960,22 +960,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String paywallTitleEntries(int count) {
-    return 'You\'ve logged your $count free entries.\nUnlimited entries is Pro.';
+    return 'You\'ve used your $count free entries.\nPro is what keeps the number true.';
   }
 
   @override
   String paywallTitleSimulations(int count) {
-    return 'You\'ve run your $count free simulations.\nUnlimited simulations is Pro.';
+    return 'You\'ve run your $count free simulations.\nPro is how you keep asking what if.';
   }
 
   @override
   String get paywallTitleDefault => 'Unlock Runway Pro.';
 
   @override
-  String get paywallFeatureEntries => 'Unlimited entries';
+  String get paywallFeatureEntries =>
+      'Log everything, so the number never drifts';
 
   @override
-  String get paywallFeatureSimulations => 'Unlimited scenario simulations';
+  String get paywallFeatureSimulations => 'Ask what if as often as you like';
 
   @override
   String get stepBalanceShort => 'Cash balance';
