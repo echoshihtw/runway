@@ -251,6 +251,7 @@
   "monthlyBudget": "Budget mensile",
   "rentFixed": "AFFITTO / FISSO",
   "livingExpenses": "SPESE DI VITA",
+  "budgetRuleHint": "La spesa consuma il suo budget — solo lo sforamento aggiunge costo",
   "subtotal": "SUBTOTALE",
   "budgetLeft": "restano {amount}",
   "budgetOver": "{amount} oltre il budget",

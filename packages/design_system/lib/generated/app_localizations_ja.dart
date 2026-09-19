@@ -613,6 +613,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get livingExpenses => '生活費';
 
   @override
+  String get budgetRuleHint => '支出は予算を使うだけ — 超えた分だけ費用が増える';
+
+  @override
   String get subtotal => '小計';
 
   @override

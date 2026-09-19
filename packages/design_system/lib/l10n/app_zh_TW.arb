@@ -251,6 +251,7 @@
   "monthlyBudget": "每月預算",
   "rentFixed": "房租 / 固定支出",
   "livingExpenses": "生活費",
+  "budgetRuleHint": "支出只是把預算用掉 — 超支才會多花錢",
   "subtotal": "小計",
   "budgetLeft": "剩餘 {amount}",
   "budgetOver": "超出預算 {amount}",
