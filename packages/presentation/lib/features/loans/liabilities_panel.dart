@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import '../../shared/add_strip.dart';
 import '../../shared/ledger_glyphs.dart';
 import '../../shared/pro_gate.dart';
+import '../../shared/money_field.dart';
 import 'loan_card.dart';
 import 'start_loan_creation.dart';
 
@@ -172,7 +173,7 @@ class _RepaySheet extends ConsumerStatefulWidget {
 
 class _RepaySheetState extends ConsumerState<_RepaySheet> {
   late final _amountCtrl = TextEditingController(
-    text: widget.summary.loan.monthlyPayment.toStringAsFixed(0),
+    text: moneyField(widget.summary.loan.monthlyPayment),
   );
 
   @override
@@ -210,7 +211,7 @@ class _RepaySheetState extends ConsumerState<_RepaySheet> {
             // null and silently does nothing.
             inputType: NeoInputType.decimal,
             keyboardType: TextInputType.number,
-            hint: summary.loan.monthlyPayment.toStringAsFixed(0),
+            hint: moneyField(summary.loan.monthlyPayment),
           ),
           const SizedBox(height: AppSpacing.lg),
           Row(

@@ -5,6 +5,7 @@ import 'package:application/application.dart';
 import '../../product_config.dart';
 import '../../shared/pro_gate.dart';
 import '../../shared/status_color.dart';
+import '../../shared/money_field.dart';
 import '../transactions/show_entry_sheet.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
@@ -121,8 +122,9 @@ class ScenariosScreen extends ConsumerWidget {
                   _SimInput(
                     label: l10n.burnRateOverride,
                     hint: '0',
-                    initialValue: (scenario.burnRateOverride ?? variableBurn)
-                        ?.toStringAsFixed(0),
+                    initialValue: moneyField(
+                      scenario.burnRateOverride ?? variableBurn,
+                    ),
                     resetVersion: scenario.resetVersion,
                     focusOnReset: true,
                     onChanged: (v) {
@@ -143,7 +145,7 @@ class ScenariosScreen extends ConsumerWidget {
                   _SimInput(
                     label: l10n.simulatedIncome,
                     hint: '0',
-                    initialValue: scenario.simulatedIncome?.toStringAsFixed(0),
+                    initialValue: moneyField(scenario.simulatedIncome),
                     resetVersion: scenario.resetVersion,
                     focusOnReset: false,
                     onChanged: (v) {
@@ -426,7 +428,7 @@ class _SimInputState extends State<_SimInput> {
       label: widget.label,
       controller: _ctrl,
       focusNode: _focusNode,
-      inputType: NeoInputType.numeric,
+      inputType: NeoInputType.decimal,
       hint: widget.hint,
       onChanged: widget.onChanged,
     );
