@@ -40,25 +40,20 @@ class NeoInput extends StatelessWidget {
           FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
           LengthLimitingTextInputFormatter(maxLength ?? 15),
         ];
+      // No allow-list on the three fields that hold words. These used to
+      // permit ASCII letters and a handful of punctuation, which meant a
+      // lender, a subscription or a note could not be written in six of the
+      // seven languages this app is translated into: the characters were
+      // dropped as they were typed, the field stayed empty, and the form's
+      // own validity gate never opened, with nothing on screen to say why.
+      // Nothing downstream needs the restriction — the database is
+      // parameterised and every one of these is displayed as text.
       case NeoInputType.name:
-        return [
-          FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z0-9\s\-_'\+/]")),
-          LengthLimitingTextInputFormatter(maxLength ?? 50),
-        ];
+        return [LengthLimitingTextInputFormatter(maxLength ?? 50)];
       case NeoInputType.note:
-        return [
-          FilteringTextInputFormatter.allow(
-            RegExp(r'[a-zA-Z0-9\s\.,\-_!?@#%&\(\)\+=/]'),
-          ),
-          LengthLimitingTextInputFormatter(maxLength ?? 200),
-        ];
+        return [LengthLimitingTextInputFormatter(maxLength ?? 200)];
       case NeoInputType.text:
-        return [
-          FilteringTextInputFormatter.allow(
-            RegExp(r'[a-zA-Z0-9\s\.,\-_!?@#%&\(\)\+=/]'),
-          ),
-          LengthLimitingTextInputFormatter(maxLength ?? 100),
-        ];
+        return [LengthLimitingTextInputFormatter(maxLength ?? 100)];
     }
   }
 
