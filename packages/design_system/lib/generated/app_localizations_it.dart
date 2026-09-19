@@ -458,10 +458,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get newSubscription => '+ ABBONAMENTO';
 
   @override
-  String get editSubscription => '> MODIFICA ABBONAMENTO';
+  String get editSubscription => 'MODIFICA ABBONAMENTO';
 
   @override
-  String get addSubscription => '> NUOVO ABBONAMENTO';
+  String get addSubscription => 'NUOVO ABBONAMENTO';
 
   @override
   String get personal => 'PERSONALE';

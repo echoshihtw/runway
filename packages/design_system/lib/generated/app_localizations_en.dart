@@ -458,10 +458,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newSubscription => '+ SUBSCRIPTION';
 
   @override
-  String get editSubscription => '> EDIT SUBSCRIPTION';
+  String get editSubscription => 'EDIT SUBSCRIPTION';
 
   @override
-  String get addSubscription => '> NEW SUBSCRIPTION';
+  String get addSubscription => 'NEW SUBSCRIPTION';
 
   @override
   String get personal => 'PERSONAL';

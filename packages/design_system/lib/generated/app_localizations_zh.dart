@@ -454,10 +454,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get newSubscription => '+ 訂閱';
 
   @override
-  String get editSubscription => '> 編輯訂閱';
+  String get editSubscription => '編輯訂閱';
 
   @override
-  String get addSubscription => '> 新增訂閱';
+  String get addSubscription => '新增訂閱';
 
   @override
   String get personal => '個人';
@@ -1411,10 +1411,10 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get newSubscription => '+ 訂閱';
 
   @override
-  String get editSubscription => '> 編輯訂閱';
+  String get editSubscription => '編輯訂閱';
 
   @override
-  String get addSubscription => '> 新增訂閱';
+  String get addSubscription => '新增訂閱';
 
   @override
   String get personal => '個人';
