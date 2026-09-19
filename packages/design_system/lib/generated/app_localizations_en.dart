@@ -620,6 +620,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get livingExpenses => 'LIVING EXPENSES';
 
   @override
+  String get budgetRuleHint =>
+      'Spending uses up its budget — only going over adds cost';
+
+  @override
   String get subtotal => 'SUBTOTAL';
 
   @override

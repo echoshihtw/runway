@@ -283,6 +283,7 @@
   "monthlyBudget": "Monthly budget",
   "rentFixed": "RENT / FIXED",
   "livingExpenses": "LIVING EXPENSES",
+  "budgetRuleHint": "Spending uses up its budget — only going over adds cost",
   "subtotal": "SUBTOTAL",
   "budgetLeft": "{amount} left",
   "@budgetLeft": {

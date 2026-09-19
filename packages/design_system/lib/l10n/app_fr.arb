@@ -251,6 +251,7 @@
   "monthlyBudget": "Budget mensuel",
   "rentFixed": "LOYER / FIXE",
   "livingExpenses": "DÉPENSES DE VIE",
+  "budgetRuleHint": "Les dépenses consomment leur budget — seul le dépassement ajoute un coût",
   "subtotal": "SOUS-TOTAL",
   "budgetLeft": "reste {amount}",
   "budgetOver": "{amount} au-dessus du budget",

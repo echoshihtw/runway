@@ -15,6 +15,7 @@ export 'use_cases/delete_subscription_use_case.dart';
 
 export 'providers/repository_provider.dart';
 export 'providers/transaction_provider.dart';
+export 'providers/clock_provider.dart';
 export 'providers/model_provider.dart';
 export 'providers/scenario_provider.dart';
 export 'providers/usage_count_provider.dart';

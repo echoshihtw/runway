@@ -10,9 +10,9 @@ void main() {
   group('Smoke', () {
     // Boot routes to onboarding until it has been completed once, so these
     // tests would never reach the dashboard they check.
-    setUp(() => SharedPreferences.setMockInitialValues({
-      'onboarding_done': true,
-    }));
+    setUp(
+      () => SharedPreferences.setMockInitialValues({'onboarding_done': true}),
+    );
 
     testWidgets('app launches without crashing', (tester) async {
       await tester.pumpWidget(buildTestApp());

@@ -1,5 +1,6 @@
 import 'package:domain/domain.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'clock_provider.dart';
 import 'transaction_provider.dart';
 import 'loan_provider.dart';
 import 'scenario_provider.dart';
@@ -14,7 +15,7 @@ final monthlyBurnProvider = Provider<MonthlyBurn>((ref) {
     budget: ref.watch(budgetProvider).value ?? const Budget(),
     loans: ref.watch(loanSummariesProvider),
     subscriptions: ref.watch(subscriptionsProvider).value ?? const [],
-    now: DateTime.now(),
+    now: ref.watch(clockProvider)(),
   );
 });
 
@@ -29,7 +30,10 @@ final modelProvider = Provider<ModelState>((ref) {
   final transactions = ref.watch(transactionsProvider).value;
 
   return computeModel(
-    currentCash: _currentCash(transactions ?? const []),
+    currentCash: _currentCash(
+      transactions ?? const [],
+      ref.watch(clockProvider)(),
+    ),
     cashIsKnown: transactions != null,
     burn: ref.watch(monthlyBurnProvider),
     expectedMonthlyInflow: assumptions.expectedMonthlyInflow,
@@ -49,7 +53,7 @@ final scenarioModelProvider = Provider<ModelState?>((ref) {
       const FinancialAssumptions();
 
   return modelForScenario(
-    currentCash: _currentCash(transactions),
+    currentCash: _currentCash(transactions, ref.watch(clockProvider)()),
     burn: ref.watch(monthlyBurnProvider),
     monthlyCostOverride: scenario.burnRateOverride,
     simulatedIncome: scenario.simulatedIncome,
@@ -58,5 +62,5 @@ final scenarioModelProvider = Provider<ModelState?>((ref) {
   );
 });
 
-double _currentCash(List<Transaction> transactions) =>
-    currentCashAsOf(transactions: transactions, now: DateTime.now());
+double _currentCash(List<Transaction> transactions, DateTime now) =>
+    currentCashAsOf(transactions: transactions, now: now);
