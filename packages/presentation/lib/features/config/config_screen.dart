@@ -48,9 +48,7 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
 
   void _startEditing(Budget budget) {
     _rentCtrl.text = budget.rent > 0 ? moneyField(budget.rent) : '';
-    _livingCtrl.text = budget.living > 0
-        ? moneyField(budget.living)
-        : '';
+    _livingCtrl.text = budget.living > 0 ? moneyField(budget.living) : '';
     setState(() => _editingBudget = true);
   }
 
@@ -227,8 +225,7 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                                   : '$symbol ${nf.format(assumptions.expectedMonthlyBurnOverride)}',
                               AppColors.red,
                             ),
-                            if (assumptions.expectedMonthlyBurnOverride !=
-                                null)
+                            if (assumptions.expectedMonthlyBurnOverride != null)
                               Text(
                                 l10n.computedCost(
                                   '$symbol ${nf.format(ref.watch(monthlyBurnProvider).total)}',
@@ -236,19 +233,25 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                                 style: AppTextStyles.caption,
                               ),
                             const SizedBox(height: AppSpacing.md),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                            // Wrap, not Row: these buttons are laid out at
+                            // their own width, so at large text sizes they ran
+                            // past the edge of the screen. Wrap puts them on a
+                            // second line instead, and still aligns them right
+                            // when they fit on one. A Flexible would not do —
+                            // it hands each button an equal share of the row,
+                            // so they would sit left of where they belong.
+                            Wrap(
+                              alignment: WrapAlignment.end,
+                              spacing: AppSpacing.sm,
+                              runSpacing: AppSpacing.sm,
                               children: [
                                 if (assumptions.hasExpectedMonthlyInflow ||
-                                    assumptions
-                                        .hasExpectedMonthlyBurnOverride) ...[
+                                    assumptions.hasExpectedMonthlyBurnOverride)
                                   NeoButton(
                                     label: l10n.clear,
                                     variant: NeoButtonVariant.danger,
                                     onPressed: _clearAssumptions,
                                   ),
-                                  const SizedBox(width: AppSpacing.sm),
-                                ],
                                 NeoButton(
                                   label:
                                       assumptions.hasExpectedMonthlyInflow ||
@@ -367,8 +370,17 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                               AppColors.red,
                             ),
                             const SizedBox(height: AppSpacing.md),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                            // Wrap, not Row: these buttons are laid out at
+                            // their own width, so at large text sizes they ran
+                            // past the edge of the screen. Wrap puts them on a
+                            // second line instead, and still aligns them right
+                            // when they fit on one. A Flexible would not do —
+                            // it hands each button an equal share of the row,
+                            // so they would sit left of where they belong.
+                            Wrap(
+                              alignment: WrapAlignment.end,
+                              spacing: AppSpacing.sm,
+                              runSpacing: AppSpacing.sm,
                               children: [
                                 NeoButton(
                                   label: budget.isSet
@@ -453,17 +465,24 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                               style: AppTextStyles.caption,
                             ),
                             const SizedBox(height: AppSpacing.md),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                            // Wrap, not Row: these buttons are laid out at
+                            // their own width, so at large text sizes they ran
+                            // past the edge of the screen. Wrap puts them on a
+                            // second line instead, and still aligns them right
+                            // when they fit on one. A Flexible would not do —
+                            // it hands each button an equal share of the row,
+                            // so they would sit left of where they belong.
+                            Wrap(
+                              alignment: WrapAlignment.end,
+                              spacing: AppSpacing.sm,
+                              runSpacing: AppSpacing.sm,
                               children: [
-                                if (runwayGoal != null) ...[
+                                if (runwayGoal != null)
                                   NeoButton(
                                     label: l10n.clear,
                                     variant: NeoButtonVariant.danger,
                                     onPressed: _clearGoal,
                                   ),
-                                  const SizedBox(width: AppSpacing.sm),
-                                ],
                                 NeoButton(
                                   label: runwayGoal == null
                                       ? l10n.setGoal
@@ -575,43 +594,43 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Wrap(
-                        spacing: AppSpacing.xs,
-                        runSpacing: AppSpacing.xs,
-                        children: supportedCurrencies.map((curr) {
-                          final active = currentCurr?.code == curr.code;
-                          return GestureDetector(
-                            onTap: () => ref
-                                .read(currencyProvider.notifier)
-                                .setCurrency(curr),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: AppSpacing.md,
-                                vertical: AppSpacing.sm,
-                              ),
-                              decoration: BoxDecoration(
-                                color: active
-                                    ? AppColors.gold.withAlpha(20)
-                                    : AppColors.surfaceHigh,
-                                borderRadius: BorderRadius.circular(50),
-                                border: Border.all(
-                                  color: active
-                                      ? AppColors.gold
-                                      : AppColors.cardBorder,
-                                  width: active ? 1.5 : 1,
+                            spacing: AppSpacing.xs,
+                            runSpacing: AppSpacing.xs,
+                            children: supportedCurrencies.map((curr) {
+                              final active = currentCurr?.code == curr.code;
+                              return GestureDetector(
+                                onTap: () => ref
+                                    .read(currencyProvider.notifier)
+                                    .setCurrency(curr),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: AppSpacing.md,
+                                    vertical: AppSpacing.sm,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: active
+                                        ? AppColors.gold.withAlpha(20)
+                                        : AppColors.surfaceHigh,
+                                    borderRadius: BorderRadius.circular(50),
+                                    border: Border.all(
+                                      color: active
+                                          ? AppColors.gold
+                                          : AppColors.cardBorder,
+                                      width: active ? 1.5 : 1,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    '${curr.symbol}  ${curr.code}',
+                                    style: AppTextStyles.button.copyWith(
+                                      color: active
+                                          ? AppColors.gold
+                                          : AppColors.textSecondary,
+                                      fontSize: 13,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              child: Text(
-                                '${curr.symbol}  ${curr.code}',
-                                style: AppTextStyles.button.copyWith(
-                                  color: active
-                                      ? AppColors.gold
-                                      : AppColors.textSecondary,
-                                  fontSize: 13,
-                                ),
-                              ),
-                            ),
-                          );
-                        }).toList(),
+                              );
+                            }).toList(),
                           ),
                           const SizedBox(height: AppSpacing.sm),
                           Text(

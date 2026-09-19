@@ -168,6 +168,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextField).at(0), '980');
+    await tester.pump();
     await tester.tap(find.text('CONFIRM'));
     await tester.pumpAndSettle();
 
@@ -210,7 +211,8 @@ void main() {
     expect(
       tester.takeException(),
       isNull,
-      reason: 'six tiles must lay out on the smallest screen we support at '
+      reason:
+          'six tiles must lay out on the smallest screen we support at '
           'the largest text size',
     );
     expect(find.text('LUNCH'), findsOneWidget);
@@ -230,6 +232,7 @@ void main() {
       await tester.tap(find.text('LUNCH'));
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextField).at(0), '980');
+      await tester.pump();
       await tester.tap(find.text('CONFIRM'));
       await tester.pumpAndSettle();
     }

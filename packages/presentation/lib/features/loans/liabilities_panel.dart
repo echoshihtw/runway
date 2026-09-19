@@ -119,7 +119,7 @@ class LiabilitiesPanel extends ConsumerWidget {
                   padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                   child: LoanCard(
                     summary: s,
-                    onTap: () {},
+                    onTap: () => _confirmSettled(context, ref, s),
                     onRepay: () => _showRepay(context, ref, s),
                   ),
                 ),
@@ -139,6 +139,51 @@ class LiabilitiesPanel extends ConsumerWidget {
       summary: summary,
       details: details,
     );
+  }
+
+  /// The only way to say a loan is over.
+  ///
+  /// Nothing else in the app ever sets a loan inactive, so a loan settled
+  /// early sat on this list charging the runway until its term ran out, and a
+  /// loan whose entry lost its id could not be reached by the delete path at
+  /// all. The card's tap did nothing until now.
+  ///
+  /// Settling leaves every entry alone. It is the commitment that ends, not
+  /// the history of what was paid.
+  Future<void> _confirmSettled(
+    BuildContext context,
+    WidgetRef ref,
+    LoanSummary summary,
+  ) async {
+    final l10n = context.l10n;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      useRootNavigator: true,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        title: Text(l10n.markSettled, style: AppTextStyles.label),
+        content: Text(l10n.markSettledExplain, style: AppTextStyles.bodySmall),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l10n.abort, style: AppTextStyles.label),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(
+              l10n.markSettled,
+              style: AppTextStyles.label.copyWith(color: SC.cost),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    await ref
+        .read(editLoanUseCaseProvider)
+        .execute(
+          summary.loan.copyWith(isActive: false, updatedAt: DateTime.now()),
+        );
   }
 
   void _showRepay(BuildContext context, WidgetRef ref, LoanSummary summary) {

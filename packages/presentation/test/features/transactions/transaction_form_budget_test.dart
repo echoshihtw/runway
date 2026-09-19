@@ -42,7 +42,10 @@ Future<List<_Submitted>> _openForm(
 }
 
 Future<void> _confirm(WidgetTester tester, String amount) async {
+  // CONFIRM follows the amount now, and enterText does not flush the
+  // rebuild that enables it, so the frame has to be pumped before the tap.
   await tester.enterText(find.byType(TextField).first, amount);
+  await tester.pump();
   await tester.tap(find.text('CONFIRM'));
   await tester.pumpAndSettle();
 }

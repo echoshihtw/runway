@@ -224,7 +224,10 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
               const SizedBox(height: AppSpacing.xs),
               Text(tx.note!, style: AppTextStyles.bodySmall),
             ],
-            if (tx.type == TransactionType.loan) ...[
+            // The delete below only reaches the loan when the entry still
+            // carries its id. An entry orphaned before #175 has none, so
+            // showing this promised something the delete could not keep.
+            if (tx.type == TransactionType.loan && tx.loanId != null) ...[
               const SizedBox(height: AppSpacing.sm),
               Text(
                 l10n.willRemoveLoan,
