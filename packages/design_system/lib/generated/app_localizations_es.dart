@@ -364,7 +364,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get markSettledExplain =>
-      'La cuota mensual deja de contar. Los registros se conservan.';
+      'La cuota mensual deja de contar y el préstamo sale de esta lista para siempre. Los registros se conservan.';
 
   @override
   String get repay => 'PAGAR';

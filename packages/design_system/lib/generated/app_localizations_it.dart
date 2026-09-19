@@ -364,7 +364,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get markSettledExplain =>
-      'La rata mensile smette di contare. Le voci restano.';
+      'La rata mensile smette di contare e il prestito lascia questa lista per sempre. Le voci restano.';
 
   @override
   String get repay => 'RIMBORSA';

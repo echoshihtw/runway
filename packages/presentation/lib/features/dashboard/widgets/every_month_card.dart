@@ -32,9 +32,14 @@ class EveryMonthCard extends ConsumerWidget {
     final nf = NumberFormat('#,##0', 'en_US');
     String money(double v) => '$symbol ${nf.format(v.abs())}';
 
-    // Nothing to say about an income nobody has told us about, beyond the one
-    // way to say it.
-    if (!model.hasSustainableProjection) {
+    // Nothing to say while there is no cost to say it against. Without a
+    // budget, a loan or a subscription the monthly cost is not zero, it is
+    // unknown — which is why the runway card next to this one prints a dash —
+    // and "Monthly costs 0, Surplus everything" is a confident wrong answer.
+    //
+    // Nothing to say about an income nobody has told us about either, beyond
+    // the one way to say it.
+    if (!model.hasCostBasis || !model.hasSustainableProjection) {
       return NeoExpandableCard(
         title: l10n.everyMonth,
         accentColor: SC.accentNeutral,

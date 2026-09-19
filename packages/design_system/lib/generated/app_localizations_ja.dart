@@ -358,7 +358,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get markSettled => '完済にする';
 
   @override
-  String get markSettledExplain => '毎月の支払いは計算に入りません。記録は残ります。';
+  String get markSettledExplain =>
+      '毎月の支払いは計算に入らなくなり、一覧からも消えます。元には戻せません。記録は残ります。';
 
   @override
   String get repay => '返済';

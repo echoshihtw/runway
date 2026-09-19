@@ -28,12 +28,15 @@ final loanSummariesProvider = Provider<List<LoanSummary>>((ref) {
 
 final activeLoanSummariesProvider = Provider<List<LoanSummary>>((ref) {
   final summaries = ref.watch(loanSummariesProvider);
-  return activeLoanSummaries(summaries);
+  return activeLoanSummaries(summaries, now: ref.watch(clockProvider)());
 });
 
 final totalMonthlyLoanPaymentProvider = Provider<double>((ref) {
   final summaries = ref.watch(loanSummariesProvider);
-  return totalMonthlyPaymentFromSummaries(summaries);
+  return totalMonthlyPaymentFromSummaries(
+    summaries,
+    now: ref.watch(clockProvider)(),
+  );
 });
 
 final addLoanUseCaseProvider = Provider<AddLoanUseCase>((ref) {

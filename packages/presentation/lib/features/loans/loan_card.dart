@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:design_system/design_system.dart';
+import 'package:application/application.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
 
-class LoanCard extends StatelessWidget {
+class LoanCard extends ConsumerWidget {
   final LoanSummary summary;
   final VoidCallback onTap;
   final VoidCallback onRepay;
@@ -16,7 +18,7 @@ class LoanCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final nf = NumberFormat('#,##0', 'en_US');
     final loan = summary.loan;
@@ -27,11 +29,15 @@ class LoanCard extends StatelessWidget {
     // this instead took the installment away from a loan past its term whose
     // principal was still outstanding, which is the one state where the owner
     // most needs to see what it costs. Only the caption turns on it.
-    final isCosting = loanIsCosting(summary, now: DateTime.now());
+    final isCosting = loanIsCosting(summary, now: ref.watch(clockProvider)());
     const color = AppColors.textPrimary;
 
+    // Long press, not tap. The only thing this opens is a dialog that removes
+    // the loan from the list for good, and the whole card was the target: a
+    // mis-tap anywhere on it plus one confirm took the loan away and moved
+    // the runway. A deliberate gesture for a decision with no undo.
     return GestureDetector(
-      onTap: onTap,
+      onLongPress: onTap,
       child: Container(
         padding: const EdgeInsets.all(AppSpacing.md),
         decoration: const BoxDecoration(

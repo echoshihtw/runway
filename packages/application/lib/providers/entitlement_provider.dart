@@ -58,8 +58,6 @@ class EntitlementNotifier extends AsyncNotifier<EntitlementState> {
   /// leaves the cache exactly as it was — the alternative locks a paying owner
   /// out of what they bought because their train went into a tunnel.
   void _revokeIfTheStoreSaysSo(PurchaseService service) {
-    var disposed = false;
-    ref.onDispose(() => disposed = true);
     unawaited(
       Future(() async {
         final bool serverPro;
@@ -68,11 +66,27 @@ class EntitlementNotifier extends AsyncNotifier<EntitlementState> {
         } catch (_) {
           return;
         }
-        if (serverPro || disposed) return;
+        if (serverPro) return;
+
+        // An unlock that arrived while this check was in flight wins. A
+        // purchase or a redeemed offer code can land between asking the store
+        // and hearing back, and the answer we are holding was true before it
+        // happened — acting on it would switch Pro off for someone who had
+        // just paid, and write that to disk for the next launch too.
+        if (_unlockedSinceCheck) return;
+
+        // Checked here rather than before the awaits: the provider can be
+        // disposed during them, and assigning state afterwards throws out of
+        // an unawaited future, where nothing catches it.
+        if (!ref.mounted) return;
         await revokePro();
       }),
     );
   }
+
+  /// Set when the store reports the entitlement while a revocation check is
+  /// still waiting for its answer.
+  bool _unlockedSinceCheck = false;
 
   /// A purchase can complete outside the paywall, for example when an offer
   /// code is redeemed from its URL. Unlock as soon as RevenueCat reports it,
@@ -82,7 +96,9 @@ class EntitlementNotifier extends AsyncNotifier<EntitlementState> {
   /// received while offline, never revokes a cached Pro unlock.
   void _unlockOnExternalPurchase(PurchaseService service) {
     final subscription = service.proEntitlementUpdates.listen((isPro) {
-      if (isPro) unlockPro();
+      if (!isPro) return;
+      _unlockedSinceCheck = true;
+      unlockPro();
     });
     ref.onDispose(subscription.cancel);
   }
@@ -90,12 +106,16 @@ class EntitlementNotifier extends AsyncNotifier<EntitlementState> {
   Future<void> unlockPro() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_kIsPro, true);
+    // The write to disk stands either way; only the in-memory state needs a
+    // live provider to land on.
+    if (!ref.mounted) return;
     state = AsyncData(EntitlementState(isPro: true));
   }
 
   Future<void> revokePro() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_kIsPro, false);
+    if (!ref.mounted) return;
     state = AsyncData(EntitlementState(isPro: _effectiveIsPro(false)));
   }
 

@@ -168,7 +168,7 @@
   "repaid": "% REMBOURSÉ",
   "stillPaying": "CAPITAL REMBOURSÉ — LES PAIEMENTS CONTINUENT",
   "markSettled": "MARQUER COMME SOLDÉ",
-  "markSettledExplain": "La mensualité cesse de compter. Les écritures sont conservées.",
+  "markSettledExplain": "La mensualité cesse de compter et le prêt quitte cette liste définitivement. Les écritures sont conservées.",
   "repay": "REMBOURSER",
   "repayTitle": "> REMBOURSER",
   "extra": "EXTRA",

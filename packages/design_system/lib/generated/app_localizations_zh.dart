@@ -352,13 +352,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get repaid => '% 已還';
 
   @override
-  String get stillPaying => '本金已還清 — 還款繼續';
+  String get stillPaying => '本金已还清 — 还款继续';
 
   @override
-  String get markSettled => '標記為已結清';
+  String get markSettled => '标记为已结清';
 
   @override
-  String get markSettledExplain => '每月還款不再計入。紀錄會保留。';
+  String get markSettledExplain => '每月还款不再计入，贷款也会永久从清单移除。记录会保留。';
 
   @override
   String get repay => '還款';
@@ -611,7 +611,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get livingExpenses => '生活費';
 
   @override
-  String get budgetRuleHint => '支出只是用掉預算 — 超支才會增加成本';
+  String get budgetRuleHint => '支出只是用掉预算 — 超支才会增加成本';
 
   @override
   String get subtotal => '小計';
@@ -659,16 +659,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get expectedInflow => '预期流入';
 
   @override
-  String get everyMonth => '每個月';
+  String get everyMonth => '每个月';
 
   @override
-  String get monthlySurplus => '結餘';
+  String get monthlySurplus => '结余';
 
   @override
   String get monthlyDeficit => '不足';
 
   @override
-  String get setExpectedIncome => '設定預期收入';
+  String get setExpectedIncome => '设定预期收入';
 
   @override
   String get expectedBurn => '预期支出';
@@ -851,10 +851,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingSkip => '跳过';
 
   @override
-  String get onboardingWelcomeTitle => '別再猜\n你的錢能撐多久。';
+  String get onboardingWelcomeTitle => '别再猜\n你的钱能撑多久。';
 
   @override
-  String get onboardingWelcomeBody => '不用註冊。不連結銀行。';
+  String get onboardingWelcomeBody => '不用注册。不连接银行。';
 
   @override
   String get onboardingGetStarted => '开始吧';
@@ -863,7 +863,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingPrivacyTitle => '你的数据，\n只在你手机里。';
 
   @override
-  String get onboardingPrivacyBody => '沒有伺服器，也就沒有外洩的風險。';
+  String get onboardingPrivacyBody => '没有服务器，也就没有泄露的风险。';
 
   @override
   String get onboardingPrivacyEncrypted => '在手机上加密';
@@ -881,10 +881,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingIUnderstand => '了解';
 
   @override
-  String get onboardingFirstActionTitle => '一個數字\n就設定好了。';
+  String get onboardingFirstActionTitle => '一个数字\n就设定好了。';
 
   @override
-  String get onboardingFirstActionBody => '只要現金餘額，其他都不用。';
+  String get onboardingFirstActionBody => '只要现金余额，其他都不用。';
 
   @override
   String get onboardingAddMyBalance => '输入我的余额';
@@ -900,7 +900,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String paywallOneTimePurchase(String price) {
-    return '$price · 买断，一次付清';
+    return '$price 买断。这个 App 帮你算订阅，自己不会变成订阅。';
   }
 
   @override
@@ -926,22 +926,22 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String paywallTitleEntries(int count) {
-    return '$count 条免费记录用完了。\n想继续记，就是 Pro。';
+    return '$count 笔免费记录用完了。\nPro 让这个数字一直是准的。';
   }
 
   @override
   String paywallTitleSimulations(int count) {
-    return '$count 次免费模拟用完了。\n想继续模拟，就是 Pro。';
+    return '$count 次免费模拟用完了。\nPro 让你想试几次都行。';
   }
 
   @override
   String get paywallTitleDefault => '解锁 Runway Pro。';
 
   @override
-  String get paywallFeatureEntries => '记录不限条数';
+  String get paywallFeatureEntries => '全部都记，数字就不会跑掉';
 
   @override
-  String get paywallFeatureSimulations => '情景模拟不限次数';
+  String get paywallFeatureSimulations => '想模拟几次都可以';
 
   @override
   String get stepBalanceShort => '现金余额';
@@ -1367,7 +1367,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get markSettled => '標記為已結清';
 
   @override
-  String get markSettledExplain => '每月還款不再計入。紀錄會留著。';
+  String get markSettledExplain => '每月還款不再計入，這筆貸款也會永久從清單上移除。紀錄會留著。';
 
   @override
   String get repay => '還款';

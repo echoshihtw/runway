@@ -168,7 +168,7 @@
   "repaid": "% REPAID",
   "stillPaying": "PRINCIPAL REPAID — PAYMENTS CONTINUE",
   "markSettled": "MARK AS SETTLED",
-  "markSettledExplain": "The monthly payment stops counting. Entries are kept.",
+  "markSettledExplain": "The monthly payment stops counting and the loan leaves this list for good. Entries are kept.",
   "repay": "REPAY",
   "repayTitle": "> REPAY",
   "extra": "EXTRA",
