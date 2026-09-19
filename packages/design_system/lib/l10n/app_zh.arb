@@ -168,7 +168,7 @@
   "repaid": "% 已還",
   "stillPaying": "本金已還清 — 還款繼續",
   "markSettled": "標記為已結清",
-  "markSettledExplain": "每月還款不再計入。紀錄會保留。",
+  "markSettledExplain": "每月還款不再計入，這筆貸款也會永久從清單上移除。紀錄會留著。",
   "repay": "還款",
   "repayTitle": "> 還款",
   "extra": "額外",

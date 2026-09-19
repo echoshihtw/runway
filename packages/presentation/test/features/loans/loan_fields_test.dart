@@ -1,6 +1,7 @@
 import 'package:design_system/design_system.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:presentation/features/loans/loan_card.dart';
 import 'package:presentation/features/transactions/widgets/loan_wizard.dart';
@@ -32,10 +33,12 @@ LoanSummary _summary({required double repaid, int termMonths = 96}) {
   );
 }
 
-Widget _wrap(Widget child) => MaterialApp(
-  localizationsDelegates: AppLocalizations.localizationsDelegates,
-  supportedLocales: AppLocalizations.supportedLocales,
-  home: Scaffold(body: SingleChildScrollView(child: child)),
+Widget _wrap(Widget child) => ProviderScope(
+  child: MaterialApp(
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    home: Scaffold(body: SingleChildScrollView(child: child)),
+  ),
 );
 
 void main() {

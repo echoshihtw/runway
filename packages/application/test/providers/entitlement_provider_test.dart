@@ -35,6 +35,35 @@ class _FakePurchaseService implements PurchaseService {
   Future<bool> restorePurchases() async => false;
 }
 
+/// A store whose answer can be held until the test lets it go.
+class _SlowCheck implements PurchaseService {
+  _SlowCheck({required this.serverPro});
+
+  final bool serverPro;
+  final updates = StreamController<bool>.broadcast();
+  final _gate = Completer<void>();
+
+  void release() => _gate.complete();
+
+  @override
+  Stream<bool> get proEntitlementUpdates => updates.stream;
+
+  @override
+  Future<bool> checkProEntitlement() async {
+    await _gate.future;
+    return serverPro;
+  }
+
+  @override
+  Future<ProOffering?> fetchOffering() async => null;
+
+  @override
+  Future<bool> purchasePackage(ProPackage package) async => false;
+
+  @override
+  Future<bool> restorePurchases() async => false;
+}
+
 ProviderContainer _containerWith(PurchaseService service) {
   final container = ProviderContainer(
     overrides: [purchaseServiceProvider.overrideWithValue(service)],
@@ -51,6 +80,27 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   setUp(() => SharedPreferences.setMockInitialValues({}));
+
+  test('a purchase that lands mid-check is not undone by it', () async {
+    // The store is asked at launch whether a cached unlock still holds. A
+    // purchase or a redeemed offer code can complete while that question is
+    // in flight, and the answer coming back was true before it happened.
+    // Acting on it switched Pro off for someone who had just paid, and wrote
+    // that to disk for the next launch as well.
+    SharedPreferences.setMockInitialValues({kIsProPreferenceKey: true});
+    final service = _SlowCheck(serverPro: false);
+    final container = _containerWith(service);
+
+    expect((await container.read(entitlementProvider.future)).isPro, isTrue);
+    service.updates.add(true);
+    await _settle();
+    service.release();
+    await _settle();
+
+    expect(container.read(entitlementProvider).value?.isPro, isTrue);
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getBool(kIsProPreferenceKey), isTrue);
+  });
 
   test(
     'a cached unlock is given up when the store says it has lapsed',

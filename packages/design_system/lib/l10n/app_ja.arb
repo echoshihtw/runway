@@ -168,7 +168,7 @@
   "repaid": "% 返済済み",
   "stillPaying": "元本は完済 — 支払いは継続",
   "markSettled": "完済にする",
-  "markSettledExplain": "毎月の支払いは計算に入りません。記録は残ります。",
+  "markSettledExplain": "毎月の支払いは計算に入らなくなり、一覧からも消えます。元には戻せません。記録は残ります。",
   "repay": "返済",
   "repayTitle": "> 返済",
   "extra": "追加",

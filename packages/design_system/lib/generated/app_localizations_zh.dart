@@ -358,7 +358,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get markSettled => '標記為已結清';
 
   @override
-  String get markSettledExplain => '每月還款不再計入。紀錄會保留。';
+  String get markSettledExplain => '每月還款不再計入，這筆貸款也會永久從清單上移除。紀錄會留著。';
 
   @override
   String get repay => '還款';
@@ -1373,7 +1373,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get markSettled => '標記為已結清';
 
   @override
-  String get markSettledExplain => '每月還款不再計入。紀錄會留著。';
+  String get markSettledExplain => '每月還款不再計入，這筆貸款也會永久從清單上移除。紀錄會留著。';
 
   @override
   String get repay => '還款';

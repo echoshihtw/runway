@@ -9,16 +9,18 @@ import 'package:presentation/features/dashboard/widgets/every_month_card.dart';
 /// showed only as one caption under the status badge, once the forecast sheet
 /// had been filled in, so the app said plenty about money leaving and nothing
 /// about money arriving.
-ModelState _model({double? expectedInflow}) => ModelState(
-  currentCash: 34000,
-  burnRate: 2800,
-  effectiveBurnRate: 2800,
-  monthlyPayment: 0,
-  subscriptionMonthlyCost: 0,
-  expectedMonthlyInflow: expectedInflow,
-  runwayMonths: 12,
-  runwayDays: 365,
-);
+ModelState _model({double? expectedInflow, bool hasCostBasis = true}) =>
+    ModelState(
+      hasCostBasis: hasCostBasis,
+      currentCash: 34000,
+      burnRate: 2800,
+      effectiveBurnRate: 2800,
+      monthlyPayment: 0,
+      subscriptionMonthlyCost: 0,
+      expectedMonthlyInflow: expectedInflow,
+      runwayMonths: 12,
+      runwayDays: 365,
+    );
 
 Future<void> _pump(
   WidgetTester tester,
@@ -79,6 +81,18 @@ void main() {
     await tester.tap(find.text('Set expected income'));
     await tester.pumpAndSettle();
     expect(opened, 1);
+  });
+
+  testWidgets('it says nothing while no cost is known', (tester) async {
+    // Without a budget, a loan or a subscription the monthly cost is not
+    // zero, it is unknown — which is why the runway card beside this one
+    // prints a dash. "Monthly costs 0, Surplus everything" is a confident
+    // wrong answer.
+    await _pump(tester, _model(expectedInflow: 4200, hasCostBasis: false));
+
+    expect(find.text('Monthly costs'), findsNothing);
+    expect(find.text('Surplus'), findsNothing);
+    expect(find.text('Set expected income'), findsOneWidget);
   });
 
   test('the runway still ignores expected income', () {

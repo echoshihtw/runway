@@ -364,7 +364,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get markSettledExplain =>
-      'La mensualité cesse de compter. Les écritures sont conservées.';
+      'La mensualité cesse de compter et le prêt quitte cette liste définitivement. Les écritures sont conservées.';
 
   @override
   String get repay => 'REMBOURSER';

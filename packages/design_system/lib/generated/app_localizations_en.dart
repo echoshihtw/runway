@@ -363,7 +363,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get markSettledExplain =>
-      'The monthly payment stops counting. Entries are kept.';
+      'The monthly payment stops counting and the loan leaves this list for good. Entries are kept.';
 
   @override
   String get repay => 'REPAY';

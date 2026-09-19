@@ -115,7 +115,16 @@ void main() {
     final loans = await _pump(tester);
     await _openPanel(tester);
 
+    // A long press, not a tap: the dialog it opens cannot be undone.
     await tester.tap(find.text('FUBON'));
+    await tester.pumpAndSettle();
+    expect(
+      find.text('MARK AS SETTLED'),
+      findsNothing,
+      reason: 'a stray tap must not reach an irreversible action',
+    );
+
+    await tester.longPress(find.text('FUBON'));
     await tester.pumpAndSettle();
     expect(find.text('MARK AS SETTLED'), findsWidgets);
 
@@ -124,7 +133,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(loans.updated, isEmpty);
 
-    await tester.tap(find.text('FUBON'));
+    await tester.longPress(find.text('FUBON'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('MARK AS SETTLED').last);
     await tester.pumpAndSettle();
@@ -170,7 +179,7 @@ void main() {
     final loans = await _pump(tester, txs: [orphaned]);
     await _openPanel(tester);
 
-    await tester.tap(find.text('FUBON'));
+    await tester.longPress(find.text('FUBON'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('MARK AS SETTLED').last);
     await tester.pumpAndSettle();

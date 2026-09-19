@@ -788,7 +788,7 @@ abstract class AppLocalizations {
   /// No description provided for @markSettledExplain.
   ///
   /// In en, this message translates to:
-  /// **'The monthly payment stops counting. Entries are kept.'**
+  /// **'The monthly payment stops counting and the loan leaves this list for good. Entries are kept.'**
   String get markSettledExplain;
 
   /// No description provided for @repay.
