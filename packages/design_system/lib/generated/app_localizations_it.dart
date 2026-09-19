@@ -850,8 +850,20 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String monthsToGoal(int count) {
-    return '$count mesi al traguardo';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count mesi di copertura da costruire',
+      one: '1 mese di copertura da costruire',
+    );
+    return '$_temp0';
   }
+
+  @override
+  String get goalCashTarget => 'Obiettivo';
+
+  @override
+  String get goalCashToGo => 'Manca';
 
   @override
   String get thisMonth => 'Questo mese';
@@ -926,7 +938,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String paywallOneTimePurchase(String price) {
-    return '$price · Acquisto unico';
+    return '$price una volta. Questa app conta i tuoi abbonamenti: non sarà uno di loro.';
   }
 
   @override
@@ -953,22 +965,23 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String paywallTitleEntries(int count) {
-    return 'Hai registrato le tue $count voci gratuite.\nLe voci illimitate sono Pro.';
+    return 'Hai usato le tue $count voci gratuite.\nPro è ciò che tiene vero il numero.';
   }
 
   @override
   String paywallTitleSimulations(int count) {
-    return 'Hai eseguito le tue $count simulazioni gratuite.\nLe simulazioni illimitate sono Pro.';
+    return 'Hai fatto le tue $count simulazioni gratuite.\nPro è come continui a chiederti cosa succederebbe.';
   }
 
   @override
   String get paywallTitleDefault => 'Sblocca Runway Pro.';
 
   @override
-  String get paywallFeatureEntries => 'Voci illimitate';
+  String get paywallFeatureEntries =>
+      'Registra tutto, così il numero non si sposta';
 
   @override
-  String get paywallFeatureSimulations => 'Simulazioni di scenari illimitate';
+  String get paywallFeatureSimulations => 'Prova quanti scenari vuoi';
 
   @override
   String get stepBalanceShort => 'Saldo';

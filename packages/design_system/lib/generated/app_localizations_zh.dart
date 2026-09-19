@@ -352,13 +352,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get repaid => '% 已還';
 
   @override
-  String get stillPaying => '本金已还清 — 还款继续';
+  String get stillPaying => '本金已還清 — 還款繼續';
 
   @override
-  String get markSettled => '标记为已结清';
+  String get markSettled => '標記為已結清';
 
   @override
-  String get markSettledExplain => '每月还款不再计入，贷款也会永久从清单移除。记录会保留。';
+  String get markSettledExplain => '每月還款不再計入，這筆貸款也會永久從清單上移除。紀錄會留著。';
 
   @override
   String get repay => '還款';
@@ -611,7 +611,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get livingExpenses => '生活費';
 
   @override
-  String get budgetRuleHint => '支出只是用掉预算 — 超支才会增加成本';
+  String get budgetRuleHint => '支出只是用掉預算 — 超支才會增加成本';
 
   @override
   String get subtotal => '小計';
@@ -659,16 +659,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get expectedInflow => '预期流入';
 
   @override
-  String get everyMonth => '每个月';
+  String get everyMonth => '每個月';
 
   @override
-  String get monthlySurplus => '结余';
+  String get monthlySurplus => '結餘';
 
   @override
   String get monthlyDeficit => '不足';
 
   @override
-  String get setExpectedIncome => '设定预期收入';
+  String get setExpectedIncome => '設定預期收入';
 
   @override
   String get expectedBurn => '预期支出';
@@ -829,8 +829,14 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String monthsToGoal(int count) {
-    return '还差$count个月';
+    return '還要再存 $count 個月';
   }
+
+  @override
+  String get goalCashTarget => '目標金額';
+
+  @override
+  String get goalCashToGo => '還差';
 
   @override
   String get thisMonth => '本月';
@@ -851,10 +857,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingSkip => '跳过';
 
   @override
-  String get onboardingWelcomeTitle => '别再猜\n你的钱能撑多久。';
+  String get onboardingWelcomeTitle => '別再猜\n你的錢能撐多久。';
 
   @override
-  String get onboardingWelcomeBody => '不用注册。不连接银行。';
+  String get onboardingWelcomeBody => '不用註冊。不連結銀行。';
 
   @override
   String get onboardingGetStarted => '开始吧';
@@ -863,7 +869,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingPrivacyTitle => '你的数据，\n只在你手机里。';
 
   @override
-  String get onboardingPrivacyBody => '没有服务器，也就没有泄露的风险。';
+  String get onboardingPrivacyBody => '沒有伺服器，也就沒有外洩的風險。';
 
   @override
   String get onboardingPrivacyEncrypted => '在手机上加密';
@@ -881,10 +887,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingIUnderstand => '了解';
 
   @override
-  String get onboardingFirstActionTitle => '一个数字\n就设定好了。';
+  String get onboardingFirstActionTitle => '一個數字\n就設定好了。';
 
   @override
-  String get onboardingFirstActionBody => '只要现金余额，其他都不用。';
+  String get onboardingFirstActionBody => '只要現金餘額，其他都不用。';
 
   @override
   String get onboardingAddMyBalance => '输入我的余额';
@@ -900,7 +906,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String paywallOneTimePurchase(String price) {
-    return '$price 买断。这个 App 帮你算订阅，自己不会变成订阅。';
+    return '$price 買斷。這個 App 幫你算訂閱，自己不會變成訂閱。';
   }
 
   @override
@@ -926,22 +932,22 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String paywallTitleEntries(int count) {
-    return '$count 笔免费记录用完了。\nPro 让这个数字一直是准的。';
+    return '$count 筆免費紀錄用完了。\nPro 讓這個數字一直是準的。';
   }
 
   @override
   String paywallTitleSimulations(int count) {
-    return '$count 次免费模拟用完了。\nPro 让你想试几次都行。';
+    return '$count 次免費模擬用完了。\nPro 讓你想試幾次都行。';
   }
 
   @override
   String get paywallTitleDefault => '解锁 Runway Pro。';
 
   @override
-  String get paywallFeatureEntries => '全部都记，数字就不会跑掉';
+  String get paywallFeatureEntries => '全部都記，數字就不會跑掉';
 
   @override
-  String get paywallFeatureSimulations => '想模拟几次都可以';
+  String get paywallFeatureSimulations => '想模擬幾次都可以';
 
   @override
   String get stepBalanceShort => '现金余额';
@@ -1838,8 +1844,14 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String monthsToGoal(int count) {
-    return '還差$count個月';
+    return '還要再存 $count 個月';
   }
+
+  @override
+  String get goalCashTarget => '目標金額';
+
+  @override
+  String get goalCashToGo => '還差';
 
   @override
   String get thisMonth => '本月';
@@ -1909,7 +1921,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String paywallOneTimePurchase(String price) {
-    return '$price · 買斷，一次付清';
+    return '$price 買斷。這個 App 幫你算訂閱，自己當然不會變成訂閱。';
   }
 
   @override
@@ -1935,22 +1947,22 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String paywallTitleEntries(int count) {
-    return '$count 筆免費紀錄用完了。\n想繼續記，就是 Pro。';
+    return '$count 筆免費紀錄用完了。\nPro 就是讓這個數字一直準。';
   }
 
   @override
   String paywallTitleSimulations(int count) {
-    return '$count 次免費模擬用完了。\n想繼續模擬，就是 Pro。';
+    return '$count 次免費模擬用完了。\nPro 讓你想試幾次就試幾次。';
   }
 
   @override
   String get paywallTitleDefault => '解鎖 Runway Pro。';
 
   @override
-  String get paywallFeatureEntries => '紀錄不限筆數';
+  String get paywallFeatureEntries => '全部都記，數字才不會跑掉';
 
   @override
-  String get paywallFeatureSimulations => '情境模擬不限次數';
+  String get paywallFeatureSimulations => '想模擬幾次就幾次';
 
   @override
   String get stepBalanceShort => '現金餘額';

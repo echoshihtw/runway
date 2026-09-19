@@ -1676,8 +1676,20 @@ abstract class AppLocalizations {
   /// No description provided for @monthsToGoal.
   ///
   /// In en, this message translates to:
-  /// **'{count} months to go'**
+  /// **'{count, plural, =1{1 month of cover to build} other{{count} months of cover to build}}'**
   String monthsToGoal(int count);
+
+  /// No description provided for @goalCashTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'Target cash'**
+  String get goalCashTarget;
+
+  /// No description provided for @goalCashToGo.
+  ///
+  /// In en, this message translates to:
+  /// **'Still to go'**
+  String get goalCashToGo;
 
   /// No description provided for @thisMonth.
   ///
@@ -1814,7 +1826,7 @@ abstract class AppLocalizations {
   /// No description provided for @paywallOneTimePurchase.
   ///
   /// In en, this message translates to:
-  /// **'{price} · One-time purchase'**
+  /// **'{price} once. This app counts your subscriptions — it will not be one.'**
   String paywallOneTimePurchase(String price);
 
   /// No description provided for @paywallUnavailable.
@@ -1862,13 +1874,13 @@ abstract class AppLocalizations {
   /// No description provided for @paywallTitleEntries.
   ///
   /// In en, this message translates to:
-  /// **'You\'ve logged your {count} free entries.\nUnlimited entries is Pro.'**
+  /// **'You\'ve used your {count} free entries.\nPro is what keeps the number true.'**
   String paywallTitleEntries(int count);
 
   /// No description provided for @paywallTitleSimulations.
   ///
   /// In en, this message translates to:
-  /// **'You\'ve run your {count} free simulations.\nUnlimited simulations is Pro.'**
+  /// **'You\'ve run your {count} free simulations.\nPro is how you keep asking what if.'**
   String paywallTitleSimulations(int count);
 
   /// No description provided for @paywallTitleDefault.
@@ -1880,13 +1892,13 @@ abstract class AppLocalizations {
   /// No description provided for @paywallFeatureEntries.
   ///
   /// In en, this message translates to:
-  /// **'Unlimited entries'**
+  /// **'Log everything, so the number never drifts'**
   String get paywallFeatureEntries;
 
   /// No description provided for @paywallFeatureSimulations.
   ///
   /// In en, this message translates to:
-  /// **'Unlimited scenario simulations'**
+  /// **'Ask what if as often as you like'**
   String get paywallFeatureSimulations;
 
   /// No description provided for @stepBalanceShort.

@@ -832,8 +832,14 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String monthsToGoal(int count) {
-    return 'あと$countヶ月';
+    return 'あと$countか月分を貯める';
   }
+
+  @override
+  String get goalCashTarget => '目標額';
+
+  @override
+  String get goalCashToGo => '残り';
 
   @override
   String get thisMonth => '今月';
@@ -903,7 +909,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String paywallOneTimePurchase(String price) {
-    return '$price · 買い切り';
+    return '$price 一回きり。サブスクを数えるアプリが、サブスクになるわけにはいきません。';
   }
 
   @override
@@ -929,22 +935,22 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String paywallTitleEntries(int count) {
-    return '無料の記録$count件を使い切りました。\n無制限の記録はProです。';
+    return '無料の記録$count件を使い切りました。\n数字を正しく保つのが Pro です。';
   }
 
   @override
   String paywallTitleSimulations(int count) {
-    return '無料のシミュレーション$count回を使い切りました。\n無制限のシミュレーションはProです。';
+    return '無料のシミュレーション$count回を使い切りました。\nPro なら「もし」を何度でも。';
   }
 
   @override
   String get paywallTitleDefault => 'Runway Proをアンロック。';
 
   @override
-  String get paywallFeatureEntries => '記録は無制限';
+  String get paywallFeatureEntries => 'すべて記録できるから、数字がずれない';
 
   @override
-  String get paywallFeatureSimulations => 'シナリオシミュレーションは無制限';
+  String get paywallFeatureSimulations => '「もし」を何度でも試せる';
 
   @override
   String get stepBalanceShort => '残高';
