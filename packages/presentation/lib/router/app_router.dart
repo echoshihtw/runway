@@ -11,9 +11,6 @@ import '../features/scenarios/scenarios_screen.dart';
 import 'page_indicator.dart';
 
 // Global keys for coach mark tour
-final hudNavKey = GlobalKey();
-final logNavKey = GlobalKey();
-final simNavKey = GlobalKey();
 
 final appRouter = GoRouter(
   initialLocation: '/boot',
