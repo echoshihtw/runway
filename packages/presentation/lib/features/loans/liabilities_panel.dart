@@ -176,6 +176,11 @@ class _RepaySheetState extends ConsumerState<_RepaySheet> {
     text: moneyField(widget.summary.loan.monthlyPayment),
   );
 
+  /// CONFIRM used to be live on an empty field while the handler returned
+  /// early, so tapping it did nothing and the sheet sat there — the same
+  /// fault the subscription sheet had before #168.
+  bool get _valid => (double.tryParse(_amountCtrl.text.trim()) ?? 0) > 0;
+
   @override
   void dispose() {
     _amountCtrl.dispose();
@@ -186,14 +191,20 @@ class _RepaySheetState extends ConsumerState<_RepaySheet> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final summary = widget.summary;
-    return Padding(
+    return Container(
+      // Capped and scrollable, as the subscription sheet is since #168: the
+      // button row overflowed at 320pt with large text.
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.9,
+      ),
       padding: EdgeInsets.only(
         left: AppSpacing.lg,
         right: AppSpacing.lg,
         top: AppSpacing.lg,
         bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.lg,
       ),
-      child: Column(
+      child: SingleChildScrollView(
+        child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -212,6 +223,7 @@ class _RepaySheetState extends ConsumerState<_RepaySheet> {
             inputType: NeoInputType.decimal,
             keyboardType: TextInputType.number,
             hint: moneyField(summary.loan.monthlyPayment),
+            onChanged: (_) => setState(() {}),
           ),
           const SizedBox(height: AppSpacing.lg),
           Row(
@@ -222,7 +234,9 @@ class _RepaySheetState extends ConsumerState<_RepaySheet> {
                   variant: NeoButtonVariant.primary,
                   color: AppColors.gold,
                   fullWidth: true,
-                  onPressed: () async {
+                  onPressed: !_valid
+                      ? null
+                      : () async {
                     final amount = double.tryParse(_amountCtrl.text.trim());
                     if (amount == null || amount <= 0) return;
                     Navigator.of(context).pop();
@@ -252,7 +266,8 @@ class _RepaySheetState extends ConsumerState<_RepaySheet> {
               ),
             ],
           ),
-        ],
+          ],
+        ),
       ),
     );
   }
