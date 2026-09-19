@@ -11,8 +11,7 @@ class BudgetNotifier extends AsyncNotifier<Budget> {
     return ref.watch(financialSettingsRepositoryProvider).getBudget();
   }
 
-  Future<void> setRent(double value) =>
-      _save(_stored.copyWith(rent: value));
+  Future<void> setRent(double value) => _save(_stored.copyWith(rent: value));
 
   Future<void> setLiving(double value) =>
       _save(_stored.copyWith(living: value));

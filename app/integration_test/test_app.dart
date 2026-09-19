@@ -11,7 +11,12 @@ import 'package:app/main.dart';
 ///
 /// Pass [database] to seed data before the app starts; otherwise the app opens
 /// an empty database of its own.
-Widget buildTestApp({AppDatabase? database}) {
+///
+/// Pass [now] to pin the clock. Every date-dependent figure — the months of
+/// runway, what is left per remaining day, the countdown to the next charge —
+/// then comes out the same on any day, which is what makes a captured
+/// screenshot reproducible.
+Widget buildTestApp({AppDatabase? database, DateTime? now}) {
   final db = database ?? AppDatabase.forTesting(NativeDatabase.memory());
   return ProviderScope(
     overrides: [
@@ -30,6 +35,7 @@ Widget buildTestApp({AppDatabase? database}) {
       purchaseServiceProvider.overrideWithValue(const _NoPurchases()),
       usageCountStoreProvider.overrideWithValue(_MemorySimulationCount()),
       reviewPrompterProvider.overrideWithValue(const _NoReviewPrompt()),
+      if (now != null) clockProvider.overrideWithValue(() => now),
     ],
     // The real root widget, so tests see the app's theme and localizations.
     child: const FinancialRunwayApp(),

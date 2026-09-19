@@ -19,7 +19,8 @@ class SubscriptionsPanel extends ConsumerWidget {
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
     final nf = NumberFormat('#,##0', 'en_US');
     final active = subs.where((s) => s.isActive).toList();
-    final sorted = sortedByNextBilling(active, now: DateTime.now());
+    final now = ref.watch(clockProvider)();
+    final sorted = sortedByNextBilling(active, now: now);
     final monthly = totalSubscriptionMonthlyCost(active);
     final yearly = totalSubscriptionYearlyCost(active);
     final next = sorted.isEmpty ? null : sorted.first;
@@ -62,7 +63,9 @@ class SubscriptionsPanel extends ConsumerWidget {
               const SizedBox(height: AppSpacing.md),
               Row(
                 children: [
-                  Expanded(child: _NextBillingStrip(sub: next!)),
+                  Expanded(
+                    child: _NextBillingStrip(sub: next!, now: now),
+                  ),
                   const SizedBox(width: AppSpacing.sm),
                   _CountBadge(count: active.length),
                 ],
@@ -82,6 +85,7 @@ class SubscriptionsPanel extends ConsumerWidget {
                   showCategoryLabel: showCatLabel,
                   showDivider: i < sorted.length - 1,
                   onEdit: () => _showEditSubscription(context, ref, sorted[i]),
+                  now: now,
                 ),
               AddStrip(
                 label: l10n.newSubscription,
@@ -272,11 +276,15 @@ class _MetricCell extends StatelessWidget {
 class _NextBillingStrip extends StatelessWidget {
   final Subscription sub;
 
-  const _NextBillingStrip({required this.sub});
+  /// Handed down rather than read here, so one frame cannot count from a
+  /// different instant than the row beside it, and a test can pin both.
+  final DateTime now;
+
+  const _NextBillingStrip({required this.sub, required this.now});
 
   @override
   Widget build(BuildContext context) {
-    final days = daysUntilNextBilling(sub, DateTime.now());
+    final days = daysUntilNextBilling(sub, now);
     final color = days <= 7
         ? AppColors.hotPink
         : days <= 14
@@ -343,6 +351,7 @@ class _SubRow extends StatelessWidget {
   final bool showCategoryLabel;
   final bool showDivider;
   final VoidCallback onEdit;
+  final DateTime now;
 
   const _SubRow({
     required this.sub,
@@ -351,12 +360,13 @@ class _SubRow extends StatelessWidget {
     this.showCategoryLabel = false,
     required this.showDivider,
     required this.onEdit,
+    required this.now,
   });
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final days = daysUntilNextBilling(sub, DateTime.now());
+    final days = daysUntilNextBilling(sub, now);
     final daysColor = days <= 7
         ? AppColors.hotPink
         : days <= 14
@@ -410,9 +420,7 @@ class _SubRow extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: SC.subscr.withAlpha(20),
                             borderRadius: BorderRadius.circular(3),
-                            border: Border.all(
-                              color: SC.subscr.withAlpha(60),
-                            ),
+                            border: Border.all(color: SC.subscr.withAlpha(60)),
                           ),
                           child: Text(
                             sub.category == SubscriptionCategory.personal
@@ -450,5 +458,3 @@ class _SubRow extends StatelessWidget {
     );
   }
 }
-
-

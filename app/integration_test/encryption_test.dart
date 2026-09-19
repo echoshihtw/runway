@@ -64,26 +64,27 @@ void main() {
     await expectEncryptedOnDisk();
   });
 
-  testWidgets('a plaintext database from an older build is encrypted in place', (
-    tester,
-  ) async {
-    // Older iOS builds loaded the system sqlite3, so PRAGMA key did nothing.
-    // Opening without a key reproduces that file.
-    final legacy = AppDatabase.forTesting(NativeDatabase(file));
-    await DriftFinancialSettingsRepository(
-      legacy,
-    ).saveBudget(const domain.Budget(rent: 4321, living: 1234));
-    await legacy.close();
-    expect(await isPlaintextSqliteFile(file), isTrue);
+  testWidgets(
+    'a plaintext database from an older build is encrypted in place',
+    (tester) async {
+      // Older iOS builds loaded the system sqlite3, so PRAGMA key did nothing.
+      // Opening without a key reproduces that file.
+      final legacy = AppDatabase.forTesting(NativeDatabase(file));
+      await DriftFinancialSettingsRepository(
+        legacy,
+      ).saveBudget(const domain.Budget(rent: 4321, living: 1234));
+      await legacy.close();
+      expect(await isPlaintextSqliteFile(file), isTrue);
 
-    final db = AppDatabase();
-    final budget = await DriftFinancialSettingsRepository(db).getBudget();
-    final cipherVersion = await readCipherVersion(db);
-    await db.close();
+      final db = AppDatabase();
+      final budget = await DriftFinancialSettingsRepository(db).getBudget();
+      final cipherVersion = await readCipherVersion(db);
+      await db.close();
 
-    expect(budget.rent, 4321);
-    expect(budget.living, 1234);
-    expect(cipherVersion, isNotNull);
-    await expectEncryptedOnDisk();
-  });
+      expect(budget.rent, 4321);
+      expect(budget.living, 1234);
+      expect(cipherVersion, isNotNull);
+      await expectEncryptedOnDisk();
+    },
+  );
 }
