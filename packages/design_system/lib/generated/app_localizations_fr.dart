@@ -1004,12 +1004,24 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String deltaDaysLonger(int days) {
-    return '$days jours de plus';
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days jours de plus',
+      one: '1 jour de plus',
+    );
+    return '$_temp0';
   }
 
   @override
   String deltaDaysShorter(int days) {
-    return '$days jours de moins';
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days jours de moins',
+      one: '1 jour de moins',
+    );
+    return '$_temp0';
   }
 
   @override

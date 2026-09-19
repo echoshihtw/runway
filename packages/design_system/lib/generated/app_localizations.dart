@@ -1940,25 +1940,25 @@ abstract class AppLocalizations {
   /// No description provided for @deltaDaysLonger.
   ///
   /// In en, this message translates to:
-  /// **'{days} days longer'**
+  /// **'{days, plural, =1{1 day longer} other{{days} days longer}}'**
   String deltaDaysLonger(int days);
 
   /// No description provided for @deltaDaysShorter.
   ///
   /// In en, this message translates to:
-  /// **'{days} days shorter'**
+  /// **'{days, plural, =1{1 day shorter} other{{days} days shorter}}'**
   String deltaDaysShorter(int days);
 
   /// No description provided for @deltaMonthsLonger.
   ///
   /// In en, this message translates to:
-  /// **'{months} months longer'**
+  /// **'{months, plural, =1{1 month longer} other{{months} months longer}}'**
   String deltaMonthsLonger(int months);
 
   /// No description provided for @deltaMonthsShorter.
   ///
   /// In en, this message translates to:
-  /// **'{months} months shorter'**
+  /// **'{months, plural, =1{1 month shorter} other{{months} months shorter}}'**
   String deltaMonthsShorter(int months);
 
   /// Link on the paywall to Apple's standard end user license agreement
