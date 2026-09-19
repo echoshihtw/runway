@@ -7,7 +7,11 @@ void main() {
 
   group('computeLoanSummaries', () {
     test('returns empty for no loans', () {
-      final result = computeLoanSummaries(loans: [], transactions: [], now: DateTime.now());
+      final result = computeLoanSummaries(
+        loans: [],
+        transactions: [],
+        now: DateTime.now(),
+      );
       expect(result, isEmpty);
     });
 
@@ -18,7 +22,11 @@ void main() {
         originalAmount: 500000,
         monthlyPayment: 15000,
       );
-      final result = computeLoanSummaries(loans: [loan], transactions: [], now: DateTime.now());
+      final result = computeLoanSummaries(
+        loans: [loan],
+        transactions: [],
+        now: DateTime.now(),
+      );
       expect(result.first.totalRepaid, 0);
       expect(result.first.remainingBalance, 500000);
     });
@@ -48,7 +56,11 @@ void main() {
           loanId: 'loan1',
         ),
       ];
-      final result = computeLoanSummaries(loans: [loan], transactions: txs, now: DateTime.now());
+      final result = computeLoanSummaries(
+        loans: [loan],
+        transactions: txs,
+        now: DateTime.now(),
+      );
       expect(result.first.totalRepaid, 30000);
       expect(result.first.remainingBalance, 470000);
     });
@@ -70,7 +82,11 @@ void main() {
           loanId: 'loan2',
         ),
       ];
-      final result = computeLoanSummaries(loans: [loan], transactions: txs, now: DateTime.now());
+      final result = computeLoanSummaries(
+        loans: [loan],
+        transactions: txs,
+        now: DateTime.now(),
+      );
       expect(result.first.totalRepaid, 0);
     });
 
@@ -91,7 +107,11 @@ void main() {
           loanId: 'loan1',
         ),
       ];
-      final result = computeLoanSummaries(loans: [loan], transactions: txs, now: DateTime.now());
+      final result = computeLoanSummaries(
+        loans: [loan],
+        transactions: txs,
+        now: DateTime.now(),
+      );
       expect(result.first.remainingBalance, 0);
       expect(result.first.isFullyPaid, true);
     });
@@ -113,7 +133,11 @@ void main() {
           loanId: 'loan1',
         ),
       ];
-      final result = computeLoanSummaries(loans: [loan], transactions: txs, now: DateTime.now());
+      final result = computeLoanSummaries(
+        loans: [loan],
+        transactions: txs,
+        now: DateTime.now(),
+      );
       expect(result.first.repaidRatio, 0.25);
     });
 
@@ -134,7 +158,11 @@ void main() {
           loanId: 'loan1',
         ),
       ];
-      final result = computeLoanSummaries(loans: [loan], transactions: txs, now: DateTime.now());
+      final result = computeLoanSummaries(
+        loans: [loan],
+        transactions: txs,
+        now: DateTime.now(),
+      );
       expect(result.first.monthsRemaining, 10);
     });
 
@@ -157,7 +185,11 @@ void main() {
           updatedAt: now,
         ),
       ];
-      final result = computeLoanSummaries(loans: [loan], transactions: txs, now: DateTime.now());
+      final result = computeLoanSummaries(
+        loans: [loan],
+        transactions: txs,
+        now: DateTime.now(),
+      );
       expect(result.first.isAheadThisMonth, true);
       expect(result.first.paidThisMonth, 20000);
     });
@@ -245,18 +277,19 @@ void main() {
 }
 
 void _costingTests() {
-  Loan loanFrom(DateTime start, {int termMonths = 0, bool isActive = true}) => Loan(
-    id: 'l1',
-    name: 'Student loan',
-    source: 'Bank',
-    originalAmount: 18000,
-    monthlyPayment: 210,
-    originalTermMonths: termMonths,
-    startDate: start,
-    isActive: isActive,
-    createdAt: start,
-    updatedAt: start,
-  );
+  Loan loanFrom(DateTime start, {int termMonths = 0, bool isActive = true}) =>
+      Loan(
+        id: 'l1',
+        name: 'Student loan',
+        source: 'Bank',
+        originalAmount: 18000,
+        monthlyPayment: 210,
+        originalTermMonths: termMonths,
+        startDate: start,
+        isActive: isActive,
+        createdAt: start,
+        updatedAt: start,
+      );
 
   LoanSummary summaryOf(Loan loan, {double repaid = 0}) => LoanSummary(
     loan: loan,
@@ -300,10 +333,72 @@ void _costingTests() {
       expect(costingLoanSummaries([summaryOf(closed)], now: now), isEmpty);
     });
 
-    test('the free-plan limit still frees the slot on repaid principal', () {
+    test('a loan that still costs money stays on the list', () {
+      // It used to drop off here: repaid principal ended it for the list while
+      // the term kept it costing, so the payment went on being subtracted from
+      // the runway with nothing on screen to explain it, and no way to record
+      // the payment that would net it off.
       final loan = loanFrom(DateTime(2020, 1, 1), termMonths: 96);
+      final summary = summaryOf(loan, repaid: 18000);
+      final now = DateTime(2026, 9, 16);
 
-      expect(activeLoanSummaries([summaryOf(loan, repaid: 18000)]), isEmpty);
+      expect(summary.isFullyPaid, isTrue);
+      expect(loanIsCosting(summary, now: now), isTrue);
+      expect(activeLoanSummaries([summary], now: now), hasLength(1));
+    });
+
+    test('a repayment does not land on a loan that is already repaid', () {
+      // The settled loan sorts first alphabetically, and the form preselects
+      // the first target. Before this it took the payment, where the balance
+      // clamp hid it and the real loan kept its installment reserved.
+      final now = DateTime(2026, 9, 16);
+      final settled = LoanSummary(
+        loan: loanFrom(
+          DateTime(2020, 1, 1),
+          termMonths: 96,
+        ).copyWith(id: 'settled', name: 'Acme'),
+        totalRepaid: 18000,
+        remainingBalance: 0,
+        paidThisMonth: 0,
+      );
+      final owing = LoanSummary(
+        loan: loanFrom(
+          DateTime(2020, 1, 1),
+          termMonths: 96,
+        ).copyWith(id: 'owing', name: 'Zenith'),
+        totalRepaid: 0,
+        remainingBalance: 18000,
+        paidThisMonth: 0,
+      );
+
+      final targets = repaymentTargets([settled, owing], now: now);
+
+      expect(targets.map((loan) => loan.id), ['owing', 'settled']);
+    });
+
+    test('the loan an edited entry already names is offered even when it is '
+        'closed', () {
+      final now = DateTime(2026, 9, 16);
+      final closed = summaryOf(loanFrom(DateTime(2020, 1, 1), isActive: false));
+
+      expect(repaymentTargets([closed], now: now), isEmpty);
+      expect(
+        repaymentTargets(
+          [closed],
+          existingLoanId: 'l1',
+          now: now,
+        ).map((loan) => loan.id),
+        ['l1'],
+      );
+    });
+
+    test('a loan that is finished with drops off the list', () {
+      final loan = loanFrom(DateTime(2020, 1, 1), termMonths: 12);
+      final summary = summaryOf(loan, repaid: 18000);
+      final now = DateTime(2026, 9, 16);
+
+      expect(loanIsCosting(summary, now: now), isFalse);
+      expect(activeLoanSummaries([summary], now: now), isEmpty);
     });
   });
 }

@@ -65,9 +65,7 @@ class LiabilitiesPanel extends ConsumerWidget {
                     textAlign: TextAlign.right,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.label.copyWith(
-                      color: AppColors.gold,
-                    ),
+                    style: AppTextStyles.label.copyWith(color: AppColors.gold),
                   ),
                 ),
               ],
@@ -205,67 +203,74 @@ class _RepaySheetState extends ConsumerState<_RepaySheet> {
       ),
       child: SingleChildScrollView(
         child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            l10n.repayLoan,
-            style: AppTextStyles.title.copyWith(color: SC.numberPrimary),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(summary.loan.name.toUpperCase(), style: AppTextStyles.bodySmall),
-          const SizedBox(height: AppSpacing.lg),
-          NeoInput(
-            label: l10n.repaymentAmount,
-            controller: _amountCtrl,
-            // Without this the field takes letters, and CONFIRM then parses
-            // null and silently does nothing.
-            inputType: NeoInputType.decimal,
-            keyboardType: TextInputType.number,
-            hint: moneyField(summary.loan.monthlyPayment),
-            onChanged: (_) => setState(() {}),
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          Row(
-            children: [
-              Expanded(
-                child: NeoButton(
-                  label: l10n.confirm,
-                  variant: NeoButtonVariant.primary,
-                  color: AppColors.gold,
-                  fullWidth: true,
-                  onPressed: !_valid
-                      ? null
-                      : () async {
-                    final amount = double.tryParse(_amountCtrl.text.trim());
-                    if (amount == null || amount <= 0) return;
-                    Navigator.of(context).pop();
-                    final now = DateTime.now();
-                    final tx = Transaction(
-                      id: const Uuid().v4(),
-                      date: now,
-                      type: TransactionType.repayment,
-                      amount: Money(amount),
-                      loanId: summary.loan.id,
-                      note: '${l10n.repay} — ${summary.loan.name}',
-                      createdAt: now,
-                      updatedAt: now,
-                    );
-                    await ref.read(addTransactionUseCaseProvider).execute(tx);
-                  },
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.repayLoan,
+              style: AppTextStyles.title.copyWith(color: SC.numberPrimary),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              summary.loan.name.toUpperCase(),
+              style: AppTextStyles.bodySmall,
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            NeoInput(
+              label: l10n.repaymentAmount,
+              controller: _amountCtrl,
+              // Without this the field takes letters, and CONFIRM then parses
+              // null and silently does nothing.
+              inputType: NeoInputType.decimal,
+              keyboardType: TextInputType.number,
+              hint: moneyField(summary.loan.monthlyPayment),
+              onChanged: (_) => setState(() {}),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            Row(
+              children: [
+                Expanded(
+                  child: NeoButton(
+                    label: l10n.confirm,
+                    variant: NeoButtonVariant.primary,
+                    color: AppColors.gold,
+                    fullWidth: true,
+                    onPressed: !_valid
+                        ? null
+                        : () async {
+                            final amount = double.tryParse(
+                              _amountCtrl.text.trim(),
+                            );
+                            if (amount == null || amount <= 0) return;
+                            Navigator.of(context).pop();
+                            final now = DateTime.now();
+                            final tx = Transaction(
+                              id: const Uuid().v4(),
+                              date: now,
+                              type: TransactionType.repayment,
+                              amount: Money(amount),
+                              loanId: summary.loan.id,
+                              note: '${l10n.repay} — ${summary.loan.name}',
+                              createdAt: now,
+                              updatedAt: now,
+                            );
+                            await ref
+                                .read(addTransactionUseCaseProvider)
+                                .execute(tx);
+                          },
+                  ),
                 ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: NeoButton(
-                  label: l10n.cancel,
-                  variant: NeoButtonVariant.ghost,
-                  fullWidth: true,
-                  onPressed: () => Navigator.of(context).pop(),
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  child: NeoButton(
+                    label: l10n.cancel,
+                    variant: NeoButtonVariant.ghost,
+                    fullWidth: true,
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
           ],
         ),
       ),

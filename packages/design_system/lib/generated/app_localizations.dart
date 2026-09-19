@@ -773,6 +773,12 @@ abstract class AppLocalizations {
   /// **'% REPAID'**
   String get repaid;
 
+  /// No description provided for @stillPaying.
+  ///
+  /// In en, this message translates to:
+  /// **'PRINCIPAL REPAID. PAYMENTS RUN TO THE END OF THE TERM.'**
+  String get stillPaying;
+
   /// No description provided for @repay.
   ///
   /// In en, this message translates to:

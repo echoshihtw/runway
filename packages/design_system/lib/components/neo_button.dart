@@ -57,11 +57,11 @@ class _NeoButtonState extends State<NeoButton>
   Color get _bgColor => _disabled
       ? AppColors.surfaceHigh
       : switch (widget.variant) {
-    NeoButtonVariant.primary => widget.color ?? AppColors.neonGreen,
-    NeoButtonVariant.secondary => AppColors.surfaceHigh,
-    NeoButtonVariant.ghost => Colors.transparent,
-    NeoButtonVariant.danger => AppColors.hotPink.withAlpha(20),
-  };
+          NeoButtonVariant.primary => widget.color ?? AppColors.neonGreen,
+          NeoButtonVariant.secondary => AppColors.surfaceHigh,
+          NeoButtonVariant.ghost => Colors.transparent,
+          NeoButtonVariant.danger => AppColors.hotPink.withAlpha(20),
+        };
 
   Color get _borderColor => switch (widget.variant) {
     NeoButtonVariant.primary => Colors.transparent,
@@ -76,11 +76,11 @@ class _NeoButtonState extends State<NeoButton>
   Color get _textColor => _disabled
       ? AppColors.textSecondary
       : switch (widget.variant) {
-    NeoButtonVariant.primary => AppColors.background,
-    NeoButtonVariant.secondary => AppColors.textPrimary,
-    NeoButtonVariant.ghost => AppColors.textSecondary,
-    NeoButtonVariant.danger => AppColors.hotPink,
-  };
+          NeoButtonVariant.primary => AppColors.background,
+          NeoButtonVariant.secondary => AppColors.textPrimary,
+          NeoButtonVariant.ghost => AppColors.textSecondary,
+          NeoButtonVariant.danger => AppColors.hotPink,
+        };
 
   @override
   Widget build(BuildContext context) {
@@ -134,8 +134,12 @@ class _NeoButtonState extends State<NeoButton>
                   const SizedBox(width: AppSpacing.xs),
                 ],
                 // The label yields rather than pushing the button past its
-                // own edge: at large text sizes every caller overflowed, and
-                // the button is the thing that should shrink, not the row.
+                // own edge at large text sizes. This only bites where the
+                // button is given a width to fit inside: a non-fullWidth
+                // NeoButton laid out as a plain child of a Row gets unbounded
+                // constraints, the Flexible below is then treated as non-flex,
+                // and the label lays out at its intrinsic width regardless.
+                // Those callers have to bound the button themselves (#178).
                 Flexible(
                   child: Text(
                     widget.label,

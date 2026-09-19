@@ -21,7 +21,14 @@ class LoanCard extends StatelessWidget {
     final nf = NumberFormat('#,##0', 'en_US');
     final loan = summary.loan;
     final pct = (summary.repaidRatio * 100).toStringAsFixed(0);
-    final color = summary.isFullyPaid ? AppColors.textPrimary : AppColors.textPrimary;
+    // Repaid principal does not mean the payments stopped: with a term set the
+    // term governs, and the runway keeps subtracting the installment. Every
+    // row below is shown on every card that is listed at all — gating them on
+    // this instead took the installment away from a loan past its term whose
+    // principal was still outstanding, which is the one state where the owner
+    // most needs to see what it costs. Only the caption turns on it.
+    final isCosting = loanIsCosting(summary, now: DateTime.now());
+    const color = AppColors.textPrimary;
 
     return GestureDetector(
       onTap: onTap,
@@ -62,7 +69,7 @@ class LoanCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (!summary.isFullyPaid)
+                if (!summary.isFullyPaid || isCosting)
                   GestureDetector(
                     onTap: onRepay,
                     child: Container(
@@ -86,69 +93,76 @@ class LoanCard extends StatelessWidget {
             const SizedBox(height: AppSpacing.xs),
             _row(
               l10n.remaining,
-              summary.isFullyPaid ? l10n.paid : nf.format(summary.remainingBalance),
+              summary.isFullyPaid
+                  ? l10n.paid
+                  : nf.format(summary.remainingBalance),
               color,
             ),
 
-            if (!summary.isFullyPaid) ...[
-              const SizedBox(height: AppSpacing.xs),
-              _row(
-                l10n.installment,
-                nf.format(loan.monthlyPayment),
-                AppColors.textPrimary,
+            const SizedBox(height: AppSpacing.xs),
+            _row(
+              l10n.installment,
+              nf.format(loan.monthlyPayment),
+              AppColors.textPrimary,
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            _row(
+              l10n.paidThisMo,
+              summary.paidThisMonth > 0
+                  ? nf.format(summary.paidThisMonth)
+                  : '—',
+              summary.paidThisMonth == 0
+                  ? AppColors.textPrimary
+                  : summary.isAheadThisMonth
+                  ? AppColors.safe
+                  // Gold: this is a loan obligation, not a runway status.
+                  : AppColors.gold,
+            ),
+            if (summary.paidThisMonth > loan.monthlyPayment) ...[
+              const SizedBox(height: AppSpacing.xxs),
+              Text(
+                '> +${nf.format(summary.paidThisMonth - loan.monthlyPayment)} ${l10n.extra}',
+                style: AppTextStyles.small.copyWith(color: AppColors.safe),
               ),
+            ],
+            const SizedBox(height: AppSpacing.xs),
+            _row(
+              l10n.monthsLeft,
+              '${summary.monthsRemaining} MO',
+              AppColors.textPrimary,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            LayoutBuilder(
+              builder: (_, c) {
+                final filled = c.maxWidth * summary.repaidRatio;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Stack(
+                      children: [
+                        Container(
+                          height: 6,
+                          width: c.maxWidth,
+                          color: AppColors.panelBorder,
+                        ),
+                        Container(
+                          height: 6,
+                          width: filled,
+                          color: AppColors.textPrimary,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: AppSpacing.xxs),
+                    Text('$pct${l10n.repaid}', style: AppTextStyles.small),
+                  ],
+                );
+              },
+            ),
+            if (summary.isFullyPaid && isCosting) ...[
               const SizedBox(height: AppSpacing.xs),
-              _row(
-                l10n.paidThisMo,
-                summary.paidThisMonth > 0
-                    ? nf.format(summary.paidThisMonth)
-                    : '—',
-                summary.paidThisMonth == 0
-                    ? AppColors.textPrimary
-                    : summary.isAheadThisMonth
-                    ? AppColors.safe
-                    // Gold: this is a loan obligation, not a runway status.
-                    : AppColors.gold,
-              ),
-              if (summary.paidThisMonth > loan.monthlyPayment) ...[
-                const SizedBox(height: AppSpacing.xxs),
-                Text(
-                  '> +${nf.format(summary.paidThisMonth - loan.monthlyPayment)} ${l10n.extra}',
-                  style: AppTextStyles.small.copyWith(color: AppColors.safe),
-                ),
-              ],
-              const SizedBox(height: AppSpacing.xs),
-              _row(
-                l10n.monthsLeft,
-                '${summary.monthsRemaining} MO',
-                AppColors.textPrimary,
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              LayoutBuilder(
-                builder: (_, c) {
-                  final filled = c.maxWidth * summary.repaidRatio;
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Stack(
-                        children: [
-                          Container(
-                            height: 6,
-                            width: c.maxWidth,
-                            color: AppColors.panelBorder,
-                          ),
-                          Container(
-                            height: 6,
-                            width: filled,
-                            color: AppColors.textPrimary,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: AppSpacing.xxs),
-                      Text('$pct${l10n.repaid}', style: AppTextStyles.small),
-                    ],
-                  );
-                },
+              Text(
+                l10n.stillPaying,
+                style: AppTextStyles.small.copyWith(color: AppColors.gold),
               ),
             ],
           ],

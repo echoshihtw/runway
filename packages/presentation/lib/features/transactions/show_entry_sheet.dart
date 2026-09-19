@@ -41,19 +41,21 @@ Future<void> showEntrySheet(
       onSubmit: (type, amount, date, note, category, loanId) async {
         final now = DateTime.now();
         if (existing == null) {
-          await ref.read(addTransactionUseCaseProvider).execute(
-            Transaction(
-              id: const Uuid().v4(),
-              date: date,
-              type: type,
-              amount: Money(amount),
-              note: note,
-              loanId: type == TransactionType.repayment ? loanId : null,
-              category: category,
-              createdAt: now,
-              updatedAt: now,
-            ),
-          );
+          await ref
+              .read(addTransactionUseCaseProvider)
+              .execute(
+                Transaction(
+                  id: const Uuid().v4(),
+                  date: date,
+                  type: type,
+                  amount: Money(amount),
+                  note: note,
+                  loanId: type == TransactionType.repayment ? loanId : null,
+                  category: category,
+                  createdAt: now,
+                  updatedAt: now,
+                ),
+              );
         } else {
           // A repayment names the loan it pays; a drawdown carries the id
           // that ties it to the commitment it created, and that id is the
@@ -82,29 +84,9 @@ Future<void> showEntrySheet(
   );
 }
 
-/// The loans a repayment may point at: the active ones, plus the loan an
-/// existing repayment already names even once it is closed — otherwise
-/// editing such an entry would silently drop its link.
-List<Loan> _loanChoices(WidgetRef ref, {Transaction? existing}) {
-  final summaries = ref.read(loanSummariesProvider);
-  final loans = activeLoanSummaries(
-    summaries,
-  ).map((summary) => summary.loan).toList();
-
-  final existingLoanId = existing?.loanId;
-  if (existingLoanId != null &&
-      !loans.any((loan) => loan.id == existingLoanId)) {
-    for (final summary in summaries) {
-      if (summary.loan.id == existingLoanId) {
-        loans.add(summary.loan);
-        break;
-      }
-    }
-  }
-
-  loans.sort((a, b) {
-    if (a.isActive != b.isActive) return a.isActive ? -1 : 1;
-    return a.name.compareTo(b.name);
-  });
-  return loans;
-}
+/// The loans a repayment may point at, best target first.
+List<Loan> _loanChoices(WidgetRef ref, {Transaction? existing}) =>
+    repaymentTargets(
+      ref.read(loanSummariesProvider),
+      existingLoanId: existing?.loanId,
+    );

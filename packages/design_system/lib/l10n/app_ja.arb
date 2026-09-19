@@ -166,6 +166,7 @@
   "paidThisMo": "今月支払い済み",
   "monthsLeft": "残り月数",
   "repaid": "% 返済済み",
+  "stillPaying": "元本は完済。支払いは期間終了まで続きます。",
   "repay": "返済",
   "repayTitle": "> 返済",
   "extra": "追加",

@@ -356,6 +356,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get repaid => '% REPAID';
 
   @override
+  String get stillPaying =>
+      'PRINCIPAL REPAID. PAYMENTS RUN TO THE END OF THE TERM.';
+
+  @override
   String get repay => 'REPAY';
 
   @override

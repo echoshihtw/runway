@@ -357,6 +357,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get repaid => '% RIMBORSATO';
 
   @override
+  String get stillPaying =>
+      'CAPITALE RIMBORSATO. I PAGAMENTI CONTINUANO FINO ALLA FINE DEL TERMINE.';
+
+  @override
   String get repay => 'RIMBORSA';
 
   @override
