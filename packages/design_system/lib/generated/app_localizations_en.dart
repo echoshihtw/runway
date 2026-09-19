@@ -356,7 +356,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get repaid => '% REPAID';
 
   @override
-  String get stillPaying => 'PRINCIPAL REPAID. PAYMENTS CONTINUE.';
+  String get stillPaying => 'PRINCIPAL REPAID — PAYMENTS CONTINUE';
 
   @override
   String get markSettled => 'MARK AS SETTLED';

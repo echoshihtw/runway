@@ -166,7 +166,7 @@
   "paidThisMo": "PAID THIS MO",
   "monthsLeft": "MONTHS LEFT",
   "repaid": "% REPAID",
-  "stillPaying": "PRINCIPAL REPAID. PAYMENTS CONTINUE.",
+  "stillPaying": "PRINCIPAL REPAID — PAYMENTS CONTINUE",
   "markSettled": "MARK AS SETTLED",
   "markSettledExplain": "The monthly payment stops counting. Entries are kept.",
   "repay": "REPAY",

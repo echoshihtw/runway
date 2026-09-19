@@ -357,7 +357,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get repaid => '% REEMBOLSADO';
 
   @override
-  String get stillPaying => 'CAPITAL PAGADO. LOS PAGOS CONTINÚAN.';
+  String get stillPaying => 'CAPITAL PAGADO — LOS PAGOS CONTINÚAN';
 
   @override
   String get markSettled => 'MARCAR COMO SALDADO';

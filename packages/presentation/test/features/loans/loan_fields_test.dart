@@ -98,7 +98,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('PRINCIPAL REPAID. PAYMENTS CONTINUE.'), findsOneWidget);
+    expect(find.text('PRINCIPAL REPAID — PAYMENTS CONTINUE'), findsOneWidget);
     // The installment is what leaves the runway, so it stays on the card, and
     // REPAY stays reachable: without it paidThisMonth can never be recorded
     // and the burn reserves the payment for ever.

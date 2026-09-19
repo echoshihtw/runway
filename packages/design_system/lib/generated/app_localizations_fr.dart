@@ -357,7 +357,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get repaid => '% REMBOURSÉ';
 
   @override
-  String get stillPaying => 'CAPITAL REMBOURSÉ. LES PAIEMENTS CONTINUENT.';
+  String get stillPaying => 'CAPITAL REMBOURSÉ — LES PAIEMENTS CONTINUENT';
 
   @override
   String get markSettled => 'MARQUER COMME SOLDÉ';

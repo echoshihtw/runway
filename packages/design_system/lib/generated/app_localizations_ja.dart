@@ -352,7 +352,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get repaid => '% 返済済み';
 
   @override
-  String get stillPaying => '元本は完済。支払いは続きます。';
+  String get stillPaying => '元本は完済 — 支払いは継続';
 
   @override
   String get markSettled => '完済にする';
