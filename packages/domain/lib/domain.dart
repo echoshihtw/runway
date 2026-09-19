@@ -25,6 +25,7 @@ export 'repositories/subscription_repository.dart';
 export 'repositories/financial_settings_repository.dart';
 
 export 'logic/monthly_aggregator.dart';
+export 'logic/opening_balance.dart';
 export 'logic/burn_engine.dart';
 export 'logic/runway_engine.dart';
 export 'logic/runway_goal_progress.dart';

@@ -1913,6 +1913,42 @@ abstract class AppLocalizations {
   /// **'RUN SIMULATION'**
   String get runSimulation;
 
+  /// No description provided for @runwayUnlimitedHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Income covers costs in this plan'**
+  String get runwayUnlimitedHere;
+
+  /// No description provided for @runwayNoChange.
+  ///
+  /// In en, this message translates to:
+  /// **'No change'**
+  String get runwayNoChange;
+
+  /// No description provided for @deltaDaysLonger.
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days longer'**
+  String deltaDaysLonger(int days);
+
+  /// No description provided for @deltaDaysShorter.
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days shorter'**
+  String deltaDaysShorter(int days);
+
+  /// No description provided for @deltaMonthsLonger.
+  ///
+  /// In en, this message translates to:
+  /// **'{months} months longer'**
+  String deltaMonthsLonger(int months);
+
+  /// No description provided for @deltaMonthsShorter.
+  ///
+  /// In en, this message translates to:
+  /// **'{months} months shorter'**
+  String deltaMonthsShorter(int months);
+
   /// Link on the paywall to Apple's standard end user license agreement
   ///
   /// In en, this message translates to:

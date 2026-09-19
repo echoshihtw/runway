@@ -961,6 +961,32 @@ class AppLocalizationsZh extends AppLocalizations {
   String get runSimulation => '开始模拟';
 
   @override
+  String get runwayUnlimitedHere => '在這個計畫裡，收入蓋得過支出';
+
+  @override
+  String get runwayNoChange => '沒有變化';
+
+  @override
+  String deltaDaysLonger(int days) {
+    return '多 $days 天';
+  }
+
+  @override
+  String deltaDaysShorter(int days) {
+    return '少 $days 天';
+  }
+
+  @override
+  String deltaMonthsLonger(int months) {
+    return '多 $months 个月';
+  }
+
+  @override
+  String deltaMonthsShorter(int months) {
+    return '少 $months 个月';
+  }
+
+  @override
   String get paywallTermsOfUse => '使用条款';
 
   @override
@@ -1922,6 +1948,32 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get runSimulation => '開始模擬';
+
+  @override
+  String get runwayUnlimitedHere => '在這個計畫裡，收入蓋得過支出';
+
+  @override
+  String get runwayNoChange => '沒有變化';
+
+  @override
+  String deltaDaysLonger(int days) {
+    return '多 $days 天';
+  }
+
+  @override
+  String deltaDaysShorter(int days) {
+    return '少 $days 天';
+  }
+
+  @override
+  String deltaMonthsLonger(int months) {
+    return '多 $months 個月';
+  }
+
+  @override
+  String deltaMonthsShorter(int months) {
+    return '少 $months 個月';
+  }
 
   @override
   String get paywallTermsOfUse => '使用條款';

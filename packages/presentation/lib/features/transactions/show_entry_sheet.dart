@@ -63,22 +63,21 @@ Future<void> showEntrySheet(
           // changed nothing orphaned the loan for good: it could no longer be
           // removed, and went on charging the runway.
           final keepsLoanId =
-              type == TransactionType.repayment || type == TransactionType.loan;
-          await ref
-              .read(editTransactionUseCaseProvider)
-              .execute(
-                existing.copyWith(
-                  date: date,
-                  type: type,
-                  amount: Money(amount),
-                  note: note,
-                  loanId: keepsLoanId ? (loanId ?? existing.loanId) : null,
-                  clearLoanId: !keepsLoanId,
-                  category: category,
-                  clearCategory: category == null,
-                  updatedAt: now,
-                ),
-              );
+              type == TransactionType.repayment ||
+              type == TransactionType.loan;
+          await ref.read(editTransactionUseCaseProvider).execute(
+            existing.copyWith(
+              date: date,
+              type: type,
+              amount: Money(amount),
+              note: note,
+              loanId: keepsLoanId ? (loanId ?? existing.loanId) : null,
+              clearLoanId: !keepsLoanId,
+              category: category,
+              clearCategory: category == null,
+              updatedAt: now,
+            ),
+          );
         }
       },
     ),

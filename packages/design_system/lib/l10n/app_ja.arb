@@ -357,6 +357,12 @@
   "simNeedsBalanceWhy": "残り月数は、この残高から数え始めます。",
   "addOpeningBalance": "残高を入力",
   "runSimulation": "シミュレーション",
+  "runwayUnlimitedHere": "この計画では収入が支出をまかないます",
+  "runwayNoChange": "変化なし",
+  "deltaDaysLonger": "{days}日長い",
+  "deltaDaysShorter": "{days}日短い",
+  "deltaMonthsLonger": "{months}か月長い",
+  "deltaMonthsShorter": "{months}か月短い",
   "paywallTermsOfUse": "利用規約",
   "paywallPrivacyPolicy": "プライバシーポリシー"
 }
