@@ -50,7 +50,7 @@ class TransactionRow extends ConsumerWidget {
     TransactionType.subscriptionCharge => l10n.typeSubscription,
   };
 
-  bool get _isPlanned => transaction.date.isAfter(DateTime.now());
+  bool _isPlannedAt(DateTime now) => transaction.date.isAfter(now);
 
   /// The note, when there is one, is what the user wrote to recognise the
   /// entry, so it leads. The type is the fallback title.
@@ -64,6 +64,7 @@ class TransactionRow extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    final isPlanned = _isPlannedAt(ref.watch(clockProvider)());
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
     final amount = NumberFormat(
       '#,##0',
@@ -118,7 +119,7 @@ class TransactionRow extends ConsumerWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      if (_isPlanned) ...[
+                      if (isPlanned) ...[
                         const SizedBox(width: AppSpacing.xs),
                         PixelBadge(
                           label: l10n.planned,
@@ -165,7 +166,8 @@ class TransactionRow extends ConsumerWidget {
                       style: AppTextStyles.metricSmall.copyWith(
                         // The opening balance is where counting starts, not
                         // money that moved; it must not sum with the day.
-                        color: transaction.type == TransactionType.openingBalance
+                        color:
+                            transaction.type == TransactionType.openingBalance
                             ? AppColors.textSecondary
                             : AppColors.textPrimary,
                       ),

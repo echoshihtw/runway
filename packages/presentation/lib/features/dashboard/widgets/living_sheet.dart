@@ -38,7 +38,12 @@ class LivingSheet extends ConsumerWidget {
         (ref.watch(transactionsProvider).value ?? const <Transaction>[])
             .where((t) => countsAsLiving(t) && t.month == burn.month)
             .toList()
-          ..sort((a, b) => b.date.compareTo(a.date));
+          // Total order: same day, same id tie-break, so the list cannot
+          // render two ways.
+          ..sort((a, b) {
+            final byDate = b.date.compareTo(a.date);
+            return byDate != 0 ? byDate : b.id.compareTo(a.id);
+          });
     final over = living.spentThisMonth - living.budget;
     final days = burn.daysLeftThisMonth;
 

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'clock_provider.dart';
 import 'package:domain/domain.dart';
 import 'transaction_provider.dart';
 
@@ -14,7 +15,7 @@ class ThisMonthFlow {
 
 final thisMonthFlowProvider = Provider<ThisMonthFlow>((ref) {
   final txs = ref.watch(transactionsProvider).value ?? [];
-  final now = DateTime.now();
+  final now = ref.watch(clockProvider)();
   final thisMonth = txs.where(
     (t) => t.date.year == now.year && t.date.month == now.month,
   );

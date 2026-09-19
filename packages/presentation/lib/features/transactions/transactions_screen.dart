@@ -16,7 +16,6 @@ class TransactionsScreen extends ConsumerStatefulWidget {
 }
 
 class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
-
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -118,14 +117,19 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
                     );
                   }
 
+                  // Newest first, then by id. Dart's sort is not stable, so
+                  // two entries on the same day swapped places between rebuilds
+                  // and between captures — the log had two valid renderings and
+                  // no way to say which (#146).
                   final sorted = [...txs]
-                    ..sort((a, b) => b.date.compareTo(a.date));
+                    ..sort((a, b) {
+                      final byDate = b.date.compareTo(a.date);
+                      return byDate != 0 ? byDate : b.id.compareTo(a.id);
+                    });
 
                   final grouped = <String, List<Transaction>>{};
                   for (final tx in sorted) {
-                    grouped
-                        .putIfAbsent(_monthKey(tx.date), () => [])
-                        .add(tx);
+                    grouped.putIfAbsent(_monthKey(tx.date), () => []).add(tx);
                   }
                   final monthKeys = grouped.keys.toList()
                     ..sort((a, b) => b.compareTo(a));
@@ -156,9 +160,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
                         direction: DismissDirection.endToStart,
                         background: Container(
                           alignment: Alignment.centerRight,
-                          padding: const EdgeInsets.only(
-                            right: AppSpacing.lg,
-                          ),
+                          padding: const EdgeInsets.only(right: AppSpacing.lg),
                           decoration: BoxDecoration(
                             color: AppColors.hotPink.withAlpha(30),
                             borderRadius: BorderRadius.circular(
@@ -177,11 +179,8 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
                         },
                         child: TransactionRow(
                           transaction: tx,
-                          onEdit: () => showEntrySheet(
-                            context,
-                            ref,
-                            existing: tx,
-                          ),
+                          onEdit: () =>
+                              showEntrySheet(context, ref, existing: tx),
                           onDelete: () => _confirmDelete(context, ref, tx),
                         ),
                       );
@@ -244,13 +243,9 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
           TextButton(
             onPressed: () async {
               Navigator.of(ctx).pop();
-              await ref
-                  .read(deleteTransactionUseCaseProvider)
-                  .execute(tx.id);
+              await ref.read(deleteTransactionUseCaseProvider).execute(tx.id);
               if (tx.type == TransactionType.loan && tx.loanId != null) {
-                await ref
-                    .read(deleteLoanUseCaseProvider)
-                    .execute(tx.loanId!);
+                await ref.read(deleteLoanUseCaseProvider).execute(tx.loanId!);
               }
             },
             child: Text(
@@ -339,4 +334,3 @@ class _MonthSectionHeader extends StatelessWidget {
     );
   }
 }
-
