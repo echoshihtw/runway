@@ -611,6 +611,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get livingExpenses => '生活費';
 
   @override
+  String get budgetRuleHint => '支出只是用掉預算 — 超支才會增加成本';
+
+  @override
   String get subtotal => '小計';
 
   @override
@@ -1604,6 +1607,9 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get livingExpenses => '生活費';
+
+  @override
+  String get budgetRuleHint => '支出只是把預算用掉 — 超支才會多花錢';
 
   @override
   String get subtotal => '小計';

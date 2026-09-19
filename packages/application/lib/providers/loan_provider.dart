@@ -1,5 +1,6 @@
 import 'package:domain/domain.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'clock_provider.dart';
 import 'transaction_provider.dart';
 import '../use_cases/add_loan_use_case.dart';
 import '../use_cases/edit_loan_use_case.dart';
@@ -21,7 +22,7 @@ final loanSummariesProvider = Provider<List<LoanSummary>>((ref) {
   return computeLoanSummaries(
     loans: loans,
     transactions: transactions,
-    now: DateTime.now(),
+    now: ref.watch(clockProvider)(),
   );
 });
 

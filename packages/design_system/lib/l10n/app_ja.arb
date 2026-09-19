@@ -251,6 +251,7 @@
   "monthlyBudget": "月間予算",
   "rentFixed": "家賃 / 固定費",
   "livingExpenses": "生活費",
+  "budgetRuleHint": "支出は予算を使うだけ — 超えた分だけ費用が増える",
   "subtotal": "小計",
   "budgetLeft": "残り {amount}",
   "budgetOver": "予算超過 {amount}",

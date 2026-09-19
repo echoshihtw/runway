@@ -1,5 +1,6 @@
 import 'package:domain/domain.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'clock_provider.dart';
 import '../use_cases/add_subscription_use_case.dart';
 import '../use_cases/edit_subscription_use_case.dart';
 import '../use_cases/delete_subscription_use_case.dart';
@@ -30,7 +31,7 @@ final pendingSubscriptionChargesProvider = Provider<List<Transaction>>((ref) {
   return dueSubscriptionCharges(
     subscriptions: ref.watch(subscriptionsProvider).value ?? const [],
     transactions: ref.watch(transactionsProvider).value ?? const [],
-    now: DateTime.now(),
+    now: ref.watch(clockProvider)(),
   );
 });
 

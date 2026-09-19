@@ -44,5 +44,6 @@ class PurchaseNotifier extends AsyncNotifier<void> {
   }
 }
 
-final purchaseNotifierProvider =
-    AsyncNotifierProvider<PurchaseNotifier, void>(PurchaseNotifier.new);
+final purchaseNotifierProvider = AsyncNotifierProvider<PurchaseNotifier, void>(
+  PurchaseNotifier.new,
+);

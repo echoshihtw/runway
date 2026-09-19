@@ -621,6 +621,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get livingExpenses => 'DÉPENSES DE VIE';
 
   @override
+  String get budgetRuleHint =>
+      'Les dépenses consomment leur budget — seul le dépassement ajoute un coût';
+
+  @override
   String get subtotal => 'SOUS-TOTAL';
 
   @override

@@ -1283,6 +1283,12 @@ abstract class AppLocalizations {
   /// **'LIVING EXPENSES'**
   String get livingExpenses;
 
+  /// No description provided for @budgetRuleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Spending uses up its budget — only going over adds cost'**
+  String get budgetRuleHint;
+
   /// No description provided for @subtotal.
   ///
   /// In en, this message translates to:
