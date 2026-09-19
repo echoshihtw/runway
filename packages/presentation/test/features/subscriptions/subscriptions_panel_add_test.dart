@@ -176,6 +176,10 @@ void main() {
 
     await tester.enterText(find.byType(TextField).at(0), 'Netflix');
     await tester.enterText(find.byType(TextField).at(1), '1990');
+    // CONFIRM is disabled until the form has something to save, and the
+    // rebuild that enables it lands a frame after the typing.
+    await tester.pump();
+    await tester.ensureVisible(find.text('CONFIRM'));
     await tester.tap(find.text('CONFIRM'));
     await tester.pumpAndSettle();
 
@@ -185,9 +189,11 @@ void main() {
       reason: 'nothing was written, so the sheet must not close as if it was',
     );
     expect(
-      find.byType(SnackBar),
+      find.textContaining("Couldn't save"),
       findsOneWidget,
-      reason: 'and the failure has to be said out loud',
+      reason: 'and the failure has to be said out loud. It used to be a '
+          'SnackBar, which needed a Scaffold, which stretched the sheet to '
+          'full height; the form says it inline now, beside the typing',
     );
   });
 }

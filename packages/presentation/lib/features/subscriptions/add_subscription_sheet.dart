@@ -23,50 +23,37 @@ Future<void> showAddSubscriptionSheet(BuildContext context, WidgetRef ref) {
         top: Radius.circular(AppSpacing.cardRadius),
       ),
     ),
-    // A SnackBar from the app's own messenger renders underneath this route,
-    // behind the modal barrier, so the failure would be invisible. This one
-    // belongs to the sheet, and shows inside it. The form does its own
-    // keyboard inset handling, so the Scaffold must not also do it.
-    builder: (_) => ScaffoldMessenger(
-      child: Builder(
-        builder: (sheetContext) => Scaffold(
-          backgroundColor: Colors.transparent,
-          resizeToAvoidBottomInset: false,
-          body: SubscriptionForm(
-            onSubmit: (name, category, amount, cycle, startDate, note) async {
-              final now = DateTime.now();
-              try {
-                await ref.read(addSubscriptionUseCaseProvider).execute(
-                  Subscription(
-                    id: const Uuid().v4(),
-                    name: name,
-                    category: category,
-                    amount: amount,
-                    cycle: cycle,
-                    startDate: startDate,
-                    nextBillingDate: computeNextBillingDate(startDate, cycle),
-                    note: note,
-                    createdAt: now,
-                    updatedAt: now,
-                  ),
-                );
-              } catch (_) {
-                if (!sheetContext.mounted) return false;
-                ScaffoldMessenger.of(sheetContext).showSnackBar(
-                  SnackBar(
-                    content: Text(sheetContext.l10n.subscriptionSaveFailed),
-                    backgroundColor: AppColors.surfaceHigh,
-                  ),
-                );
-                // Keeps the form open with the typing intact. Returning true
-                // would dismiss it as though the subscription existed.
-                return false;
-              }
-              return true;
-            },
-          ),
-        ),
-      ),
+    // The form is handed over directly, as the edit paths already do, so the
+    // sheet is the height of its content. It used to be wrapped in a
+    // ScaffoldMessenger and a Scaffold purely to host a failure SnackBar, and
+    // a Scaffold inside a scroll-controlled sheet expands to the full height
+    // of the screen. The form reports its own failure inline now, next to the
+    // typing, which needs no Scaffold and reads better besides.
+    builder: (_) => SubscriptionForm(
+      onSubmit: (name, category, amount, cycle, startDate, note) async {
+        final now = DateTime.now();
+        try {
+          await ref.read(addSubscriptionUseCaseProvider).execute(
+            Subscription(
+              id: const Uuid().v4(),
+              name: name,
+              category: category,
+              amount: amount,
+              cycle: cycle,
+              startDate: startDate,
+              nextBillingDate: computeNextBillingDate(startDate, cycle),
+              note: note,
+              createdAt: now,
+              updatedAt: now,
+            ),
+          );
+        } catch (_) {
+          // Keeps the form open with the typing intact. Returning true would
+          // dismiss it as though the subscription existed.
+          return false;
+        }
+        return true;
+      },
     ),
   );
 }
