@@ -53,6 +53,15 @@ class ThisMonthCard extends ConsumerWidget {
             fmt: fmt,
             onTap: () => showLivingSheet(context),
           ),
+        // The one rule the whole number rests on, said where the rule applies.
+        // A budget is a cap that spending uses up, not a cost that spending
+        // adds to, so logging a large expense inside its budget moves nothing
+        // — which reads as a broken app to anyone who has not been told. The
+        // store listing explains this; until now the product never did.
+        if (burn.rent.budget > 0 || burn.living.budget > 0) ...[
+          const SizedBox(height: AppSpacing.xs),
+          Text(l10n.budgetRuleHint, style: AppTextStyles.caption),
+        ],
       ],
     );
 
@@ -85,10 +94,7 @@ class _Row extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: AppTextStyles.label),
-          Text(
-            value,
-            style: AppTextStyles.metricSmall.copyWith(color: color),
-          ),
+          Text(value, style: AppTextStyles.metricSmall.copyWith(color: color)),
         ],
       ),
     );
@@ -171,18 +177,11 @@ class _EmptyState extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: SC.chrome.withAlpha(45)),
           ),
-          child: Icon(
-            Icons.calendar_today_rounded,
-            color: SC.chrome,
-            size: 18,
-          ),
+          child: Icon(Icons.calendar_today_rounded, color: SC.chrome, size: 18),
         ),
         const SizedBox(width: AppSpacing.sm),
         Expanded(
-          child: Text(
-            l10n.noActivityThisMonth,
-            style: AppTextStyles.bodySmall,
-          ),
+          child: Text(l10n.noActivityThisMonth, style: AppTextStyles.bodySmall),
         ),
       ],
     );

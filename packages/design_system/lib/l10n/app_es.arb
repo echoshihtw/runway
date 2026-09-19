@@ -251,6 +251,7 @@
   "monthlyBudget": "Presupuesto mensual",
   "rentFixed": "ALQUILER / FIJO",
   "livingExpenses": "GASTOS DE VIDA",
+  "budgetRuleHint": "El gasto consume su presupuesto — solo pasarse añade coste",
   "subtotal": "SUBTOTAL",
   "budgetLeft": "quedan {amount}",
   "budgetOver": "{amount} por encima del presupuesto",

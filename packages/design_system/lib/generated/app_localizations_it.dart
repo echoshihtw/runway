@@ -621,6 +621,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get livingExpenses => 'SPESE DI VITA';
 
   @override
+  String get budgetRuleHint =>
+      'La spesa consuma il suo budget — solo lo sforamento aggiunge costo';
+
+  @override
   String get subtotal => 'SUBTOTALE';
 
   @override

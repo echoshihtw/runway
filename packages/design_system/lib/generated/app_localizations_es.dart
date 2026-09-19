@@ -621,6 +621,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get livingExpenses => 'GASTOS DE VIDA';
 
   @override
+  String get budgetRuleHint =>
+      'El gasto consume su presupuesto — solo pasarse añade coste';
+
+  @override
   String get subtotal => 'SUBTOTAL';
 
   @override
