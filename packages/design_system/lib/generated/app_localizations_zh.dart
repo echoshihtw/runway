@@ -839,10 +839,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingSkip => '跳过';
 
   @override
-  String get onboardingWelcomeTitle => '你的跑道，\n一眼看懂。';
+  String get onboardingWelcomeTitle => '你的錢\n能撐幾個月。';
 
   @override
-  String get onboardingWelcomeBody => '一个数字，告诉你现在站在哪。\n你的钱还能撑几个月？';
+  String get onboardingWelcomeBody => '不用註冊。不連結銀行。';
 
   @override
   String get onboardingGetStarted => '开始吧';
@@ -851,8 +851,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingPrivacyTitle => '你的数据，\n只在你手机里。';
 
   @override
-  String get onboardingPrivacyBody =>
-      '所有数据都在你手机上加密。\n我们看不到你的财务数据。\n连我们都不知道你的数字。';
+  String get onboardingPrivacyBody => '資料不會離開你的手機。沒有伺服器能讀取。';
 
   @override
   String get onboardingPrivacyEncrypted => '在手机上加密';
@@ -870,10 +869,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingIUnderstand => '了解';
 
   @override
-  String get onboardingFirstActionTitle => '准备好看看\n自己的跑道了吗？';
+  String get onboardingFirstActionTitle => '從你現在有的\n開始。';
 
   @override
-  String get onboardingFirstActionBody => '先输入你现在手上有多少钱。\n这样就够了，马上看到你的数字。';
+  String get onboardingFirstActionBody => '只要現金餘額，就能看到數字。';
 
   @override
   String get onboardingAddMyBalance => '输入我的余额';
@@ -1837,10 +1836,10 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get onboardingSkip => '跳過';
 
   @override
-  String get onboardingWelcomeTitle => '你的跑道，\n一眼看懂。';
+  String get onboardingWelcomeTitle => '你的錢\n能撐幾個月。';
 
   @override
-  String get onboardingWelcomeBody => '一個數字，告訴你現在站在哪。\n你的錢還能撐幾個月？';
+  String get onboardingWelcomeBody => '不用註冊，也不連銀行。';
 
   @override
   String get onboardingGetStarted => '開始吧';
@@ -1849,8 +1848,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get onboardingPrivacyTitle => '你的資料，\n只在你手機裡。';
 
   @override
-  String get onboardingPrivacyBody =>
-      '所有資料都在你手機上加密。\n我們看不到你的財務資料。\n連我們都不知道你的數字。';
+  String get onboardingPrivacyBody => '資料不會離開你的手機，也沒有伺服器能讀。';
 
   @override
   String get onboardingPrivacyEncrypted => '在手機上加密';
@@ -1868,10 +1866,10 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get onboardingIUnderstand => '了解';
 
   @override
-  String get onboardingFirstActionTitle => '準備好看看\n自己的跑道了嗎？';
+  String get onboardingFirstActionTitle => '從你現在\n手上有的開始。';
 
   @override
-  String get onboardingFirstActionBody => '先輸入你現在手上有多少錢。\n這樣就夠了，馬上看到你的數字。';
+  String get onboardingFirstActionBody => '只要輸入現金餘額，數字就出來了。';
 
   @override
   String get onboardingAddMyBalance => '輸入我的餘額';

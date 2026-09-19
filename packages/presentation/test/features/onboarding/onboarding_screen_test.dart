@@ -26,7 +26,7 @@ void main() {
     tester,
   ) async {
     await _pumpOnboarding(tester);
-    expect(find.text('Know your\nrunway.'), findsOneWidget);
+    expect(find.text('How many months\nyour money covers.'), findsOneWidget);
 
     await tester.tap(find.text('GET STARTED'));
     await tester.pumpAndSettle();
@@ -34,7 +34,7 @@ void main() {
 
     await tester.tap(find.text('I UNDERSTAND'));
     await tester.pumpAndSettle();
-    expect(find.text('Ready to find\nyour runway?'), findsOneWidget);
+    expect(find.text('Start with what\nyou have now.'), findsOneWidget);
     expect(find.text('ADD MY BALANCE'), findsOneWidget);
     expect(find.text('SKIP'), findsNothing);
   });

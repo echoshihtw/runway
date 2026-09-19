@@ -1694,13 +1694,13 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingWelcomeTitle.
   ///
   /// In en, this message translates to:
-  /// **'Know your\nrunway.'**
+  /// **'How many months\nyour money covers.'**
   String get onboardingWelcomeTitle;
 
   /// No description provided for @onboardingWelcomeBody.
   ///
   /// In en, this message translates to:
-  /// **'One number shows where you stand.\nHow many months does your money cover?'**
+  /// **'No account. No bank connection.'**
   String get onboardingWelcomeBody;
 
   /// No description provided for @onboardingGetStarted.
@@ -1718,7 +1718,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingPrivacyBody.
   ///
   /// In en, this message translates to:
-  /// **'Everything is encrypted on your device.\nWe cannot read your financial data.\nEven we don\'t know your numbers.'**
+  /// **'Nothing leaves your phone. There is no server to read it.'**
   String get onboardingPrivacyBody;
 
   /// No description provided for @onboardingPrivacyEncrypted.
@@ -1754,13 +1754,13 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingFirstActionTitle.
   ///
   /// In en, this message translates to:
-  /// **'Ready to find\nyour runway?'**
+  /// **'Start with what\nyou have now.'**
   String get onboardingFirstActionTitle;
 
   /// No description provided for @onboardingFirstActionBody.
   ///
   /// In en, this message translates to:
-  /// **'Start by adding your current cash balance.\nThat\'s all you need to see your number.'**
+  /// **'Your cash balance is all it takes to see your number.'**
   String get onboardingFirstActionBody;
 
   /// No description provided for @onboardingAddMyBalance.

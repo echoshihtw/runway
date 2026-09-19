@@ -860,11 +860,11 @@ class AppLocalizationsIt extends AppLocalizations {
   String get onboardingSkip => 'SALTA';
 
   @override
-  String get onboardingWelcomeTitle => 'Conosci la tua\nautonomia.';
+  String get onboardingWelcomeTitle => 'Quanti mesi copre\nil tuo denaro.';
 
   @override
   String get onboardingWelcomeBody =>
-      'Un solo numero mostra dove sei.\nQuanti mesi copre il tuo denaro?';
+      'Nessun account. Nessuna connessione bancaria.';
 
   @override
   String get onboardingGetStarted => 'INIZIA';
@@ -874,7 +874,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get onboardingPrivacyBody =>
-      'Tutto è cifrato sul tuo dispositivo.\nNon possiamo leggere i tuoi dati finanziari.\nNemmeno noi conosciamo i tuoi numeri.';
+      'Niente esce dal tuo telefono. Non c\'è un server che possa leggerlo.';
 
   @override
   String get onboardingPrivacyEncrypted => 'Cifrato sul dispositivo';
@@ -893,12 +893,11 @@ class AppLocalizationsIt extends AppLocalizations {
   String get onboardingIUnderstand => 'HO CAPITO';
 
   @override
-  String get onboardingFirstActionTitle =>
-      'Pronto a scoprire\nla tua autonomia?';
+  String get onboardingFirstActionTitle => 'Inizia da quello\nche hai ora.';
 
   @override
   String get onboardingFirstActionBody =>
-      'Inizia aggiungendo il tuo saldo attuale.\nÈ tutto ciò che serve per vedere il tuo numero.';
+      'Il tuo saldo basta per vedere il numero.';
 
   @override
   String get onboardingAddMyBalance => 'AGGIUNGI IL MIO SALDO';

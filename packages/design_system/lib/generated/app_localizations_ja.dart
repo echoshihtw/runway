@@ -841,10 +841,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get onboardingSkip => 'スキップ';
 
   @override
-  String get onboardingWelcomeTitle => 'あなたの\n残り月数を知る。';
+  String get onboardingWelcomeTitle => 'あなたのお金は\n何か月もつか。';
 
   @override
-  String get onboardingWelcomeBody => 'ひとつの数字で今の立ち位置がわかります。\nあなたのお金は何か月もちますか？';
+  String get onboardingWelcomeBody => 'アカウント不要。銀行連携なし。';
 
   @override
   String get onboardingGetStarted => 'はじめる';
@@ -853,8 +853,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get onboardingPrivacyTitle => 'あなたのデータは、\nあなたの端末に。';
 
   @override
-  String get onboardingPrivacyBody =>
-      'すべて端末内で暗号化されます。\n私たちはあなたの金融データを読めません。\n私たちでさえ、あなたの数字を知りません。';
+  String get onboardingPrivacyBody => 'データは端末から出ません。読み取るサーバーがありません。';
 
   @override
   String get onboardingPrivacyEncrypted => '端末内で暗号化';
@@ -872,10 +871,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get onboardingIUnderstand => 'わかりました';
 
   @override
-  String get onboardingFirstActionTitle => '残り月数を\n確かめますか？';
+  String get onboardingFirstActionTitle => '今ある残高から\n始めます。';
 
   @override
-  String get onboardingFirstActionBody => 'まず今の現金残高を入力してください。\nそれだけで数字が見えます。';
+  String get onboardingFirstActionBody => '現金残高だけで数字が出ます。';
 
   @override
   String get onboardingAddMyBalance => '残高を入力';
