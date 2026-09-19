@@ -59,8 +59,11 @@ class _Subscriptions implements SubscriptionRepository {
 }
 
 class _Settings implements FinancialSettingsRepository {
+  _Settings({this.budget = const Budget(living: 1100)});
+  final Budget budget;
+
   @override
-  Future<Budget> getBudget() async => const Budget(living: 1100);
+  Future<Budget> getBudget() async => budget;
 
   @override
   Future<FinancialAssumptions> getFinancialAssumptions() async =>
@@ -112,7 +115,11 @@ Subscription _streaming() => Subscription(
   updatedAt: DateTime(2026, 1, 1),
 );
 
-Future<void> _pump(WidgetTester tester, {bool withFixedCosts = false}) async {
+Future<void> _pump(
+  WidgetTester tester, {
+  bool withFixedCosts = false,
+  bool noBudget = false,
+}) async {
   SharedPreferences.setMockInitialValues({});
   final subscriptions = _Subscriptions();
   if (withFixedCosts) subscriptions.items.add(_streaming());
@@ -122,7 +129,9 @@ Future<void> _pump(WidgetTester tester, {bool withFixedCosts = false}) async {
         transactionRepositoryProvider.overrideWithValue(_Transactions()),
         loanRepositoryProvider.overrideWithValue(_Loans()),
         subscriptionRepositoryProvider.overrideWithValue(subscriptions),
-        financialSettingsRepositoryProvider.overrideWithValue(_Settings()),
+        financialSettingsRepositoryProvider.overrideWithValue(
+          _Settings(budget: noBudget ? const Budget() : const Budget(living: 1100)),
+        ),
         usageCountStoreProvider.overrideWithValue(_Count()),
         purchaseServiceProvider.overrideWithValue(_FreeTier()),
       ],
@@ -139,24 +148,31 @@ Future<void> _pump(WidgetTester tester, {bool withFixedCosts = false}) async {
 Finder get _costField => find.byType(TextField).first;
 
 void main() {
-  group('#108 the button exists only while it has a job', () {
-    testWidgets('with nothing to run there is no primary button', (
+  _statesWhatItKnows();
+
+  group('#108 the button shows whether it has a job', () {
+    // It used to be deleted when disabled, because a faded primary fill read
+    // as broken. That left the screen with no primary action at all on a cold
+    // open. NeoButton has a real disabled state now, so the button stays and
+    // carries the state itself.
+    testWidgets('with nothing to run the button is there and dead', (
       tester,
     ) async {
       await _pump(tester);
 
-      expect(find.text('RUN SIMULATION'), findsNothing);
+      expect(find.text('RUN SIMULATION'), findsOneWidget);
+      expect(_runButton(tester).onPressed, isNull);
       expect(find.text('Reset scenario'), findsOneWidget);
     });
 
-    testWidgets('a change brings it, and running it takes it away again', (
+    testWidgets('a change makes it live, and running it makes it dead again', (
       tester,
     ) async {
       await _pump(tester);
 
       await tester.enterText(_costField, '900');
       await tester.pump();
-      expect(find.text('RUN SIMULATION'), findsOneWidget);
+      expect(_runButton(tester).onPressed, isNotNull);
 
       await tester.ensureVisible(find.text('RUN SIMULATION'));
       await tester.tap(find.text('RUN SIMULATION'));
@@ -165,9 +181,9 @@ void main() {
 
       expect(find.text('Projected runway'), findsOneWidget);
       expect(
-        find.text('RUN SIMULATION'),
-        findsNothing,
-        reason: 'the result is on screen; a dimmed primary under it reads as broken',
+        _runButton(tester).onPressed,
+        isNull,
+        reason: 'the result is on screen, so there is nothing left to run',
       );
       expect(find.text('Reset scenario'), findsOneWidget);
     });
@@ -205,5 +221,31 @@ void main() {
 
       expect(tester.widget<TextField>(_costField).controller!.text, '');
     });
+  });
+}
+
+NeoButton _runButton(WidgetTester tester) => tester.widget<NeoButton>(
+  find
+      .ancestor(
+        of: find.text('RUN SIMULATION'),
+        matching: find.byType(NeoButton),
+      )
+      .first,
+);
+
+/// The screen used to state a runway the dashboard refuses to state, and to
+/// subtract a sentinel. Audited 2026-09-19 by a CFO, a financial adviser and
+/// a product designer; all three found these independently.
+void _statesWhatItKnows() {
+  testWidgets('with no cost known the runway is an em dash, not infinity', (
+    tester,
+  ) async {
+    // Exactly what onboarding asks for: a balance and nothing else. The
+    // dashboard shows "—"; this screen showed ∞ in mint with a STABLE colour
+    // one tab away (CONTRACTS §3.1).
+    await _pump(tester, noBudget: true);
+
+    expect(find.text('∞'), findsNothing);
+    expect(find.text('—'), findsWidgets);
   });
 }

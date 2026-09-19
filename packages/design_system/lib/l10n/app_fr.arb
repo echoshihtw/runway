@@ -355,6 +355,12 @@
   "simNeedsBalanceWhy": "Votre marge a besoin d'un solde de départ d'où partir.",
   "addOpeningBalance": "SAISIR MON SOLDE",
   "runSimulation": "LANCER LA SIMULATION",
+  "runwayUnlimitedHere": "Les revenus couvrent les coûts dans ce plan",
+  "runwayNoChange": "Aucun changement",
+  "deltaDaysLonger": "{days} jours de plus",
+  "deltaDaysShorter": "{days} jours de moins",
+  "deltaMonthsLonger": "{months} mois de plus",
+  "deltaMonthsShorter": "{months} mois de moins",
   "paywallTermsOfUse": "Conditions d’utilisation",
   "paywallPrivacyPolicy": "Politique de confidentialité"
 }

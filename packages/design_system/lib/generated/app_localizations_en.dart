@@ -975,6 +975,32 @@ class AppLocalizationsEn extends AppLocalizations {
   String get runSimulation => 'RUN SIMULATION';
 
   @override
+  String get runwayUnlimitedHere => 'Income covers costs in this plan';
+
+  @override
+  String get runwayNoChange => 'No change';
+
+  @override
+  String deltaDaysLonger(int days) {
+    return '$days days longer';
+  }
+
+  @override
+  String deltaDaysShorter(int days) {
+    return '$days days shorter';
+  }
+
+  @override
+  String deltaMonthsLonger(int months) {
+    return '$months months longer';
+  }
+
+  @override
+  String deltaMonthsShorter(int months) {
+    return '$months months shorter';
+  }
+
+  @override
   String get paywallTermsOfUse => 'Terms of Use';
 
   @override

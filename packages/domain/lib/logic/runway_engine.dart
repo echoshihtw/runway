@@ -128,9 +128,16 @@ ModelState modelForScenario({
     monthlyBurn: monthlyBurn,
     dueThisMonth: math.max(baseDueThisMonth + changeThisMonth, 0.0),
     // The underlying cost, before income offsets it. Income covering costs is
-    // a real unlimited runway, not an unknown one.
-    hasCostBasis: baseMonthly > 0,
-    basis: _basisFor(burn, assumption),
+    // a real unlimited runway, not an unknown one. The typed cost counts: a
+    // scenario driven entirely by a what-if, on an owner who has set no
+    // budget, still knows what it costs.
+    hasCostBasis: (baseMonthly + variableChange) > 0,
+    // A typed cost is the basis when there is one, whatever the dashboard is
+    // running on — otherwise the scenario claims the number came from a
+    // budget the owner never set.
+    basis: monthlyCostOverride != null
+        ? RunwayBasis.assumption
+        : _basisFor(burn, assumption),
     // Carried through so the scenario reports sustainability on the same
     // footing as the dashboard. It does not move the runway: the number
     // answers what happens if income stopped today.

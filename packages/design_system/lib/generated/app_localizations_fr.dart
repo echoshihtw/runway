@@ -982,6 +982,33 @@ class AppLocalizationsFr extends AppLocalizations {
   String get runSimulation => 'LANCER LA SIMULATION';
 
   @override
+  String get runwayUnlimitedHere =>
+      'Les revenus couvrent les coûts dans ce plan';
+
+  @override
+  String get runwayNoChange => 'Aucun changement';
+
+  @override
+  String deltaDaysLonger(int days) {
+    return '$days jours de plus';
+  }
+
+  @override
+  String deltaDaysShorter(int days) {
+    return '$days jours de moins';
+  }
+
+  @override
+  String deltaMonthsLonger(int months) {
+    return '$months mois de plus';
+  }
+
+  @override
+  String deltaMonthsShorter(int months) {
+    return '$months mois de moins';
+  }
+
+  @override
   String get paywallTermsOfUse => 'Conditions d’utilisation';
 
   @override

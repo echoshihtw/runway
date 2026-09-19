@@ -355,6 +355,12 @@
   "simNeedsBalanceWhy": "La tua autonomia parte da un saldo iniziale.",
   "addOpeningBalance": "AGGIUNGI IL MIO SALDO",
   "runSimulation": "AVVIA SIMULAZIONE",
+  "runwayUnlimitedHere": "Le entrate coprono i costi in questo piano",
+  "runwayNoChange": "Nessun cambiamento",
+  "deltaDaysLonger": "{days} giorni in più",
+  "deltaDaysShorter": "{days} giorni in meno",
+  "deltaMonthsLonger": "{months} mesi in più",
+  "deltaMonthsShorter": "{months} mesi in meno",
   "paywallTermsOfUse": "Termini di utilizzo",
   "paywallPrivacyPolicy": "Informativa sulla privacy"
 }
