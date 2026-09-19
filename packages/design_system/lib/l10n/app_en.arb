@@ -404,7 +404,9 @@
   "shareImage": "SHARE IMAGE",
   "shareAsText": "SHARE AS TEXT",
   "goalReached": "Goal reached!",
-  "monthsToGoal": "{count} months to go",
+  "monthsToGoal": "{count, plural, =1{1 month of cover to build} other{{count} months of cover to build}}",
+  "goalCashTarget": "Target cash",
+  "goalCashToGo": "Still to go",
   "@monthsToGoal": {
     "placeholders": {
       "count": {

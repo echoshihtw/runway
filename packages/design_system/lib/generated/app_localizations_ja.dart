@@ -831,8 +831,14 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String monthsToGoal(int count) {
-    return 'あと$countヶ月';
+    return 'あと$countか月分を貯める';
   }
+
+  @override
+  String get goalCashTarget => '目標額';
+
+  @override
+  String get goalCashToGo => '残り';
 
   @override
   String get thisMonth => '今月';

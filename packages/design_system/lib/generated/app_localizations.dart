@@ -1676,8 +1676,20 @@ abstract class AppLocalizations {
   /// No description provided for @monthsToGoal.
   ///
   /// In en, this message translates to:
-  /// **'{count} months to go'**
+  /// **'{count, plural, =1{1 month of cover to build} other{{count} months of cover to build}}'**
   String monthsToGoal(int count);
+
+  /// No description provided for @goalCashTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'Target cash'**
+  String get goalCashTarget;
+
+  /// No description provided for @goalCashToGo.
+  ///
+  /// In en, this message translates to:
+  /// **'Still to go'**
+  String get goalCashToGo;
 
   /// No description provided for @thisMonth.
   ///

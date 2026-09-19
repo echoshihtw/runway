@@ -32,7 +32,6 @@ const budget = <String, int>{
   'features/transactions/widgets/transaction_row.dart': 5,
   'features/config/widgets/delete_all_data_card.dart': 4,
   'features/transactions/daily_spend_sheet.dart': 4,
-  'features/dashboard/widgets/goal_card.dart': 3,
   'features/subscriptions/widgets/subscription_prompt_card.dart': 3,
   'features/dashboard/dashboard_screen.dart': 2,
   'features/dashboard/widgets/living_sheet.dart': 2,
