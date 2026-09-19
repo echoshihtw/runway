@@ -980,13 +980,13 @@ abstract class AppLocalizations {
   /// No description provided for @editSubscription.
   ///
   /// In en, this message translates to:
-  /// **'> EDIT SUBSCRIPTION'**
+  /// **'EDIT SUBSCRIPTION'**
   String get editSubscription;
 
   /// No description provided for @addSubscription.
   ///
   /// In en, this message translates to:
-  /// **'> NEW SUBSCRIPTION'**
+  /// **'NEW SUBSCRIPTION'**
   String get addSubscription;
 
   /// No description provided for @personal.

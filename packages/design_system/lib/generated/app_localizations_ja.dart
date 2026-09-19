@@ -454,10 +454,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get newSubscription => '+ サブスク';
 
   @override
-  String get editSubscription => '> サブスク編集';
+  String get editSubscription => 'サブスク編集';
 
   @override
-  String get addSubscription => '> 新規サブスク';
+  String get addSubscription => '新規サブスク';
 
   @override
   String get personal => '個人';
