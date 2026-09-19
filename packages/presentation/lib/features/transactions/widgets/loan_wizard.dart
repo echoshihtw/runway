@@ -12,6 +12,8 @@ class LoanWizard extends StatefulWidget {
     double monthlyPayment,
     int termMonths,
     DateTime date,
+    String source,
+    String name,
     String? note,
   )
   onSubmit;
@@ -43,7 +45,10 @@ class _LoanWizardState extends State<LoanWizard>
   String _source = 'BANK';
 
   static const _totalSteps = 3;
-  static const _sources = ['BANK', 'FRIEND', 'FAMILY', 'OTHER'];
+  // FRIEND and FAMILY were separate chips. Nothing in the app treats a loan
+  // from a friend differently from one from a bank, and the lender's name
+  // below already says who it is, so the taxonomy only added a choice to make.
+  static const _sources = ['BANK', 'OTHER'];
 
   @override
   void initState() {
@@ -139,16 +144,27 @@ class _LoanWizardState extends State<LoanWizard>
     final payment = double.tryParse(_paymentCtrl.text.trim());
     final termMo = int.tryParse(_monthsCtrl.text.trim()) ?? 0;
     if (amount == null || payment == null) return;
-    final note =
-        '$_source — ${_nameCtrl.text.trim()}'
-        '${_noteCtrl.text.trim().isNotEmpty ? " | ${_noteCtrl.text.trim()}" : ""}';
+    // The source, the lender's name and the note used to be packed into one
+    // string here and split apart again by the caller, which only split on the
+    // first separator: a loan from John noted "bought a car" was stored with
+    // the name "John | bought a car" and no note at all. They are three fields
+    // on the loan already, so they travel as three.
+    final typed = _noteCtrl.text.trim();
     setState(() {
       _saving = true;
       _error = null;
     });
     // The pop used to happen here, before the awaits inside onSubmit had run,
     // so the wizard closed whether the write landed or not (#133).
-    final saved = await widget.onSubmit(amount, payment, termMo, _date, note);
+    final saved = await widget.onSubmit(
+      amount,
+      payment,
+      termMo,
+      _date,
+      _source,
+      _nameCtrl.text.trim(),
+      typed.isEmpty ? null : typed,
+    );
     if (!mounted) return;
     if (saved) {
       Navigator.of(context).pop();
@@ -185,118 +201,128 @@ class _LoanWizardState extends State<LoanWizard>
       ),
       child: SingleChildScrollView(
         child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Container(
-              width: 36,
-              height: 4,
-              decoration: BoxDecoration(
-                color: AppColors.cardBorder,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.md),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // The title yields at large text sizes; the step counter is two
-              // characters and never needs to.
-              Flexible(
-                child: Text(
-                  l10n.loanWizardTitle.toUpperCase(),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.title.copyWith(color: AppColors.gold),
-                ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              Text('${_step + 1} / $_totalSteps', style: AppTextStyles.caption),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Row(
-            children: List.generate(
-              _totalSteps,
-              (i) => Expanded(
-                child: Container(
-                  height: 2,
-                  margin: EdgeInsets.only(
-                    right: i < _totalSteps - 1 ? AppSpacing.xs : 0,
-                  ),
-                  decoration: BoxDecoration(
-                    color: i <= _step ? AppColors.gold : AppColors.cardBorder,
-                    borderRadius: BorderRadius.circular(1),
-                  ),
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 36,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: AppColors.cardBorder,
+                  borderRadius: BorderRadius.circular(2),
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          SlideTransition(position: _slideAnim, child: _buildStep(context, l10n)),
-          const SizedBox(height: AppSpacing.lg),
-          if (_error != null) ...[
-            Text(
-              _error!,
-              style: AppTextStyles.caption.copyWith(color: AppColors.red),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-          ],
-          Row(
-            children: [
-              if (_step > 0) ...[
+            const SizedBox(height: AppSpacing.md),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // The title yields at large text sizes; the step counter is two
+                // characters and never needs to.
                 Flexible(
-                  child: NeoButton(
-                    label: l10n.back,
-                    variant: NeoButtonVariant.ghost,
-                    onPressed: _prev,
+                  child: Text(
+                    l10n.loanWizardTitle.toUpperCase(),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.title.copyWith(color: AppColors.gold),
                   ),
                 ),
                 const SizedBox(width: AppSpacing.sm),
+                Text(
+                  '${_step + 1} / $_totalSteps',
+                  style: AppTextStyles.caption,
+                ),
               ],
-              Expanded(
-                child: _step < _totalSteps - 1
-                    ? NeoButton(
-                        label: '${l10n.next} →',
-                        variant: NeoButtonVariant.primary,
-                        color: AppColors.gold,
-                        fullWidth: true,
-                        onPressed: _valid ? _next : null,
-                      )
-                    : NeoButton(
-                        label: l10n.confirm,
-                        variant: NeoButtonVariant.primary,
-                        color: AppColors.gold,
-                        fullWidth: true,
-                        onPressed: _step2Valid && !_saving ? _submit : null,
-                      ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Row(
+              children: List.generate(
+                _totalSteps,
+                (i) => Expanded(
+                  child: Container(
+                    height: 2,
+                    margin: EdgeInsets.only(
+                      right: i < _totalSteps - 1 ? AppSpacing.xs : 0,
+                    ),
+                    decoration: BoxDecoration(
+                      color: i <= _step ? AppColors.gold : AppColors.cardBorder,
+                      borderRadius: BorderRadius.circular(1),
+                    ),
+                  ),
+                ),
               ),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            SlideTransition(
+              position: _slideAnim,
+              child: _buildStep(context, l10n),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            if (_error != null) ...[
+              Text(
+                _error!,
+                style: AppTextStyles.caption.copyWith(color: AppColors.red),
+              ),
+              const SizedBox(height: AppSpacing.sm),
             ],
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          NeoButton(
-            label: l10n.abort,
-            variant: NeoButtonVariant.danger,
-            fullWidth: true,
-            onPressed: () => Navigator.of(context).pop(),
-          ),
+            Row(
+              children: [
+                if (_step > 0) ...[
+                  Flexible(
+                    child: NeoButton(
+                      label: l10n.back,
+                      variant: NeoButtonVariant.ghost,
+                      onPressed: _prev,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                ],
+                Expanded(
+                  child: _step < _totalSteps - 1
+                      ? NeoButton(
+                          label: '${l10n.next} →',
+                          variant: NeoButtonVariant.primary,
+                          color: AppColors.gold,
+                          fullWidth: true,
+                          onPressed: _valid ? _next : null,
+                        )
+                      : NeoButton(
+                          label: l10n.confirm,
+                          variant: NeoButtonVariant.primary,
+                          color: AppColors.gold,
+                          fullWidth: true,
+                          onPressed: _step2Valid && !_saving ? _submit : null,
+                        ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            NeoButton(
+              label: l10n.abort,
+              variant: NeoButtonVariant.danger,
+              fullWidth: true,
+              onPressed: () => Navigator.of(context).pop(),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildStep(BuildContext context, AppLocalizations l10n) => switch (_step) {
-    0 => _step0(context, l10n),
-    1 => _step1(l10n),
-    _ => _step2(l10n),
-  };
+  Widget _buildStep(BuildContext context, AppLocalizations l10n) =>
+      switch (_step) {
+        0 => _step0(context, l10n),
+        1 => _step1(l10n),
+        _ => _step2(l10n),
+      };
 
   Widget _step0(BuildContext context, AppLocalizations l10n) {
     final locale = Localizations.localeOf(context).toString();
-    final dateStr = DateFormat('dd MMM yyyy', locale).format(_date).toUpperCase();
+    final dateStr = DateFormat(
+      'dd MMM yyyy',
+      locale,
+    ).format(_date).toUpperCase();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

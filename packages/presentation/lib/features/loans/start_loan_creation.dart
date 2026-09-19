@@ -28,63 +28,74 @@ Future<void> startLoanCreation(BuildContext context, WidgetRef ref) async {
       ),
     ),
     builder: (_) => LoanWizard(
-      onSubmit: (loanAmount, monthlyPayment, termMonths, date, note) async {
-        final now = DateTime.now();
-        final loanId = const Uuid().v4();
-        // The wizard packs the source and the name into one note field.
-        final parts = (note ?? '').split(' — ');
-        final source = parts.isNotEmpty
-            ? parts[0].replaceAll(' LOAN', '')
-            : 'OTHER';
-        final name = parts.length > 1 ? parts[1] : 'LOAN';
+      onSubmit:
+          (
+            loanAmount,
+            monthlyPayment,
+            termMonths,
+            date,
+            source,
+            name,
+            note,
+          ) async {
+            final now = DateTime.now();
+            final loanId = const Uuid().v4();
 
-        try {
-          await ref.read(addLoanUseCaseProvider).execute(
-            Loan(
-              id: loanId,
-              name: name,
-              source: source,
-              originalAmount: loanAmount,
-              monthlyPayment: monthlyPayment,
-              originalTermMonths: termMonths,
-              startDate: date,
-              createdAt: now,
-              updatedAt: now,
-            ),
-          );
-        } catch (_) {
-          return false;
-        }
+            try {
+              await ref
+                  .read(addLoanUseCaseProvider)
+                  .execute(
+                    Loan(
+                      id: loanId,
+                      name: name,
+                      source: source,
+                      originalAmount: loanAmount,
+                      monthlyPayment: monthlyPayment,
+                      originalTermMonths: termMonths,
+                      startDate: date,
+                      note: note,
+                      createdAt: now,
+                      updatedAt: now,
+                    ),
+                  );
+            } catch (_) {
+              return false;
+            }
 
-        // The money arriving is an entry of its own, linked by loanId. Two
-        // writes, and the second can fail on its own: that left a commitment
-        // whose principal never entered the balance, so the runway divided by
-        // a payment for money the owner never received (#133). If it fails,
-        // the loan is taken back out, because half a loan is worse than none.
-        try {
-          await ref.read(addTransactionUseCaseProvider).execute(
-            Transaction(
-              id: const Uuid().v4(),
-              date: date,
-              type: TransactionType.loan,
-              amount: Money(loanAmount),
-              note: note,
-              loanId: loanId,
-              createdAt: now,
-              updatedAt: now,
-            ),
-          );
-        } catch (_) {
-          try {
-            await ref.read(deleteLoanUseCaseProvider).execute(loanId);
-          } catch (_) {
-            // Nothing more to try. Reporting the failure is still right: the
-            // wizard stays open and the owner is not told it worked.
-          }
-          return false;
-        }
-        return true;
-      },
+            // The money arriving is an entry of its own, linked by loanId. Two
+            // writes, and the second can fail on its own: that left a commitment
+            // whose principal never entered the balance, so the runway divided by
+            // a payment for money the owner never received (#133). If it fails,
+            // the loan is taken back out, because half a loan is worse than none.
+            try {
+              await ref
+                  .read(addTransactionUseCaseProvider)
+                  .execute(
+                    Transaction(
+                      id: const Uuid().v4(),
+                      date: date,
+                      type: TransactionType.loan,
+                      amount: Money(loanAmount),
+                      // The log row falls back to the type label when there is no
+                      // note, so a drawdown with nothing typed would read only
+                      // "LOAN". The lender's name is what tells them apart.
+                      note: note ?? name,
+                      loanId: loanId,
+                      createdAt: now,
+                      updatedAt: now,
+                    ),
+                  );
+            } catch (_) {
+              try {
+                await ref.read(deleteLoanUseCaseProvider).execute(loanId);
+              } catch (_) {
+                // Nothing more to try. Reporting the failure is still right: the
+                // wizard stays open and the owner is not told it worked.
+              }
+              return false;
+            }
+            return true;
+          },
     ),
   );
 }

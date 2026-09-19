@@ -70,23 +70,38 @@ DateTime? loanTermEnd(Loan loan) => loan.originalTermMonths > 0
 /// Without a term there is nothing better than repaid principal, which is also
 /// correct for an interest-free loan. A loan carrying interest but no recorded
 /// term will still stop early; recording a term is what fixes that.
-List<LoanSummary> costingLoanSummaries(
-  List<LoanSummary> summaries, {
-  required DateTime now,
-}) => summaries.where((summary) {
+bool loanIsCosting(LoanSummary summary, {required DateTime now}) {
   if (!summary.loan.isActive) return false;
   final end = loanTermEnd(summary.loan);
   // With a term, the term governs: repaid principal does not mean the payments
   // stopped. Without a term, repaid principal is the only end available, and it
   // is the right one for an interest-free loan, where payment = amount / months.
   return end == null ? !summary.isFullyPaid : now.isBefore(end);
-}).toList();
+}
 
-/// Loans to show. Repaying the principal ends one here, which is deliberately
-/// more generous than the costing rule above.
-List<LoanSummary> activeLoanSummaries(List<LoanSummary> summaries) {
+List<LoanSummary> costingLoanSummaries(
+  List<LoanSummary> summaries, {
+  required DateTime now,
+}) => summaries.where((summary) => loanIsCosting(summary, now: now)).toList();
+
+/// Loans to show and to offer a repayment against.
+///
+/// A loan stays here while it still costs money, even once the principal is
+/// repaid. Dropping it at repaid principal hid a loan that the term rule was
+/// still charging for: the payment went on being subtracted from the runway
+/// with nothing on screen to explain it, and `loanPaymentsLeftThisMonth`
+/// reserved the whole payment every month with no way to record paying it.
+List<LoanSummary> activeLoanSummaries(
+  List<LoanSummary> summaries, {
+  DateTime? now,
+}) {
+  final at = now ?? DateTime.now();
   return summaries
-      .where((summary) => summary.loan.isActive && !summary.isFullyPaid)
+      .where(
+        (summary) =>
+            summary.loan.isActive &&
+            (!summary.isFullyPaid || loanIsCosting(summary, now: at)),
+      )
       .toList();
 }
 

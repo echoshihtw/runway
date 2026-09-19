@@ -21,7 +21,14 @@ class LoanCard extends StatelessWidget {
     final nf = NumberFormat('#,##0', 'en_US');
     final loan = summary.loan;
     final pct = (summary.repaidRatio * 100).toStringAsFixed(0);
-    final color = summary.isFullyPaid ? AppColors.textPrimary : AppColors.textPrimary;
+    // Repaid principal does not mean the payments stopped: with a term set the
+    // term governs, and the runway keeps subtracting the installment. The rows
+    // about money still leaving follow this, the rows about principal progress
+    // follow isFullyPaid.
+    final isCosting = loanIsCosting(summary, now: DateTime.now());
+    final color = summary.isFullyPaid
+        ? AppColors.textPrimary
+        : AppColors.textPrimary;
 
     return GestureDetector(
       onTap: onTap,
@@ -62,7 +69,7 @@ class LoanCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (!summary.isFullyPaid)
+                if (!summary.isFullyPaid || isCosting)
                   GestureDetector(
                     onTap: onRepay,
                     child: Container(
@@ -86,11 +93,13 @@ class LoanCard extends StatelessWidget {
             const SizedBox(height: AppSpacing.xs),
             _row(
               l10n.remaining,
-              summary.isFullyPaid ? l10n.paid : nf.format(summary.remainingBalance),
+              summary.isFullyPaid
+                  ? l10n.paid
+                  : nf.format(summary.remainingBalance),
               color,
             ),
 
-            if (!summary.isFullyPaid) ...[
+            if (isCosting) ...[
               const SizedBox(height: AppSpacing.xs),
               _row(
                 l10n.installment,
@@ -117,6 +126,8 @@ class LoanCard extends StatelessWidget {
                   style: AppTextStyles.small.copyWith(color: AppColors.safe),
                 ),
               ],
+            ],
+            if (!summary.isFullyPaid) ...[
               const SizedBox(height: AppSpacing.xs),
               _row(
                 l10n.monthsLeft,
@@ -149,6 +160,13 @@ class LoanCard extends StatelessWidget {
                     ],
                   );
                 },
+              ),
+            ],
+            if (summary.isFullyPaid && isCosting) ...[
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                l10n.stillPaying,
+                style: AppTextStyles.small.copyWith(color: AppColors.gold),
               ),
             ],
           ],

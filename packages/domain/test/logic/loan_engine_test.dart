@@ -300,10 +300,27 @@ void _costingTests() {
       expect(costingLoanSummaries([summaryOf(closed)], now: now), isEmpty);
     });
 
-    test('the free-plan limit still frees the slot on repaid principal', () {
+    test('a loan that still costs money stays on the list', () {
+      // It used to drop off here: repaid principal ended it for the list while
+      // the term kept it costing, so the payment went on being subtracted from
+      // the runway with nothing on screen to explain it, and no way to record
+      // the payment that would net it off.
       final loan = loanFrom(DateTime(2020, 1, 1), termMonths: 96);
+      final summary = summaryOf(loan, repaid: 18000);
+      final now = DateTime(2026, 9, 16);
 
-      expect(activeLoanSummaries([summaryOf(loan, repaid: 18000)]), isEmpty);
+      expect(summary.isFullyPaid, isTrue);
+      expect(loanIsCosting(summary, now: now), isTrue);
+      expect(activeLoanSummaries([summary], now: now), hasLength(1));
+    });
+
+    test('a loan that is finished with drops off the list', () {
+      final loan = loanFrom(DateTime(2020, 1, 1), termMonths: 12);
+      final summary = summaryOf(loan, repaid: 18000);
+      final now = DateTime(2026, 9, 16);
+
+      expect(loanIsCosting(summary, now: now), isFalse);
+      expect(activeLoanSummaries([summary], now: now), isEmpty);
     });
   });
 }

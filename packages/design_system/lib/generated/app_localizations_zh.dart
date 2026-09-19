@@ -352,6 +352,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get repaid => '% 已還';
 
   @override
+  String get stillPaying => '本金已还清。还款持续到期限结束。';
+
+  @override
   String get repay => '還款';
 
   @override
@@ -1310,6 +1313,9 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get repaid => '% 已還';
+
+  @override
+  String get stillPaying => '本金已還清，但還要繳到期滿。';
 
   @override
   String get repay => '還款';

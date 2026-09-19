@@ -17,7 +17,8 @@ Future<void> _pump(WidgetTester tester, Future<bool> Function() onSubmit) async 
       home: Scaffold(
         body: SingleChildScrollView(
           child: LoanWizard(
-            onSubmit: (_, __, ___, ____, _____) async => onSubmit(),
+            onSubmit: (_, __, ___, ____, _____, ______, _______) async =>
+                onSubmit(),
           ),
         ),
       ),
