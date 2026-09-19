@@ -100,6 +100,7 @@
   "subscriptionPaidYes": "是，記錄下來",
   "subscriptionChargeFailed": "無法記錄。請檢查訂閱金額。",
   "subscriptionSaveFailed": "無法儲存訂閱。尚未新增。",
+  "loanSaveFailed": "貸款沒存成功，還沒加進去。",
   "subscriptionPaidNo": "否",
   "subscriptionWhatHappened": "發生了什麼？",
   "subscriptionReasonCancelled": "我已取消",

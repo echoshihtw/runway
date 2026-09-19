@@ -252,6 +252,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get subscriptionSaveFailed => '無法儲存訂閱。尚未新增。';
 
   @override
+  String get loanSaveFailed => '無法儲存貸款。尚未新增。';
+
+  @override
   String get subscriptionPaidNo => '否';
 
   @override
@@ -1207,6 +1210,9 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get subscriptionSaveFailed => '無法儲存訂閱。尚未新增。';
+
+  @override
+  String get loanSaveFailed => '貸款沒存成功，還沒加進去。';
 
   @override
   String get subscriptionPaidNo => '否';

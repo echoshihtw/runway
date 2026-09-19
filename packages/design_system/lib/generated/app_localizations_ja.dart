@@ -252,6 +252,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get subscriptionSaveFailed => 'サブスクを保存できませんでした。追加されていません。';
 
   @override
+  String get loanSaveFailed => 'ローンを保存できませんでした。追加されていません。';
+
+  @override
   String get subscriptionPaidNo => 'いいえ';
 
   @override

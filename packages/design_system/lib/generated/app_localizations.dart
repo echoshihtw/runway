@@ -581,6 +581,12 @@ abstract class AppLocalizations {
   /// **'Couldn\'t save that subscription. Nothing was added.'**
   String get subscriptionSaveFailed;
 
+  /// No description provided for @loanSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t save that loan. Nothing was added.'**
+  String get loanSaveFailed;
+
   /// No description provided for @subscriptionPaidNo.
   ///
   /// In en, this message translates to:
