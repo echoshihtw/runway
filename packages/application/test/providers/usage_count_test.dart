@@ -132,10 +132,9 @@ void main() {
   });
 
   group('entries', () {
-    test('adding one counts it, whatever kind it is', () async {
-      // "Every entry" was the decision: an expense, a repayment, a confirmed
-      // subscription charge and a loan disbursement all go through the one
-      // add use case, so counting there means no door can forget to.
+    test('an entry the owner chose to log counts, whatever kind it is', () async {
+      // Everything goes through the one add use case, so counting there means
+      // no door can forget to.
       final device = _MemoryStore();
       final ledger = _Ledger();
       final container = _container(device, ledger: ledger);
@@ -146,10 +145,44 @@ void main() {
       final add = container.read(addTransactionUseCaseProvider);
       await add.execute(_entry(TransactionType.expense));
       await add.execute(_entry(TransactionType.repayment));
+
+      expect(ledger.items, hasLength(2));
+      expect(device.counts[UsageKind.entries.key], 2);
+    });
+
+    test('a confirmed subscription charge is written but not counted', () async {
+      // The owner is answering a question the app asked, not logging an entry
+      // of their own, and the listing promises subscription tracking is free
+      // for everyone. Someone tracking three of them used to spend most of
+      // five free entries confirming bills.
+      final device = _MemoryStore();
+      final ledger = _Ledger();
+      final container = _container(device, ledger: ledger);
+      final keepAlive = container.listen(entryCountProvider, (_, __) {});
+      addTearDown(keepAlive.close);
+      await container.read(entryCountProvider.future);
+
+      final add = container.read(addTransactionUseCaseProvider);
       await add.execute(_entry(TransactionType.subscriptionCharge));
 
-      expect(ledger.items, hasLength(3));
-      expect(device.counts[UsageKind.entries.key], 3);
+      expect(ledger.items, hasLength(1), reason: 'the charge is still recorded');
+      expect(device.counts[UsageKind.entries.key] ?? 0, 0);
+    });
+
+    test('a free owner at the limit can still confirm a charge', () async {
+      final device = _MemoryStore()..counts[UsageKind.entries.key] = 5;
+      final ledger = _Ledger();
+      final container = _container(device, ledger: ledger);
+      final keepAlive = container.listen(entryCountProvider, (_, __) {});
+      addTearDown(keepAlive.close);
+      await container.read(entryCountProvider.future);
+
+      await container
+          .read(addTransactionUseCaseProvider)
+          .execute(_entry(TransactionType.subscriptionCharge));
+
+      expect(ledger.items, hasLength(1));
+      expect(device.counts[UsageKind.entries.key], 5, reason: 'unchanged');
     });
 
     test('the opening balance is not an entry, so onboarding never dead-ends', () async {
