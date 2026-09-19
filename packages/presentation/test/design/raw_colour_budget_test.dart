@@ -24,9 +24,8 @@ const budget = <String, int>{
   'features/transactions/transactions_screen.dart': 16,
   'features/loans/loan_card.dart': 14,
   'features/transactions/widgets/transaction_form.dart': 13,
-  'features/onboarding/onboarding_screen.dart': 11,
+  'features/onboarding/onboarding_screen.dart': 12,
   'features/subscriptions/subscriptions_panel.dart': 11,
-  'features/loans/liabilities_panel.dart': 2,
   'features/paywall/paywall_screen.dart': 8,
   'features/dashboard/widgets/runway_card.dart': 7,
   'features/paywall/pro_locked_card.dart': 6,
@@ -38,6 +37,7 @@ const budget = <String, int>{
   'features/dashboard/dashboard_screen.dart': 2,
   'features/dashboard/widgets/living_sheet.dart': 2,
   'features/dashboard/widgets/this_month_card.dart': 2,
+  'features/loans/liabilities_panel.dart': 2,
   'router/page_indicator.dart': 2,
   'features/boot/boot_screen.dart': 1,
   'features/loans/start_loan_creation.dart': 1,
@@ -56,7 +56,13 @@ void main() {
     for (final entity in root.listSync(recursive: true)) {
       if (entity is! File || !entity.path.endsWith('.dart')) continue;
       final relative = entity.path.substring('lib/'.length);
-      final hits = 'AppColors.'.allMatches(entity.readAsStringSync()).length;
+      // Whitespace-tolerant: the formatter is free to split `AppColors` from
+      // its `.field` across two lines, and a plain substring count then reads
+      // one fewer than there are. The budget moved when nothing but the
+      // formatting had.
+      final hits = RegExp(
+        r'\bAppColors\s*\.',
+      ).allMatches(entity.readAsStringSync()).length;
       if (hits > 0) counts[relative] = hits;
     }
 

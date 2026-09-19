@@ -856,11 +856,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingSkip => 'SKIP';
 
   @override
-  String get onboardingWelcomeTitle => 'Know your\nrunway.';
+  String get onboardingWelcomeTitle =>
+      'Stop guessing how long\nyour money lasts.';
 
   @override
-  String get onboardingWelcomeBody =>
-      'One number shows where you stand.\nHow many months does your money cover?';
+  String get onboardingWelcomeBody => 'No account. No bank connection.';
 
   @override
   String get onboardingGetStarted => 'GET STARTED';
@@ -870,7 +870,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingPrivacyBody =>
-      'Everything is encrypted on your device.\nWe cannot read your financial data.\nEven we don\'t know your numbers.';
+      'There is no server, so there is nothing to leak.';
 
   @override
   String get onboardingPrivacyEncrypted => 'Encrypted on device';
@@ -888,11 +888,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingIUnderstand => 'I UNDERSTAND';
 
   @override
-  String get onboardingFirstActionTitle => 'Ready to find\nyour runway?';
+  String get onboardingFirstActionTitle => 'One number and\nyou are set up.';
 
   @override
   String get onboardingFirstActionBody =>
-      'Start by adding your current cash balance.\nThat\'s all you need to see your number.';
+      'Just your cash balance. Nothing else.';
 
   @override
   String get onboardingAddMyBalance => 'ADD MY BALANCE';

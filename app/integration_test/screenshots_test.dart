@@ -71,7 +71,7 @@ void main() {
     await capture(
       '01-runway',
       const _Caption(
-        'How many months your money covers',
+        'Stop guessing how long your money lasts',
         'No account. No bank connection.',
       ),
     );
@@ -81,8 +81,8 @@ void main() {
     await capture(
       '02-living',
       const _Caption(
-        'Living budget, tracked as you spend',
-        'What is left this month, and what that leaves per day.',
+        'Know what you can spend today',
+        'What is left this month, and what that is per day.',
       ),
     );
     // Dismiss the sheet by tapping outside it.
@@ -93,8 +93,8 @@ void main() {
     await capture(
       '03-log',
       const _Caption(
-        'Every entry in one log',
-        'Rent, living and loan repayments stay separate.',
+        'Log a spend in seconds',
+        'Rent, living and repayments stay separate.',
       ),
     );
 
@@ -113,7 +113,7 @@ void main() {
       '04-plan',
       const _Caption(
         'Model a change before you make it',
-        'See the months a lower cost adds.',
+        'See how many months a lower cost buys.',
       ),
     );
   });
@@ -192,6 +192,12 @@ Future<void> _seed(AppDatabase database) async {
       note: 'Phone and utilities',
     ),
     _entry('t9', day(9), TransactionType.expense, 35, note: 'Coffee'),
+    // A fortnight of ordinary spending, so the log frame reads like a log
+    // somebody keeps rather than one they opened twice. Living stays well
+    // inside its budget, which is the state the budget rows are there to show.
+    _entry('t10', day(10), TransactionType.expense, 26, note: 'Dinner out'),
+    _entry('t11', day(11), TransactionType.expense, 58, note: 'Groceries'),
+    _entry('t13', day(14), TransactionType.expense, 41, note: 'Pharmacy'),
   ];
   for (final entry in entries) {
     await transactions.add(entry);

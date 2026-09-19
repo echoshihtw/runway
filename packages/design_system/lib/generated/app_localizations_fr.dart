@@ -860,11 +860,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get onboardingSkip => 'PASSER';
 
   @override
-  String get onboardingWelcomeTitle => 'Connaissez votre\nmarge.';
+  String get onboardingWelcomeTitle =>
+      'Ne devinez plus\ncombien de temps votre argent tient.';
 
   @override
-  String get onboardingWelcomeBody =>
-      'Un seul chiffre montre où vous en êtes.\nCombien de mois votre argent couvre-t-il ?';
+  String get onboardingWelcomeBody => 'Sans compte. Sans connexion bancaire.';
 
   @override
   String get onboardingGetStarted => 'COMMENCER';
@@ -874,7 +874,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get onboardingPrivacyBody =>
-      'Tout est chiffré sur votre appareil.\nNous ne pouvons pas lire vos données financières.\nMême nous ne connaissons pas vos chiffres.';
+      'Il n\'y a pas de serveur, donc rien à divulguer.';
 
   @override
   String get onboardingPrivacyEncrypted => 'Chiffré sur l\'appareil';
@@ -894,11 +894,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get onboardingIUnderstand => 'COMPRIS';
 
   @override
-  String get onboardingFirstActionTitle => 'Prêt à découvrir\nvotre marge ?';
+  String get onboardingFirstActionTitle => 'Un chiffre et\nc\'est configuré.';
 
   @override
-  String get onboardingFirstActionBody =>
-      'Commencez par saisir votre solde actuel.\nC\'est tout ce qu\'il faut pour voir votre chiffre.';
+  String get onboardingFirstActionBody => 'Juste votre solde. Rien d\'autre.';
 
   @override
   String get onboardingAddMyBalance => 'SAISIR MON SOLDE';
