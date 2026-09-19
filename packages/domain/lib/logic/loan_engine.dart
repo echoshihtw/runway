@@ -51,13 +51,20 @@ double totalMonthlyPayment(List<Loan> loans) {
 }
 
 /// The month after the last scheduled payment, or null when no term is set.
-DateTime? loanTermEnd(Loan loan) => loan.originalTermMonths > 0
-    ? DateTime(
-        loan.startDate.year,
-        loan.startDate.month + loan.originalTermMonths,
-        loan.startDate.day,
-      )
-    : null;
+DateTime? loanTermEnd(Loan loan) {
+  if (loan.originalTermMonths <= 0) return null;
+  final year = loan.startDate.year;
+  final month = loan.startDate.month + loan.originalTermMonths;
+  // DateTime rolls a day past the end of its month into the next one, so a
+  // loan taken out on the 31st used to end on the 2nd or 3rd and keep costing
+  // the runway for days it did not owe. Day zero of the following month is
+  // the last day of this one, leap years included.
+  final lastDayOfMonth = DateTime(year, month + 1, 0).day;
+  final day = loan.startDate.day < lastDayOfMonth
+      ? loan.startDate.day
+      : lastDayOfMonth;
+  return DateTime(year, month, day);
+}
 
 /// Loans that still cost money every month at [now].
 ///

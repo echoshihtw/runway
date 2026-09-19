@@ -352,7 +352,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get repaid => '% 已還';
 
   @override
-  String get stillPaying => '本金已還清。還款持續到期限結束。';
+  String get stillPaying => '本金已還清 — 還款繼續';
+
+  @override
+  String get markSettled => '標記為已結清';
+
+  @override
+  String get markSettledExplain => '每月還款不再計入。紀錄會保留。';
 
   @override
   String get repay => '還款';
@@ -1341,7 +1347,13 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get repaid => '% 已還';
 
   @override
-  String get stillPaying => '本金已還清，但還要繳到期滿。';
+  String get stillPaying => '本金已還清 — 還要繼續繳';
+
+  @override
+  String get markSettled => '標記為已結清';
+
+  @override
+  String get markSettledExplain => '每月還款不再計入。紀錄會留著。';
 
   @override
   String get repay => '還款';

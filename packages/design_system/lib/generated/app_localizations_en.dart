@@ -356,8 +356,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get repaid => '% REPAID';
 
   @override
-  String get stillPaying =>
-      'PRINCIPAL REPAID. PAYMENTS RUN TO THE END OF THE TERM.';
+  String get stillPaying => 'PRINCIPAL REPAID — PAYMENTS CONTINUE';
+
+  @override
+  String get markSettled => 'MARK AS SETTLED';
+
+  @override
+  String get markSettledExplain =>
+      'The monthly payment stops counting. Entries are kept.';
 
   @override
   String get repay => 'REPAY';

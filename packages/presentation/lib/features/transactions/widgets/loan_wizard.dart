@@ -128,11 +128,15 @@ class _LoanWizardState extends State<LoanWizard>
     if (picked != null) setState(() => _date = picked);
   }
 
+  // Above zero, not merely parsable. The write rejects a loan of zero on
+  // either figure, so a wizard that let you reach CONFIRM with one could only
+  // ever fail there. The term is left alone: zero months is a loan with no
+  // term, which the engine reads as open-ended and is a real thing to enter.
   bool get _step0Valid =>
       _nameCtrl.text.trim().isNotEmpty &&
-      double.tryParse(_amountCtrl.text.trim()) != null;
+      (double.tryParse(_amountCtrl.text.trim()) ?? 0) > 0;
   bool get _step1Valid => int.tryParse(_monthsCtrl.text.trim()) != null;
-  bool get _step2Valid => double.tryParse(_paymentCtrl.text.trim()) != null;
+  bool get _step2Valid => (double.tryParse(_paymentCtrl.text.trim()) ?? 0) > 0;
   bool get _valid => switch (_step) {
     0 => _step0Valid,
     1 => _step1Valid,

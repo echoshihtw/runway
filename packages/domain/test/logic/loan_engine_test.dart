@@ -315,6 +315,25 @@ void _costingTests() {
       );
     });
 
+    test('a term starting at the end of a month ends inside one', () {
+      // DateTime rolls a day past the end of a month into the next one, so a
+      // loan taken out on 31 August over six months used to run to 3 March
+      // and keep costing the runway for three days it did not owe.
+      final loan = loanFrom(DateTime(2025, 8, 31), termMonths: 6);
+
+      expect(loanTermEnd(loan), DateTime(2026, 2, 28));
+      expect(
+        costingLoanSummaries([summaryOf(loan)], now: DateTime(2026, 3, 1)),
+        isEmpty,
+      );
+    });
+
+    test('a leap February takes the 29th', () {
+      final loan = loanFrom(DateTime(2023, 8, 31), termMonths: 6);
+
+      expect(loanTermEnd(loan), DateTime(2024, 2, 29));
+    });
+
     test('a loan past its term stops counting', () {
       final loan = loanFrom(DateTime(2020, 1, 1), termMonths: 12);
 

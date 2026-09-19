@@ -123,15 +123,27 @@ void main() {
     testWidgets('a loan payment wears the bank, and says what it is', (
       tester,
     ) async {
-      await _pumpRow(tester, _of(TransactionType.repayment, note: 'Student loan'));
+      await _pumpRow(
+        tester,
+        _of(TransactionType.repayment, note: 'Student loan'),
+      );
 
       expect(find.byIcon(Icons.account_balance_rounded), findsOneWidget);
       expect(find.byIcon(Icons.replay_rounded), findsNothing);
-      expect(find.text('LOAN PAYMENT'), findsOneWidget, reason: 'a noun, not a verb');
+      expect(
+        find.text('LOAN PAYMENT'),
+        findsOneWidget,
+        reason: 'a noun, not a verb',
+      );
     });
 
-    testWidgets('money arriving from a loan wears the bank too', (tester) async {
-      await _pumpRow(tester, _of(TransactionType.loan, note: 'Bank loan', amount: 5000));
+    testWidgets('money arriving from a loan wears the bank too', (
+      tester,
+    ) async {
+      await _pumpRow(
+        tester,
+        _of(TransactionType.loan, note: 'Bank loan', amount: 5000),
+      );
 
       expect(find.byIcon(Icons.account_balance_rounded), findsOneWidget);
       expect(find.byIcon(Icons.credit_score_rounded), findsNothing);
@@ -140,7 +152,10 @@ void main() {
     testWidgets('the opening balance is a starting line, not a bank', (
       tester,
     ) async {
-      await _pumpRow(tester, _of(TransactionType.openingBalance, amount: 34000));
+      await _pumpRow(
+        tester,
+        _of(TransactionType.openingBalance, amount: 34000),
+      );
 
       expect(find.byIcon(Icons.flag_rounded), findsOneWidget);
       expect(find.byIcon(Icons.account_balance_rounded), findsNothing);

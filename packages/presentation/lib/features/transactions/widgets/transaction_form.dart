@@ -22,7 +22,8 @@ class TransactionForm extends StatefulWidget {
     String? note,
     ExpenseCategory? category,
     String? loanId,
-  ) onSubmit;
+  )
+  onSubmit;
 
   const TransactionForm({
     super.key,
@@ -65,8 +66,7 @@ class _TransactionFormState extends State<TransactionForm> {
         TransactionType.expense;
     _isInflow = type.isInflow;
     _date = widget.existing?.date ?? DateTime.now();
-    _amountCtrl.text =
-        moneyField(widget.existing?.amount.value);
+    _amountCtrl.text = moneyField(widget.existing?.amount.value);
     _noteCtrl.text = widget.existing?.note ?? widget.prefillNote ?? '';
     _selectedLoanId = widget.existing?.loanId;
     _outKind = switch (widget.existing) {
@@ -141,16 +141,32 @@ class _TransactionFormState extends State<TransactionForm> {
     if (picked != null) setState(() => _date = picked);
   }
 
-  void _submit() {
+  /// What CONFIRM is enabled by, and the only statement of it.
+  ///
+  /// The amount used to be checked only inside the handler, which returned
+  /// early while the button stayed live: the tap did nothing, the sheet sat
+  /// there, and nothing said why.
+  ///
+  /// The loan branch is defensive rather than reachable. `_loanChoices` always
+  /// offers the loan an existing entry names, even a closed one, and with no
+  /// loans at all `_effectiveOutKind` falls back to living before the type can
+  /// resolve to a repayment. It mirrors the handler so the two cannot drift.
+  bool get _valid {
     final amount = double.tryParse(_amountCtrl.text.trim());
-    if (amount == null || amount <= 0) return;
-    final isRepayment = _resolvedType == TransactionType.repayment;
-    if (isRepayment) {
+    if (amount == null || amount <= 0) return false;
+    if (_resolvedType == TransactionType.repayment) {
       final validIds = widget.loans.map((l) => l.id).toSet();
       if (_selectedLoanId == null || !validIds.contains(_selectedLoanId)) {
-        return;
+        return false;
       }
     }
+    return true;
+  }
+
+  void _submit() {
+    if (!_valid) return;
+    final amount = double.parse(_amountCtrl.text.trim());
+    final isRepayment = _resolvedType == TransactionType.repayment;
     widget.onSubmit(
       _resolvedType,
       amount,
@@ -166,8 +182,10 @@ class _TransactionFormState extends State<TransactionForm> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final locale = Localizations.localeOf(context).toString();
-    final dateStr =
-        DateFormat('dd MMM yyyy', locale).format(_date).toUpperCase();
+    final dateStr = DateFormat(
+      'dd MMM yyyy',
+      locale,
+    ).format(_date).toUpperCase();
     final showOutKind = !_isInflow && !_isOpeningBalance && !_isLockedType;
 
     return Container(
@@ -233,6 +251,7 @@ class _TransactionFormState extends State<TransactionForm> {
               focusNode: _amountFocus,
               inputType: NeoInputType.decimal,
               hint: '50,000',
+              onChanged: (_) => setState(() {}),
             ),
             const SizedBox(height: AppSpacing.md),
 
@@ -277,7 +296,7 @@ class _TransactionFormState extends State<TransactionForm> {
               label: l10n.confirm,
               variant: NeoButtonVariant.primary,
               fullWidth: true,
-              onPressed: _submit,
+              onPressed: _valid ? _submit : null,
             ),
           ],
         ),
@@ -413,11 +432,7 @@ class _ToggleTile extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              color: active ? color : AppColors.textDim,
-              size: 16,
-            ),
+            Icon(icon, color: active ? color : AppColors.textDim, size: 16),
             const SizedBox(width: 6),
             // Three tiles can share a row, so a long label shrinks to fit
             // instead of overflowing.
@@ -473,10 +488,7 @@ class _TypeBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(50),
         border: Border.all(color: _color.withAlpha(60)),
       ),
-      child: Text(
-        _label,
-        style: AppTextStyles.caption.copyWith(color: _color),
-      ),
+      child: Text(_label, style: AppTextStyles.caption.copyWith(color: _color)),
     );
   }
 }
@@ -556,11 +568,7 @@ class _DateChip extends StatelessWidget {
           const SizedBox(width: 6),
           Text(dateStr, style: AppTextStyles.caption),
           const SizedBox(width: 4),
-          const Icon(
-            Icons.edit_rounded,
-            size: 10,
-            color: AppColors.textDim,
-          ),
+          const Icon(Icons.edit_rounded, size: 10, color: AppColors.textDim),
         ],
       ),
     );
