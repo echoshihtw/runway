@@ -18,7 +18,21 @@ final addTransactionUseCaseProvider = Provider<AddTransactionUseCase>((ref) {
     // Every kind of entry counts toward the free limit except the opening
     // balance: starting is not logging, and onboarding must never dead-end.
     onAdded: (transaction) async {
-      if (transaction.type == TransactionType.openingBalance) return;
+      // Two kinds of entry do not count against the free allowance.
+      //
+      // The opening balance is where the ledger starts, not something logged,
+      // and onboarding must never dead-end.
+      //
+      // A confirmed subscription charge is the app telling the owner a bill
+      // is due and the owner agreeing. They did not decide to log anything,
+      // and the store listing promises subscription tracking is free for
+      // everyone — which it was not, while someone tracking three of them
+      // spent most of five free entries confirming bills.
+      const uncounted = {
+        TransactionType.openingBalance,
+        TransactionType.subscriptionCharge,
+      };
+      if (uncounted.contains(transaction.type)) return;
       await ref.read(entryCountProvider.notifier).increment();
     },
   );
