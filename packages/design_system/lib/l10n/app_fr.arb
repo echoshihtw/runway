@@ -100,6 +100,7 @@
   "subscriptionPaidYes": "Oui, enregistrer",
   "subscriptionChargeFailed": "Enregistrement impossible. Vérifiez le montant de l'abonnement.",
   "subscriptionSaveFailed": "Enregistrement de l'abonnement impossible. Rien n'a été ajouté.",
+  "loanSaveFailed": "Enregistrement du prêt impossible. Rien n'a été ajouté.",
   "subscriptionPaidNo": "Non",
   "subscriptionWhatHappened": "Que s'est-il passé ?",
   "subscriptionReasonCancelled": "Je l'ai résilié",

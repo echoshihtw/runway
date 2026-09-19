@@ -100,6 +100,7 @@
   "subscriptionPaidYes": "はい、記録する",
   "subscriptionChargeFailed": "記録できませんでした。サブスクの金額を確認してください。",
   "subscriptionSaveFailed": "サブスクを保存できませんでした。追加されていません。",
+  "loanSaveFailed": "ローンを保存できませんでした。追加されていません。",
   "subscriptionPaidNo": "いいえ",
   "subscriptionWhatHappened": "理由は？",
   "subscriptionReasonCancelled": "解約した",

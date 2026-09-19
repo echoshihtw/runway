@@ -5,7 +5,9 @@ import 'package:intl/intl.dart';
 import 'dart:math';
 
 class LoanWizard extends StatefulWidget {
-  final void Function(
+  /// Returns false when the write was refused, so the wizard can stay open
+  /// with the typing intact instead of closing as though the loan existed.
+  final Future<bool> Function(
     double loanAmount,
     double monthlyPayment,
     int termMonths,
@@ -23,6 +25,8 @@ class LoanWizard extends StatefulWidget {
 class _LoanWizardState extends State<LoanWizard>
     with SingleTickerProviderStateMixin {
   int _step = 0;
+  String? _error;
+  bool _saving = false;
   late AnimationController _slideCtrl;
   late Animation<Offset> _slideAnim;
 
@@ -130,7 +134,7 @@ class _LoanWizardState extends State<LoanWizard>
     _ => _step2Valid,
   };
 
-  void _submit() {
+  Future<void> _submit() async {
     final amount = double.tryParse(_amountCtrl.text.trim());
     final payment = double.tryParse(_paymentCtrl.text.trim());
     final termMo = int.tryParse(_monthsCtrl.text.trim()) ?? 0;
@@ -138,8 +142,22 @@ class _LoanWizardState extends State<LoanWizard>
     final note =
         '$_source — ${_nameCtrl.text.trim()}'
         '${_noteCtrl.text.trim().isNotEmpty ? " | ${_noteCtrl.text.trim()}" : ""}';
-    widget.onSubmit(amount, payment, termMo, _date, note);
-    Navigator.of(context).pop();
+    setState(() {
+      _saving = true;
+      _error = null;
+    });
+    // The pop used to happen here, before the awaits inside onSubmit had run,
+    // so the wizard closed whether the write landed or not (#133).
+    final saved = await widget.onSubmit(amount, payment, termMo, _date, note);
+    if (!mounted) return;
+    if (saved) {
+      Navigator.of(context).pop();
+      return;
+    }
+    setState(() {
+      _saving = false;
+      _error = context.l10n.loanSaveFailed;
+    });
   }
 
   @override
@@ -204,6 +222,13 @@ class _LoanWizardState extends State<LoanWizard>
           const SizedBox(height: AppSpacing.lg),
           SlideTransition(position: _slideAnim, child: _buildStep(context, l10n)),
           const SizedBox(height: AppSpacing.lg),
+          if (_error != null) ...[
+            Text(
+              _error!,
+              style: AppTextStyles.caption.copyWith(color: AppColors.red),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+          ],
           Row(
             children: [
               if (_step > 0) ...[
@@ -228,7 +253,7 @@ class _LoanWizardState extends State<LoanWizard>
                         variant: NeoButtonVariant.primary,
                         color: AppColors.gold,
                         fullWidth: true,
-                        onPressed: _step2Valid ? _submit : null,
+                        onPressed: _step2Valid && !_saving ? _submit : null,
                       ),
               ),
             ],

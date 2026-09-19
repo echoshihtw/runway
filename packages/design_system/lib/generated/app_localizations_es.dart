@@ -255,6 +255,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'No se pudo guardar la suscripción. No se añadió nada.';
 
   @override
+  String get loanSaveFailed =>
+      'No se pudo guardar el préstamo. No se añadió nada.';
+
+  @override
   String get subscriptionPaidNo => 'No';
 
   @override
