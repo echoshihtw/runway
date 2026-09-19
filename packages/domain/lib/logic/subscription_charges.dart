@@ -2,6 +2,7 @@ import '../entities/subscription.dart';
 import '../entities/transaction.dart';
 import '../enums/transaction_type.dart';
 import '../value_objects/money.dart';
+import 'opening_balance.dart';
 import 'subscription_billing.dart';
 
 /// A subscription is a reminder. On its payment date it leaves an entry for the
@@ -43,12 +44,7 @@ List<Transaction> dueSubscriptionCharges({
 }) {
   final endOfToday = DateTime(now.year, now.month, now.day, 23, 59, 59, 999);
 
-  final openingBalanceDate = transactions
-      .where((t) => t.type == TransactionType.openingBalance)
-      .fold<DateTime?>(
-        null,
-        (latest, t) => latest == null || t.date.isAfter(latest) ? t.date : latest,
-      );
+  final openingBalanceDate = latestOpeningBalanceDate(transactions);
 
   final recorded = transactions.map((t) => t.id).toSet();
 
