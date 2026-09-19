@@ -14,6 +14,20 @@
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	<!-- The languages the app ships. Apple builds the App Store's Languages
+	     field from this key, never from the Dart localisations, which it
+	     cannot see; without it the product page read English only. zh-Hant
+	     because the one Chinese locale is Traditional and plain zh displays
+	     as Simplified; Flutter resolves a zh-Hant device to zh regardless. -->
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>es</string>
+		<string>fr</string>
+		<string>it</string>
+		<string>ja</string>
+		<string>zh-Hant</string>
+	</array>
 	<key>CFBundleName</key>
 	<string>Runway</string>
 	<key>CFBundlePackageType</key>
