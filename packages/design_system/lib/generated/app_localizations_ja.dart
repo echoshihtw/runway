@@ -960,6 +960,32 @@ class AppLocalizationsJa extends AppLocalizations {
   String get runSimulation => 'シミュレーション';
 
   @override
+  String get runwayUnlimitedHere => 'この計画では収入が支出をまかないます';
+
+  @override
+  String get runwayNoChange => '変化なし';
+
+  @override
+  String deltaDaysLonger(int days) {
+    return '$days日長い';
+  }
+
+  @override
+  String deltaDaysShorter(int days) {
+    return '$days日短い';
+  }
+
+  @override
+  String deltaMonthsLonger(int months) {
+    return '$monthsか月長い';
+  }
+
+  @override
+  String deltaMonthsShorter(int months) {
+    return '$monthsか月短い';
+  }
+
+  @override
   String get paywallTermsOfUse => '利用規約';
 
   @override

@@ -356,6 +356,12 @@
   "simNeedsBalanceWhy": "Tu margen necesita un saldo de partida desde el que contar.",
   "addOpeningBalance": "AÑADIR MI SALDO",
   "runSimulation": "SIMULAR",
+  "runwayUnlimitedHere": "Los ingresos cubren los costes en este plan",
+  "runwayNoChange": "Sin cambios",
+  "deltaDaysLonger": "{days} días más",
+  "deltaDaysShorter": "{days} días menos",
+  "deltaMonthsLonger": "{months} meses más",
+  "deltaMonthsShorter": "{months} meses menos",
   "paywallTermsOfUse": "Términos de uso",
   "paywallPrivacyPolicy": "Política de privacidad"
 }

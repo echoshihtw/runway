@@ -10,6 +10,9 @@ import '../transactions/show_entry_sheet.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
 
+/// Matches the engine's unlimited sentinel.
+const _unlimitedMonths = 9999;
+
 class ScenariosScreen extends ConsumerWidget {
   const ScenariosScreen({super.key});
 
@@ -24,7 +27,9 @@ class ScenariosScreen extends ConsumerWidget {
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
     final nf = NumberFormat('#,##0', 'en_US');
 
-    String fmt(double v) => '$symbol ${nf.format(v.abs())}';
+    // No abs(): a negative balance is an overdraft, and showing it unsigned
+    // told the owner they had money they did not have.
+    String fmt(double v) => '$symbol ${nf.format(v)}';
     String fmtRunway(int m) {
       if (m >= 9999) return '∞';
       if (m >= 24) return '${(m / 12).toStringAsFixed(1)} YRS';
@@ -76,8 +81,16 @@ class ScenariosScreen extends ConsumerWidget {
                       Expanded(
                         child: _tile(
                           l10n.runway,
-                          fmtRunway(realModel.runwayMonths),
-                          runwayColor(realModel.runwayStatus),
+                          // The dashboard refuses to state a runway with no
+                          // cost known, and says so with an em dash. This
+                          // screen used to show the same owner ∞ in mint with
+                          // a STABLE colour, one tab away (CONTRACTS §3.1).
+                          realModel.runwayIsKnown
+                              ? fmtRunway(realModel.runwayMonths)
+                              : '—',
+                          realModel.runwayIsKnown
+                              ? runwayColor(realModel.runwayStatus)
+                              : AppColors.textSecondary,
                         ),
                       ),
                       Expanded(
@@ -95,7 +108,9 @@ class ScenariosScreen extends ConsumerWidget {
                       Expanded(
                         child: _tile(
                           l10n.cash,
-                          fmt(realModel.currentCash),
+                          realModel.cashIsKnown
+                              ? fmt(realModel.currentCash)
+                              : '—',
                           AppColors.textPrimary,
                         ),
                       ),
@@ -166,18 +181,23 @@ class ScenariosScreen extends ConsumerWidget {
                     fmtRunway: fmtRunway,
                     runwayColor: runwayColor,
                   ),
-                  if (canRun) ...[
-                    const SizedBox(height: AppSpacing.md),
-                    NeoButton(
-                      label: l10n.runSimulation,
-                      variant: NeoButtonVariant.primary,
-                      fullWidth: true,
-                      onPressed: () {
-                        if (!allowsSimulation(context, ref)) return;
-                        ref.read(scenarioProvider.notifier).activate();
-                      },
-                    ),
-                  ],
+                  // Always rendered. It was deleted when disabled because a
+                  // faded primary fill read as broken (#108), which left the
+                  // screen with no primary action at all on a cold open — the
+                  // cause was the disabled styling, and that is fixed in
+                  // NeoButton, so the state can be shown rather than hidden.
+                  const SizedBox(height: AppSpacing.md),
+                  NeoButton(
+                    label: l10n.runSimulation,
+                    variant: NeoButtonVariant.primary,
+                    fullWidth: true,
+                    onPressed: canRun
+                        ? () {
+                            if (!allowsSimulation(context, ref)) return;
+                            ref.read(scenarioProvider.notifier).activate();
+                          }
+                        : null,
+                  ),
                   // Shown once the first is spent, so the paywall never
                   // arrives unannounced.
                   if (simulationsRun > 0 && !isProOwner(ref)) ...[
@@ -293,8 +313,15 @@ class ScenariosScreen extends ConsumerWidget {
     }
 
     if (scenario.isActive && simModel != null) {
-      final isImproved = simModel.runwayMonths >= realModel.runwayMonths;
-      final delta = simModel.runwayMonths - realModel.runwayMonths;
+      // 9999 is the unlimited sentinel, not a quantity. Differencing against
+      // it printed "+9997 MO" beside ∞, and a runway that is unlimited in the
+      // plan is a state to name rather than a number to subtract.
+      final unlimited = simModel.runwayMonths >= _unlimitedMonths;
+      // Both runways are floored to whole months, so a difference of floors
+      // reported "0 MO" for a cut worth half a month — at two months of
+      // runway, the fifteen days that decide it.
+      final deltaDays = simModel.runwayDays - realModel.runwayDays;
+      final better = deltaDays > 0;
 
       return _simulationPanel(
         child: Column(
@@ -304,25 +331,39 @@ class ScenariosScreen extends ConsumerWidget {
                 Expanded(
                   child: _tile(
                     l10n.simRunway,
-                    fmtRunway(simModel.runwayMonths),
-                    runwayColor(simModel.runwayStatus),
+                    simModel.runwayIsKnown
+                        ? fmtRunway(simModel.runwayMonths)
+                        : '—',
+                    simModel.runwayIsKnown
+                        ? runwayColor(simModel.runwayStatus)
+                        : AppColors.textSecondary,
                   ),
                 ),
-                Icon(
-                  isImproved
-                      ? Icons.trending_up_rounded
-                      : Icons.trending_down_rounded,
-                  color: isImproved ? AppColors.green : AppColors.red,
-                  size: 18,
-                ),
-                const SizedBox(width: AppSpacing.xs),
-                Text(
-                  '${delta > 0 ? "+" : ""}$delta MO',
-                  style: AppTextStyles.metricSmall.copyWith(
-                    color: isImproved ? AppColors.green : AppColors.red,
+                if (!unlimited && deltaDays != 0) ...[
+                  Icon(
+                    better
+                        ? Icons.trending_up_rounded
+                        : Icons.trending_down_rounded,
+                    color: better ? AppColors.green : AppColors.red,
+                    size: 18,
                   ),
-                ),
+                  const SizedBox(width: AppSpacing.xs),
+                ],
               ],
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              unlimited
+                  ? l10n.runwayUnlimitedHere
+                  : _deltaLabel(l10n, deltaDays),
+              textAlign: TextAlign.center,
+              style: AppTextStyles.bodySmall.copyWith(
+                color: unlimited
+                    ? AppColors.green
+                    : deltaDays == 0
+                    ? AppColors.textSecondary
+                    : (better ? AppColors.green : AppColors.red),
+              ),
             ),
           ],
         ),
@@ -337,6 +378,22 @@ class ScenariosScreen extends ConsumerWidget {
         textAlign: TextAlign.center,
       ),
     );
+  }
+
+  /// Says the change at the precision the decision needs: days under a
+  /// month, months above it, and nothing at all when there is no change.
+  String _deltaLabel(AppLocalizations l10n, int deltaDays) {
+    if (deltaDays == 0) return l10n.runwayNoChange;
+    final days = deltaDays.abs();
+    if (days < 30) {
+      return deltaDays > 0
+          ? l10n.deltaDaysLonger(days)
+          : l10n.deltaDaysShorter(days);
+    }
+    final months = days ~/ 30;
+    return deltaDays > 0
+        ? l10n.deltaMonthsLonger(months)
+        : l10n.deltaMonthsShorter(months);
   }
 
   Widget _simulationPanel({IconData? icon, required Widget child}) {

@@ -356,6 +356,12 @@
   "simNeedsBalanceWhy": "可用月數要從一個起始餘額開始算。",
   "addOpeningBalance": "新增我的餘額",
   "runSimulation": "開始模擬",
+  "runwayUnlimitedHere": "在這個計畫裡，收入蓋得過支出",
+  "runwayNoChange": "沒有變化",
+  "deltaDaysLonger": "多 {days} 天",
+  "deltaDaysShorter": "少 {days} 天",
+  "deltaMonthsLonger": "多 {months} 個月",
+  "deltaMonthsShorter": "少 {months} 個月",
   "paywallTermsOfUse": "使用條款",
   "paywallPrivacyPolicy": "隱私權政策"
 }
