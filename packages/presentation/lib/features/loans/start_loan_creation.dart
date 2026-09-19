@@ -56,6 +56,22 @@ Future<void> startLoanCreation(BuildContext context, WidgetRef ref) async {
           return false;
         }
 
+        // Money that arrived before the opening balance is already inside it,
+        // so writing it again takes it twice. Entering a loan taken out last
+        // year used to add its whole principal to today's cash — money long
+        // since received and spent, already in the figure the owner typed.
+        // Subscriptions have obeyed this rule since charges were first
+        // written; loans now use the same one.
+        final openingBalanceDate = latestOpeningBalanceDate(
+          ref.read(transactionsProvider).value ?? const [],
+        );
+        if (isAlreadyInOpeningBalance(
+          date,
+          openingBalanceDate: openingBalanceDate,
+        )) {
+          return true;
+        }
+
         // The money arriving is an entry of its own, linked by loanId. Two
         // writes, and the second can fail on its own: that left a commitment
         // whose principal never entered the balance, so the runway divided by
