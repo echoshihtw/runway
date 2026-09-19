@@ -71,7 +71,7 @@ void main() {
     await capture(
       '01-runway',
       const _Caption(
-        'How many months your money covers',
+        'Stop guessing how long your money lasts',
         'No account. No bank connection.',
       ),
     );
@@ -81,8 +81,8 @@ void main() {
     await capture(
       '02-living',
       const _Caption(
-        'Living budget, tracked as you spend',
-        'What is left this month, and what that leaves per day.',
+        'Know what you can spend today',
+        'What is left this month, and what that is per day.',
       ),
     );
     // Dismiss the sheet by tapping outside it.
@@ -93,8 +93,8 @@ void main() {
     await capture(
       '03-log',
       const _Caption(
-        'Every entry in one log',
-        'Rent, living and loan repayments stay separate.',
+        'Log a spend in seconds',
+        'Rent, living and repayments stay separate.',
       ),
     );
 
@@ -113,7 +113,7 @@ void main() {
       '04-plan',
       const _Caption(
         'Model a change before you make it',
-        'See the months a lower cost adds.',
+        'See how many months a lower cost buys.',
       ),
     );
   });
