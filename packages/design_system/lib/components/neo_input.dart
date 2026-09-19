@@ -28,6 +28,18 @@ class NeoInput extends StatelessWidget {
     this.maxLength,
   });
 
+  /// Numbers are set in the mono face, words in the label face.
+  ///
+  /// Every figure the owner typed used to come out in Inter while the figures
+  /// the app printed beside it were mono — most visibly on the Plan screen,
+  /// where a typed amount sat directly above a mono one inside the same card.
+  /// A name or a note is words, and stays in the reading face.
+  TextStyle get _fieldStyle => switch (inputType) {
+    NeoInputType.numeric || NeoInputType.decimal => AppTextStyles.metricSmall,
+    NeoInputType.name || NeoInputType.note || NeoInputType.text =>
+      AppTextStyles.body,
+  };
+
   List<TextInputFormatter> get _formatters {
     switch (inputType) {
       case NeoInputType.numeric:
@@ -82,10 +94,10 @@ class NeoInput extends StatelessWidget {
           keyboardType: _keyboardType,
           inputFormatters: _formatters,
           onChanged: onChanged,
-          style: AppTextStyles.body,
+          style: _fieldStyle,
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+            hintStyle: _fieldStyle.copyWith(color: AppColors.textSecondary),
             filled: true,
             fillColor: AppColors.surfaceHigh,
             border: OutlineInputBorder(

@@ -98,6 +98,7 @@ class _NeoExpandableCardState extends State<NeoExpandableCard>
                   // sizes an unflexed title pushes the chevron off the card.
                   Expanded(
                     child: Text(
+                      // Sentence case in, upper case out. See NeoCard.
                       widget.title.toUpperCase(),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

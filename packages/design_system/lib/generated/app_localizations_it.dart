@@ -153,10 +153,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get highLoad => 'CARICO ELEVATO';
 
   @override
-  String get language => 'LINGUA';
+  String get language => 'Lingua';
 
   @override
-  String get currency => 'VALUTA';
+  String get currency => 'Valuta';
 
   @override
   String get currencySymbolOnly =>
@@ -281,7 +281,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Interrompe le voci future. I pagamenti già registrati vengono mantenuti.';
 
   @override
-  String get liabilities => 'DEBITI';
+  String get liabilities => 'Debiti';
 
   @override
   String get noActiveLoans => '> NESSUN PRESTITO ATTIVO';
@@ -430,7 +430,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get change => 'CAMBIA';
 
   @override
-  String get subscriptions => 'ABBONAMENTI';
+  String get subscriptions => 'Abbonamenti';
 
   @override
   String get noSubscriptions => '> NESSUN ABBONAMENTO ATTIVO';
@@ -587,14 +587,14 @@ class AppLocalizationsIt extends AppLocalizations {
   String get whatIfAnalysis => 'ANALISI WHAT-IF';
 
   @override
-  String get current => 'ATTUALE';
+  String get current => 'Attuale';
 
   @override
-  String get simulate => 'SIMULA';
+  String get simulate => 'Simula';
 
   @override
   String get simHint =>
-      'MODIFICA SPESA O REDDITO PER VEDERE L\'IMPATTO SULL\'AUTONOMIA';
+      'Modifica spesa o reddito per vedere l\'impatto sull\'autonomia';
 
   @override
   String get simulation => 'SIMULAZIONE';
@@ -612,7 +612,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get close => 'CHIUDI';
 
   @override
-  String get monthlyBudget => 'BUDGET MENSILE';
+  String get monthlyBudget => 'Budget mensile';
 
   @override
   String get rentFixed => 'AFFITTO / FISSO';
@@ -838,7 +838,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get thisMonth => 'QUESTO MESE';
+  String get thisMonth => 'Questo mese';
 
   @override
   String get cashIn => 'ENTRATA';
