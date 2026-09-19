@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../feature_flags.dart';
@@ -14,13 +16,22 @@ class EntitlementNotifier extends AsyncNotifier<EntitlementState> {
     // Offline fallback — use locally cached value first
     final prefs = await SharedPreferences.getInstance();
     final cached = prefs.getBool(_kIsPro) ?? false;
+
+    // Read outside the try: a missing override is a programming error, not an
+    // offline store.
+    final service = ref.read(purchaseServiceProvider);
+
     if (_effectiveIsPro(cached)) {
+      // The cache answers first, so a paying owner is never held at a spinner
+      // waiting for the network. But it cannot be the last word: a cached
+      // unlock used to return here and the store was never consulted again on
+      // that device, so a refund or a lapsed subscription had no way to land
+      // and the only thing that could correct it was never called at all.
+      _unlockOnExternalPurchase(service);
+      if (cached) _revokeIfTheStoreSaysSo(service);
       return EntitlementState(isPro: true);
     }
 
-    // Try to verify with RevenueCat if configured. Read outside the try: a
-    // missing override is a programming error, not an offline store.
-    final service = ref.read(purchaseServiceProvider);
     try {
       final serverPro = await service.checkProEntitlement();
       if (serverPro) {
@@ -39,6 +50,28 @@ class EntitlementNotifier extends AsyncNotifier<EntitlementState> {
       _unlockOnExternalPurchase(service);
       return EntitlementState(isPro: _effectiveIsPro(cached));
     }
+  }
+
+  /// Gives up a cached unlock the store no longer recognises.
+  ///
+  /// Only a store that answers may revoke. Offline, or a store that is down,
+  /// leaves the cache exactly as it was — the alternative locks a paying owner
+  /// out of what they bought because their train went into a tunnel.
+  void _revokeIfTheStoreSaysSo(PurchaseService service) {
+    var disposed = false;
+    ref.onDispose(() => disposed = true);
+    unawaited(
+      Future(() async {
+        final bool serverPro;
+        try {
+          serverPro = await service.checkProEntitlement();
+        } catch (_) {
+          return;
+        }
+        if (serverPro || disposed) return;
+        await revokePro();
+      }),
+    );
   }
 
   /// A purchase can complete outside the paywall, for example when an offer
