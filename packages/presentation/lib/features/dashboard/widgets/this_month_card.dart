@@ -136,7 +136,7 @@ class _BudgetRow extends StatelessWidget {
                   over > 0
                       ? l10n.budgetOver(fmt(over))
                       : l10n.budgetLeft(fmt(bucket.leftThisMonth)),
-                  style: AppTextStyles.caption.copyWith(
+                  style: AppTextStyles.metricCaption.copyWith(
                     color: over > 0 ? SC.cost : SC.life,
                   ),
                 ),

@@ -74,7 +74,7 @@ class LivingSheet extends ConsumerWidget {
               over > 0
                   ? l10n.budgetOver(fmt(over))
                   : l10n.budgetLeft(fmt(living.leftThisMonth)),
-              style: AppTextStyles.caption.copyWith(
+              style: AppTextStyles.metricCaption.copyWith(
                 color: over > 0 ? SC.cost : SC.life,
               ),
             ),
@@ -82,7 +82,7 @@ class LivingSheet extends ConsumerWidget {
               const SizedBox(height: AppSpacing.xs),
               Text(
                 l10n.dailyAllowance(fmt(living.leftThisMonth / days), days),
-                style: AppTextStyles.body,
+                style: AppTextStyles.metricSmall,
               ),
             ],
             const SizedBox(height: AppSpacing.lg),

@@ -30,6 +30,15 @@ abstract final class AppTextStyles {
     color: AppColors.textPrimary,
   );
 
+  /// Caption-sized numerals. The same 11pt as [caption], in the mono face, so
+  /// an amount sitting in a caption keeps its size and stops changing family
+  /// halfway down a card.
+  static TextStyle get metricCaption => GoogleFonts.jetBrainsMono(
+    fontSize: 11,
+    fontWeight: FontWeight.w400,
+    color: AppColors.textSecondary,
+  );
+
   // ── Labels (Inter — clean) ───────────────────
   static TextStyle get label => GoogleFonts.inter(
     fontSize: 11,
