@@ -4,6 +4,7 @@ import 'package:design_system/design_system.dart';
 import 'package:application/application.dart';
 import 'package:domain/domain.dart';
 import 'widgets/this_month_card.dart';
+import 'widgets/every_month_card.dart';
 import 'widgets/goal_card.dart';
 import 'widgets/runway_card.dart';
 import 'widgets/getting_started_card.dart';
@@ -74,6 +75,14 @@ class DashboardScreen extends ConsumerWidget {
                   const SubscriptionPromptCard(),
                   GoalCard(model: model),
                   const SizedBox(height: AppSpacing.cardGap),
+                  // The income side, directly above the spending side, so the
+                  // pair reads as what you expect each month and then what
+                  // actually happened this one.
+                  EveryMonthCard(
+                    model: model,
+                    onSetUp: () => _showConfig(context),
+                  ),
+                  const SizedBox(height: AppSpacing.cardGap),
                   const ThisMonthCard(),
                   const SizedBox(height: AppSpacing.cardGap),
                   const LiabilitiesPanel(),
@@ -135,8 +144,8 @@ class _RunwayBadgeState extends ConsumerState<_RunwayBadge>
   late final Animation<double> _glow;
 
   static Duration _durationFor(RunwayStatus s) => switch (s) {
-    RunwayStatus.stable   => const Duration(milliseconds: 2800),
-    RunwayStatus.caution  => const Duration(milliseconds: 1400),
+    RunwayStatus.stable => const Duration(milliseconds: 2800),
+    RunwayStatus.caution => const Duration(milliseconds: 1400),
     RunwayStatus.critical => const Duration(milliseconds: 650),
   };
 
@@ -149,9 +158,10 @@ class _RunwayBadgeState extends ConsumerState<_RunwayBadge>
       vsync: this,
       duration: const Duration(milliseconds: 2800),
     )..repeat(reverse: true);
-    _glow = Tween<double>(begin: 0.10, end: 0.45).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _glow = Tween<double>(
+      begin: 0.10,
+      end: 0.45,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override

@@ -661,6 +661,18 @@ class AppLocalizationsJa extends AppLocalizations {
   String get expectedInflow => '想定流入';
 
   @override
+  String get everyMonth => '毎月';
+
+  @override
+  String get monthlySurplus => '余剰';
+
+  @override
+  String get monthlyDeficit => '不足';
+
+  @override
+  String get setExpectedIncome => '想定収入を入力';
+
+  @override
   String get expectedBurn => '想定支出';
 
   @override
