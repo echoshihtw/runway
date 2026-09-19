@@ -906,7 +906,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String paywallOneTimePurchase(String price) {
-    return '$price · 买断，一次付清';
+    return '$price 買斷。這個 App 幫你算訂閱，自己不會變成訂閱。';
   }
 
   @override
@@ -932,22 +932,22 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String paywallTitleEntries(int count) {
-    return '$count 条免费记录用完了。\n想继续记，就是 Pro。';
+    return '$count 筆免費紀錄用完了。\nPro 讓這個數字一直是準的。';
   }
 
   @override
   String paywallTitleSimulations(int count) {
-    return '$count 次免费模拟用完了。\n想继续模拟，就是 Pro。';
+    return '$count 次免費模擬用完了。\nPro 讓你想試幾次都行。';
   }
 
   @override
   String get paywallTitleDefault => '解锁 Runway Pro。';
 
   @override
-  String get paywallFeatureEntries => '记录不限条数';
+  String get paywallFeatureEntries => '全部都記，數字就不會跑掉';
 
   @override
-  String get paywallFeatureSimulations => '情景模拟不限次数';
+  String get paywallFeatureSimulations => '想模擬幾次都可以';
 
   @override
   String get stepBalanceShort => '现金余额';
@@ -1921,7 +1921,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String paywallOneTimePurchase(String price) {
-    return '$price · 買斷，一次付清';
+    return '$price 買斷。這個 App 幫你算訂閱，自己當然不會變成訂閱。';
   }
 
   @override
@@ -1947,22 +1947,22 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String paywallTitleEntries(int count) {
-    return '$count 筆免費紀錄用完了。\n想繼續記，就是 Pro。';
+    return '$count 筆免費紀錄用完了。\nPro 就是讓這個數字一直準。';
   }
 
   @override
   String paywallTitleSimulations(int count) {
-    return '$count 次免費模擬用完了。\n想繼續模擬，就是 Pro。';
+    return '$count 次免費模擬用完了。\nPro 讓你想試幾次就試幾次。';
   }
 
   @override
   String get paywallTitleDefault => '解鎖 Runway Pro。';
 
   @override
-  String get paywallFeatureEntries => '紀錄不限筆數';
+  String get paywallFeatureEntries => '全部都記，數字才不會跑掉';
 
   @override
-  String get paywallFeatureSimulations => '情境模擬不限次數';
+  String get paywallFeatureSimulations => '想模擬幾次就幾次';
 
   @override
   String get stepBalanceShort => '現金餘額';

@@ -937,7 +937,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String paywallOneTimePurchase(String price) {
-    return '$price · Pago único';
+    return '$price una vez. Esta app cuenta tus suscripciones; no va a ser una.';
   }
 
   @override
@@ -966,23 +966,22 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String paywallTitleEntries(int count) {
-    return 'Has registrado tus $count entradas gratis.\nLas entradas ilimitadas son Pro.';
+    return 'Has usado tus $count registros gratis.\nPro es lo que mantiene el número verdadero.';
   }
 
   @override
   String paywallTitleSimulations(int count) {
-    return 'Has usado tus $count simulaciones gratis.\nLas simulaciones ilimitadas son Pro.';
+    return 'Has hecho tus $count simulaciones gratis.\nPro es como sigues preguntando qué pasaría si.';
   }
 
   @override
   String get paywallTitleDefault => 'Desbloquea Runway Pro.';
 
   @override
-  String get paywallFeatureEntries => 'Entradas ilimitadas';
+  String get paywallFeatureEntries => 'Registra todo, y el número no se desvía';
 
   @override
-  String get paywallFeatureSimulations =>
-      'Simulaciones de escenarios ilimitadas';
+  String get paywallFeatureSimulations => 'Pregunta qué pasaría si, sin contar';
 
   @override
   String get stepBalanceShort => 'Saldo';
