@@ -40,11 +40,17 @@ class GoalCard extends ConsumerWidget {
       targetMonths: goal.targetMonths,
       monthlyCost: model.totalMonthlyOutflow,
     );
-    final cashToGo = runwayGoalCashToGo(
-      targetMonths: goal.targetMonths,
-      monthlyCost: model.totalMonthlyOutflow,
-      currentCash: model.currentCash,
-    );
+    // What is still to go is measured against the cash on hand, so it cannot
+    // be stated while the ledger has not loaded: currentCash is 0 then, and
+    // the card would print a confident figure directly beneath a runway card
+    // correctly showing cash as unknown.
+    final cashToGo = model.cashIsKnown
+        ? runwayGoalCashToGo(
+            targetMonths: goal.targetMonths,
+            monthlyCost: model.totalMonthlyOutflow,
+            currentCash: model.currentCash,
+          )
+        : null;
     String money(double v) => '$symbol ${nf.format(v)}';
 
     final summary = Column(
@@ -56,9 +62,7 @@ class GoalCard extends ConsumerWidget {
             Flexible(
               child: Text(
                 goal.name.toUpperCase(),
-                style: AppTextStyles.body.copyWith(
-                  color: SC.numberPrimary,
-                ),
+                style: AppTextStyles.body.copyWith(color: SC.numberPrimary),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -79,10 +83,20 @@ class GoalCard extends ConsumerWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              achieved ? l10n.goalReached : l10n.monthsToGoal(monthsLeft),
-              style: AppTextStyles.caption.copyWith(color: color),
+            // The caption is the long side and the only one that can yield:
+            // "12 months of cover to build" needs 304 points where "12 months
+            // to go" needed 169, and the card is 32 points narrower than the
+            // screen. Unbounded, it overflowed on every iPhone below about
+            // 415 points at the default text size, in English.
+            Flexible(
+              child: Text(
+                achieved ? l10n.goalReached : l10n.monthsToGoal(monthsLeft),
+                style: AppTextStyles.caption.copyWith(color: color),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
+            const SizedBox(width: AppSpacing.sm),
             Text(
               '$percent%',
               style: AppTextStyles.caption.copyWith(color: SC.captionColor),
@@ -126,6 +140,9 @@ class _CashRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        // The label yields, the amount does not. Two Flexibles each capped at
+        // half the row cut the money figure mid-number at large text sizes,
+        // and a truncated amount is worse than a truncated word for it.
         Flexible(
           child: Text(
             label,
@@ -135,16 +152,13 @@ class _CashRow extends StatelessWidget {
           ),
         ),
         const SizedBox(width: AppSpacing.sm),
-        Flexible(
-          child: Text(
-            value,
-            style: AppTextStyles.metricCaption.copyWith(
-              color: color ?? SC.numberPrimary,
-            ),
-            textAlign: TextAlign.right,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+        Text(
+          value,
+          style: AppTextStyles.metricCaption.copyWith(
+            color: color ?? SC.numberPrimary,
           ),
+          textAlign: TextAlign.right,
+          maxLines: 1,
         ),
       ],
     );
