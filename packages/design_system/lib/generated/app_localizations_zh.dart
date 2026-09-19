@@ -829,8 +829,14 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String monthsToGoal(int count) {
-    return '还差$count个月';
+    return '還要再存 $count 個月';
   }
+
+  @override
+  String get goalCashTarget => '目標金額';
+
+  @override
+  String get goalCashToGo => '還差';
 
   @override
   String get thisMonth => '本月';
@@ -1838,8 +1844,14 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String monthsToGoal(int count) {
-    return '還差$count個月';
+    return '還要再存 $count 個月';
   }
+
+  @override
+  String get goalCashTarget => '目標金額';
+
+  @override
+  String get goalCashToGo => '還差';
 
   @override
   String get thisMonth => '本月';

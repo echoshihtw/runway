@@ -850,8 +850,20 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String monthsToGoal(int count) {
-    return '$count mesi al traguardo';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count mesi di copertura da costruire',
+      one: '1 mese di copertura da costruire',
+    );
+    return '$_temp0';
   }
+
+  @override
+  String get goalCashTarget => 'Obiettivo';
+
+  @override
+  String get goalCashToGo => 'Manca';
 
   @override
   String get thisMonth => 'Questo mese';
