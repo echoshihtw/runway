@@ -228,6 +228,13 @@ Future<void> _seed(AppDatabase database) async {
   await settings.saveBudget(
     const Budget(rent: _rentBudget, living: _livingBudget),
   );
+
+  // Expected income, so the frames show the growth half of the product rather
+  // than an empty state asking for it. Retainers and a contract, a little
+  // above the monthly cost, which is the position the app is for.
+  await settings.saveFinancialAssumptions(
+    const FinancialAssumptions(expectedMonthlyInflow: 3200),
+  );
 }
 
 Transaction _entry(

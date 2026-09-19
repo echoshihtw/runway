@@ -659,6 +659,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get expectedInflow => '预期流入';
 
   @override
+  String get everyMonth => '每個月';
+
+  @override
+  String get monthlySurplus => '結餘';
+
+  @override
+  String get monthlyDeficit => '不足';
+
+  @override
+  String get setExpectedIncome => '設定預期收入';
+
+  @override
   String get expectedBurn => '预期支出';
 
   @override
@@ -1654,6 +1666,18 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get expectedInflow => '預計每月收入';
+
+  @override
+  String get everyMonth => '每個月';
+
+  @override
+  String get monthlySurplus => '結餘';
+
+  @override
+  String get monthlyDeficit => '不足';
+
+  @override
+  String get setExpectedIncome => '設定預期收入';
 
   @override
   String get expectedBurn => '預計每月支出';

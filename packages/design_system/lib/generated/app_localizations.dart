@@ -1355,6 +1355,30 @@ abstract class AppLocalizations {
   /// **'Expected income'**
   String get expectedInflow;
 
+  /// No description provided for @everyMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Every month'**
+  String get everyMonth;
+
+  /// No description provided for @monthlySurplus.
+  ///
+  /// In en, this message translates to:
+  /// **'Surplus'**
+  String get monthlySurplus;
+
+  /// No description provided for @monthlyDeficit.
+  ///
+  /// In en, this message translates to:
+  /// **'Deficit'**
+  String get monthlyDeficit;
+
+  /// No description provided for @setExpectedIncome.
+  ///
+  /// In en, this message translates to:
+  /// **'Set expected income'**
+  String get setExpectedIncome;
+
   /// No description provided for @expectedBurn.
   ///
   /// In en, this message translates to:

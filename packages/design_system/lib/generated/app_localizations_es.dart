@@ -671,6 +671,18 @@ class AppLocalizationsEs extends AppLocalizations {
   String get expectedInflow => 'Entrada esperada';
 
   @override
+  String get everyMonth => 'Cada mes';
+
+  @override
+  String get monthlySurplus => 'Superávit';
+
+  @override
+  String get monthlyDeficit => 'Déficit';
+
+  @override
+  String get setExpectedIncome => 'Indicar ingresos previstos';
+
+  @override
   String get expectedBurn => 'Gasto esperado';
 
   @override
