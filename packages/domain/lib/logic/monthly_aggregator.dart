@@ -1,14 +1,22 @@
 import '../entities/transaction.dart';
 import '../entities/monthly_state.dart';
 import '../enums/transaction_type.dart';
-import '../value_objects/survival_month.dart';
+import '../value_objects/ledger_month.dart';
 
 List<MonthlyState> aggregateMonths(List<Transaction> transactions) {
   if (transactions.isEmpty) return [];
 
-  final opening = transactions
-      .where((t) => t.type == TransactionType.openingBalance)
-      .fold(0.0, (sum, t) => sum + t.signedAmount);
+  // An opening balance is one starting point, not a running total. Only one is
+  // supported, and the UI offers it only while the ledger is empty. If stored
+  // data holds several, the most recent wins, so correcting a balance can never
+  // silently double it.
+  final openings =
+      transactions.where((t) => t.type == TransactionType.openingBalance).toList()
+        ..sort((a, b) {
+          final byDate = a.date.compareTo(b.date);
+          return byDate != 0 ? byDate : a.createdAt.compareTo(b.createdAt);
+        });
+  final opening = openings.isEmpty ? 0.0 : openings.last.signedAmount;
 
   final regular = transactions
       .where((t) => t.type != TransactionType.openingBalance)
@@ -17,7 +25,7 @@ List<MonthlyState> aggregateMonths(List<Transaction> transactions) {
   if (regular.isEmpty && opening > 0) {
     return [
       MonthlyState(
-        month: SurvivalMonth(DateTime.now()),
+        month: LedgerMonth(DateTime.now()),
         netFlow: 0,
         balance: opening,
         grossOutflow: 0,
@@ -54,4 +62,20 @@ List<MonthlyState> aggregateMonths(List<Transaction> transactions) {
   }
 
   return result;
+}
+
+/// Cash on hand at [now].
+///
+/// Entries dated after today are plans: the log shows them with a badge, and
+/// they must not move cash or the runway until their date arrives.
+double currentCashAsOf({
+  required List<Transaction> transactions,
+  required DateTime now,
+}) {
+  final endOfToday = DateTime(now.year, now.month, now.day, 23, 59, 59, 999);
+  final settled = transactions
+      .where((t) => !t.date.isAfter(endOfToday))
+      .toList();
+  final months = aggregateMonths(settled);
+  return months.isEmpty ? 0.0 : months.last.balance;
 }

@@ -17,17 +17,31 @@ abstract final class AppColors {
   static const green = neonGreen;
   static const blue = turkishBlue;
   static const red = hotPink;
-  static const gold = Color(0xFFCB9A3E); // muted amber
+  static const gold = Color(0xFFCB9A3E); // muted amber — debt only
+  static const amber = Color(0xFFFFC978); // light amber — caution status
   static const purple = Color(0xFFBB6DFF); // keep purple for subscriptions
 
   // ── Text ─────────────────────────────────────
+  // Three tiers with different jobs, and the job sets the contrast each has
+  // to meet. `contrast_test.dart` holds them to it.
+  //
+  // Text needs 4.5:1 (WCAG AA, normal size). Icons and other non-text controls
+  // need 3:1. textDim used to be the caption default at 1.75:1 on surface,
+  // which is not readable — and no value can be both the dimmest tier and a
+  // legal text colour here, because clearing 4.5:1 would make it brighter
+  // than textSecondary and invert the ramp (#147).
   static const textPrimary = Color(0xFFCDD5E0); // soft blue-smoke
-  static const textSecondary = Color(0xFF6B7F96); // softer mid-tone
-  static const textDim = Color(0xFF2A3D5A); // dark blue-grey
+
+  /// Secondary text. Never below 4.5:1 on any surface it is drawn on.
+  static const textSecondary = Color(0xFF6E8298); // softer mid-tone
+
+  /// Icons, chevrons and decoration. **Not for text** — it meets 3:1, the
+  /// bar for non-text controls, and nothing more.
+  static const textDim = Color(0xFF456594); // dim blue-grey
 
   // ── Status ────────────────────────────────────
   static const stable = neonGreen;
-  static const caution = gold;
+  static const caution = amber;
   static const critical = hotPink;
   static const safe = turkishBlue;
 

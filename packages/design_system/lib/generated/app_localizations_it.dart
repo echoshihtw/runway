@@ -33,9 +33,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get cash => 'CONTANTI';
 
   @override
-  String get burnPerMonth => 'SPESA/MESE';
-
-  @override
   String get loanPerMonth => 'DEBITO/MESE';
 
   @override
@@ -64,10 +61,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get clear => 'CANCELLA';
-
-  @override
-  String get loanAffectsInfo =>
-      '> PRESTITO/MESE INFLUISCE SUL RATIO DI PRESSIONE E INVESTIBILE';
 
   @override
   String get transactionLog => 'REGISTRO TRANSAZIONI';
@@ -115,7 +108,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get overrideInputs => 'INPUT DI SOSTITUZIONE';
 
   @override
-  String get burnRateOverride => 'SOSTITUZIONE SPESA';
+  String get burnRateOverride => 'Affitto + spese quotidiane / mese';
 
   @override
   String get simulatedIncome => 'REDDITO SIMULATO/MESE';
@@ -160,10 +153,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get highLoad => 'CARICO ELEVATO';
 
   @override
-  String get language => 'LINGUA';
+  String get language => 'Lingua';
 
   @override
-  String get currency => 'VALUTA';
+  String get currency => 'Valuta';
 
   @override
   String get currencySymbolOnly =>
@@ -226,16 +219,121 @@ class AppLocalizationsIt extends AppLocalizations {
   String get typeLoan => 'PRESTITO';
 
   @override
-  String get typeRepay => 'RIMBORSO';
+  String get typeRepay => 'RATA DEL PRESTITO';
 
   @override
   String get typeOpening => 'SALDO INIZIALE';
 
   @override
-  String get liabilities => 'DEBITI';
+  String get typeSubscription => 'ABBONAMENTO';
+
+  @override
+  String subscriptionPaidQuestion(String amount, String name, String date) {
+    return 'Hai pagato $amount per $name il $date?';
+  }
+
+  @override
+  String subscriptionChargesDue(int count, String amount) {
+    return '$count addebiti di abbonamento da confermare — $amount';
+  }
+
+  @override
+  String get subscriptionConfirmAll => 'Conferma tutto';
+
+  @override
+  String get subscriptionReviewEach => 'Rivedi uno a uno';
+
+  @override
+  String get subscriptionPaidYes => 'Sì, registralo';
+
+  @override
+  String get subscriptionChargeFailed =>
+      'Non è stato possibile registrarlo. Controlla l\'importo dell\'abbonamento.';
+
+  @override
+  String get subscriptionSaveFailed =>
+      'Non è stato possibile salvare l\'abbonamento. Non è stato aggiunto nulla.';
+
+  @override
+  String get loanSaveFailed =>
+      'Non è stato possibile salvare il prestito. Non è stato aggiunto nulla.';
+
+  @override
+  String get subscriptionPaidNo => 'No';
+
+  @override
+  String get subscriptionWhatHappened => 'Cosa è successo?';
+
+  @override
+  String get subscriptionReasonCancelled => 'L\'ho disdetto';
+
+  @override
+  String get subscriptionReasonPriceChanged => 'Il prezzo è cambiato';
+
+  @override
+  String get subscriptionReasonNotPaid => 'Non l\'ho pagato';
+
+  @override
+  String get deleteSubscription => 'Elimina abbonamento';
+
+  @override
+  String get deleteSubscriptionKeepsEntries =>
+      'Interrompe le voci future. I pagamenti già registrati vengono mantenuti.';
+
+  @override
+  String get liabilities => 'Debiti';
 
   @override
   String get noActiveLoans => '> NESSUN PRESTITO ATTIVO';
+
+  @override
+  String get newLoan => '+ PRESTITO';
+
+  @override
+  String get spendOnWhat => 'PER COSA HAI SPESO?';
+
+  @override
+  String get presetCoffee => 'CAFFÈ';
+
+  @override
+  String get presetCoffeeNote => 'Caffè';
+
+  @override
+  String get presetLunch => 'PRANZO';
+
+  @override
+  String get presetLunchNote => 'Pranzo';
+
+  @override
+  String get presetDinner => 'CENA';
+
+  @override
+  String get presetDinnerNote => 'Cena';
+
+  @override
+  String get presetTransport => 'TRASPORTI';
+
+  @override
+  String get presetTransportNote => 'Trasporti';
+
+  @override
+  String get presetGroceries => 'SPESA';
+
+  @override
+  String get presetGroceriesNote => 'Spesa';
+
+  @override
+  String get presetSomethingElse => 'QUALCOS’ALTRO';
+
+  @override
+  String freeEntriesUsed(int used, int free) {
+    return '$used di $free voci gratuite usate';
+  }
+
+  @override
+  String freeSimulationsUsed(int used, int free) {
+    return '$used di $free simulazioni gratuite usate';
+  }
 
   @override
   String get settled => 'SALDATO';
@@ -257,6 +355,16 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get repaid => '% RIMBORSATO';
+
+  @override
+  String get stillPaying => 'CAPITALE RIMBORSATO — I PAGAMENTI CONTINUANO';
+
+  @override
+  String get markSettled => 'SEGNA COME ESTINTO';
+
+  @override
+  String get markSettledExplain =>
+      'La rata mensile smette di contare e il prestito lascia questa lista per sempre. Le voci restano.';
 
   @override
   String get repay => 'RIMBORSA';
@@ -322,7 +430,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get change => 'CAMBIA';
 
   @override
-  String get subscriptions => 'ABBONAMENTI';
+  String get subscriptions => 'Abbonamenti';
 
   @override
   String get noSubscriptions => '> NESSUN ABBONAMENTO ATTIVO';
@@ -364,10 +472,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get newSubscription => '+ ABBONAMENTO';
 
   @override
-  String get editSubscription => '> MODIFICA ABBONAMENTO';
+  String get editSubscription => 'MODIFICA ABBONAMENTO';
 
   @override
-  String get addSubscription => '> NUOVO ABBONAMENTO';
+  String get addSubscription => 'NUOVO ABBONAMENTO';
 
   @override
   String get personal => 'PERSONALE';
@@ -453,20 +561,40 @@ class AppLocalizationsIt extends AppLocalizations {
   String get delete => 'ELIMINA';
 
   @override
+  String get dataSection => 'I tuoi dati';
+
+  @override
+  String get deleteAllDataBody =>
+      'Cancella tutte le voci, i prestiti, gli abbonamenti e le impostazioni da questo dispositivo. Runway Pro resta sbloccato.';
+
+  @override
+  String get deleteAllDataButton => 'CANCELLA TUTTI I DATI';
+
+  @override
+  String get deleteAllDataConfirmTitle => 'Cancellare tutto?';
+
+  @override
+  String get deleteAllDataConfirmBody =>
+      'I tuoi dati vengono cancellati da questo dispositivo e non possono essere recuperati. Runway ricomincia dall\'inizio.';
+
+  @override
+  String get deleteAllDataConfirmAction => 'CANCELLA TUTTO';
+
+  @override
   String get planned => 'PIANIFICATO';
 
   @override
   String get whatIfAnalysis => 'ANALISI WHAT-IF';
 
   @override
-  String get current => 'ATTUALE';
+  String get current => 'Attuale';
 
   @override
-  String get simulate => 'SIMULA';
+  String get simulate => 'Simula';
 
   @override
   String get simHint =>
-      'MODIFICA SPESA O REDDITO PER VEDERE L\'IMPATTO SULL\'AUTONOMIA';
+      'Modifica spesa o reddito per vedere l\'impatto sull\'autonomia';
 
   @override
   String get simulation => 'SIMULAZIONE';
@@ -484,7 +612,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get close => 'CHIUDI';
 
   @override
-  String get monthlyBudget => 'BUDGET MENSILE';
+  String get monthlyBudget => 'Budget mensile';
 
   @override
   String get rentFixed => 'AFFITTO / FISSO';
@@ -493,7 +621,35 @@ class AppLocalizationsIt extends AppLocalizations {
   String get livingExpenses => 'SPESE DI VITA';
 
   @override
+  String get budgetRuleHint =>
+      'La spesa consuma il suo budget — solo lo sforamento aggiunge costo';
+
+  @override
   String get subtotal => 'SUBTOTALE';
+
+  @override
+  String budgetLeft(String amount) {
+    return 'restano $amount';
+  }
+
+  @override
+  String budgetOver(String amount) {
+    return '$amount oltre il budget';
+  }
+
+  @override
+  String dailyAllowance(String amount, int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$amount al giorno per $days giorni',
+      one: '$amount per oggi',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noLivingExpensesThisMonth => 'Nessuna spesa di vita questo mese';
 
   @override
   String get totalBudgetPerMonth => 'BUDGET TOTALE/MESE';
@@ -514,10 +670,26 @@ class AppLocalizationsIt extends AppLocalizations {
   String get expectedInflow => 'Entrate previste';
 
   @override
+  String get everyMonth => 'Ogni mese';
+
+  @override
+  String get monthlySurplus => 'Avanzo';
+
+  @override
+  String get monthlyDeficit => 'Disavanzo';
+
+  @override
+  String get setExpectedIncome => 'Indica il reddito previsto';
+
+  @override
   String get expectedBurn => 'Spesa prevista';
 
   @override
   String get notSet => 'Non impostato';
+
+  @override
+  String get settingsFailedToLoad =>
+      'Non è stato possibile caricare queste impostazioni. La modifica è disattivata per non sovrascriverle.';
 
   @override
   String get usingCurrentBurn => 'Uso della spesa attuale';
@@ -576,39 +748,28 @@ class AppLocalizationsIt extends AppLocalizations {
   String get targetMonths => 'Mesi target';
 
   @override
-  String get display => 'SCHERMO';
-
-  @override
-  String get glassEffect => 'EFFETTO VETRO';
-
-  @override
-  String get glassEffectHint =>
-      'INTENSIVO GPU — DISATTIVARE SU DISPOSITIVI PIÙ VECCHI';
-
-  @override
   String get runwayBrand => 'RUNWAY';
 
   @override
-  String get bootRunwayCheck => '> CONTROLLO RUNWAY...';
+  String get runwayBasisBudget =>
+      'Sul tuo budget, se il reddito si fermasse oggi';
 
   @override
-  String get bootIncomeStopped => '> SE IL TUO REDDITO SI FERMASSE OGGI...';
+  String get runwayBasisSpending =>
+      'Sulle tue spese, se il reddito si fermasse oggi';
 
   @override
-  String get bootCountingCashDays => '> CONTEGGIO DEI GIORNI DI CASSA...';
+  String get runwayBasisAssumption =>
+      'Sulla tua ipotesi di costi, se il reddito si fermasse oggi';
 
   @override
-  String get bootRemovingComfortFilter =>
-      '> RIMOZIONE DEL FILTRO DI COMFORT...';
+  String computedCost(String amount) {
+    return 'Calcolato da budget e registro: $amount';
+  }
 
   @override
-  String get bootRealityCheckReady => '> CONTROLLO REALTÀ PRONTO.';
-
-  @override
-  String get ifIncomeStoppedToday => 'If inflow stopped today';
-
-  @override
-  String get ifIncomePausedToday => 'Se il reddito si fermasse oggi';
+  String get runwayNeedsCosts =>
+      'Imposta i costi mensili per vedere la tua autonomia';
 
   @override
   String get monthSingular => 'mese';
@@ -631,13 +792,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get monthlyBurn => 'Spesa mensile';
-
-  @override
   String get availableCash => 'Liquidità disponibile';
-
-  @override
-  String get historicalBurn => 'Spesa media';
 
   @override
   String get notEnoughHistory => 'Storico insufficiente';
@@ -650,12 +805,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get fixedPressure => 'Costi fissi';
-
-  @override
-  String get actualBurn => 'Spesa reale';
-
-  @override
-  String get actualBurnHigh => 'Spesa reale ▲';
 
   @override
   String get plannedEssentials => 'Essenziali pianificati';
@@ -673,13 +822,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get yourRunway => 'Il tuo runway';
 
   @override
-  String get loseIncome => 'Inflow stops';
-
-  @override
   String get higherExpenses => 'Spese più alte';
-
-  @override
-  String get incomeSetToZero => 'Inflow set to 0';
 
   @override
   String deltaDays(int days) {
@@ -707,11 +850,23 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String monthsToGoal(int count) {
-    return '$count mesi al traguardo';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count mesi di copertura da costruire',
+      one: '1 mese di copertura da costruire',
+    );
+    return '$_temp0';
   }
 
   @override
-  String get thisMonth => 'QUESTO MESE';
+  String get goalCashTarget => 'Obiettivo';
+
+  @override
+  String get goalCashToGo => 'Manca';
+
+  @override
+  String get thisMonth => 'Questo mese';
 
   @override
   String get cashIn => 'ENTRATA';
@@ -724,4 +879,202 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get noActivityThisMonth => 'Nessuna attività questo mese';
+
+  @override
+  String get onboardingSkip => 'SALTA';
+
+  @override
+  String get onboardingWelcomeTitle =>
+      'Smetti di indovinare\nquanto dura il tuo denaro.';
+
+  @override
+  String get onboardingWelcomeBody =>
+      'Nessun account. Nessuna connessione bancaria.';
+
+  @override
+  String get onboardingGetStarted => 'INIZIA';
+
+  @override
+  String get onboardingPrivacyTitle => 'I tuoi dati,\nil tuo dispositivo.';
+
+  @override
+  String get onboardingPrivacyBody =>
+      'Non c\'è un server, quindi non c\'è nulla da far trapelare.';
+
+  @override
+  String get onboardingPrivacyEncrypted => 'Cifrato sul dispositivo';
+
+  @override
+  String get onboardingPrivacyOnDevice =>
+      'I numeri restano sul tuo dispositivo';
+
+  @override
+  String get onboardingPrivacyHidden => 'Nascosto quando cambi app';
+
+  @override
+  String get onboardingPrivacyDelete => 'Elimina quando vuoi, all\'istante';
+
+  @override
+  String get onboardingIUnderstand => 'HO CAPITO';
+
+  @override
+  String get onboardingFirstActionTitle => 'Un numero e\nhai finito.';
+
+  @override
+  String get onboardingFirstActionBody => 'Solo il tuo saldo. Nient\'altro.';
+
+  @override
+  String get onboardingAddMyBalance => 'AGGIUNGI IL MIO SALDO';
+
+  @override
+  String get paywallUnlock => 'SBLOCCA RUNWAY PRO';
+
+  @override
+  String get paywallLoadingPrice => 'Caricamento prezzo...';
+
+  @override
+  String get paywallStoreUnreachable =>
+      'Impossibile raggiungere lo store. Controlla la connessione e riprova.';
+
+  @override
+  String paywallOneTimePurchase(String price) {
+    return '$price una volta. Questa app conta i tuoi abbonamenti: non sarà uno di loro.';
+  }
+
+  @override
+  String get paywallUnavailable =>
+      'Pro non è disponibile al momento. Riprova più tardi.';
+
+  @override
+  String get paywallRestore => 'Ripristina acquisto';
+
+  @override
+  String get paywallMaybeLater => 'Forse più tardi';
+
+  @override
+  String get paywallPurchaseFailed => 'Acquisto non riuscito. Riprova.';
+
+  @override
+  String get paywallSomethingWrong => 'Qualcosa è andato storto. Riprova.';
+
+  @override
+  String get paywallNoPreviousPurchase => 'Nessun acquisto precedente trovato.';
+
+  @override
+  String get paywallRestoreFailed => 'Ripristino non riuscito. Riprova.';
+
+  @override
+  String paywallTitleEntries(int count) {
+    return 'Hai usato le tue $count voci gratuite.\nPro è ciò che tiene vero il numero.';
+  }
+
+  @override
+  String paywallTitleSimulations(int count) {
+    return 'Hai fatto le tue $count simulazioni gratuite.\nPro è come continui a chiederti cosa succederebbe.';
+  }
+
+  @override
+  String get paywallTitleDefault => 'Sblocca Runway Pro.';
+
+  @override
+  String get paywallFeatureEntries =>
+      'Registra tutto, così il numero non si sposta';
+
+  @override
+  String get paywallFeatureSimulations => 'Prova quanti scenari vuoi';
+
+  @override
+  String get stepBalanceShort => 'Saldo';
+
+  @override
+  String get stepBudgetShort => 'Budget';
+
+  @override
+  String get stepExpenseShort => 'Prima spesa';
+
+  @override
+  String get stepSimShort => 'Simulatore';
+
+  @override
+  String stepsDone(String steps) {
+    return 'Fatto: $steps';
+  }
+
+  @override
+  String get optionalBadge => 'FACOLTATIVO';
+
+  @override
+  String fixedCostsUnchanged(String amount) {
+    return 'Costi fissi invariati: $amount';
+  }
+
+  @override
+  String get simNeedsBalance => 'Aggiungi prima il saldo iniziale';
+
+  @override
+  String get simNeedsBalanceWhy =>
+      'La tua autonomia parte da un saldo iniziale.';
+
+  @override
+  String get addOpeningBalance => 'AGGIUNGI IL MIO SALDO';
+
+  @override
+  String get runSimulation => 'AVVIA SIMULAZIONE';
+
+  @override
+  String get runwayUnlimitedHere =>
+      'Le entrate coprono i costi in questo piano';
+
+  @override
+  String get runwayNoChange => 'Nessun cambiamento';
+
+  @override
+  String deltaDaysLonger(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days giorni in più',
+      one: '1 giorno in più',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String deltaDaysShorter(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days giorni in meno',
+      one: '1 giorno in meno',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String deltaMonthsLonger(int months) {
+    String _temp0 = intl.Intl.pluralLogic(
+      months,
+      locale: localeName,
+      other: '$months mesi in più',
+      one: '1 mese in più',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String deltaMonthsShorter(int months) {
+    String _temp0 = intl.Intl.pluralLogic(
+      months,
+      locale: localeName,
+      other: '$months mesi in meno',
+      one: '1 mese in meno',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get paywallTermsOfUse => 'Termini di utilizzo';
+
+  @override
+  String get paywallPrivacyPolicy => 'Informativa sulla privacy';
 }

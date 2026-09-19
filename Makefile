@@ -12,13 +12,36 @@ APP_ICON_ASSET := $(APP_DIR)/assets/brand/runway-icon-1024.png
 IOS_ICON_DIR  := $(APP_DIR)/ios/Runner/Assets.xcassets/AppIcon.appiconset
 ANDROID_RES   := $(APP_DIR)/android/app/src/main/res
 IOS_EXPORT_METHOD ?= app-store
-IPA_FLAGS     := --release --export-method $(IOS_EXPORT_METHOD)
-ifneq ($(BUILD_NAME),)
-IPA_FLAGS     += --build-name $(BUILD_NAME)
-endif
-ifneq ($(BUILD_NUMBER),)
-IPA_FLAGS     += --build-number $(BUILD_NUMBER)
-endif
+
+# ── Release version, never typed by hand ────────────────────────────────────
+# A build attaches to an App Store Connect version record by
+# CFBundleShortVersionString, so a forgotten or mistyped version produces an
+# archive the store refuses. pubspec is only Flutter's default and drifts from
+# whatever the next release is actually called, so neither is asked for here.
+#
+# The open release PR's title is release-pr.yml's own computation of the next
+# version, which makes it the one place that decides — reading it beats a
+# second implementation of the same rule that can drift. Once a release has
+# been tagged and no release PR is open, the newest tag is what a rebuild of
+# the shipped version needs. Both are lazy: no subprocess runs unless a build
+# actually asks for the version.
+#
+# Override deliberately, never routinely:  make build-testflight BUILD_NAME=1.2.3
+RELEASE_VERSION = $(shell \
+	v=$$(gh pr list --base main --label release --state open --json title \
+	     --jq '.[0].title' 2>/dev/null \
+	     | sed -n 's/.*v\([0-9][0-9.]*\).*/\1/p'); \
+	[ -n "$$v" ] || v=$$(git tag --list 'v*' --sort=-v:refname 2>/dev/null \
+	     | head -1 | sed 's/^v//'); \
+	printf '%s' "$$v")
+BUILD_NAME   ?= $(RELEASE_VERSION)
+# The same expression cd.yml uses, so local and pipeline builds share one
+# increasing sequence and cannot collide inside a version on TestFlight.
+BUILD_NUMBER ?= $(shell git rev-list --count HEAD)
+
+IPA_FLAGS      = --release --export-method $(IOS_EXPORT_METHOD) \
+                 $(if $(BUILD_NAME),--build-name $(BUILD_NAME)) \
+                 $(if $(BUILD_NUMBER),--build-number $(BUILD_NUMBER))
 
 # ============================================================================
 # HELP
@@ -92,7 +115,7 @@ run-chrome: ## Run app in Chrome
 # ============================================================================
 
 .PHONY: gen
-gen: ## Run code generation (Drift, Riverpod)
+gen: ## Run code generation (Drift, Riverpod, localizations)
 	melos run gen
 
 .PHONY: gen-l10n
@@ -101,7 +124,7 @@ gen-l10n: ## Generate localizations from ARB files
 	@echo "✓ Localizations generated"
 
 .PHONY: gen-all
-gen-all: gen gen-l10n ## Run all code generation
+gen-all: gen ## Deprecated alias for gen, which now includes localizations
 
 # ============================================================================
 # BRAND ASSETS
@@ -193,8 +216,16 @@ lint: format analyze ## Format + analyze all packages
 
 .PHONY: test
 test: ## Run all tests
-	@echo "→ Running domain tests..."
+	@echo "→ domain"
 	@cd packages/domain && dart test
+	@echo "→ data"
+	@cd packages/data && flutter test
+	@echo "→ application"
+	@cd packages/application && flutter test
+	@echo "→ presentation"
+	@cd packages/presentation && flutter test
+	@echo "→ app"
+	@cd app && flutter test
 	@echo "✓ All tests passed"
 
 .PHONY: test-verbose
@@ -221,6 +252,15 @@ testflight-check: gen-icons gen-l10n l10n-check analyze test ## Run checks befor
 
 .PHONY: build-testflight
 build-testflight: gen-icons gen-l10n ## Build signed IPA for TestFlight/App Store Connect
+	@name='$(BUILD_NAME)'; number='$(BUILD_NUMBER)'; \
+	if [ -z "$$name" ]; then \
+	  echo "✗ No version to build."; \
+	  echo "  It comes from the open release PR's title, or the newest v* tag."; \
+	  echo "  Neither exists yet. Open the release PR, or pass one deliberately:"; \
+	  echo "      make build-testflight BUILD_NAME=1.0.0"; \
+	  exit 1; \
+	fi; \
+	echo "→ Building $$name build $$number (must match the App Store Connect version record)"
 	@mkdir -p $(APP_DIR)/build/ios/ipa
 	@touch $(APP_DIR)/build/ios/ipa/.build-testflight-start
 	cd $(APP_DIR) && $(FVM) build ipa $(IPA_FLAGS)

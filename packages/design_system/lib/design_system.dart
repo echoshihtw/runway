@@ -12,19 +12,12 @@ export 'components/neo_card.dart';
 export 'components/neo_expandable_card.dart';
 export 'components/neo_button.dart';
 export 'components/neo_input.dart';
-export 'components/metric_tile.dart';
 export 'components/pixel_badge.dart';
 export 'components/pixel_bar.dart';
 export 'components/gradient_scaffold.dart';
-export 'components/liquid_glass_container.dart';
-export 'components/app_input_formatters.dart';
 
 // Legacy components (keep during transition)
-export 'components/terminal_panel.dart';
 export 'components/scanline_overlay.dart';
-export 'components/terminal_button.dart';
-export 'components/terminal_input.dart';
-export 'components/terminal_divider.dart';
 
 // Localizations
 export 'generated/app_localizations.dart';

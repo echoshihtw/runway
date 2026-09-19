@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -9,7 +10,9 @@ class RevenueCatService implements PurchaseService {
   static Future<RevenueCatService> init() async {
     if (!isRevenueCatConfigured) {
       debugPrint('[RevenueCat] Placeholder keys detected — skipping init');
-      return RevenueCatService._();
+      return RevenueCatService.unconfigured(
+        'RevenueCat keys are placeholders on this platform.',
+      );
     }
     try {
       final key = Platform.isIOS ? kRevenueCatAppleKey : kRevenueCatGoogleKey;
@@ -19,32 +22,58 @@ class RevenueCatService implements PurchaseService {
       debugPrint('[RevenueCat] Configured');
     } catch (e) {
       debugPrint('[RevenueCat] Init failed: $e');
+      return RevenueCatService.unconfigured(
+        'RevenueCat failed to configure: $e',
+      );
     }
     return RevenueCatService._();
   }
 
-  RevenueCatService._();
+  RevenueCatService._() : _unavailable = null;
+
+  /// A service that cannot talk to the store, and says why when asked to.
+  ///
+  /// `init()` used to swallow a failed `configure` and hand back a service
+  /// indistinguishable from a working one, whose `fetchOffering` then
+  /// returned null. The paywall rendered that as a price line with no price,
+  /// and purchases were silently impossible.
+  @visibleForTesting
+  RevenueCatService.unconfigured(String reason) : _unavailable = reason;
+
+  /// Why the store is unreachable, or null when it is not.
+  final String? _unavailable;
 
   @override
   Future<ProOffering?> fetchOffering() async {
-    if (!isRevenueCatConfigured) return null;
-    try {
-      final offerings = await Purchases.getOfferings();
-      final current = offerings.current;
-      if (current == null) return null;
-      return ProOffering(
-        identifier: current.identifier,
-        packages: current.availablePackages.map(_toProPackage).toList(),
-      );
-    } catch (e) {
-      debugPrint('[RevenueCat] fetchOffering error: $e');
-      return null;
-    }
+    if (_unavailable != null) throw StateError(_unavailable);
+    // A failed call propagates to the provider as an error, so the paywall
+    // can say the store could not be reached. Swallowing it to null made that
+    // indistinguishable from "nothing is on sale".
+    final offerings = await Purchases.getOfferings();
+    final current = offerings.current;
+    if (current == null) return null;
+    final mapped = current.availablePackages.map(_toProPackage);
+    // The dashboard can be reconfigured without the app changing, so the
+    // product this build expects goes first and cannot lose a tie to another
+    // lifetime package. The assert makes a mismatch loud in development
+    // rather than a wrong sale in production.
+    final expected = mapped.where((p) => p.productId == kProProductId);
+    final others = mapped.where((p) => p.productId != kProProductId);
+    assert(
+      expected.isNotEmpty,
+      'RevenueCat offering "${current.identifier}" does not hold '
+      '$kProProductId. It offers: '
+      '${mapped.map((p) => p.productId).join(', ')}',
+    );
+    return ProOffering(
+      identifier: current.identifier,
+      packages: [...expected, ...others],
+    );
   }
 
   @override
   Future<bool> purchasePackage(ProPackage package) async {
-    if (!isRevenueCatConfigured) return false;
+    if (_unavailable != null) throw PurchaseException(_unavailable);
     try {
       final nativePkg = package.nativePackage as Package;
       final result = await Purchases.purchase(PurchaseParams.package(nativePkg));
@@ -63,7 +92,9 @@ class RevenueCatService implements PurchaseService {
 
   @override
   Future<bool> restorePurchases() async {
-    if (!isRevenueCatConfigured) return false;
+    // Returning false here read as "No previous purchase found" on a store
+    // that was never reached.
+    if (_unavailable != null) throw PurchaseException(_unavailable);
     try {
       final info = await Purchases.restorePurchases();
       return info.entitlements.active.containsKey(kProEntitlementId);
@@ -75,7 +106,7 @@ class RevenueCatService implements PurchaseService {
 
   @override
   Future<bool> checkProEntitlement() async {
-    if (!isRevenueCatConfigured) return false;
+    if (_unavailable != null) return false;
     try {
       final info = await Purchases.getCustomerInfo();
       return info.entitlements.active.containsKey(kProEntitlementId);
@@ -83,6 +114,29 @@ class RevenueCatService implements PurchaseService {
       debugPrint('[RevenueCat] checkProEntitlement error: $e');
       return false;
     }
+  }
+
+  @override
+  Stream<bool> get proEntitlementUpdates {
+    if (_unavailable != null) return const Stream<bool>.empty();
+    late final StreamController<bool> controller;
+    void onCustomerInfo(CustomerInfo info) => controller.add(
+      info.entitlements.active.containsKey(kProEntitlementId),
+    );
+    // Registering replays the last known customer info straight away, so a
+    // purchase that finished before the listener was attached still arrives.
+    controller = StreamController<bool>(
+      onListen: () {
+        try {
+          Purchases.addCustomerInfoUpdateListener(onCustomerInfo);
+        } catch (e) {
+          debugPrint('[RevenueCat] listener error: $e');
+        }
+      },
+      onCancel: () =>
+          Purchases.removeCustomerInfoUpdateListener(onCustomerInfo),
+    );
+    return controller.stream;
   }
 
   ProPackage _toProPackage(Package pkg) {
@@ -95,6 +149,7 @@ class RevenueCatService implements PurchaseService {
     };
     return ProPackage(
       identifier: pkg.identifier,
+      productId: pkg.storeProduct.identifier,
       priceString: pkg.storeProduct.priceString,
       type: type,
       nativePackage: pkg,

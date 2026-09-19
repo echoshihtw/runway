@@ -1,12 +1,12 @@
 import '../enums/expense_category.dart';
 import '../enums/transaction_type.dart';
 import '../value_objects/money.dart';
-import '../value_objects/survival_month.dart';
+import '../value_objects/ledger_month.dart';
 
 class Transaction {
   final String id;
   final DateTime date;
-  final SurvivalMonth month;
+  final LedgerMonth month;
   final TransactionType type;
   final Money amount;
   final String? note;
@@ -25,7 +25,7 @@ class Transaction {
     this.category,
     required this.createdAt,
     required this.updatedAt,
-  }) : month = SurvivalMonth(date);
+  }) : month = LedgerMonth(date);
 
   double get signedAmount => type.isInflow ? amount.value : -amount.value;
 

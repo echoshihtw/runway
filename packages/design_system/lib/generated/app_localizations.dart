@@ -104,7 +104,6 @@ abstract class AppLocalizations {
     Locale('it'),
     Locale('ja'),
     Locale('zh'),
-    Locale('zh', 'TW'),
   ];
 
   /// No description provided for @appTitle.
@@ -154,12 +153,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'CASH'**
   String get cash;
-
-  /// No description provided for @burnPerMonth.
-  ///
-  /// In en, this message translates to:
-  /// **'BURN/MO'**
-  String get burnPerMonth;
 
   /// No description provided for @loanPerMonth.
   ///
@@ -220,12 +213,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'CLEAR'**
   String get clear;
-
-  /// No description provided for @loanAffectsInfo.
-  ///
-  /// In en, this message translates to:
-  /// **'Loan payments add to your fixed costs and reduce runway.'**
-  String get loanAffectsInfo;
 
   /// No description provided for @transactionLog.
   ///
@@ -320,7 +307,7 @@ abstract class AppLocalizations {
   /// No description provided for @burnRateOverride.
   ///
   /// In en, this message translates to:
-  /// **'Monthly burn'**
+  /// **'Rent + living / month'**
   String get burnRateOverride;
 
   /// No description provided for @simulatedIncome.
@@ -410,13 +397,13 @@ abstract class AppLocalizations {
   /// No description provided for @language.
   ///
   /// In en, this message translates to:
-  /// **'LANGUAGE'**
+  /// **'Language'**
   String get language;
 
   /// No description provided for @currency.
   ///
   /// In en, this message translates to:
-  /// **'CURRENCY'**
+  /// **'Currency'**
   String get currency;
 
   /// No description provided for @currencySymbolOnly.
@@ -536,7 +523,7 @@ abstract class AppLocalizations {
   /// No description provided for @typeRepay.
   ///
   /// In en, this message translates to:
-  /// **'REPAY'**
+  /// **'LOAN PAYMENT'**
   String get typeRepay;
 
   /// No description provided for @typeOpening.
@@ -545,10 +532,106 @@ abstract class AppLocalizations {
   /// **'OPENING'**
   String get typeOpening;
 
+  /// No description provided for @typeSubscription.
+  ///
+  /// In en, this message translates to:
+  /// **'SUBSCRIPTION'**
+  String get typeSubscription;
+
+  /// Asks whether a subscription charge was actually paid
+  ///
+  /// In en, this message translates to:
+  /// **'Did you pay {amount} for {name} on {date}?'**
+  String subscriptionPaidQuestion(String amount, String name, String date);
+
+  /// How many subscription charges are waiting to be confirmed, and their total
+  ///
+  /// In en, this message translates to:
+  /// **'{count} subscription charges due — {amount}'**
+  String subscriptionChargesDue(int count, String amount);
+
+  /// No description provided for @subscriptionConfirmAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm all'**
+  String get subscriptionConfirmAll;
+
+  /// No description provided for @subscriptionReviewEach.
+  ///
+  /// In en, this message translates to:
+  /// **'Review each'**
+  String get subscriptionReviewEach;
+
+  /// No description provided for @subscriptionPaidYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, log it'**
+  String get subscriptionPaidYes;
+
+  /// No description provided for @subscriptionChargeFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t record that. Check the amount on the subscription.'**
+  String get subscriptionChargeFailed;
+
+  /// No description provided for @subscriptionSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t save that subscription. Nothing was added.'**
+  String get subscriptionSaveFailed;
+
+  /// No description provided for @loanSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t save that loan. Nothing was added.'**
+  String get loanSaveFailed;
+
+  /// No description provided for @subscriptionPaidNo.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get subscriptionPaidNo;
+
+  /// No description provided for @subscriptionWhatHappened.
+  ///
+  /// In en, this message translates to:
+  /// **'What happened?'**
+  String get subscriptionWhatHappened;
+
+  /// No description provided for @subscriptionReasonCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'I cancelled it'**
+  String get subscriptionReasonCancelled;
+
+  /// No description provided for @subscriptionReasonPriceChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'The price changed'**
+  String get subscriptionReasonPriceChanged;
+
+  /// No description provided for @subscriptionReasonNotPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'I didn\'t pay it'**
+  String get subscriptionReasonNotPaid;
+
+  /// No description provided for @deleteSubscription.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete subscription'**
+  String get deleteSubscription;
+
+  /// No description provided for @deleteSubscriptionKeepsEntries.
+  ///
+  /// In en, this message translates to:
+  /// **'Stops future entries. The payments already logged are kept.'**
+  String get deleteSubscriptionKeepsEntries;
+
   /// No description provided for @liabilities.
   ///
   /// In en, this message translates to:
-  /// **'LIABILITIES'**
+  /// **'Liabilities'**
   String get liabilities;
 
   /// No description provided for @noActiveLoans.
@@ -556,6 +639,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'> NO ACTIVE LOANS'**
   String get noActiveLoans;
+
+  /// No description provided for @newLoan.
+  ///
+  /// In en, this message translates to:
+  /// **'+ LOAN'**
+  String get newLoan;
+
+  /// No description provided for @spendOnWhat.
+  ///
+  /// In en, this message translates to:
+  /// **'WHAT DID YOU SPEND ON?'**
+  String get spendOnWhat;
+
+  /// No description provided for @presetCoffee.
+  ///
+  /// In en, this message translates to:
+  /// **'COFFEE'**
+  String get presetCoffee;
+
+  /// No description provided for @presetCoffeeNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Coffee'**
+  String get presetCoffeeNote;
+
+  /// No description provided for @presetLunch.
+  ///
+  /// In en, this message translates to:
+  /// **'LUNCH'**
+  String get presetLunch;
+
+  /// No description provided for @presetLunchNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Lunch'**
+  String get presetLunchNote;
+
+  /// No description provided for @presetDinner.
+  ///
+  /// In en, this message translates to:
+  /// **'DINNER'**
+  String get presetDinner;
+
+  /// No description provided for @presetDinnerNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Dinner'**
+  String get presetDinnerNote;
+
+  /// No description provided for @presetTransport.
+  ///
+  /// In en, this message translates to:
+  /// **'TRANSPORT'**
+  String get presetTransport;
+
+  /// No description provided for @presetTransportNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Transport'**
+  String get presetTransportNote;
+
+  /// No description provided for @presetGroceries.
+  ///
+  /// In en, this message translates to:
+  /// **'GROCERIES'**
+  String get presetGroceries;
+
+  /// No description provided for @presetGroceriesNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Groceries'**
+  String get presetGroceriesNote;
+
+  /// No description provided for @presetSomethingElse.
+  ///
+  /// In en, this message translates to:
+  /// **'SOMETHING ELSE'**
+  String get presetSomethingElse;
+
+  /// No description provided for @freeEntriesUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'{used} of {free} free entries used'**
+  String freeEntriesUsed(int used, int free);
+
+  /// No description provided for @freeSimulationsUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'{used} of {free} free simulations used'**
+  String freeSimulationsUsed(int used, int free);
 
   /// No description provided for @settled.
   ///
@@ -598,6 +771,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'% REPAID'**
   String get repaid;
+
+  /// No description provided for @stillPaying.
+  ///
+  /// In en, this message translates to:
+  /// **'PRINCIPAL REPAID — PAYMENTS CONTINUE'**
+  String get stillPaying;
+
+  /// No description provided for @markSettled.
+  ///
+  /// In en, this message translates to:
+  /// **'MARK AS SETTLED'**
+  String get markSettled;
+
+  /// No description provided for @markSettledExplain.
+  ///
+  /// In en, this message translates to:
+  /// **'The monthly payment stops counting and the loan leaves this list for good. Entries are kept.'**
+  String get markSettledExplain;
 
   /// No description provided for @repay.
   ///
@@ -728,7 +919,7 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptions.
   ///
   /// In en, this message translates to:
-  /// **'SUBSCRIPTIONS'**
+  /// **'Subscriptions'**
   String get subscriptions;
 
   /// No description provided for @noSubscriptions.
@@ -812,13 +1003,13 @@ abstract class AppLocalizations {
   /// No description provided for @editSubscription.
   ///
   /// In en, this message translates to:
-  /// **'> EDIT SUBSCRIPTION'**
+  /// **'EDIT SUBSCRIPTION'**
   String get editSubscription;
 
   /// No description provided for @addSubscription.
   ///
   /// In en, this message translates to:
-  /// **'> NEW SUBSCRIPTION'**
+  /// **'NEW SUBSCRIPTION'**
   String get addSubscription;
 
   /// No description provided for @personal.
@@ -977,6 +1168,42 @@ abstract class AppLocalizations {
   /// **'DELETE'**
   String get delete;
 
+  /// Settings card title for erasing all local data
+  ///
+  /// In en, this message translates to:
+  /// **'Your data'**
+  String get dataSection;
+
+  /// Explains what Delete all data erases
+  ///
+  /// In en, this message translates to:
+  /// **'Erase every entry, loan, subscription and setting from this device. Runway Pro stays unlocked.'**
+  String get deleteAllDataBody;
+
+  /// Button that opens the delete-all-data confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'DELETE ALL DATA'**
+  String get deleteAllDataButton;
+
+  /// Title of the delete-all-data confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Delete everything?'**
+  String get deleteAllDataConfirmTitle;
+
+  /// Warning that deletion is permanent
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is erased from this device and cannot be recovered. Runway starts again from the beginning.'**
+  String get deleteAllDataConfirmBody;
+
+  /// Confirms permanent deletion of all data
+  ///
+  /// In en, this message translates to:
+  /// **'DELETE EVERYTHING'**
+  String get deleteAllDataConfirmAction;
+
   /// No description provided for @planned.
   ///
   /// In en, this message translates to:
@@ -992,7 +1219,7 @@ abstract class AppLocalizations {
   /// No description provided for @current.
   ///
   /// In en, this message translates to:
-  /// **'CURRENT'**
+  /// **'Current'**
   String get current;
 
   /// No description provided for @simulate.
@@ -1004,7 +1231,7 @@ abstract class AppLocalizations {
   /// No description provided for @simHint.
   ///
   /// In en, this message translates to:
-  /// **'OVERRIDE BURN RATE OR ADD INCOME TO SEE IMPACT ON RUNWAY'**
+  /// **'Change rent + living or add income to see the impact on runway'**
   String get simHint;
 
   /// No description provided for @simulation.
@@ -1040,7 +1267,7 @@ abstract class AppLocalizations {
   /// No description provided for @monthlyBudget.
   ///
   /// In en, this message translates to:
-  /// **'MONTHLY BUDGET'**
+  /// **'Monthly budget'**
   String get monthlyBudget;
 
   /// No description provided for @rentFixed.
@@ -1055,11 +1282,41 @@ abstract class AppLocalizations {
   /// **'LIVING EXPENSES'**
   String get livingExpenses;
 
+  /// No description provided for @budgetRuleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Spending uses up its budget — only going over adds cost'**
+  String get budgetRuleHint;
+
   /// No description provided for @subtotal.
   ///
   /// In en, this message translates to:
   /// **'SUBTOTAL'**
   String get subtotal;
+
+  /// Unused part of a monthly budget, e.g. $ 29,790 left
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} left'**
+  String budgetLeft(String amount);
+
+  /// Spending above a monthly budget, e.g. $ 1,500 over budget
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} over budget'**
+  String budgetOver(String amount);
+
+  /// What is left of the living budget per remaining day of the month
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{{amount} left for today} other{{amount} a day for {days} days}}'**
+  String dailyAllowance(String amount, int days);
+
+  /// No description provided for @noLivingExpensesThisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'No living expenses logged this month'**
+  String get noLivingExpensesThisMonth;
 
   /// No description provided for @totalBudgetPerMonth.
   ///
@@ -1094,13 +1351,37 @@ abstract class AppLocalizations {
   /// No description provided for @expectedInflow.
   ///
   /// In en, this message translates to:
-  /// **'Expected inflow'**
+  /// **'Expected income'**
   String get expectedInflow;
+
+  /// No description provided for @everyMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Every month'**
+  String get everyMonth;
+
+  /// No description provided for @monthlySurplus.
+  ///
+  /// In en, this message translates to:
+  /// **'Surplus'**
+  String get monthlySurplus;
+
+  /// No description provided for @monthlyDeficit.
+  ///
+  /// In en, this message translates to:
+  /// **'Deficit'**
+  String get monthlyDeficit;
+
+  /// No description provided for @setExpectedIncome.
+  ///
+  /// In en, this message translates to:
+  /// **'Set expected income'**
+  String get setExpectedIncome;
 
   /// No description provided for @expectedBurn.
   ///
   /// In en, this message translates to:
-  /// **'Expected burn'**
+  /// **'Expected costs'**
   String get expectedBurn;
 
   /// No description provided for @notSet.
@@ -1109,10 +1390,16 @@ abstract class AppLocalizations {
   /// **'Not set'**
   String get notSet;
 
+  /// No description provided for @settingsFailedToLoad.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load these settings. Editing is off so nothing overwrites them.'**
+  String get settingsFailedToLoad;
+
   /// No description provided for @usingCurrentBurn.
   ///
   /// In en, this message translates to:
-  /// **'Using current burn'**
+  /// **'Using current costs'**
   String get usingCurrentBurn;
 
   /// No description provided for @assumptionsProjectionOnly.
@@ -1130,25 +1417,25 @@ abstract class AppLocalizations {
   /// No description provided for @expectedMonthlyInflow.
   ///
   /// In en, this message translates to:
-  /// **'Expected monthly inflow'**
+  /// **'Expected monthly income'**
   String get expectedMonthlyInflow;
 
   /// No description provided for @expectedMonthlyBurn.
   ///
   /// In en, this message translates to:
-  /// **'Expected monthly burn'**
+  /// **'Expected monthly costs'**
   String get expectedMonthlyBurn;
 
   /// No description provided for @useCurrentBurn.
   ///
   /// In en, this message translates to:
-  /// **'Use current burn'**
+  /// **'Use current costs'**
   String get useCurrentBurn;
 
   /// No description provided for @futureInflowHint.
   ///
   /// In en, this message translates to:
-  /// **'Any recurring or expected inflow — retainers, contracts, creator income, dividends.'**
+  /// **'Any recurring or expected income, such as retainers, contracts, creator income or dividends.'**
   String get futureInflowHint;
 
   /// No description provided for @runwayGoal.
@@ -1211,71 +1498,41 @@ abstract class AppLocalizations {
   /// **'Target months'**
   String get targetMonths;
 
-  /// No description provided for @display.
-  ///
-  /// In en, this message translates to:
-  /// **'DISPLAY'**
-  String get display;
-
-  /// No description provided for @glassEffect.
-  ///
-  /// In en, this message translates to:
-  /// **'GLASS EFFECT'**
-  String get glassEffect;
-
-  /// No description provided for @glassEffectHint.
-  ///
-  /// In en, this message translates to:
-  /// **'GPU INTENSIVE — DISABLE ON OLDER DEVICES'**
-  String get glassEffectHint;
-
   /// No description provided for @runwayBrand.
   ///
   /// In en, this message translates to:
   /// **'RUNWAY'**
   String get runwayBrand;
 
-  /// No description provided for @bootRunwayCheck.
+  /// No description provided for @runwayBasisBudget.
   ///
   /// In en, this message translates to:
-  /// **'Checking your runway...'**
-  String get bootRunwayCheck;
+  /// **'On your budget, if income paused today'**
+  String get runwayBasisBudget;
 
-  /// No description provided for @bootIncomeStopped.
+  /// No description provided for @runwayBasisSpending.
   ///
   /// In en, this message translates to:
-  /// **'Looking at what changes if income pauses...'**
-  String get bootIncomeStopped;
+  /// **'On your spending, if income paused today'**
+  String get runwayBasisSpending;
 
-  /// No description provided for @bootCountingCashDays.
+  /// No description provided for @runwayBasisAssumption.
   ///
   /// In en, this message translates to:
-  /// **'Estimating your breathing room...'**
-  String get bootCountingCashDays;
+  /// **'On your cost assumption, if income paused today'**
+  String get runwayBasisAssumption;
 
-  /// No description provided for @bootRemovingComfortFilter.
+  /// No description provided for @computedCost.
   ///
   /// In en, this message translates to:
-  /// **'Separating essentials from noise...'**
-  String get bootRemovingComfortFilter;
+  /// **'Computed from your budget and log: {amount}'**
+  String computedCost(String amount);
 
-  /// No description provided for @bootRealityCheckReady.
+  /// No description provided for @runwayNeedsCosts.
   ///
   /// In en, this message translates to:
-  /// **'Your financial picture is ready.'**
-  String get bootRealityCheckReady;
-
-  /// No description provided for @ifIncomeStoppedToday.
-  ///
-  /// In en, this message translates to:
-  /// **'If inflow stopped today'**
-  String get ifIncomeStoppedToday;
-
-  /// No description provided for @ifIncomePausedToday.
-  ///
-  /// In en, this message translates to:
-  /// **'If income paused today'**
-  String get ifIncomePausedToday;
+  /// **'Set your monthly costs to see your runway'**
+  String get runwayNeedsCosts;
 
   /// No description provided for @monthSingular.
   ///
@@ -1292,7 +1549,7 @@ abstract class AppLocalizations {
   /// No description provided for @sustainableWithExpectedInflow.
   ///
   /// In en, this message translates to:
-  /// **'Sustainable with your expected inflow'**
+  /// **'Sustainable with your expected income'**
   String get sustainableWithExpectedInflow;
 
   /// No description provided for @shortByPerMonth.
@@ -1307,23 +1564,11 @@ abstract class AppLocalizations {
   /// **'{months} month target. Progress toward your goal, not a score.'**
   String goalTargetProgress(int months);
 
-  /// No description provided for @monthlyBurn.
-  ///
-  /// In en, this message translates to:
-  /// **'Monthly burn'**
-  String get monthlyBurn;
-
   /// No description provided for @availableCash.
   ///
   /// In en, this message translates to:
   /// **'Available cash'**
   String get availableCash;
-
-  /// No description provided for @historicalBurn.
-  ///
-  /// In en, this message translates to:
-  /// **'Avg burn'**
-  String get historicalBurn;
 
   /// No description provided for @notEnoughHistory.
   ///
@@ -1348,18 +1593,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Fixed costs'**
   String get fixedPressure;
-
-  /// No description provided for @actualBurn.
-  ///
-  /// In en, this message translates to:
-  /// **'Actual burn'**
-  String get actualBurn;
-
-  /// No description provided for @actualBurnHigh.
-  ///
-  /// In en, this message translates to:
-  /// **'Actual burn ▲'**
-  String get actualBurnHigh;
 
   /// No description provided for @plannedEssentials.
   ///
@@ -1391,23 +1624,11 @@ abstract class AppLocalizations {
   /// **'Your runway'**
   String get yourRunway;
 
-  /// No description provided for @loseIncome.
-  ///
-  /// In en, this message translates to:
-  /// **'Inflow stops'**
-  String get loseIncome;
-
   /// No description provided for @higherExpenses.
   ///
   /// In en, this message translates to:
   /// **'Higher expenses'**
   String get higherExpenses;
-
-  /// No description provided for @incomeSetToZero.
-  ///
-  /// In en, this message translates to:
-  /// **'Inflow set to 0'**
-  String get incomeSetToZero;
 
   /// No description provided for @deltaDays.
   ///
@@ -1454,13 +1675,25 @@ abstract class AppLocalizations {
   /// No description provided for @monthsToGoal.
   ///
   /// In en, this message translates to:
-  /// **'{count} months to go'**
+  /// **'{count, plural, =1{1 month of cover to build} other{{count} months of cover to build}}'**
   String monthsToGoal(int count);
+
+  /// No description provided for @goalCashTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'Target cash'**
+  String get goalCashTarget;
+
+  /// No description provided for @goalCashToGo.
+  ///
+  /// In en, this message translates to:
+  /// **'Still to go'**
+  String get goalCashToGo;
 
   /// No description provided for @thisMonth.
   ///
   /// In en, this message translates to:
-  /// **'THIS MONTH'**
+  /// **'This month'**
   String get thisMonth;
 
   /// No description provided for @cashIn.
@@ -1486,6 +1719,300 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No activity yet this month'**
   String get noActivityThisMonth;
+
+  /// No description provided for @onboardingSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'SKIP'**
+  String get onboardingSkip;
+
+  /// No description provided for @onboardingWelcomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop guessing how long\nyour money lasts.'**
+  String get onboardingWelcomeTitle;
+
+  /// No description provided for @onboardingWelcomeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'No account. No bank connection.'**
+  String get onboardingWelcomeBody;
+
+  /// No description provided for @onboardingGetStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'GET STARTED'**
+  String get onboardingGetStarted;
+
+  /// No description provided for @onboardingPrivacyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data,\nyour device.'**
+  String get onboardingPrivacyTitle;
+
+  /// No description provided for @onboardingPrivacyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'There is no server, so there is nothing to leak.'**
+  String get onboardingPrivacyBody;
+
+  /// No description provided for @onboardingPrivacyEncrypted.
+  ///
+  /// In en, this message translates to:
+  /// **'Encrypted on device'**
+  String get onboardingPrivacyEncrypted;
+
+  /// No description provided for @onboardingPrivacyOnDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Numbers stay on your device'**
+  String get onboardingPrivacyOnDevice;
+
+  /// No description provided for @onboardingPrivacyHidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden when you switch apps'**
+  String get onboardingPrivacyHidden;
+
+  /// No description provided for @onboardingPrivacyDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete anytime, instantly'**
+  String get onboardingPrivacyDelete;
+
+  /// No description provided for @onboardingIUnderstand.
+  ///
+  /// In en, this message translates to:
+  /// **'I UNDERSTAND'**
+  String get onboardingIUnderstand;
+
+  /// No description provided for @onboardingFirstActionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'One number and\nyou are set up.'**
+  String get onboardingFirstActionTitle;
+
+  /// No description provided for @onboardingFirstActionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Just your cash balance. Nothing else.'**
+  String get onboardingFirstActionBody;
+
+  /// No description provided for @onboardingAddMyBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'ADD MY BALANCE'**
+  String get onboardingAddMyBalance;
+
+  /// No description provided for @paywallUnlock.
+  ///
+  /// In en, this message translates to:
+  /// **'UNLOCK RUNWAY PRO'**
+  String get paywallUnlock;
+
+  /// No description provided for @paywallLoadingPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading price...'**
+  String get paywallLoadingPrice;
+
+  /// No description provided for @paywallStoreUnreachable.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t reach the store. Check your connection and try again.'**
+  String get paywallStoreUnreachable;
+
+  /// No description provided for @paywallOneTimePurchase.
+  ///
+  /// In en, this message translates to:
+  /// **'{price} once. This app counts your subscriptions — it will not be one.'**
+  String paywallOneTimePurchase(String price);
+
+  /// No description provided for @paywallUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Pro isn\'t available right now. Please try again later.'**
+  String get paywallUnavailable;
+
+  /// No description provided for @paywallRestore.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore purchase'**
+  String get paywallRestore;
+
+  /// No description provided for @paywallMaybeLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Maybe later'**
+  String get paywallMaybeLater;
+
+  /// No description provided for @paywallPurchaseFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase failed. Please try again.'**
+  String get paywallPurchaseFailed;
+
+  /// No description provided for @paywallSomethingWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get paywallSomethingWrong;
+
+  /// No description provided for @paywallNoPreviousPurchase.
+  ///
+  /// In en, this message translates to:
+  /// **'No previous purchase found.'**
+  String get paywallNoPreviousPurchase;
+
+  /// No description provided for @paywallRestoreFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore failed. Please try again.'**
+  String get paywallRestoreFailed;
+
+  /// No description provided for @paywallTitleEntries.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve used your {count} free entries.\nPro is what keeps the number true.'**
+  String paywallTitleEntries(int count);
+
+  /// No description provided for @paywallTitleSimulations.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve run your {count} free simulations.\nPro is how you keep asking what if.'**
+  String paywallTitleSimulations(int count);
+
+  /// No description provided for @paywallTitleDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Runway Pro.'**
+  String get paywallTitleDefault;
+
+  /// No description provided for @paywallFeatureEntries.
+  ///
+  /// In en, this message translates to:
+  /// **'Log everything, so the number never drifts'**
+  String get paywallFeatureEntries;
+
+  /// No description provided for @paywallFeatureSimulations.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask what if as often as you like'**
+  String get paywallFeatureSimulations;
+
+  /// No description provided for @stepBalanceShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash balance'**
+  String get stepBalanceShort;
+
+  /// No description provided for @stepBudgetShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget'**
+  String get stepBudgetShort;
+
+  /// No description provided for @stepExpenseShort.
+  ///
+  /// In en, this message translates to:
+  /// **'First expense'**
+  String get stepExpenseShort;
+
+  /// No description provided for @stepSimShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Simulator'**
+  String get stepSimShort;
+
+  /// No description provided for @stepsDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done: {steps}'**
+  String stepsDone(String steps);
+
+  /// No description provided for @optionalBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'OPTIONAL'**
+  String get optionalBadge;
+
+  /// No description provided for @fixedCostsUnchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Fixed costs unchanged: {amount}'**
+  String fixedCostsUnchanged(String amount);
+
+  /// No description provided for @simNeedsBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your opening balance first'**
+  String get simNeedsBalance;
+
+  /// No description provided for @simNeedsBalanceWhy.
+  ///
+  /// In en, this message translates to:
+  /// **'A runway needs a starting balance to count down from.'**
+  String get simNeedsBalanceWhy;
+
+  /// No description provided for @addOpeningBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'ADD MY BALANCE'**
+  String get addOpeningBalance;
+
+  /// No description provided for @runSimulation.
+  ///
+  /// In en, this message translates to:
+  /// **'RUN SIMULATION'**
+  String get runSimulation;
+
+  /// No description provided for @runwayUnlimitedHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Income covers costs in this plan'**
+  String get runwayUnlimitedHere;
+
+  /// No description provided for @runwayNoChange.
+  ///
+  /// In en, this message translates to:
+  /// **'No change'**
+  String get runwayNoChange;
+
+  /// No description provided for @deltaDaysLonger.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{1 day longer} other{{days} days longer}}'**
+  String deltaDaysLonger(int days);
+
+  /// No description provided for @deltaDaysShorter.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{1 day shorter} other{{days} days shorter}}'**
+  String deltaDaysShorter(int days);
+
+  /// No description provided for @deltaMonthsLonger.
+  ///
+  /// In en, this message translates to:
+  /// **'{months, plural, =1{1 month longer} other{{months} months longer}}'**
+  String deltaMonthsLonger(int months);
+
+  /// No description provided for @deltaMonthsShorter.
+  ///
+  /// In en, this message translates to:
+  /// **'{months, plural, =1{1 month shorter} other{{months} months shorter}}'**
+  String deltaMonthsShorter(int months);
+
+  /// Link on the paywall to Apple's standard end user license agreement
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Use'**
+  String get paywallTermsOfUse;
+
+  /// Link on the paywall to the Runway privacy policy
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get paywallPrivacyPolicy;
 }
 
 class _AppLocalizationsDelegate
@@ -1512,18 +2039,6 @@ class _AppLocalizationsDelegate
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-  // Lookup logic when language+country codes are specified.
-  switch (locale.languageCode) {
-    case 'zh':
-      {
-        switch (locale.countryCode) {
-          case 'TW':
-            return AppLocalizationsZhTw();
-        }
-        break;
-      }
-  }
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
     case 'en':

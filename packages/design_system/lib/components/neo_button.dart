@@ -52,12 +52,16 @@ class _NeoButtonState extends State<NeoButton>
     super.dispose();
   }
 
-  Color get _bgColor => switch (widget.variant) {
-    NeoButtonVariant.primary => widget.color ?? AppColors.neonGreen,
-    NeoButtonVariant.secondary => AppColors.surfaceHigh,
-    NeoButtonVariant.ghost => Colors.transparent,
-    NeoButtonVariant.danger => AppColors.hotPink.withAlpha(20),
-  };
+  bool get _disabled => widget.onPressed == null;
+
+  Color get _bgColor => _disabled
+      ? AppColors.surfaceHigh
+      : switch (widget.variant) {
+          NeoButtonVariant.primary => widget.color ?? AppColors.neonGreen,
+          NeoButtonVariant.secondary => AppColors.surfaceHigh,
+          NeoButtonVariant.ghost => Colors.transparent,
+          NeoButtonVariant.danger => AppColors.hotPink.withAlpha(20),
+        };
 
   Color get _borderColor => switch (widget.variant) {
     NeoButtonVariant.primary => Colors.transparent,
@@ -69,12 +73,14 @@ class _NeoButtonState extends State<NeoButton>
     NeoButtonVariant.danger => AppColors.red.withAlpha(80),
   };
 
-  Color get _textColor => switch (widget.variant) {
-    NeoButtonVariant.primary => AppColors.background,
-    NeoButtonVariant.secondary => AppColors.textPrimary,
-    NeoButtonVariant.ghost => AppColors.textSecondary,
-    NeoButtonVariant.danger => AppColors.hotPink,
-  };
+  Color get _textColor => _disabled
+      ? AppColors.textSecondary
+      : switch (widget.variant) {
+          NeoButtonVariant.primary => AppColors.background,
+          NeoButtonVariant.secondary => AppColors.textPrimary,
+          NeoButtonVariant.ghost => AppColors.textSecondary,
+          NeoButtonVariant.danger => AppColors.hotPink,
+        };
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +103,11 @@ class _NeoButtonState extends State<NeoButton>
         scale: _scale,
         child: AnimatedOpacity(
           duration: const Duration(milliseconds: 150),
-          opacity: disabled ? 0.4 : 1.0,
+          // Disabled is a state of its own, not a faded copy of the live one.
+          // At 0.4 a primary fill read as broken rather than as not-yet, which
+          // is why the Plan screen deleted its only button rather than show it
+          // (#108). Colour carries it now, at full opacity.
+          opacity: 1.0,
           child: Container(
             width: widget.fullWidth ? double.infinity : null,
             padding: const EdgeInsets.symmetric(
@@ -123,9 +133,21 @@ class _NeoButtonState extends State<NeoButton>
                   ),
                   const SizedBox(width: AppSpacing.xs),
                 ],
-                Text(
-                  widget.label,
-                  style: AppTextStyles.button.copyWith(color: _textColor),
+                // The label yields rather than pushing the button past its
+                // own edge at large text sizes. This only bites where the
+                // button is given a width to fit inside: a non-fullWidth
+                // NeoButton laid out as a plain child of a Row gets unbounded
+                // constraints, the Flexible below is then treated as non-flex,
+                // and the label lays out at its intrinsic width regardless.
+                // Those callers have to bound the button themselves (#178).
+                Flexible(
+                  child: Text(
+                    widget.label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.button.copyWith(color: _textColor),
+                  ),
                 ),
               ],
             ),

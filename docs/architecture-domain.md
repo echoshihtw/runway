@@ -74,7 +74,7 @@ packages/domain/lib/
 
 ### Enums
 
-- **`TransactionType`** — `expense, income, loan, investment, repayment, openingBalance`. `isInflow` is true for `income`, `loan`, `openingBalance`. `investment` is retained **for backward compatibility with stored data** (see Known Constraints).
+- **`TransactionType`** — `expense, income, loan, repayment, openingBalance`. `isInflow` is true for `income`, `loan`, `openingBalance`. A stored name this version does not know reads as `expense`, so a database written before a type was removed still loads.
 - **`ExpenseCategory`** — 9 categories grouped into `LIVING / TRANSPORT / HEALTH / TRAVEL`, with `subcategoriesFor(group)` and `groupHasSubcategories(group)` driving the UI's two-level picker.
 - **`BillingCycle`** — `weekly/monthly/quarterly/yearly` with `monthlyEquivalent(amount)` (×52/12, ×1, ÷3, ÷12) and `intervalDays`.
 - **`SubscriptionCategory`** — `personal | business`.
@@ -135,12 +135,10 @@ Also relevant:
 
 - §5.2 opening-balance handling → `monthly_aggregator.dart`.
 - §7.1–§7.2 require a test in `packages/domain/test/` for every domain logic change, with `MonthlyAggregator` (empty / opening-only / mixed), `SurvivalEngine` (status thresholds, runway math), and `LoanEngine` (months remaining) edge cases always covered. §7.3: "all 39+ tests must pass before any commit."
-- §10 decision log records the rationale behind several behaviors implemented here: no investment in burn rate, `max(actual, budget)`, mathematical runway with no 120-month cap, adaptive 6–18 month safety buffer, monthly subscription normalization.
+- §10 decision log records the rationale behind several behaviors implemented here: `max(actual, budget)`, mathematical runway with no 120-month cap, adaptive 6–18 month safety buffer, monthly subscription normalization.
 
 ### Divergences from CONTRACTS
 
-- **§3.3 (Investable / safety fund) is unimplemented.** The contract specifies `safetyMonths = clamp(runwayMonths/2, 6, 18)`, `riskCapacity`, and `investable = max(0, surplus × riskCapacity × pressureFactor)`, with two strictly separated pockets. No corresponding engine exists in `logic/` at scan time — the concept survives only as the retained `TransactionType.investment`, `SC.metricInvestable`/`metricSafety` color tokens, and contract text.
-- **§5.3 `investment` treatment diverges.** The contract says investment transactions reduce cash but are *excluded* from the burn rate (§3.4 repeats this). In code, `TransactionType.investment` is simply not an inflow, so `aggregateMonths` folds it into `grossOutflow` — which is exactly what feeds the burn rate. Either the exclusion was never implemented or it was dropped when the type was demoted to backward-compatibility-only.
 
 ## Testing Strategy
 
@@ -148,7 +146,6 @@ Also relevant:
 
 ## Known Constraints
 
-- `TransactionType.investment` cannot be removed without a data migration — stored rows reference it.
 - `DateTime.now()` is called directly inside `loan_engine`, `subscription_engine`, and `survival_engine` (`_projectFromCash`), so those functions are not time-injectable; tests around month boundaries are inherently date-sensitive.
 - `RunwayGoal` is JSON-serialized rather than stored in SQLite (persisted via `shared_preferences` in the application layer).
 

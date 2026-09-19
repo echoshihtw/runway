@@ -4,12 +4,16 @@ import 'package:design_system/design_system.dart';
 import 'package:application/application.dart';
 import 'package:domain/domain.dart';
 import 'widgets/this_month_card.dart';
+import 'widgets/every_month_card.dart';
 import 'widgets/goal_card.dart';
 import 'widgets/runway_card.dart';
 import 'widgets/getting_started_card.dart';
+import 'widgets/review_prompt_trigger.dart';
+import '../../shared/status_color.dart';
 import '../config/config_screen.dart';
 import '../loans/liabilities_panel.dart';
 import '../subscriptions/subscriptions_panel.dart';
+import '../subscriptions/widgets/subscription_prompt_card.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -17,6 +21,7 @@ class DashboardScreen extends ConsumerWidget {
   void _showConfig(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       useSafeArea: true,
       backgroundColor: Colors.transparent,
@@ -59,10 +64,24 @@ class DashboardScreen extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
               child: Column(
                 children: [
-                  const GettingStartedCard(),
+                  // Asks for an App Store rating at the right moment. Renders nothing.
+                  const ReviewPromptTrigger(),
+                  // Runway is always the hero, center-top (CONTRACTS.md §4.3).
                   RunwayCard(model: model),
                   const SizedBox(height: AppSpacing.cardGap),
+                  // Adds its own bottom gap, and none once dismissed.
+                  const GettingStartedCard(),
+                  // Asks before any subscription charge is recorded.
+                  const SubscriptionPromptCard(),
                   GoalCard(model: model),
+                  const SizedBox(height: AppSpacing.cardGap),
+                  // The income side, directly above the spending side, so the
+                  // pair reads as what you expect each month and then what
+                  // actually happened this one.
+                  EveryMonthCard(
+                    model: model,
+                    onSetUp: () => _showConfig(context),
+                  ),
                   const SizedBox(height: AppSpacing.cardGap),
                   const ThisMonthCard(),
                   const SizedBox(height: AppSpacing.cardGap),
@@ -124,17 +143,13 @@ class _RunwayBadgeState extends ConsumerState<_RunwayBadge>
   late final AnimationController _controller;
   late final Animation<double> _glow;
 
-  static Duration _durationFor(SurvivalStatus s) => switch (s) {
-    SurvivalStatus.stable   => const Duration(milliseconds: 2800),
-    SurvivalStatus.caution  => const Duration(milliseconds: 1400),
-    SurvivalStatus.critical => const Duration(milliseconds: 650),
+  static Duration _durationFor(RunwayStatus s) => switch (s) {
+    RunwayStatus.stable => const Duration(milliseconds: 2800),
+    RunwayStatus.caution => const Duration(milliseconds: 1400),
+    RunwayStatus.critical => const Duration(milliseconds: 650),
   };
 
-  static Color _colorFor(SurvivalStatus s) => switch (s) {
-    SurvivalStatus.stable   => AppColors.neonGreen,
-    SurvivalStatus.caution  => AppColors.gold,
-    SurvivalStatus.critical => AppColors.red,
-  };
+  static Color _colorFor(RunwayStatus s) => statusColor(s);
 
   @override
   void initState() {
@@ -143,9 +158,10 @@ class _RunwayBadgeState extends ConsumerState<_RunwayBadge>
       vsync: this,
       duration: const Duration(milliseconds: 2800),
     )..repeat(reverse: true);
-    _glow = Tween<double>(begin: 0.10, end: 0.45).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _glow = Tween<double>(
+      begin: 0.10,
+      end: 0.45,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -156,7 +172,7 @@ class _RunwayBadgeState extends ConsumerState<_RunwayBadge>
 
   @override
   Widget build(BuildContext context) {
-    final status = ref.watch(modelProvider).survivalStatus;
+    final status = ref.watch(modelProvider).runwayStatus;
     final targetDuration = _durationFor(status);
     if (_controller.duration != targetDuration) {
       _controller.duration = targetDuration;

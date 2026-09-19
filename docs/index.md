@@ -63,7 +63,7 @@
 
 | Document | Path | What it covers |
 |---|---|---|
-| **CONTRACTS.md** | `CONTRACTS.md` | ★ **Binding rules** — product principles, layer boundaries, burn/runway/investable formulas, color & typography contracts. Read before changing anything. |
+| **CONTRACTS.md** | `CONTRACTS.md` | ★ **Binding rules** — product principles, layer boundaries, burn/runway formulas, color & typography contracts. Read before changing anything. |
 | README | `README.md` | Product philosophy, the runway formula, architecture summary, tech stack |
 | CI Secrets | `.github/SECRETS.md` | Required GitHub secrets and how to encode them |
 | Design artifacts | `design-artifacts/` | WDS pipeline: `A-Product-Brief`, `B-Trigger-Map`, `C-UX-Scenarios`, `D-Design-System`, `E-Development` |

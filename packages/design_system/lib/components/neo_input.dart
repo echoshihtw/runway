@@ -28,6 +28,18 @@ class NeoInput extends StatelessWidget {
     this.maxLength,
   });
 
+  /// Numbers are set in the mono face, words in the label face.
+  ///
+  /// Every figure the owner typed used to come out in Inter while the figures
+  /// the app printed beside it were mono — most visibly on the Plan screen,
+  /// where a typed amount sat directly above a mono one inside the same card.
+  /// A name or a note is words, and stays in the reading face.
+  TextStyle get _fieldStyle => switch (inputType) {
+    NeoInputType.numeric || NeoInputType.decimal => AppTextStyles.metricSmall,
+    NeoInputType.name || NeoInputType.note || NeoInputType.text =>
+      AppTextStyles.body,
+  };
+
   List<TextInputFormatter> get _formatters {
     switch (inputType) {
       case NeoInputType.numeric:
@@ -40,25 +52,20 @@ class NeoInput extends StatelessWidget {
           FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
           LengthLimitingTextInputFormatter(maxLength ?? 15),
         ];
+      // No allow-list on the three fields that hold words. These used to
+      // permit ASCII letters and a handful of punctuation, which meant a
+      // lender, a subscription or a note could not be written in six of the
+      // seven languages this app is translated into: the characters were
+      // dropped as they were typed, the field stayed empty, and the form's
+      // own validity gate never opened, with nothing on screen to say why.
+      // Nothing downstream needs the restriction — the database is
+      // parameterised and every one of these is displayed as text.
       case NeoInputType.name:
-        return [
-          FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z0-9\s\-_'\+/]")),
-          LengthLimitingTextInputFormatter(maxLength ?? 50),
-        ];
+        return [LengthLimitingTextInputFormatter(maxLength ?? 50)];
       case NeoInputType.note:
-        return [
-          FilteringTextInputFormatter.allow(
-            RegExp(r'[a-zA-Z0-9\s\.,\-_!?@#%&\(\)\+=/]'),
-          ),
-          LengthLimitingTextInputFormatter(maxLength ?? 200),
-        ];
+        return [LengthLimitingTextInputFormatter(maxLength ?? 200)];
       case NeoInputType.text:
-        return [
-          FilteringTextInputFormatter.allow(
-            RegExp(r'[a-zA-Z0-9\s\.,\-_!?@#%&\(\)\+=/]'),
-          ),
-          LengthLimitingTextInputFormatter(maxLength ?? 100),
-        ];
+        return [LengthLimitingTextInputFormatter(maxLength ?? 100)];
     }
   }
 
@@ -87,10 +94,10 @@ class NeoInput extends StatelessWidget {
           keyboardType: _keyboardType,
           inputFormatters: _formatters,
           onChanged: onChanged,
-          style: AppTextStyles.body,
+          style: _fieldStyle,
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: AppTextStyles.body.copyWith(color: AppColors.textDim),
+            hintStyle: _fieldStyle.copyWith(color: AppColors.textSecondary),
             filled: true,
             fillColor: AppColors.surfaceHigh,
             border: OutlineInputBorder(
