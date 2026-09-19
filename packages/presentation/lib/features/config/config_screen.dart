@@ -6,6 +6,7 @@ import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
 
 import 'widgets/delete_all_data_card.dart';
+import '../../shared/money_field.dart';
 
 class ConfigScreen extends ConsumerStatefulWidget {
   const ConfigScreen({super.key});
@@ -46,9 +47,9 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
   }
 
   void _startEditing(Budget budget) {
-    _rentCtrl.text = budget.rent > 0 ? budget.rent.toStringAsFixed(0) : '';
+    _rentCtrl.text = budget.rent > 0 ? moneyField(budget.rent) : '';
     _livingCtrl.text = budget.living > 0
-        ? budget.living.toStringAsFixed(0)
+        ? moneyField(budget.living)
         : '';
     setState(() => _editingBudget = true);
   }
@@ -105,10 +106,10 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
   void _startEditingAssumptions(FinancialAssumptions assumptions) {
     _expectedInflowCtrl.text = assumptions.expectedMonthlyInflow == null
         ? ''
-        : assumptions.expectedMonthlyInflow!.toStringAsFixed(0);
+        : moneyField(assumptions.expectedMonthlyInflow);
     _expectedBurnCtrl.text = assumptions.expectedMonthlyBurnOverride == null
         ? ''
-        : assumptions.expectedMonthlyBurnOverride!.toStringAsFixed(0);
+        : moneyField(assumptions.expectedMonthlyBurnOverride);
     setState(() => _editingAssumptions = true);
   }
 
@@ -265,6 +266,7 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                             NeoInput(
                               label: l10n.expectedMonthlyInflow,
                               controller: _expectedInflowCtrl,
+                              inputType: NeoInputType.decimal,
                               keyboardType: TextInputType.number,
                               hint: '0',
                             ),
@@ -272,6 +274,7 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                             NeoInput(
                               label: l10n.expectedMonthlyBurn,
                               controller: _expectedBurnCtrl,
+                              inputType: NeoInputType.decimal,
                               keyboardType: TextInputType.number,
                               hint: l10n.useCurrentBurn,
                             ),
@@ -380,12 +383,14 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                             NeoInput(
                               label: l10n.rentFixedCosts,
                               controller: _rentCtrl,
+                              inputType: NeoInputType.decimal,
                               keyboardType: TextInputType.number,
                             ),
                             const SizedBox(height: AppSpacing.md),
                             NeoInput(
                               label: l10n.livingExpenses,
                               controller: _livingCtrl,
+                              inputType: NeoInputType.decimal,
                               keyboardType: TextInputType.number,
                             ),
                             const SizedBox(height: AppSpacing.xs),

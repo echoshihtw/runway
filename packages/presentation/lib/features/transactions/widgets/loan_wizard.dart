@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:design_system/design_system.dart';
+import '../../../shared/money_field.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
 
@@ -95,7 +96,7 @@ class _LoanWizardState extends State<LoanWizard>
     }
     setState(() {
       _computedPayment = payment;
-      if (!_overridePayment) _paymentCtrl.text = payment.toStringAsFixed(0);
+      if (!_overridePayment) _paymentCtrl.text = moneyField(payment);
     });
   }
 
@@ -308,7 +309,7 @@ class _LoanWizardState extends State<LoanWizard>
         NeoInput(
           label: l10n.loanAmount,
           controller: _amountCtrl,
-          inputType: NeoInputType.numeric,
+          inputType: NeoInputType.decimal,
           hint: "1880000",
           onChanged: (_) {
             setState(() {});
@@ -394,7 +395,7 @@ class _LoanWizardState extends State<LoanWizard>
                   ],
                 ),
                 Text(
-                  _computedPayment!.toStringAsFixed(0),
+                  moneyField(_computedPayment),
                   style: AppTextStyles.metric.copyWith(color: AppColors.gold),
                 ),
               ],
@@ -437,7 +438,7 @@ class _LoanWizardState extends State<LoanWizard>
           onTap: () => setState(() {
             _overridePayment = !_overridePayment;
             if (!_overridePayment && _computedPayment != null)
-              _paymentCtrl.text = _computedPayment!.toStringAsFixed(0);
+              _paymentCtrl.text = moneyField(_computedPayment);
           }),
           child: Row(
             children: [
@@ -472,8 +473,8 @@ class _LoanWizardState extends State<LoanWizard>
         NeoInput(
           label: l10n.monthlyInstallment,
           controller: _paymentCtrl,
-          inputType: NeoInputType.numeric,
-          hint: _computedPayment?.toStringAsFixed(0) ?? "0",
+          inputType: NeoInputType.decimal,
+          hint: _computedPayment == null ? "0" : moneyField(_computedPayment),
           onChanged: (_) => setState(() {}),
         ),
         const SizedBox(height: AppSpacing.md),

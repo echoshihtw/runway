@@ -3,6 +3,8 @@ import 'package:design_system/design_system.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
 
+import '../../shared/money_field.dart';
+
 class SubscriptionForm extends StatefulWidget {
   final Subscription? existing;
   final Future<bool> Function(
@@ -59,14 +61,7 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
     _cycle = widget.existing?.cycle ?? BillingCycle.monthly;
     _startDate = widget.existing?.startDate ?? DateTime.now();
     _nameCtrl.text = widget.existing?.name ?? '';
-    // Keeps the decimals when the price has them: toStringAsFixed(0) turned
-    // an existing 9.99 into "10" the moment the sheet opened.
-    final amount = widget.existing?.amount;
-    _amountCtrl.text = amount == null
-        ? ''
-        : (amount == amount.roundToDouble()
-              ? amount.toStringAsFixed(0)
-              : amount.toString());
+    _amountCtrl.text = moneyField(widget.existing?.amount);
     _noteCtrl.text = widget.existing?.note ?? '';
   }
 

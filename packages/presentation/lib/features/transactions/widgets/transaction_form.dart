@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:design_system/design_system.dart';
+import '../../../shared/money_field.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
 
@@ -65,7 +66,7 @@ class _TransactionFormState extends State<TransactionForm> {
     _isInflow = type.isInflow;
     _date = widget.existing?.date ?? DateTime.now();
     _amountCtrl.text =
-        widget.existing?.amount.value.toStringAsFixed(0) ?? '';
+        moneyField(widget.existing?.amount.value);
     _noteCtrl.text = widget.existing?.note ?? widget.prefillNote ?? '';
     _selectedLoanId = widget.existing?.loanId;
     _outKind = switch (widget.existing) {
@@ -230,7 +231,7 @@ class _TransactionFormState extends State<TransactionForm> {
               label: l10n.amount,
               controller: _amountCtrl,
               focusNode: _amountFocus,
-              inputType: NeoInputType.numeric,
+              inputType: NeoInputType.decimal,
               hint: '50,000',
             ),
             const SizedBox(height: AppSpacing.md),
