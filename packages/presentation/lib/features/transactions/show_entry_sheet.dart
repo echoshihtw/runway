@@ -55,14 +55,22 @@ Future<void> showEntrySheet(
             ),
           );
         } else {
+          // A repayment names the loan it pays; a drawdown carries the id
+          // that ties it to the commitment it created, and that id is the
+          // only handle the delete path has. Clearing it on a confirm that
+          // changed nothing orphaned the loan for good: it could no longer be
+          // removed, and went on charging the runway.
+          final keepsLoanId =
+              type == TransactionType.repayment ||
+              type == TransactionType.loan;
           await ref.read(editTransactionUseCaseProvider).execute(
             existing.copyWith(
               date: date,
               type: type,
               amount: Money(amount),
               note: note,
-              loanId: type == TransactionType.repayment ? loanId : null,
-              clearLoanId: type != TransactionType.repayment,
+              loanId: keepsLoanId ? (loanId ?? existing.loanId) : null,
+              clearLoanId: !keepsLoanId,
               category: category,
               clearCategory: category == null,
               updatedAt: now,

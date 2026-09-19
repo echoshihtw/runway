@@ -164,6 +164,13 @@ class _LoanWizardState extends State<LoanWizard>
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Container(
+      // The same cap the subscription sheet took in #168: unbounded, the
+      // column below grows instead of scrolling, and at 320pt with large text
+      // CONFIRM sat 247px past the bottom of the screen with no way to reach
+      // it.
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.9,
+      ),
       decoration: const BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.vertical(
@@ -176,7 +183,8 @@ class _LoanWizardState extends State<LoanWizard>
         top: AppSpacing.md,
         bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.lg,
       ),
-      child: Column(
+      child: SingleChildScrollView(
+        child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -194,10 +202,17 @@ class _LoanWizardState extends State<LoanWizard>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                l10n.loanWizardTitle.toUpperCase(),
-                style: AppTextStyles.title.copyWith(color: AppColors.gold),
+              // The title yields at large text sizes; the step counter is two
+              // characters and never needs to.
+              Flexible(
+                child: Text(
+                  l10n.loanWizardTitle.toUpperCase(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.title.copyWith(color: AppColors.gold),
+                ),
               ),
+              const SizedBox(width: AppSpacing.sm),
               Text('${_step + 1} / $_totalSteps', style: AppTextStyles.caption),
             ],
           ),
@@ -232,10 +247,12 @@ class _LoanWizardState extends State<LoanWizard>
           Row(
             children: [
               if (_step > 0) ...[
-                NeoButton(
-                  label: l10n.back,
-                  variant: NeoButtonVariant.ghost,
-                  onPressed: _prev,
+                Flexible(
+                  child: NeoButton(
+                    label: l10n.back,
+                    variant: NeoButtonVariant.ghost,
+                    onPressed: _prev,
+                  ),
                 ),
                 const SizedBox(width: AppSpacing.sm),
               ],
@@ -265,7 +282,8 @@ class _LoanWizardState extends State<LoanWizard>
             fullWidth: true,
             onPressed: () => Navigator.of(context).pop(),
           ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -359,7 +377,16 @@ class _LoanWizardState extends State<LoanWizard>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(dateStr, style: AppTextStyles.body),
+                // The date yields at large text sizes; the icon does not.
+                Flexible(
+                  child: Text(
+                    dateStr,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.body,
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.xs),
                 const Icon(
                   Icons.calendar_today_rounded,
                   color: AppColors.textSecondary,

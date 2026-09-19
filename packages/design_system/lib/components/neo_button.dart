@@ -133,9 +133,17 @@ class _NeoButtonState extends State<NeoButton>
                   ),
                   const SizedBox(width: AppSpacing.xs),
                 ],
-                Text(
-                  widget.label,
-                  style: AppTextStyles.button.copyWith(color: _textColor),
+                // The label yields rather than pushing the button past its
+                // own edge: at large text sizes every caller overflowed, and
+                // the button is the thing that should shrink, not the row.
+                Flexible(
+                  child: Text(
+                    widget.label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.button.copyWith(color: _textColor),
+                  ),
                 ),
               ],
             ),
