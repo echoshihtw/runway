@@ -36,15 +36,15 @@ class LiabilitiesPanel extends ConsumerWidget {
                   width: 34,
                   height: 34,
                   decoration: BoxDecoration(
-                    color: AppColors.gold.withAlpha(16),
+                    color: SC.accentCost.withAlpha(16),
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppColors.gold.withAlpha(45)),
+                    border: Border.all(color: SC.accentCost.withAlpha(45)),
                   ),
                   // One glyph per concept: loans wear account_balance
                   // everywhere, card and empty state alike.
                   child: const Icon(
                     LedgerGlyphs.lender,
-                    color: AppColors.gold,
+                    color: SC.accentCost,
                     size: 18,
                   ),
                 ),
@@ -65,7 +65,7 @@ class LiabilitiesPanel extends ConsumerWidget {
                     textAlign: TextAlign.right,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.label.copyWith(color: AppColors.gold),
+                    style: AppTextStyles.label.copyWith(color: SC.accentCost),
                   ),
                 ),
               ],
@@ -82,7 +82,7 @@ class LiabilitiesPanel extends ConsumerWidget {
                     Text(
                       '$symbol ${nf.format(total)}',
                       style: AppTextStyles.metric.copyWith(
-                        color: AppColors.gold,
+                        color: SC.accentCost,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -99,7 +99,7 @@ class LiabilitiesPanel extends ConsumerWidget {
                     Text(
                       l10n.activeCount(active.length),
                       style: AppTextStyles.metric.copyWith(
-                        color: AppColors.textSecondary,
+                        color: SC.captionColor,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -126,7 +126,7 @@ class LiabilitiesPanel extends ConsumerWidget {
               ),
               AddStrip(
                 label: l10n.newLoan,
-                color: AppColors.gold,
+                color: SC.accentCost,
                 onTap: () => startLoanCreation(context, ref),
               ),
             ],
@@ -278,7 +278,7 @@ class _RepaySheetState extends ConsumerState<_RepaySheet> {
                   child: NeoButton(
                     label: l10n.confirm,
                     variant: NeoButtonVariant.primary,
-                    color: AppColors.gold,
+                    color: SC.accentCost,
                     fullWidth: true,
                     onPressed: !_valid
                         ? null
