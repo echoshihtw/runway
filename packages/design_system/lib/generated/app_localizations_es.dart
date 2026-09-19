@@ -860,7 +860,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get onboardingSkip => 'OMITIR';
 
   @override
-  String get onboardingWelcomeTitle => 'Cuántos meses\ncubre tu dinero.';
+  String get onboardingWelcomeTitle =>
+      'Deja de adivinar\ncuánto te dura el dinero.';
 
   @override
   String get onboardingWelcomeBody => 'Sin cuenta. Sin conexión bancaria.';
@@ -873,7 +874,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get onboardingPrivacyBody =>
-      'Nada sale de tu teléfono. No hay servidor que pueda leerlo.';
+      'No hay servidor, así que no hay nada que filtrar.';
 
   @override
   String get onboardingPrivacyEncrypted => 'Cifrado en el dispositivo';
@@ -891,11 +892,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get onboardingIUnderstand => 'ENTENDIDO';
 
   @override
-  String get onboardingFirstActionTitle => 'Empieza con lo\nque tienes ahora.';
+  String get onboardingFirstActionTitle => 'Un número y\nya está listo.';
 
   @override
   String get onboardingFirstActionBody =>
-      'Tu saldo en efectivo es todo lo que hace falta.';
+      'Solo tu saldo en efectivo. Nada más.';
 
   @override
   String get onboardingAddMyBalance => 'AÑADIR MI SALDO';

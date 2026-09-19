@@ -860,7 +860,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get onboardingSkip => 'PASSER';
 
   @override
-  String get onboardingWelcomeTitle => 'Combien de mois\nvotre argent tient.';
+  String get onboardingWelcomeTitle =>
+      'Ne devinez plus\ncombien de temps votre argent tient.';
 
   @override
   String get onboardingWelcomeBody => 'Sans compte. Sans connexion bancaire.';
@@ -873,7 +874,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get onboardingPrivacyBody =>
-      'Rien ne quitte votre téléphone. Aucun serveur ne peut le lire.';
+      'Il n\'y a pas de serveur, donc rien à divulguer.';
 
   @override
   String get onboardingPrivacyEncrypted => 'Chiffré sur l\'appareil';
@@ -893,11 +894,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get onboardingIUnderstand => 'COMPRIS';
 
   @override
-  String get onboardingFirstActionTitle => 'Commencez par ce\nque vous avez.';
+  String get onboardingFirstActionTitle => 'Un chiffre et\nc\'est configuré.';
 
   @override
-  String get onboardingFirstActionBody =>
-      'Votre solde suffit à afficher votre chiffre.';
+  String get onboardingFirstActionBody => 'Juste votre solde. Rien d\'autre.';
 
   @override
   String get onboardingAddMyBalance => 'SAISIR MON SOLDE';

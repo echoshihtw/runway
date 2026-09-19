@@ -839,7 +839,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingSkip => '跳过';
 
   @override
-  String get onboardingWelcomeTitle => '你的錢\n能撐幾個月。';
+  String get onboardingWelcomeTitle => '別再猜\n你的錢能撐多久。';
 
   @override
   String get onboardingWelcomeBody => '不用註冊。不連結銀行。';
@@ -851,7 +851,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingPrivacyTitle => '你的数据，\n只在你手机里。';
 
   @override
-  String get onboardingPrivacyBody => '資料不會離開你的手機。沒有伺服器能讀取。';
+  String get onboardingPrivacyBody => '沒有伺服器，也就沒有外洩的風險。';
 
   @override
   String get onboardingPrivacyEncrypted => '在手机上加密';
@@ -869,10 +869,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingIUnderstand => '了解';
 
   @override
-  String get onboardingFirstActionTitle => '從你現在有的\n開始。';
+  String get onboardingFirstActionTitle => '一個數字\n就設定好了。';
 
   @override
-  String get onboardingFirstActionBody => '只要現金餘額，就能看到數字。';
+  String get onboardingFirstActionBody => '只要現金餘額，其他都不用。';
 
   @override
   String get onboardingAddMyBalance => '输入我的余额';
@@ -1836,7 +1836,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get onboardingSkip => '跳過';
 
   @override
-  String get onboardingWelcomeTitle => '你的錢\n能撐幾個月。';
+  String get onboardingWelcomeTitle => '別再猜\n你的錢能撐多久。';
 
   @override
   String get onboardingWelcomeBody => '不用註冊，也不連銀行。';
@@ -1848,7 +1848,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get onboardingPrivacyTitle => '你的資料，\n只在你手機裡。';
 
   @override
-  String get onboardingPrivacyBody => '資料不會離開你的手機，也沒有伺服器能讀。';
+  String get onboardingPrivacyBody => '沒有伺服器，就沒有外洩的問題。';
 
   @override
   String get onboardingPrivacyEncrypted => '在手機上加密';
@@ -1866,10 +1866,10 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get onboardingIUnderstand => '了解';
 
   @override
-  String get onboardingFirstActionTitle => '從你現在\n手上有的開始。';
+  String get onboardingFirstActionTitle => '一個數字\n就設定完成。';
 
   @override
-  String get onboardingFirstActionBody => '只要輸入現金餘額，數字就出來了。';
+  String get onboardingFirstActionBody => '只要現金餘額，其他都不用。';
 
   @override
   String get onboardingAddMyBalance => '輸入我的餘額';

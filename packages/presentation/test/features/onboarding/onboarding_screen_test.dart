@@ -26,7 +26,10 @@ void main() {
     tester,
   ) async {
     await _pumpOnboarding(tester);
-    expect(find.text('How many months\nyour money covers.'), findsOneWidget);
+    expect(
+      find.text('Stop guessing how long\nyour money lasts.'),
+      findsOneWidget,
+    );
 
     await tester.tap(find.text('GET STARTED'));
     await tester.pumpAndSettle();
@@ -34,14 +37,12 @@ void main() {
 
     await tester.tap(find.text('I UNDERSTAND'));
     await tester.pumpAndSettle();
-    expect(find.text('Start with what\nyou have now.'), findsOneWidget);
+    expect(find.text('One number and\nyou are set up.'), findsOneWidget);
     expect(find.text('ADD MY BALANCE'), findsOneWidget);
     expect(find.text('SKIP'), findsNothing);
   });
 
-  testWidgets('the privacy page carries every privacy promise', (
-    tester,
-  ) async {
+  testWidgets('the privacy page carries every privacy promise', (tester) async {
     await _pumpOnboarding(tester);
     await tester.tap(find.text('GET STARTED'));
     await tester.pumpAndSettle();

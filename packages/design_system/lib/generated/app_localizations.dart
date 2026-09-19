@@ -1694,7 +1694,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingWelcomeTitle.
   ///
   /// In en, this message translates to:
-  /// **'How many months\nyour money covers.'**
+  /// **'Stop guessing how long\nyour money lasts.'**
   String get onboardingWelcomeTitle;
 
   /// No description provided for @onboardingWelcomeBody.
@@ -1718,7 +1718,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingPrivacyBody.
   ///
   /// In en, this message translates to:
-  /// **'Nothing leaves your phone. There is no server to read it.'**
+  /// **'There is no server, so there is nothing to leak.'**
   String get onboardingPrivacyBody;
 
   /// No description provided for @onboardingPrivacyEncrypted.
@@ -1754,13 +1754,13 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingFirstActionTitle.
   ///
   /// In en, this message translates to:
-  /// **'Start with what\nyou have now.'**
+  /// **'One number and\nyou are set up.'**
   String get onboardingFirstActionTitle;
 
   /// No description provided for @onboardingFirstActionBody.
   ///
   /// In en, this message translates to:
-  /// **'Your cash balance is all it takes to see your number.'**
+  /// **'Just your cash balance. Nothing else.'**
   String get onboardingFirstActionBody;
 
   /// No description provided for @onboardingAddMyBalance.

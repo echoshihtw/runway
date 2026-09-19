@@ -856,7 +856,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingSkip => 'SKIP';
 
   @override
-  String get onboardingWelcomeTitle => 'How many months\nyour money covers.';
+  String get onboardingWelcomeTitle =>
+      'Stop guessing how long\nyour money lasts.';
 
   @override
   String get onboardingWelcomeBody => 'No account. No bank connection.';
@@ -869,7 +870,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingPrivacyBody =>
-      'Nothing leaves your phone. There is no server to read it.';
+      'There is no server, so there is nothing to leak.';
 
   @override
   String get onboardingPrivacyEncrypted => 'Encrypted on device';
@@ -887,11 +888,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingIUnderstand => 'I UNDERSTAND';
 
   @override
-  String get onboardingFirstActionTitle => 'Start with what\nyou have now.';
+  String get onboardingFirstActionTitle => 'One number and\nyou are set up.';
 
   @override
   String get onboardingFirstActionBody =>
-      'Your cash balance is all it takes to see your number.';
+      'Just your cash balance. Nothing else.';
 
   @override
   String get onboardingAddMyBalance => 'ADD MY BALANCE';
