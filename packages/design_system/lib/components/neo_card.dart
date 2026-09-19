@@ -68,6 +68,10 @@ class NeoCard extends StatelessWidget {
             ),
             const SizedBox(width: AppSpacing.sm),
           ],
+          // The card decides the case, not the translation. Titles are
+          // written in sentence case and uppercased here, so the voice is the
+          // same on every card and a locale that has no case is untouched —
+          // toUpperCase is the identity on Japanese and Chinese.
           Text(title!.toUpperCase(), style: AppTextStyles.sectionTitle),
           const Spacer(),
           if (trailing != null) trailing!,

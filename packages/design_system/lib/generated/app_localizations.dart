@@ -398,13 +398,13 @@ abstract class AppLocalizations {
   /// No description provided for @language.
   ///
   /// In en, this message translates to:
-  /// **'LANGUAGE'**
+  /// **'Language'**
   String get language;
 
   /// No description provided for @currency.
   ///
   /// In en, this message translates to:
-  /// **'CURRENCY'**
+  /// **'Currency'**
   String get currency;
 
   /// No description provided for @currencySymbolOnly.
@@ -632,7 +632,7 @@ abstract class AppLocalizations {
   /// No description provided for @liabilities.
   ///
   /// In en, this message translates to:
-  /// **'LIABILITIES'**
+  /// **'Liabilities'**
   String get liabilities;
 
   /// No description provided for @noActiveLoans.
@@ -920,7 +920,7 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptions.
   ///
   /// In en, this message translates to:
-  /// **'SUBSCRIPTIONS'**
+  /// **'Subscriptions'**
   String get subscriptions;
 
   /// No description provided for @noSubscriptions.
@@ -1220,7 +1220,7 @@ abstract class AppLocalizations {
   /// No description provided for @current.
   ///
   /// In en, this message translates to:
-  /// **'CURRENT'**
+  /// **'Current'**
   String get current;
 
   /// No description provided for @simulate.
@@ -1232,7 +1232,7 @@ abstract class AppLocalizations {
   /// No description provided for @simHint.
   ///
   /// In en, this message translates to:
-  /// **'CHANGE RENT + LIVING OR ADD INCOME TO SEE THE IMPACT ON RUNWAY'**
+  /// **'Change rent + living or add income to see the impact on runway'**
   String get simHint;
 
   /// No description provided for @simulation.
@@ -1268,7 +1268,7 @@ abstract class AppLocalizations {
   /// No description provided for @monthlyBudget.
   ///
   /// In en, this message translates to:
-  /// **'MONTHLY BUDGET'**
+  /// **'Monthly budget'**
   String get monthlyBudget;
 
   /// No description provided for @rentFixed.
@@ -1652,7 +1652,7 @@ abstract class AppLocalizations {
   /// No description provided for @thisMonth.
   ///
   /// In en, this message translates to:
-  /// **'THIS MONTH'**
+  /// **'This month'**
   String get thisMonth;
 
   /// No description provided for @cashIn.

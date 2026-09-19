@@ -153,10 +153,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get highLoad => 'HIGH LOAD';
 
   @override
-  String get language => 'LANGUAGE';
+  String get language => 'Language';
 
   @override
-  String get currency => 'CURRENCY';
+  String get currency => 'Currency';
 
   @override
   String get currencySymbolOnly =>
@@ -280,7 +280,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Stops future entries. The payments already logged are kept.';
 
   @override
-  String get liabilities => 'LIABILITIES';
+  String get liabilities => 'Liabilities';
 
   @override
   String get noActiveLoans => '> NO ACTIVE LOANS';
@@ -429,7 +429,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get change => 'CHANGE';
 
   @override
-  String get subscriptions => 'SUBSCRIPTIONS';
+  String get subscriptions => 'Subscriptions';
 
   @override
   String get noSubscriptions => '> NO ACTIVE SUBSCRIPTIONS';
@@ -586,14 +586,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get whatIfAnalysis => 'WHAT-IF ANALYSIS';
 
   @override
-  String get current => 'CURRENT';
+  String get current => 'Current';
 
   @override
   String get simulate => 'Plan';
 
   @override
   String get simHint =>
-      'CHANGE RENT + LIVING OR ADD INCOME TO SEE THE IMPACT ON RUNWAY';
+      'Change rent + living or add income to see the impact on runway';
 
   @override
   String get simulation => 'Scenario';
@@ -611,7 +611,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get close => 'CLOSE';
 
   @override
-  String get monthlyBudget => 'MONTHLY BUDGET';
+  String get monthlyBudget => 'Monthly budget';
 
   @override
   String get rentFixed => 'RENT / FIXED';
@@ -834,7 +834,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get thisMonth => 'THIS MONTH';
+  String get thisMonth => 'This month';
 
   @override
   String get cashIn => 'IN';
