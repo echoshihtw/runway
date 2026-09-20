@@ -7,6 +7,11 @@ import 'app_colors.dart';
 /// BLUE              = UI CHROME — borders, accents, structural
 /// WHITE/SMOKE       = ALL OTHER NUMBERS — neutral facts
 abstract final class SC {
+  // ── Surfaces ──────────────────────────────────
+  /// The ground the page sits on. Named here so presentation can scrim or
+  /// fade content into it without reaching past the semantic layer.
+  static const pageGround = AppColors.background;
+
   // ── Primary meanings ──────────────────────────
   static const life    = AppColors.neonGreen;   // mint — survival
   static const cost    = AppColors.hotPink;     // pink — burn/outflow

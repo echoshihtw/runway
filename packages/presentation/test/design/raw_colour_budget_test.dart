@@ -42,7 +42,6 @@ const budget = <String, int>{
   'features/loans/start_loan_creation.dart': 1,
   'features/subscriptions/add_subscription_sheet.dart': 1,
   'features/transactions/show_entry_sheet.dart': 1,
-  'router/app_router.dart': 1,
   'shared/add_strip.dart': 1,
 };
 
