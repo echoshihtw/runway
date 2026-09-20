@@ -24,13 +24,28 @@ final appRouter = GoRouter(
       builder: (context, state, shell) => _ScaffoldWithNav(shell: shell),
       branches: [
         StatefulShellBranch(
-          routes: [GoRoute(path: '/dashboard', builder: (_, __) => const DashboardScreen())],
+          routes: [
+            GoRoute(
+              path: '/dashboard',
+              builder: (_, __) => const DashboardScreen(),
+            ),
+          ],
         ),
         StatefulShellBranch(
-          routes: [GoRoute(path: '/transactions', builder: (_, __) => const TransactionsScreen())],
+          routes: [
+            GoRoute(
+              path: '/transactions',
+              builder: (_, __) => const TransactionsScreen(),
+            ),
+          ],
         ),
         StatefulShellBranch(
-          routes: [GoRoute(path: '/scenarios', builder: (_, __) => const ScenariosScreen())],
+          routes: [
+            GoRoute(
+              path: '/scenarios',
+              builder: (_, __) => const ScenariosScreen(),
+            ),
+          ],
         ),
       ],
     ),
@@ -61,7 +76,7 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
     final currentIndex = widget.shell.currentIndex;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: SC.pageGround,
       body: GestureDetector(
         onHorizontalDragEnd: _onHorizontalDragEnd,
         behavior: HitTestBehavior.translucent,
@@ -82,14 +97,36 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
               ),
             ),
 
-            // Labelled page indicator: tap a label or swipe
+            // Labelled page indicator: tap a label or swipe. The scrim fades
+            // the page into the background colour behind it. The indicator
+            // floats over scrolling content, so without one its labels land on
+            // top of whatever happens to be there — on the dashboard at rest,
+            // the liabilities figures, which read as a collision rather than a
+            // layer. The labels stay where they were: the safe-area inset moves
+            // from the Positioned to the padding inside it.
             Positioned(
               left: 0,
               right: 0,
-              bottom: bottomSafe,
-              child: PageIndicator(
-                currentIndex: currentIndex,
-                onSelect: widget.shell.goBranch,
+              bottom: 0,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [SC.pageGround.withAlpha(0), SC.pageGround],
+                    stops: const [0, 0.55],
+                  ),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    top: AppSpacing.xxxl,
+                    bottom: bottomSafe,
+                  ),
+                  child: PageIndicator(
+                    currentIndex: currentIndex,
+                    onSelect: widget.shell.goBranch,
+                  ),
+                ),
               ),
             ),
           ],
