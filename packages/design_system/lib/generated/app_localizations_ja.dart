@@ -296,7 +296,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get newLoan => '+ ローン';
 
   @override
-  String get spendOnWhat => '何に使った？';
+  String get spendOnWhat => '何に使いましたか？';
 
   @override
   String get presetCoffee => 'コーヒー';

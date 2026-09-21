@@ -667,7 +667,7 @@ abstract class AppLocalizations {
   /// No description provided for @spendOnWhat.
   ///
   /// In en, this message translates to:
-  /// **'What did you spend on?'**
+  /// **'What was it for?'**
   String get spendOnWhat;
 
   /// No description provided for @presetCoffee.

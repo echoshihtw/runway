@@ -302,7 +302,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get newLoan => '+ PRÉSTAMO';
 
   @override
-  String get spendOnWhat => '¿En qué gastaste?';
+  String get spendOnWhat => '¿Para qué fue?';
 
   @override
   String get presetCoffee => 'CAFÉ';

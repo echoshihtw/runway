@@ -301,7 +301,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newLoan => '+ LOAN';
 
   @override
-  String get spendOnWhat => 'What did you spend on?';
+  String get spendOnWhat => 'What was it for?';
 
   @override
   String get presetCoffee => 'COFFEE';

@@ -296,7 +296,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get newLoan => '+ 貸款';
 
   @override
-  String get spendOnWhat => '這筆花在什麼？';
+  String get spendOnWhat => '這筆是花在什麼？';
 
   @override
   String get presetCoffee => '咖啡';

@@ -129,7 +129,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.text('What did you spend on?'),
+      find.text('What was it for?'),
       findsOneWidget,
       reason: 'the step is the instruction; tapping it should do the thing',
     );
