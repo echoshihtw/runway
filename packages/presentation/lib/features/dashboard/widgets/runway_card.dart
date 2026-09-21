@@ -59,85 +59,90 @@ class RunwayCard extends ConsumerWidget {
       ),
       padding: const EdgeInsets.all(AppSpacing.cardPadding),
       child: Column(
+        children: [
+          const SizedBox(height: AppSpacing.sm),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
             children: [
-              const SizedBox(height: AppSpacing.sm),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: [
-                  Text(
-                    fmtRunwayMonths(model.runwayMonths),
-                    style: AppTextStyles.heroLarge.copyWith(
-                      color: color,
-                      fontSize: 72,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  Text(
-                    ' ${fmtRunwayMonthUnit(model.runwayMonths)}',
-                    style: AppTextStyles.metric.copyWith(
-                      color: color.withAlpha(180),
-                    ),
-                  ),
-                ],
+              Text(
+                fmtRunwayMonths(model.runwayMonths),
+                style: AppTextStyles.heroLarge.copyWith(
+                  color: color,
+                  fontSize: 72,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
               Text(
-                known
-                    ? switch (model.basis) {
-                        RunwayBasis.budget => l10n.runwayBasisBudget,
-                        RunwayBasis.spending => l10n.runwayBasisSpending,
-                        RunwayBasis.assumption => l10n.runwayBasisAssumption,
-                      }
-                    : l10n.runwayNeedsCosts,
-                textAlign: TextAlign.center,
-                style: AppTextStyles.bodySmall,
-              ),
-              if (known) ...[
-                const SizedBox(height: AppSpacing.md),
-                PixelBadge(label: statusLabel, color: color),
-              ],
-              if (model.hasSustainableProjection) ...[
-                const SizedBox(height: AppSpacing.sm),
-                Text(
-                  fmtSustainability(),
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.caption.copyWith(
-                    color: model.isSustainableIndefinitely
-                        ? AppColors.green
-                        : AppColors.gold,
-                  ),
+                ' ${fmtRunwayMonthUnit(model.runwayMonths)}',
+                style: AppTextStyles.metric.copyWith(
+                  color: color.withAlpha(180),
                 ),
-              ],
-              const SizedBox(height: AppSpacing.md),
-              Divider(color: Colors.white.withAlpha(15), height: 1),
-              const SizedBox(height: AppSpacing.md),
-              Row(
-                children: [
-                  Expanded(
-                    child: _stat(
-                      l10n.cash,
-                      // An unloaded ledger has no balance to state. The
-                      // runway already says so with the same mark.
-                      model.cashIsKnown
-                          ? '$symbol ${nf.format(model.currentCash)}'
-                          : '—',
-                      model.cashIsKnown
-                          ? AppColors.green
-                          : AppColors.textSecondary,
-                    ),
-                  ),
-                  Expanded(
-                    child: _stat(
-                      l10n.runOut,
-                      fmtDate(model.runOutDate),
-                      AppColors.textSecondary,
-                    ),
-                  ),
-                ],
               ),
-              const SizedBox(height: AppSpacing.xs),
             ],
+          ),
+          Text(
+            known
+                ? switch (model.basis) {
+                    RunwayBasis.budget => l10n.runwayBasisBudget,
+                    RunwayBasis.spending => l10n.runwayBasisSpending,
+                    RunwayBasis.assumption => l10n.runwayBasisAssumption,
+                  }
+                : l10n.runwayNeedsCosts,
+            textAlign: TextAlign.center,
+            style: AppTextStyles.bodySmall,
+          ),
+          if (known) ...[
+            const SizedBox(height: AppSpacing.md),
+            PixelBadge(label: statusLabel, color: color),
+          ],
+          if (model.hasSustainableProjection) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              fmtSustainability(),
+              textAlign: TextAlign.center,
+              style: AppTextStyles.caption.copyWith(
+                color: model.isSustainableIndefinitely
+                    ? AppColors.green
+                    : AppColors.gold,
+              ),
+            ),
+          ],
+          const SizedBox(height: AppSpacing.md),
+          Divider(color: Colors.white.withAlpha(15), height: 1),
+          const SizedBox(height: AppSpacing.md),
+          Row(
+            children: [
+              Expanded(
+                child: _stat(
+                  l10n.cash,
+                  // An unloaded ledger has no balance to state. The
+                  // runway already says so with the same mark.
+                  model.cashIsKnown
+                      ? '$symbol ${nf.format(model.currentCash)}'
+                      : '—',
+                  // Negative cash is not life. An overdrawn balance in
+                  // the mint used for cash and runway reads as "you are
+                  // fine" at the exact moment that is least true.
+                  !model.cashIsKnown
+                      ? AppColors.textSecondary
+                      : model.currentCash < 0
+                      ? SC.numberCost
+                      : SC.numberLife,
+                ),
+              ),
+              Expanded(
+                child: _stat(
+                  l10n.runOut,
+                  fmtDate(model.runOutDate),
+                  AppColors.textSecondary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.xs),
+        ],
       ),
     );
   }

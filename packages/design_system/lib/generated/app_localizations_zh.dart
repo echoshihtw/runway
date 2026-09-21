@@ -72,10 +72,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noEntries => '還沒有任何紀錄\n點 + 新增你的第一筆資料';
 
   @override
-  String get newLogEntry => '> 新增一筆';
+  String get newLogEntry => '新增一筆';
 
   @override
-  String get modifyEntry => '> 編輯紀錄';
+  String get modifyEntry => '編輯紀錄';
 
   @override
   String get type => '類型';
@@ -99,7 +99,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get abort => '取消';
 
   @override
-  String get purgeEntry => '> 要刪除這筆嗎？';
+  String get purgeEntry => '要刪除這筆嗎？';
 
   @override
   String get scenarioSimulator => '情境規劃';
@@ -279,7 +279,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get liabilities => '負債';
 
   @override
-  String get noActiveLoans => '> 目前沒有貸款';
+  String get noActiveLoans => '目前沒有貸款';
 
   @override
   String get newLoan => '+ 貸款';
@@ -364,7 +364,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get repay => '還款';
 
   @override
-  String get repayTitle => '> 還款';
+  String get repayTitle => '還款';
 
   @override
   String get extra => '額外';
@@ -427,7 +427,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get subscriptions => '訂閱';
 
   @override
-  String get noSubscriptions => '> 目前沒有訂閱';
+  String get noSubscriptions => '目前沒有訂閱';
 
   @override
   String get subscriptionName => '名稱';

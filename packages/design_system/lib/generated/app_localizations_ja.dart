@@ -72,10 +72,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get noEntries => 'No entries yet\nTap + ADD to log your first entry';
 
   @override
-  String get newLogEntry => '> 新規エントリー';
+  String get newLogEntry => '新規エントリー';
 
   @override
-  String get modifyEntry => '> エントリー修正';
+  String get modifyEntry => 'エントリー修正';
 
   @override
   String get type => 'タイプ';
@@ -99,7 +99,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get abort => '中止';
 
   @override
-  String get purgeEntry => '> このエントリーを削除？';
+  String get purgeEntry => 'このエントリーを削除？';
 
   @override
   String get scenarioSimulator => 'シナリオシミュレーター';
@@ -279,7 +279,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get liabilities => '負債';
 
   @override
-  String get noActiveLoans => '> アクティブなローンなし';
+  String get noActiveLoans => 'アクティブなローンなし';
 
   @override
   String get newLoan => '+ ローン';
@@ -365,7 +365,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get repay => '返済';
 
   @override
-  String get repayTitle => '> 返済';
+  String get repayTitle => '返済';
 
   @override
   String get extra => '追加';
@@ -428,7 +428,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get subscriptions => 'サブスクリプション';
 
   @override
-  String get noSubscriptions => '> アクティブなサブスクなし';
+  String get noSubscriptions => 'アクティブなサブスクなし';
 
   @override
   String get subscriptionName => '名前';

@@ -9,7 +9,7 @@ import 'package:presentation/features/paywall/paywall_screen.dart';
 import 'package:presentation/features/transactions/widgets/loan_wizard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// "> NO ACTIVE LOANS" was inert text, and it is seen exactly when someone
+/// "NO ACTIVE LOANS" was inert text, and it is seen exactly when someone
 /// does not yet know the feature exists. Creating a loan lived only in the add
 /// menu — a tap and a decision away from the card that owns loans.
 class _Loans implements LoanRepository {
@@ -124,7 +124,7 @@ void main() {
   ) async {
     await _pump(tester, const []);
 
-    expect(find.text('> NO ACTIVE LOANS'), findsOneWidget);
+    expect(find.text('NO ACTIVE LOANS'), findsOneWidget);
     expect(find.text('+ LOAN'), findsOneWidget);
 
     await tester.tap(find.text('+ LOAN'));
