@@ -20,21 +20,33 @@ class AddStrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    // The strip reads as static text without this: nothing says the row is
+    // the way to add one more. The label is a plain string, so the child's
+    // own node is dropped and the strip announces itself once.
+    return Semantics(
+      button: true,
+      label: label,
       onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        width: double.infinity,
-        // 44pt is Apple's minimum. The strip reads as one control all the way
-        // down to the gap beneath the label, so the gap belongs inside the
-        // target rather than just outside it.
-        constraints: const BoxConstraints(minHeight: 44),
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm + 2),
-        decoration: const BoxDecoration(
-          border: Border(top: BorderSide(color: AppColors.cardBorder)),
-        ),
-        child: Center(
-          child: Text(label, style: AppTextStyles.label.copyWith(color: color)),
+      excludeSemantics: true,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Container(
+          width: double.infinity,
+          // 44pt is Apple's minimum. The strip reads as one control all the way
+          // down to the gap beneath the label, so the gap belongs inside the
+          // target rather than just outside it.
+          constraints: const BoxConstraints(minHeight: 44),
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm + 2),
+          decoration: const BoxDecoration(
+            border: Border(top: BorderSide(color: AppColors.cardBorder)),
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: AppTextStyles.label.copyWith(color: color),
+            ),
+          ),
         ),
       ),
     );

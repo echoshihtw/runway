@@ -23,24 +23,33 @@ class NeoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    // A card that does nothing when tapped must not claim to be a control,
+    // so the role is added only when there is something to activate. The
+    // contents keep their own nodes: a card holds figures worth reading one
+    // at a time, unlike a button, which is a label.
+    return Semantics(
+      button: onTap != null,
       onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
-          border: Border.all(color: AppColors.cardBorder, width: 1),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (title != null) _buildHeader(),
-            Padding(
-              padding: padding ?? const EdgeInsets.all(AppSpacing.cardPadding),
-              child: child,
-            ),
-          ],
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+            border: Border.all(color: AppColors.cardBorder, width: 1),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (title != null) _buildHeader(),
+              Padding(
+                padding:
+                    padding ?? const EdgeInsets.all(AppSpacing.cardPadding),
+                child: child,
+              ),
+            ],
+          ),
         ),
       ),
     );
