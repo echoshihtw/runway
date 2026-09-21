@@ -113,7 +113,11 @@ class RunwayCard extends ConsumerWidget {
             Text(
               l10n.runsOut(fmtDate(model.runOutDate)),
               textAlign: TextAlign.center,
-              style: AppTextStyles.metricCaption,
+              // Bigger than the sentence above it, which is the order of
+              // importance: that line explains the basis, this one restates
+              // the number. At caption size it read as a footnote to the
+              // footnote.
+              style: AppTextStyles.metricSmall.copyWith(color: SC.captionColor),
             ),
           if (known) ...[
             const SizedBox(height: AppSpacing.md),
