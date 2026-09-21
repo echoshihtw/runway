@@ -505,13 +505,13 @@ abstract class AppLocalizations {
   /// No description provided for @navHud.
   ///
   /// In en, this message translates to:
-  /// **'Home'**
+  /// **'Overview'**
   String get navHud;
 
   /// No description provided for @navLog.
   ///
   /// In en, this message translates to:
-  /// **'LOG'**
+  /// **'Log'**
   String get navLog;
 
   /// No description provided for @navSim.

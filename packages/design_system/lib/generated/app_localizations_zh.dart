@@ -214,7 +214,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get navHud => '總覽';
 
   @override
-  String get navLog => 'LOG';
+  String get navLog => '紀錄';
 
   @override
   String get navSim => '規劃';

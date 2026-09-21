@@ -213,10 +213,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loading => 'LOADING...';
 
   @override
-  String get navHud => 'Home';
+  String get navHud => 'Overview';
 
   @override
-  String get navLog => 'LOG';
+  String get navLog => 'Log';
 
   @override
   String get navSim => 'Plan';
