@@ -196,7 +196,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get stepBudgetHint => '房租 + 生活費';
 
   @override
-  String get stepExpenseLabel => '紀錄第一筆支出';
+  String get stepExpenseLabel => '記錄第一筆支出';
 
   @override
   String get stepExpenseHint => '追蹤你的花費';
@@ -254,10 +254,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get subscriptionReviewEach => '逐筆確認';
 
   @override
-  String get subscriptionPaidYes => '是，紀錄下來';
+  String get subscriptionPaidYes => '是，記錄下來';
 
   @override
-  String get subscriptionChargeFailed => '無法紀錄。請檢查訂閱金額。';
+  String get subscriptionChargeFailed => '無法記錄。請檢查訂閱金額。';
 
   @override
   String get subscriptionSaveFailed => '無法儲存訂閱。尚未新增。';
@@ -284,7 +284,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deleteSubscription => '刪除訂閱';
 
   @override
-  String get deleteSubscriptionKeepsEntries => '停止未來的紀錄。已紀錄的付款會保留。';
+  String get deleteSubscriptionKeepsEntries => '停止未來的紀錄。已記錄的付款會保留。';
 
   @override
   String get liabilities => '負債';

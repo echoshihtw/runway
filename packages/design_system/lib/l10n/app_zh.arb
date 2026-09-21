@@ -71,7 +71,7 @@
   "stepBalanceHint": "你現在有多少錢？",
   "stepBudgetLabel": "設定每月預算",
   "stepBudgetHint": "房租 + 生活費",
-  "stepExpenseLabel": "紀錄第一筆支出",
+  "stepExpenseLabel": "記錄第一筆支出",
   "stepExpenseHint": "追蹤你的花費",
   "stepSimLabel": "試試模擬器",
   "stepSimHint": "減少支出會怎樣？",
@@ -100,8 +100,8 @@
       }
     }
   },
-  "subscriptionPaidYes": "是，紀錄下來",
-  "subscriptionChargeFailed": "無法紀錄。請檢查訂閱金額。",
+  "subscriptionPaidYes": "是，記錄下來",
+  "subscriptionChargeFailed": "無法記錄。請檢查訂閱金額。",
   "subscriptionSaveFailed": "無法儲存訂閱。尚未新增。",
   "loanSaveFailed": "貸款沒存成功，還沒加進去。",
   "subscriptionPaidNo": "否",
@@ -124,7 +124,7 @@
     }
   },
   "deleteSubscription": "刪除訂閱",
-  "deleteSubscriptionKeepsEntries": "停止未來的紀錄。已紀錄的付款會保留。",
+  "deleteSubscriptionKeepsEntries": "停止未來的紀錄。已記錄的付款會保留。",
   "liabilities": "負債",
   "noActiveLoans": "目前沒有貸款",
   "newLoan": "+ 貸款",
