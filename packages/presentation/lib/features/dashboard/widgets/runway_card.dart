@@ -52,13 +52,23 @@ class RunwayCard extends ConsumerWidget {
     String fmtDate(DateTime? d) =>
         d == null ? '—' : DateFormat('MMM yyyy').format(d).toUpperCase();
 
+    // The most important card on the screen was also the plainest (#114).
+    // Every card below it earns a solid border, a 3pt accent bar and a
+    // divider under its title, while the hero had a 1pt rim at alpha 40 and
+    // nothing else, so the hierarchy rested on font size alone.
+    //
+    // It outranks its children in two more dimensions now: a rim that is
+    // wider and four times as present, and room inside that none of them
+    // get. The rim is the status colour, which makes this the one card whose
+    // edge means something, and the extra padding buys the 72pt figure air
+    // that a subordinate card cannot spend.
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
         color: AppColors.surface,
-        border: Border.all(color: color.withAlpha(40), width: 1),
+        border: Border.all(color: color.withAlpha(160), width: 1.5),
       ),
-      padding: const EdgeInsets.all(AppSpacing.cardPadding),
+      padding: const EdgeInsets.all(AppSpacing.xl),
       child: Column(
         children: [
           const SizedBox(height: AppSpacing.sm),
