@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:design_system/design_system.dart';
+
+import '../../router/nav_metrics.dart';
 import 'package:application/application.dart';
 import 'package:domain/domain.dart';
 import 'widgets/transaction_row.dart';
@@ -26,27 +28,33 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
       backgroundColor: AppColors.background,
       // One button, one job: ask what was bought. Loans and subscriptions
       // are created from the cards that own them.
-      floatingActionButton: GestureDetector(
-        key: const Key('add-fab'),
-        onTap: () => showDailySpendSheet(context, ref),
-        child: Container(
-          width: 56,
-          height: 56,
-          decoration: BoxDecoration(
-            color: AppColors.neonGreen,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.neonGreen.withAlpha(80),
-                blurRadius: 20,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: const Icon(
-            Icons.add_rounded,
-            color: AppColors.background,
-            size: 26,
+      // Lifted clear of the page indicator's band. At the default position
+      // the scrim behind the labels covered its lower half and it could not
+      // be tapped on a device (#201).
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: kNavBandHeight),
+        child: GestureDetector(
+          key: const Key('add-fab'),
+          onTap: () => showDailySpendSheet(context, ref),
+          child: Container(
+            width: 56,
+            height: 56,
+            decoration: BoxDecoration(
+              color: AppColors.neonGreen,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.neonGreen.withAlpha(80),
+                  blurRadius: 20,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: const Icon(
+              Icons.add_rounded,
+              color: AppColors.background,
+              size: 26,
+            ),
           ),
         ),
       ),

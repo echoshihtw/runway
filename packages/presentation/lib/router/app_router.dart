@@ -8,6 +8,7 @@ import '../features/onboarding/onboarding_screen.dart';
 import '../features/dashboard/dashboard_screen.dart';
 import '../features/transactions/transactions_screen.dart';
 import '../features/scenarios/scenarios_screen.dart';
+import 'nav_metrics.dart';
 import 'page_indicator.dart';
 
 // Global keys for coach mark tour
@@ -97,36 +98,38 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
               ),
             ),
 
-            // Labelled page indicator: tap a label or swipe. The scrim fades
-            // the page into the background colour behind it. The indicator
-            // floats over scrolling content, so without one its labels land on
-            // top of whatever happens to be there — on the dashboard at rest,
-            // the liabilities figures, which read as a collision rather than a
-            // layer. The labels stay where they were: the safe-area inset moves
-            // from the Positioned to the padding inside it.
+            // The scrim fades the page into the background colour behind the
+            // labels, which float over scrolling content and would otherwise
+            // land on top of whatever happened to be there. Purely decorative,
+            // and behind an IgnorePointer so it can never take a tap meant for
+            // the screen underneath.
             Positioned(
               left: 0,
               right: 0,
               bottom: 0,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [SC.pageGround.withAlpha(0), SC.pageGround],
-                    stops: const [0, 0.55],
+              child: IgnorePointer(
+                child: Container(
+                  height: kNavBandHeight + bottomSafe,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [SC.pageGround.withAlpha(0), SC.pageGround],
+                      stops: const [0, 0.55],
+                    ),
                   ),
                 ),
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    top: AppSpacing.xxxl,
-                    bottom: bottomSafe,
-                  ),
-                  child: PageIndicator(
-                    currentIndex: currentIndex,
-                    onSelect: widget.shell.goBranch,
-                  ),
-                ),
+              ),
+            ),
+
+            // Labelled page indicator: tap a label or swipe.
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: bottomSafe,
+              child: PageIndicator(
+                currentIndex: currentIndex,
+                onSelect: widget.shell.goBranch,
               ),
             ),
           ],
