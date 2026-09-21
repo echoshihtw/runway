@@ -29,7 +29,7 @@ const budget = <String, int>{
   'features/paywall/paywall_screen.dart': 8,
   'features/dashboard/widgets/runway_card.dart': 3,
   'features/paywall/pro_locked_card.dart': 6,
-  'features/transactions/widgets/transaction_row.dart': 5,
+  'features/transactions/widgets/transaction_row.dart': 3,
   'features/config/widgets/delete_all_data_card.dart': 4,
   'features/transactions/daily_spend_sheet.dart': 4,
   'features/subscriptions/widgets/subscription_prompt_card.dart': 3,

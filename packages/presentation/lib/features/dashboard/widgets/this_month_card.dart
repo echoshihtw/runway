@@ -171,10 +171,15 @@ class _BudgetRow extends StatelessWidget {
                         : SC.life,
                   ),
                 ),
-                // The working, for anyone who wants it. "of" rather than a
-                // slash: a slash reads as a fraction to be computed, which
-                // is what it was when it was the headline.
-                if (showProgress)
+                // The working, but only where there is nowhere else to put
+                // it. The living row opens a sheet that already states the
+                // spend against the budget, draws it as a bar and turns it
+                // into a daily figure, so repeating it here was the card
+                // answering a question its own chevron answers better.
+                //
+                // Rent has no sheet, so on the one occasion it has something
+                // to show — going over — it shows it inline.
+                if (showProgress && onTap == null)
                   Text(
                     l10n.spentOfBudget(
                       fmt(bucket.spentThisMonth),
