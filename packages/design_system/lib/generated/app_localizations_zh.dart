@@ -299,10 +299,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get spendOnWhat => '剛剛買了什麼？';
 
   @override
-  String get moneyCameInInstead => '入帳？';
+  String get moneyCameInInstead => '剛剛收到錢？';
 
   @override
-  String get logIncome => '記錄收入';
+  String get logIncome => '新增收入';
 
   @override
   String get presetCoffee => '咖啡';
