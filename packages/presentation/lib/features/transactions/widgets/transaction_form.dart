@@ -222,7 +222,7 @@ class _TransactionFormState extends State<TransactionForm> {
             // Title
             Text(
               widget.existing == null
-                  ? l10n.newLogEntry.toUpperCase()
+                  ? l10n.newLogEntry
                   : l10n.modifyEntry.toUpperCase(),
               style: AppTextStyles.title,
             ),

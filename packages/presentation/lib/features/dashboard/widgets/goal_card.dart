@@ -106,6 +106,18 @@ class GoalCard extends ConsumerWidget {
         if (cashTarget != null) ...[
           const SizedBox(height: AppSpacing.sm),
           _CashRow(label: l10n.goalCashTarget, value: money(cashTarget)),
+          // The target is the goal in months times the monthly cost, and
+          // nobody typed it. Unstated, an unround figure nobody entered
+          // reads as arbitrary — so the card shows its own arithmetic, the
+          // way the budget card in settings does.
+          const SizedBox(height: AppSpacing.xxs),
+          Text(
+            l10n.goalCashTargetFrom(
+              goal.targetMonths,
+              money(model.totalMonthlyOutflow),
+            ),
+            style: AppTextStyles.caption,
+          ),
           if (!achieved && cashToGo != null && cashToGo > 0) ...[
             const SizedBox(height: AppSpacing.xxs),
             _CashRow(

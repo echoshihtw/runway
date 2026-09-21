@@ -144,7 +144,7 @@ void main() {
     await tester.tap(_addButton);
     await tester.pumpAndSettle();
 
-    expect(find.text('WHAT DID YOU SPEND ON?'), findsOneWidget);
+    expect(find.text('What did you spend on?'), findsOneWidget);
     for (final label in const [
       'COFFEE',
       'LUNCH',

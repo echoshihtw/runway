@@ -253,7 +253,7 @@ abstract class AppLocalizations {
   /// No description provided for @newLogEntry.
   ///
   /// In en, this message translates to:
-  /// **'NEW LOG ENTRY'**
+  /// **'New log entry'**
   String get newLogEntry;
 
   /// No description provided for @modifyEntry.
@@ -667,7 +667,7 @@ abstract class AppLocalizations {
   /// No description provided for @spendOnWhat.
   ///
   /// In en, this message translates to:
-  /// **'WHAT DID YOU SPEND ON?'**
+  /// **'What did you spend on?'**
   String get spendOnWhat;
 
   /// No description provided for @presetCoffee.
@@ -835,7 +835,7 @@ abstract class AppLocalizations {
   /// No description provided for @loanWizardTitle.
   ///
   /// In en, this message translates to:
-  /// **'LOAN WIZARD'**
+  /// **'Loan wizard'**
   String get loanWizardTitle;
 
   /// No description provided for @whoAndHowMuch.
@@ -1021,13 +1021,13 @@ abstract class AppLocalizations {
   /// No description provided for @editSubscription.
   ///
   /// In en, this message translates to:
-  /// **'EDIT SUBSCRIPTION'**
+  /// **'Edit subscription'**
   String get editSubscription;
 
   /// No description provided for @addSubscription.
   ///
   /// In en, this message translates to:
-  /// **'NEW SUBSCRIPTION'**
+  /// **'New subscription'**
   String get addSubscription;
 
   /// No description provided for @personal.
@@ -1087,7 +1087,7 @@ abstract class AppLocalizations {
   /// No description provided for @repayLoan.
   ///
   /// In en, this message translates to:
-  /// **'REPAY LOAN'**
+  /// **'Repay loan'**
   String get repayLoan;
 
   /// No description provided for @repaymentAmount.
@@ -1297,7 +1297,7 @@ abstract class AppLocalizations {
   /// No description provided for @livingExpenses.
   ///
   /// In en, this message translates to:
-  /// **'LIVING EXPENSES'**
+  /// **'Living expenses'**
   String get livingExpenses;
 
   /// No description provided for @budgetRuleHint.
@@ -1455,6 +1455,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Any recurring or expected income, such as retainers, contracts, creator income or dividends.'**
   String get futureInflowHint;
+
+  /// In the Forecast card: income is deliberately outside the runway
+  ///
+  /// In en, this message translates to:
+  /// **'Income does not move the runway. The runway is what your cash covers if income stopped; this says whether the month adds to it.'**
+  String get forecastDoesNotMoveRunway;
 
   /// No description provided for @runwayGoal.
   ///
@@ -1701,6 +1707,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Target cash'**
   String get goalCashTarget;
+
+  /// Under Target cash: the arithmetic behind a figure nobody typed
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 month × {cost} a month} other{{count} months × {cost} a month}}'**
+  String goalCashTargetFrom(int count, String cost);
 
   /// No description provided for @goalCashToGo.
   ///

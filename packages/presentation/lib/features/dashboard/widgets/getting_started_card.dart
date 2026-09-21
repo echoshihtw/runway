@@ -152,7 +152,10 @@ class _GettingStartedCardState extends ConsumerState<GettingStartedCard> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(l10n.gettingStarted, style: AppTextStyles.sectionTitle),
+                    Text(
+                      l10n.gettingStarted,
+                      style: AppTextStyles.sectionTitle,
+                    ),
                     Text(
                       l10n.stepsComplete(completedCount, steps.length),
                       style: AppTextStyles.caption,

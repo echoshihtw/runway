@@ -232,6 +232,21 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                                 ),
                                 style: AppTextStyles.caption,
                               ),
+                            // Income is deliberately outside the runway
+                            // (CONTRACTS.md §3.2), and nothing said so.
+                            // Someone enters 3,200 here, watches the runway
+                            // not move, and has to guess whether the app is
+                            // broken or the number means something else. The
+                            // edit hint above explains what counts as income;
+                            // this explains what it does, in the state where
+                            // the figures are actually read.
+                            if (assumptions.hasExpectedMonthlyInflow) ...[
+                              const SizedBox(height: AppSpacing.xs),
+                              Text(
+                                l10n.forecastDoesNotMoveRunway,
+                                style: AppTextStyles.caption,
+                              ),
+                            ],
                             const SizedBox(height: AppSpacing.md),
                             // Wrap, not Row: these buttons are laid out at
                             // their own width, so at large text sizes they ran
@@ -333,7 +348,7 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                                 AppColors.textPrimary,
                               ),
                               _budgetRow(
-                                l10n.livingExpenses,
+                                l10n.livingExpenses.toUpperCase(),
                                 '$symbol ${nf.format(budget.living)}',
                                 AppColors.textPrimary,
                               ),
@@ -341,10 +356,17 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                                 color: AppColors.cardBorder,
                                 height: AppSpacing.lg,
                               ),
+                              // Mint is life: cash and runway. A budget
+                              // subtotal is the opposite of both, and it sat
+                              // in mint on a card about money leaving. It
+                              // sums the two neutral rows above it and is
+                              // scaffolding for the total below, so it takes
+                              // the neutral colour and leaves exactly one
+                              // cost-coloured figure on the card.
                               _budgetRow(
                                 l10n.subtotal,
                                 '$symbol ${nf.format(budget.subtotal)}',
-                                AppColors.green,
+                                SC.numberPrimary,
                               ),
                             ] else ...[
                               Text(l10n.notSet, style: AppTextStyles.caption),
@@ -400,7 +422,7 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                             ),
                             const SizedBox(height: AppSpacing.md),
                             NeoInput(
-                              label: l10n.livingExpenses,
+                              label: l10n.livingExpenses.toUpperCase(),
                               controller: _livingCtrl,
                               inputType: NeoInputType.decimal,
                               keyboardType: TextInputType.number,

@@ -44,7 +44,8 @@ class _SubscriptionPromptCardState
     if (subscription == null) return const SizedBox.shrink();
 
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
-    final amount = '$symbol ${NumberFormat('#,##0', 'en_US').format(charge.amount.value)}';
+    final amount =
+        '$symbol ${NumberFormat('#,##0', 'en_US').format(charge.amount.value)}';
     final date = DateFormat('d MMM').format(charge.date);
 
     return Padding(
@@ -172,7 +173,8 @@ class _SubscriptionPromptCardState
   /// The charge id carries its subscription, so the two stay linked without a
   /// column on the table.
   Subscription? _subscriptionFor(Transaction charge) {
-    for (final s in ref.watch(subscriptionsProvider).value ?? const <Subscription>[]) {
+    for (final s
+        in ref.watch(subscriptionsProvider).value ?? const <Subscription>[]) {
       if (charge.id.startsWith('subchg-${s.id}-')) return s;
     }
     return null;
@@ -245,9 +247,11 @@ class _SubscriptionPromptCardState
       case _NotPaidReason.cancelled:
         // Stops future prompts. The entries already confirmed stay, because
         // those payments happened.
-        await ref.read(editSubscriptionUseCaseProvider).execute(
-          subscription.copyWith(isActive: false, updatedAt: DateTime.now()),
-        );
+        await ref
+            .read(editSubscriptionUseCaseProvider)
+            .execute(
+              subscription.copyWith(isActive: false, updatedAt: DateTime.now()),
+            );
       case _NotPaidReason.priceChanged:
         if (!context.mounted) return;
         await _editSubscription(context, subscription);
@@ -277,17 +281,19 @@ class _SubscriptionPromptCardState
       builder: (_) => SubscriptionForm(
         existing: subscription,
         onSubmit: (name, category, amount, cycle, startDate, note) async {
-          await ref.read(editSubscriptionUseCaseProvider).execute(
-            subscription.copyWith(
-              name: name,
-              category: category,
-              amount: amount,
-              cycle: cycle,
-              startDate: startDate,
-              note: note,
-              updatedAt: DateTime.now(),
-            ),
-          );
+          await ref
+              .read(editSubscriptionUseCaseProvider)
+              .execute(
+                subscription.copyWith(
+                  name: name,
+                  category: category,
+                  amount: amount,
+                  cycle: cycle,
+                  startDate: startDate,
+                  note: note,
+                  updatedAt: DateTime.now(),
+                ),
+              );
           return true;
         },
       ),

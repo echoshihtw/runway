@@ -84,7 +84,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get noEntries => 'No entries yet\nTap + ADD to log your first entry';
 
   @override
-  String get newLogEntry => 'NUOVA VOCE';
+  String get newLogEntry => 'Nuova voce';
 
   @override
   String get modifyEntry => 'MODIFICA VOCE';
@@ -302,7 +302,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get newLoan => '+ PRESTITO';
 
   @override
-  String get spendOnWhat => 'PER COSA HAI SPESO?';
+  String get spendOnWhat => 'Su cosa hai speso?';
 
   @override
   String get presetCoffee => 'CAFFÈ';
@@ -391,7 +391,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get configButton => 'CFG';
 
   @override
-  String get loanWizardTitle => 'ASSISTENTE PRESTITO';
+  String get loanWizardTitle => 'Procedura prestito';
 
   @override
   String get whoAndHowMuch => 'CHI E QUANTO';
@@ -484,10 +484,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get newSubscription => '+ ABBONAMENTO';
 
   @override
-  String get editSubscription => 'MODIFICA ABBONAMENTO';
+  String get editSubscription => 'Modifica abbonamento';
 
   @override
-  String get addSubscription => 'NUOVO ABBONAMENTO';
+  String get addSubscription => 'Nuovo abbonamento';
 
   @override
   String get personal => 'PERSONALE';
@@ -519,7 +519,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get repayLoan => 'RIMBORSA PRESTITO';
+  String get repayLoan => 'Rimborsa prestito';
 
   @override
   String get repaymentAmount => 'IMPORTO DEL RIMBORSO';
@@ -630,7 +630,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get rentFixed => 'AFFITTO / FISSO';
 
   @override
-  String get livingExpenses => 'SPESE DI VITA';
+  String get livingExpenses => 'Spese di vita';
 
   @override
   String get budgetRuleHint =>
@@ -725,6 +725,10 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get futureInflowHint =>
       'Usa qui entrate future neutrali: freelance, contratti, redditi creator, dividendi o qualsiasi entrata prevista.';
+
+  @override
+  String get forecastDoesNotMoveRunway =>
+      'Il reddito non cambia l\'autonomia. L\'autonomia è ciò che coprono i tuoi contanti se il reddito si fermasse; questo indica se il mese la aumenta.';
 
   @override
   String get runwayGoal => 'Obiettivo runway';
@@ -873,6 +877,17 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get goalCashTarget => 'Obiettivo';
+
+  @override
+  String goalCashTargetFrom(int count, String cost) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count mesi × $cost al mese',
+      one: '1 mese × $cost al mese',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get goalCashToGo => 'Manca';

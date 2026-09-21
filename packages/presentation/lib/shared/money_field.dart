@@ -6,7 +6,5 @@
 String moneyField(double? value) {
   if (value == null) return '';
   final fixed = value.toStringAsFixed(2);
-  return fixed.endsWith('.00')
-      ? fixed.substring(0, fixed.length - 3)
-      : fixed;
+  return fixed.endsWith('.00') ? fixed.substring(0, fixed.length - 3) : fixed;
 }

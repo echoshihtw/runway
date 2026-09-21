@@ -53,7 +53,7 @@ class ThisMonthCard extends ConsumerWidget {
           ),
         if (burn.living.budget > 0)
           _BudgetRow(
-            label: l10n.livingExpenses,
+            label: l10n.livingExpenses.toUpperCase(),
             bucket: burn.living,
             fmt: fmt,
             onTap: () => showLivingSheet(context),

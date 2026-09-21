@@ -164,8 +164,8 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
 
             Text(
               widget.existing == null
-                  ? l10n.addSubscription.toUpperCase()
-                  : l10n.editSubscription.toUpperCase(),
+                  ? l10n.addSubscription
+                  : l10n.editSubscription,
               style: AppTextStyles.title.copyWith(color: AppColors.purple),
             ),
             const SizedBox(height: AppSpacing.lg),

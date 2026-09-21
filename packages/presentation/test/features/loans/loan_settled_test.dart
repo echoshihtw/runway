@@ -159,7 +159,7 @@ void main() {
     // The card's tap target sits under REPAY's own, so the inner one has to
     // win or the repay button would settle the loan instead.
     expect(find.text('MARK AS SETTLED'), findsNothing);
-    expect(find.text('REPAY LOAN'), findsOneWidget);
+    expect(find.text('Repay loan'), findsOneWidget);
   });
 
   testWidgets('a loan whose drawdown entry lost its id can still be settled', (

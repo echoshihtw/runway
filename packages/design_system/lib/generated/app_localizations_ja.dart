@@ -715,6 +715,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get futureInflowHint => 'フリーランス、契約収入、クリエイター収入、配当など、想定される将来の流入を入力します。';
 
   @override
+  String get forecastDoesNotMoveRunway =>
+      '収入で残り月数は変わりません。残り月数は収入が止まった場合に現金でもつ期間で、これはその月に増えるかどうかを示します。';
+
+  @override
   String get runwayGoal => 'ランウェイ目標';
 
   @override
@@ -848,6 +852,16 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get goalCashTarget => '目標額';
+
+  @override
+  String goalCashTargetFrom(int count, String cost) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countか月 × 月$cost',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get goalCashToGo => '残り';

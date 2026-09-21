@@ -712,6 +712,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get futureInflowHint => '可以填接案、合約收入、創作者收入、股息，或任何你預期會進來的錢。';
 
   @override
+  String get forecastDoesNotMoveRunway =>
+      '收入不會改變可用月數。可用月數是沒收入時現金能撐多久，這裡只顯示這個月是增加還是減少。';
+
+  @override
   String get runwayGoal => '跑道目標';
 
   @override
@@ -845,6 +849,16 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get goalCashTarget => '目標金額';
+
+  @override
+  String goalCashTargetFrom(int count, String cost) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 個月 × 每月 $cost',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get goalCashToGo => '還差';

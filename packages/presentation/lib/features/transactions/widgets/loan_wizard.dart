@@ -239,7 +239,7 @@ class _LoanWizardState extends State<LoanWizard>
                 // characters and never needs to.
                 Flexible(
                   child: Text(
-                    l10n.loanWizardTitle.toUpperCase(),
+                    l10n.loanWizardTitle,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTextStyles.title.copyWith(color: AppColors.gold),

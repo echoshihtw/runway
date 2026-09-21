@@ -84,7 +84,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get noEntries => 'No entries yet\nTap + ADD to log your first entry';
 
   @override
-  String get newLogEntry => 'NUEVA ENTRADA';
+  String get newLogEntry => 'Nueva entrada';
 
   @override
   String get modifyEntry => 'MODIFICAR ENTRADA';
@@ -302,7 +302,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get newLoan => '+ PRÉSTAMO';
 
   @override
-  String get spendOnWhat => '¿EN QUÉ HAS GASTADO?';
+  String get spendOnWhat => '¿En qué gastaste?';
 
   @override
   String get presetCoffee => 'CAFÉ';
@@ -391,7 +391,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get configButton => 'CFG';
 
   @override
-  String get loanWizardTitle => 'ASISTENTE DE PRÉSTAMO';
+  String get loanWizardTitle => 'Asistente de préstamo';
 
   @override
   String get whoAndHowMuch => 'QUIÉN Y CUÁNTO';
@@ -484,10 +484,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get newSubscription => '+ SUSCRIPCIÓN';
 
   @override
-  String get editSubscription => 'EDITAR SUSCRIPCIÓN';
+  String get editSubscription => 'Editar suscripción';
 
   @override
-  String get addSubscription => 'NUEVA SUSCRIPCIÓN';
+  String get addSubscription => 'Nueva suscripción';
 
   @override
   String get personal => 'PERSONAL';
@@ -519,7 +519,7 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get repayLoan => 'PAGAR PRÉSTAMO';
+  String get repayLoan => 'Pagar préstamo';
 
   @override
   String get repaymentAmount => 'MONTO DE PAGO';
@@ -630,7 +630,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get rentFixed => 'ALQUILER / FIJO';
 
   @override
-  String get livingExpenses => 'GASTOS DE VIDA';
+  String get livingExpenses => 'Gastos de vida';
 
   @override
   String get budgetRuleHint =>
@@ -726,6 +726,10 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get futureInflowHint =>
       'Usa aquí entradas futuras neutrales: freelance, contratos, ingresos de creador, dividendos o cualquier entrada esperada.';
+
+  @override
+  String get forecastDoesNotMoveRunway =>
+      'Los ingresos no cambian el margen. El margen es lo que cubre tu efectivo si los ingresos se detuvieran; esto indica si el mes lo aumenta.';
 
   @override
   String get runwayGoal => 'Objetivo de runway';
@@ -873,6 +877,17 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get goalCashTarget => 'Objetivo';
+
+  @override
+  String goalCashTargetFrom(int count, String cost) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count meses × $cost al mes',
+      one: '1 mes × $cost al mes',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get goalCashToGo => 'Falta';

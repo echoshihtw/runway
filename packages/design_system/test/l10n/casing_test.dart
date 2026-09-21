@@ -33,10 +33,10 @@ const bodyText = ['simHint'];
 /// Chinese are absent: their strings have no case, so uppercasing is the
 /// identity and a count would mean nothing.
 const bakedCapsBudget = <String, int>{
-  'app_en.arb': 146,
-  'app_es.arb': 163,
-  'app_fr.arb': 163,
-  'app_it.arb': 163,
+  'app_en.arb': 139,
+  'app_es.arb': 156,
+  'app_fr.arb': 156,
+  'app_it.arb': 156,
 };
 
 Map<String, String> _strings(String file) {

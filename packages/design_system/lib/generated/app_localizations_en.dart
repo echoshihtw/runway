@@ -84,7 +84,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noEntries => 'No entries yet\nTap + ADD to log your first entry';
 
   @override
-  String get newLogEntry => 'NEW LOG ENTRY';
+  String get newLogEntry => 'New log entry';
 
   @override
   String get modifyEntry => 'MODIFY ENTRY';
@@ -301,7 +301,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newLoan => '+ LOAN';
 
   @override
-  String get spendOnWhat => 'WHAT DID YOU SPEND ON?';
+  String get spendOnWhat => 'What did you spend on?';
 
   @override
   String get presetCoffee => 'COFFEE';
@@ -390,7 +390,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get configButton => 'CFG';
 
   @override
-  String get loanWizardTitle => 'LOAN WIZARD';
+  String get loanWizardTitle => 'Loan wizard';
 
   @override
   String get whoAndHowMuch => 'WHO & HOW MUCH';
@@ -483,10 +483,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newSubscription => '+ SUBSCRIPTION';
 
   @override
-  String get editSubscription => 'EDIT SUBSCRIPTION';
+  String get editSubscription => 'Edit subscription';
 
   @override
-  String get addSubscription => 'NEW SUBSCRIPTION';
+  String get addSubscription => 'New subscription';
 
   @override
   String get personal => 'PERSONAL';
@@ -518,7 +518,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get repayLoan => 'REPAY LOAN';
+  String get repayLoan => 'Repay loan';
 
   @override
   String get repaymentAmount => 'REPAYMENT AMOUNT';
@@ -629,7 +629,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rentFixed => 'RENT / FIXED';
 
   @override
-  String get livingExpenses => 'LIVING EXPENSES';
+  String get livingExpenses => 'Living expenses';
 
   @override
   String get budgetRuleHint =>
@@ -725,6 +725,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get futureInflowHint =>
       'Any recurring or expected income, such as retainers, contracts, creator income or dividends.';
+
+  @override
+  String get forecastDoesNotMoveRunway =>
+      'Income does not move the runway. The runway is what your cash covers if income stopped; this says whether the month adds to it.';
 
   @override
   String get runwayGoal => 'Runway goal';
@@ -869,6 +873,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get goalCashTarget => 'Target cash';
+
+  @override
+  String goalCashTargetFrom(int count, String cost) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count months × $cost a month',
+      one: '1 month × $cost a month',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get goalCashToGo => 'Still to go';
