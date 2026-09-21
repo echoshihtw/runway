@@ -9,6 +9,7 @@
   "metrics": "MÉTRICAS",
   "cash": "EFECTIVO",
   "owed": "Pendiente",
+  "runsOut": "Se agota {date}",
   "loanPerMonth": "DEUDA/MES",
   "runway": "AUTONOMÍA",
   "runOut": "AGOTAMIENTO",

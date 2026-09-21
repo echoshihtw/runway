@@ -9,6 +9,7 @@
   "metrics": "メトリクス",
   "cash": "現金",
   "owed": "残債",
+  "runsOut": "{date} に枯渇",
   "loanPerMonth": "月間債務",
   "runway": "生存期間",
   "runOut": "枯渇日",

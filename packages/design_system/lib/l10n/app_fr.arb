@@ -9,6 +9,7 @@
   "metrics": "MÉTRIQUES",
   "cash": "LIQUIDITÉS",
   "owed": "Reste dû",
+  "runsOut": "Épuisé en {date}",
   "loanPerMonth": "DETTE/MO",
   "runway": "AUTONOMIE",
   "runOut": "ÉPUISEMENT",

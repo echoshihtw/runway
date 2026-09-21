@@ -94,6 +94,17 @@ class RunwayCard extends ConsumerWidget {
             textAlign: TextAlign.center,
             style: AppTextStyles.bodySmall,
           ),
+          // Twelve months from today is a date, so RUN OUT was the hero
+          // number said again in a different unit. It sat in the row of
+          // balances as though it were a third independent fact, where it
+          // centred itself under the gap between the two and lined up with
+          // neither. It belongs to the line that explains the number.
+          if (model.runOutDate != null)
+            Text(
+              l10n.runsOut(fmtDate(model.runOutDate)),
+              textAlign: TextAlign.center,
+              style: AppTextStyles.metricCaption,
+            ),
           if (known) ...[
             const SizedBox(height: AppSpacing.md),
             PixelBadge(label: statusLabel, color: color),
@@ -124,27 +135,22 @@ class RunwayCard extends ConsumerWidget {
           // monthly payment stays in the liabilities panel with the
           // other monthly figures. Stocks with stocks, flows with flows.
           //
-          // With nothing borrowed the pair is CASH and RUN OUT, as it
-          // has always been. A row reading $symbol 0 would be a
-          // liability the owner does not have.
+          // With nothing borrowed there is one balance and the row holds
+          // one. A second reading $symbol 0 would be a liability the
+          // owner does not have.
           Row(
             children: [
               Expanded(child: _cash(l10n, symbol, nf)),
-              Expanded(
-                child: owed > 0
-                    ? _stat(
-                        l10n.owed,
-                        '$symbol ${nf.format(owed)}',
-                        SC.accentCost,
-                      )
-                    : _stat(l10n.runOut, fmtDate(model.runOutDate), SC.unknown),
-              ),
+              if (owed > 0)
+                Expanded(
+                  child: _stat(
+                    l10n.owed,
+                    '$symbol ${nf.format(owed)}',
+                    SC.accentCost,
+                  ),
+                ),
             ],
           ),
-          if (owed > 0) ...[
-            const SizedBox(height: AppSpacing.md),
-            _stat(l10n.runOut, fmtDate(model.runOutDate), SC.unknown),
-          ],
           const SizedBox(height: AppSpacing.xs),
         ],
       ),

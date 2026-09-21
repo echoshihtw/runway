@@ -36,6 +36,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get owed => 'Owed';
 
   @override
+  String runsOut(String date) {
+    return 'Runs out $date';
+  }
+
+  @override
   String get loanPerMonth => 'DEBT/MO';
 
   @override

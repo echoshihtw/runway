@@ -9,6 +9,7 @@
   "metrics": "METRICHE",
   "cash": "CONTANTI",
   "owed": "Residuo",
+  "runsOut": "Si esaurisce {date}",
   "loanPerMonth": "DEBITO/MESE",
   "runway": "AUTONOMIA",
   "runOut": "ESAURIMENTO",

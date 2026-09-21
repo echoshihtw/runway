@@ -160,6 +160,12 @@ abstract class AppLocalizations {
   /// **'Owed'**
   String get owed;
 
+  /// The run-out date, under the runway number it restates
+  ///
+  /// In en, this message translates to:
+  /// **'Runs out {date}'**
+  String runsOut(String date);
+
   /// No description provided for @loanPerMonth.
   ///
   /// In en, this message translates to:

@@ -9,6 +9,7 @@
   "metrics": "重點",
   "cash": "現金",
   "owed": "欠款",
+  "runsOut": "{date} 用完",
   "loanPerMonth": "月債務",
   "runway": "可撐多久",
   "runOut": "用完時間",

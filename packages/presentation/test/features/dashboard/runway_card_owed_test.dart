@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Borrowing is an inflow. It raises cash and the runway with it, and the
 /// card showed only that half: a $18,000 loan took the headline from 7 months
 /// to 12 with STABLE still on the badge and the debt nowhere on screen (#202).
-ModelState _model() => const ModelState(
+ModelState _model() => ModelState(
   currentCash: 34336,
   burnRate: 2800,
   effectiveBurnRate: 2800,
@@ -19,6 +19,7 @@ ModelState _model() => const ModelState(
   runwayMonths: 12,
   runwayDays: 365,
   hasCostBasis: true,
+  runOutDate: DateTime(2027, 9, 1),
 );
 
 Future<void> _pump(WidgetTester tester, double owed) async {
@@ -60,12 +61,26 @@ void main() {
     final owed = tester.getCenter(find.text('OWED'));
     expect(owed.dy, cash.dy, reason: 'OWED belongs on the CASH row');
     expect(owed.dx, greaterThan(cash.dx));
+  });
 
-    // RUN OUT keeps its place on the card, one row down.
+  testWidgets('the run-out date explains the number it restates', (
+    tester,
+  ) async {
+    // Twelve months from today is a date. As a stat it read as a third
+    // independent fact beside two balances, and centred itself under the gap
+    // between them, lining up with neither.
+    await _pump(tester, 12400);
+
+    expect(find.text('RUN OUT'), findsNothing);
+    final date = find.textContaining('Runs out');
+    expect(date, findsOneWidget);
+
+    // Above the divider, with the basis line it belongs to — not below it
+    // with the balances.
     expect(
-      tester.getCenter(find.text('RUN OUT')).dy,
-      greaterThan(cash.dy),
-      reason: 'the date moves under the pair rather than off the card',
+      tester.getCenter(date).dy,
+      lessThan(tester.getCenter(find.text('CASH')).dy),
+      reason: 'the date sits with the number it restates',
     );
   });
 
@@ -84,11 +99,8 @@ void main() {
 
     expect(find.text('OWED'), findsNothing);
 
-    final cash = tester.getCenter(find.text('CASH'));
-    expect(
-      tester.getCenter(find.text('RUN OUT')).dy,
-      cash.dy,
-      reason: 'the pair is CASH and RUN OUT, as it has always been',
-    );
+    // The row holds balances, and there is one. A second reading $ 0 would
+    // be a liability the owner does not have.
+    expect(find.textContaining('Runs out'), findsOneWidget);
   });
 }

@@ -9,6 +9,15 @@
   "metrics": "Signals",
   "cash": "CASH",
   "owed": "Owed",
+  "runsOut": "Runs out {date}",
+  "@runsOut": {
+    "description": "The run-out date, under the runway number it restates",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "@owed": {
     "description": "Total outstanding loan principal, beside CASH on the runway card"
   },
