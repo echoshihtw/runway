@@ -103,4 +103,30 @@ void main() {
     // be a liability the owner does not have.
     expect(find.textContaining('Runs out'), findsOneWidget);
   });
+
+  testWidgets('a lone balance sits on the card\'s own axis', (tester) async {
+    // Left against the edge it read as half of a pair with the other half
+    // missing, which is what most people see: most people owe nothing.
+    await _pump(tester, 0);
+
+    final card = tester.getRect(find.byType(RunwayCard));
+    final cash = tester.getCenter(find.text('CASH'));
+
+    expect(
+      cash.dx,
+      closeTo(card.center.dx, 1),
+      reason: 'the figure, the basis line and the badge are all centred',
+    );
+  });
+
+  testWidgets('two balances share the row instead of centring', (tester) async {
+    await _pump(tester, 12400);
+
+    final card = tester.getRect(find.byType(RunwayCard));
+    expect(
+      tester.getCenter(find.text('CASH')).dx,
+      lessThan(card.center.dx),
+      reason: 'a pair splits left and right; only a lone balance centres',
+    );
+  });
 }

@@ -148,10 +148,10 @@ class RunwayCard extends ConsumerWidget {
           // With nothing borrowed there is one balance and the row holds
           // one. A second reading $symbol 0 would be a liability the
           // owner does not have.
-          Row(
-            children: [
-              Expanded(child: _cash(l10n, symbol, nf)),
-              if (owed > 0)
+          if (owed > 0)
+            Row(
+              children: [
+                Expanded(child: _cash(l10n, symbol, nf)),
                 Expanded(
                   child: _stat(
                     l10n.owed,
@@ -159,15 +159,28 @@ class RunwayCard extends ConsumerWidget {
                     SC.accentCost,
                   ),
                 ),
-            ],
-          ),
+              ],
+            )
+          else
+            // Most people owe nothing, so this is what most people see. Left
+            // against the edge it read as half of a pair with the other half
+            // missing. Everything else on this card is centred — the figure,
+            // the basis line, the badge — and a lone balance belongs on that
+            // same axis. It takes the larger size too, having nothing to
+            // share the width with.
+            _cash(l10n, symbol, nf, alone: true),
           const SizedBox(height: AppSpacing.xs),
         ],
       ),
     );
   }
 
-  Widget _cash(AppLocalizations l10n, String symbol, NumberFormat nf) => _stat(
+  Widget _cash(
+    AppLocalizations l10n,
+    String symbol,
+    NumberFormat nf, {
+    bool alone = false,
+  }) => _stat(
     l10n.cash,
     // An unloaded ledger has no balance to state. The runway already
     // says so with the same mark.
@@ -180,11 +193,14 @@ class RunwayCard extends ConsumerWidget {
         : model.currentCash < 0
         ? SC.numberCost
         : SC.numberLife,
+    alone: alone,
   );
 
-  Widget _stat(String label, String value, Color color) {
+  Widget _stat(String label, String value, Color color, {bool alone = false}) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: alone
+          ? CrossAxisAlignment.center
+          : CrossAxisAlignment.start,
       children: [
         // The component shouts and the translation carries sentence case
         // (#188). CASH and RUN OUT are still baked caps in the backlog, so
@@ -193,7 +209,8 @@ class RunwayCard extends ConsumerWidget {
         const SizedBox(height: AppSpacing.xxs),
         Text(
           value,
-          style: AppTextStyles.metricSmall.copyWith(color: color),
+          style: (alone ? AppTextStyles.metric : AppTextStyles.metricSmall)
+              .copyWith(color: color),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
