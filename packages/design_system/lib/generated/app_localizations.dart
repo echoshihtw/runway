@@ -427,7 +427,7 @@ abstract class AppLocalizations {
   /// No description provided for @currencySymbolOnly.
   ///
   /// In en, this message translates to:
-  /// **'Changes the display symbol only — your amounts are not converted.'**
+  /// **'Changes the display symbol only. Your amounts are not converted.'**
   String get currencySymbolOnly;
 
   /// No description provided for @daysShort.
@@ -565,7 +565,7 @@ abstract class AppLocalizations {
   /// How many subscription charges are waiting to be confirmed, and their total
   ///
   /// In en, this message translates to:
-  /// **'{count} subscription charges due — {amount}'**
+  /// **'{count} subscription charges due: {amount}'**
   String subscriptionChargesDue(int count, String amount);
 
   /// No description provided for @subscriptionConfirmAll.
@@ -1090,12 +1090,6 @@ abstract class AppLocalizations {
   /// **'LOANS'**
   String get loans;
 
-  /// No description provided for @activeCount.
-  ///
-  /// In en, this message translates to:
-  /// **'{count} ACTIVE'**
-  String activeCount(int count);
-
   /// No description provided for @repayLoan.
   ///
   /// In en, this message translates to:
@@ -1125,12 +1119,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'/ year'**
   String get subscrPerYear;
-
-  /// No description provided for @removeConfirm.
-  ///
-  /// In en, this message translates to:
-  /// **'REMOVE?'**
-  String get removeConfirm;
 
   /// No description provided for @remove.
   ///
@@ -1167,12 +1155,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'SAFETY'**
   String get safety;
-
-  /// No description provided for @deployableCapital.
-  ///
-  /// In en, this message translates to:
-  /// **'Optional capital after protecting your runway'**
-  String get deployableCapital;
 
   /// No description provided for @historyEntries.
   ///
@@ -1315,7 +1297,7 @@ abstract class AppLocalizations {
   /// No description provided for @budgetRuleHint.
   ///
   /// In en, this message translates to:
-  /// **'Spending uses up its budget — only going over adds cost'**
+  /// **'Spending uses up its budget. Only going over adds cost.'**
   String get budgetRuleHint;
 
   /// No description provided for @subtotal.
@@ -1329,6 +1311,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{amount} left'**
   String budgetLeft(String amount);
+
+  /// Under the remainder: the working behind it
+  ///
+  /// In en, this message translates to:
+  /// **'{spent} of {budget}'**
+  String spentOfBudget(String spent, String budget);
 
   /// Spending above a monthly budget, e.g. $ 1,500 over budget
   ///
@@ -1705,7 +1693,7 @@ abstract class AppLocalizations {
   /// No description provided for @goalReached.
   ///
   /// In en, this message translates to:
-  /// **'Goal reached!'**
+  /// **'Goal reached'**
   String get goalReached;
 
   /// No description provided for @monthsToGoal.
@@ -1819,7 +1807,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingPrivacyDelete.
   ///
   /// In en, this message translates to:
-  /// **'Delete anytime, instantly'**
+  /// **'Delete anytime'**
   String get onboardingPrivacyDelete;
 
   /// No description provided for @onboardingIUnderstand.
@@ -1867,7 +1855,7 @@ abstract class AppLocalizations {
   /// No description provided for @paywallOneTimePurchase.
   ///
   /// In en, this message translates to:
-  /// **'{price} once. This app counts your subscriptions — it will not be one.'**
+  /// **'{price} once. This app counts your subscriptions; it will not be one.'**
   String paywallOneTimePurchase(String price);
 
   /// No description provided for @paywallUnavailable.

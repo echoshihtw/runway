@@ -67,7 +67,7 @@
   "highLoad": "HIGH LOAD",
   "language": "Language",
   "currency": "Currency",
-  "currencySymbolOnly": "Changes the display symbol only — your amounts are not converted.",
+  "currencySymbolOnly": "Changes the display symbol only. Your amounts are not converted.",
   "daysShort": "d",
   "gettingStarted": "GETTING STARTED",
   "stepsComplete": "{completed} of {total} complete",
@@ -100,7 +100,7 @@
   "typeOpening": "OPENING",
   "typeSubscription": "SUBSCRIPTION",
   "subscriptionPaidQuestion": "Did you pay {amount} for {name} on {date}?",
-  "subscriptionChargesDue": "{count} subscription charges due — {amount}",
+  "subscriptionChargesDue": "{count} subscription charges due: {amount}",
   "subscriptionConfirmAll": "Confirm all",
   "subscriptionReviewEach": "Review each",
   "@subscriptionChargesDue": {
@@ -239,20 +239,11 @@
   "yearly": "YEARLY",
   "subscrPerMonth": "/ month",
   "loans": "LOANS",
-  "activeCount": "{count} ACTIVE",
-  "@activeCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "repayLoan": "Repay loan",
   "repaymentAmount": "REPAYMENT AMOUNT",
   "cancel": "CANCEL",
   "paid": "✓ PAID",
   "subscrPerYear": "/ year",
-  "removeConfirm": "REMOVE?",
   "remove": "REMOVE",
   "monthsProjected": "{count} months ahead",
   "@monthsProjected": {
@@ -266,7 +257,6 @@
   "breakdown": "BREAKDOWN",
   "safetyFund": "SAFETY FUND",
   "safety": "SAFETY",
-  "deployableCapital": "Optional capital after protecting your runway",
   "historyEntries": "HISTORY & ENTRIES",
   "addEntry": "+ ADD",
   "willRemoveLoan": "WILL ALSO REMOVE FROM LIABILITIES",
@@ -308,9 +298,21 @@
   "monthlyBudget": "Monthly budget",
   "rentFixed": "RENT / FIXED",
   "livingExpenses": "Living expenses",
-  "budgetRuleHint": "Spending uses up its budget — only going over adds cost",
+  "budgetRuleHint": "Spending uses up its budget. Only going over adds cost.",
   "subtotal": "SUBTOTAL",
   "budgetLeft": "{amount} left",
+  "spentOfBudget": "{spent} of {budget}",
+  "@spentOfBudget": {
+    "description": "Under the remainder: the working behind it",
+    "placeholders": {
+      "spent": {
+        "type": "String"
+      },
+      "budget": {
+        "type": "String"
+      }
+    }
+  },
   "@budgetLeft": {
     "description": "Unused part of a monthly budget, e.g. $ 29,790 left",
     "placeholders": {
@@ -438,7 +440,7 @@
   "preparing": "PREPARING...",
   "shareImage": "SHARE IMAGE",
   "shareAsText": "SHARE AS TEXT",
-  "goalReached": "Goal reached!",
+  "goalReached": "Goal reached",
   "monthsToGoal": "{count, plural, =1{1 month of cover to build} other{{count} months of cover to build}}",
   "goalCashTarget": "Target cash",
   "goalCashTargetFrom": "{count, plural, =1{1 month × {cost} a month} other{{count} months × {cost} a month}}",
@@ -475,7 +477,7 @@
   "onboardingPrivacyEncrypted": "Encrypted on device",
   "onboardingPrivacyOnDevice": "Numbers stay on your device",
   "onboardingPrivacyHidden": "Hidden when you switch apps",
-  "onboardingPrivacyDelete": "Delete anytime, instantly",
+  "onboardingPrivacyDelete": "Delete anytime",
   "onboardingIUnderstand": "I UNDERSTAND",
   "onboardingFirstActionTitle": "One number and\nyou are set up.",
   "onboardingFirstActionBody": "Just your cash balance. Nothing else.",
@@ -483,7 +485,7 @@
   "paywallUnlock": "UNLOCK RUNWAY PRO",
   "paywallLoadingPrice": "Loading price...",
   "paywallStoreUnreachable": "Couldn't reach the store. Check your connection and try again.",
-  "paywallOneTimePurchase": "{price} once. This app counts your subscriptions — it will not be one.",
+  "paywallOneTimePurchase": "{price} once. This app counts your subscriptions; it will not be one.",
   "@paywallOneTimePurchase": {
     "placeholders": {
       "price": {

@@ -172,7 +172,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get currencySymbolOnly =>
-      'Cambia solo el símbolo de visualización — tus importes no se convierten.';
+      'Cambia solo el símbolo de visualización. Tus importes no se convierten.';
 
   @override
   String get daysShort => 'd';
@@ -246,7 +246,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String subscriptionChargesDue(int count, String amount) {
-    return '$count cargos de suscripción pendientes — $amount';
+    return '$count cargos de suscripción pendientes: $amount';
   }
 
   @override
@@ -521,11 +521,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get loans => 'PRÉSTAMOS';
 
   @override
-  String activeCount(int count) {
-    return '$count ACTIVO(S)';
-  }
-
-  @override
   String get repayLoan => 'Pagar préstamo';
 
   @override
@@ -539,9 +534,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get subscrPerYear => '/ year';
-
-  @override
-  String get removeConfirm => '¿ELIMINAR?';
 
   @override
   String get remove => 'ELIMINAR';
@@ -562,10 +554,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get safety => 'SEGURIDAD';
-
-  @override
-  String get deployableCapital =>
-      'CAPITAL DESPLEGABLE — SEPARADO DEL BUFFER DE SUPERVIVENCIA';
 
   @override
   String get historyEntries => 'HISTORIAL & ENTRADAS';
@@ -641,7 +629,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get budgetRuleHint =>
-      'El gasto consume su presupuesto — solo pasarse añade coste';
+      'El gasto consume su presupuesto. Solo pasarse añade coste.';
 
   @override
   String get subtotal => 'SUBTOTAL';
@@ -649,6 +637,11 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String budgetLeft(String amount) {
     return 'quedan $amount';
+  }
+
+  @override
+  String spentOfBudget(String spent, String budget) {
+    return '$spent de $budget';
   }
 
   @override
@@ -869,7 +862,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get shareAsText => 'COMPARTIR TEXTO';
 
   @override
-  String get goalReached => '¡Objetivo alcanzado!';
+  String get goalReached => 'Objetivo alcanzado';
 
   @override
   String monthsToGoal(int count) {
@@ -944,7 +937,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get onboardingPrivacyHidden => 'Oculto al cambiar de app';
 
   @override
-  String get onboardingPrivacyDelete => 'Bórralo cuando quieras, al instante';
+  String get onboardingPrivacyDelete => 'Bórralo cuando quieras';
 
   @override
   String get onboardingIUnderstand => 'ENTENDIDO';

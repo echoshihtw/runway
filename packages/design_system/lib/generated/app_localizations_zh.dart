@@ -40,7 +40,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String runsOut(String date) {
-    return '$date 用完';
+    return '$date 會用完';
   }
 
   @override
@@ -74,7 +74,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get clear => '清除';
 
   @override
-  String get transactionLog => '交易記錄';
+  String get transactionLog => '交易紀錄';
 
   @override
   String get newEntry => '+ 新增';
@@ -110,7 +110,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get abort => '取消';
 
   @override
-  String get purgeEntry => '刪除這筆記錄？';
+  String get purgeEntry => '刪除這筆紀錄？';
 
   @override
   String get scenarioSimulator => '情境規劃';
@@ -211,7 +211,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get loading => '載入中...';
 
   @override
-  String get navHud => '首頁';
+  String get navHud => '總覽';
 
   @override
   String get navLog => 'LOG';
@@ -244,7 +244,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String subscriptionChargesDue(int count, String amount) {
-    return '$count 筆訂閱費用待確認 — $amount';
+    return '$count 筆訂閱費用待確認：$amount';
   }
 
   @override
@@ -284,7 +284,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deleteSubscription => '刪除訂閱';
 
   @override
-  String get deleteSubscriptionKeepsEntries => '停止未來的記錄。已記錄的付款會保留。';
+  String get deleteSubscriptionKeepsEntries => '停止未來的紀錄。已記錄的付款會保留。';
 
   @override
   String get liabilities => '負債';
@@ -296,13 +296,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get newLoan => '+ 貸款';
 
   @override
-  String get spendOnWhat => '這筆是花在什麼？';
+  String get spendOnWhat => '剛剛買了什麼？';
 
   @override
-  String get moneyCameInInstead => '是收到錢嗎？';
+  String get moneyCameInInstead => '剛剛收到錢？';
 
   @override
-  String get logIncome => '記錄收入';
+  String get logIncome => '新增收入';
 
   @override
   String get presetCoffee => '咖啡';
@@ -339,7 +339,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String freeEntriesUsed(int used, int free) {
-    return '免費記錄 $free 筆已用 $used 筆';
+    return '免費紀錄 $free 筆已用 $used 筆';
   }
 
   @override
@@ -513,11 +513,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get loans => '貸款';
 
   @override
-  String activeCount(int count) {
-    return '$count 筆有效';
-  }
-
-  @override
   String get repayLoan => '還款';
 
   @override
@@ -531,9 +526,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get subscrPerYear => '/ 年';
-
-  @override
-  String get removeConfirm => '刪除？';
 
   @override
   String get remove => '刪除';
@@ -556,10 +548,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get safety => '安全';
 
   @override
-  String get deployableCapital => '保留安全緩衝後，還能運用的資金';
-
-  @override
-  String get historyEntries => '歷史記錄';
+  String get historyEntries => '歷史紀錄';
 
   @override
   String get addEntry => '+ 新增';
@@ -628,7 +617,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get livingExpenses => '生活費';
 
   @override
-  String get budgetRuleHint => '支出只是把預算用掉 — 超支才會多花錢';
+  String get budgetRuleHint => '支出只是把預算用掉，超支才會多花錢。';
 
   @override
   String get subtotal => '小計';
@@ -636,6 +625,11 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String budgetLeft(String amount) {
     return '剩餘 $amount';
+  }
+
+  @override
+  String spentOfBudget(String spent, String budget) {
+    return '$budget 用了 $spent';
   }
 
   @override
@@ -767,7 +761,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String computedCost(String amount) {
-    return '照預算和記錄算出來是：$amount';
+    return '照預算和紀錄算出來是：$amount';
   }
 
   @override
@@ -846,7 +840,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get shareAsText => '以文字分享';
 
   @override
-  String get goalReached => '目標達成！';
+  String get goalReached => '目標達成';
 
   @override
   String monthsToGoal(int count) {
@@ -912,7 +906,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingPrivacyHidden => '切到別的 App 就自動遮起來';
 
   @override
-  String get onboardingPrivacyDelete => '想刪就刪，馬上清光';
+  String get onboardingPrivacyDelete => '想刪就刪';
 
   @override
   String get onboardingIUnderstand => '了解';
