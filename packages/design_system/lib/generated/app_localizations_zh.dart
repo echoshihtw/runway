@@ -40,7 +40,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String runsOut(String date) {
-    return '$date 用完';
+    return '$date 會用完';
   }
 
   @override
@@ -211,7 +211,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get loading => '載入中...';
 
   @override
-  String get navHud => '首頁';
+  String get navHud => '總覽';
 
   @override
   String get navLog => 'LOG';
@@ -296,10 +296,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get newLoan => '+ 貸款';
 
   @override
-  String get spendOnWhat => '這筆是花在什麼？';
+  String get spendOnWhat => '剛剛買了什麼？';
 
   @override
-  String get moneyCameInInstead => '是收到錢嗎？';
+  String get moneyCameInInstead => '入帳？';
 
   @override
   String get logIncome => '記錄收入';
