@@ -72,53 +72,68 @@ class _NeoExpandableCardState extends State<NeoExpandableCard>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Header
-          GestureDetector(
-            onTap: widget.details != null ? _toggle : null,
-            behavior: HitTestBehavior.opaque,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.cardPadding,
-                vertical: AppSpacing.sm + 2,
-              ),
-              child: Row(
-                children: [
-                  if (widget.accentColor != null) ...[
-                    Container(
-                      width: 3,
-                      height: 14,
-                      decoration: BoxDecoration(
-                        color: widget.accentColor,
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.sm),
-                  ],
-                  // Expanded, not a Text beside a Spacer: the title is the
-                  // one thing here that can be shortened, and at large text
-                  // sizes an unflexed title pushes the chevron off the card.
-                  Expanded(
-                    child: Text(
-                      // Sentence case in, upper case out. See NeoCard.
-                      widget.title.toUpperCase(),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.sectionTitle,
-                    ),
+          //
+          // MergeSemantics rather than excludeSemantics: the header can carry
+          // a `trailing` widget with a figure in it, and that is worth
+          // hearing. Merging keeps it and still announces the header once
+          // instead of as three loose pieces of static text.
+          //
+          // A card with nothing to expand is not a control, so the role and
+          // the expanded state are attached only when there are details.
+          MergeSemantics(
+            child: Semantics(
+              button: widget.details != null,
+              expanded: widget.details != null ? _expanded : null,
+              onTap: widget.details != null ? _toggle : null,
+              child: GestureDetector(
+                onTap: widget.details != null ? _toggle : null,
+                behavior: HitTestBehavior.opaque,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.cardPadding,
+                    vertical: AppSpacing.sm + 2,
                   ),
-                  if (widget.trailing != null) ...[
-                    widget.trailing!,
-                    const SizedBox(width: AppSpacing.sm),
-                  ],
-                  if (widget.details != null)
-                    RotationTransition(
-                      turns: _rotate,
-                      child: const Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        color: AppColors.textDim,
-                        size: 18,
+                  child: Row(
+                    children: [
+                      if (widget.accentColor != null) ...[
+                        Container(
+                          width: 3,
+                          height: 14,
+                          decoration: BoxDecoration(
+                            color: widget.accentColor,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                        const SizedBox(width: AppSpacing.sm),
+                      ],
+                      // Expanded, not a Text beside a Spacer: the title is the
+                      // one thing here that can be shortened, and at large text
+                      // sizes an unflexed title pushes the chevron off the card.
+                      Expanded(
+                        child: Text(
+                          // Sentence case in, upper case out. See NeoCard.
+                          widget.title.toUpperCase(),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyles.sectionTitle,
+                        ),
                       ),
-                    ),
-                ],
+                      if (widget.trailing != null) ...[
+                        widget.trailing!,
+                        const SizedBox(width: AppSpacing.sm),
+                      ],
+                      if (widget.details != null)
+                        RotationTransition(
+                          turns: _rotate,
+                          child: const Icon(
+                            Icons.keyboard_arrow_down_rounded,
+                            color: AppColors.textDim,
+                            size: 18,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
