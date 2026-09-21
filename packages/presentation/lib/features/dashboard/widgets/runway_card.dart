@@ -20,7 +20,7 @@ class RunwayCard extends ConsumerWidget {
     // With no cost known the runway cannot be stated, so it must not borrow
     // the confidence of a status colour.
     final known = model.runwayIsKnown;
-    final color = known ? statusColor(status) : AppColors.textSecondary;
+    final color = known ? statusColor(status) : SC.unknown;
     final statusLabel = switch (status) {
       RunwayStatus.stable => l10n.stable,
       RunwayStatus.caution => l10n.caution,
@@ -126,7 +126,7 @@ class RunwayCard extends ConsumerWidget {
                   // the mint used for cash and runway reads as "you are
                   // fine" at the exact moment that is least true.
                   !model.cashIsKnown
-                      ? AppColors.textSecondary
+                      ? SC.unknown
                       : model.currentCash < 0
                       ? SC.numberCost
                       : SC.numberLife,
@@ -136,7 +136,7 @@ class RunwayCard extends ConsumerWidget {
                 child: _stat(
                   l10n.runOut,
                   fmtDate(model.runOutDate),
-                  AppColors.textSecondary,
+                  SC.unknown,
                 ),
               ),
             ],

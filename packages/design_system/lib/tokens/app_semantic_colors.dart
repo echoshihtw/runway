@@ -18,6 +18,10 @@ abstract final class SC {
   static const subscr  = AppColors.purple;      // purple — subscriptions only
   static const chrome  = AppColors.turkishBlue; // blue — UI structure
 
+  /// A fact the app cannot state. Never a status colour: an unknown runway
+  /// must not borrow the confidence of one.
+  static const unknown = AppColors.textSecondary;
+
   // ── Numbers ───────────────────────────────────
   static const numberPrimary  = AppColors.textPrimary; // smoke white — neutral facts
   static const numberLife     = AppColors.neonGreen;   // mint — cash, runway

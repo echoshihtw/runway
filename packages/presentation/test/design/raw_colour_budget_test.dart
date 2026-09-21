@@ -27,7 +27,7 @@ const budget = <String, int>{
   'features/onboarding/onboarding_screen.dart': 12,
   'features/subscriptions/subscriptions_panel.dart': 11,
   'features/paywall/paywall_screen.dart': 8,
-  'features/dashboard/widgets/runway_card.dart': 6,
+  'features/dashboard/widgets/runway_card.dart': 3,
   'features/paywall/pro_locked_card.dart': 6,
   'features/transactions/widgets/transaction_row.dart': 5,
   'features/config/widgets/delete_all_data_card.dart': 4,
