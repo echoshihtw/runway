@@ -8,6 +8,7 @@
   "pressureLabel": "Costos mensuales",
   "metrics": "MÉTRICAS",
   "cash": "EFECTIVO",
+  "owed": "Pendiente",
   "loanPerMonth": "DEUDA/MES",
   "runway": "AUTONOMÍA",
   "runOut": "AGOTAMIENTO",
@@ -292,7 +293,13 @@
   "runwayBasisSpending": "Según tu gasto, si los ingresos se detuvieran hoy",
   "runwayBasisAssumption": "Según tu supuesto de costes, si los ingresos se detuvieran hoy",
   "computedCost": "Calculado con tu presupuesto y registro: {amount}",
-  "@computedCost": {"placeholders": {"amount": {"type": "String"}}},
+  "@computedCost": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "runwayNeedsCosts": "Indica tus gastos mensuales para ver tu margen",
   "monthSingular": "mes",
   "monthPlural": "meses",

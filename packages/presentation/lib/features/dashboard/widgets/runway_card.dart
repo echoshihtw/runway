@@ -20,6 +20,7 @@ class RunwayCard extends ConsumerWidget {
     // With no cost known the runway cannot be stated, so it must not borrow
     // the confidence of a status colour.
     final known = model.runwayIsKnown;
+    final owed = ref.watch(totalOwedProvider);
     final color = known ? statusColor(status) : SC.unknown;
     final statusLabel = switch (status) {
       RunwayStatus.stable => l10n.stable,
@@ -112,46 +113,67 @@ class RunwayCard extends ConsumerWidget {
           const SizedBox(height: AppSpacing.md),
           Divider(color: Colors.white.withAlpha(15), height: 1),
           const SizedBox(height: AppSpacing.md),
+          // Borrowing is an inflow: it raises cash and the runway with
+          // it, and until now the other side of that same transaction
+          // appeared nowhere on this card. OWED is that other side,
+          // beside the balance it was borrowed into, as a balance.
+          //
+          // The two are not to be subtracted, and nothing here invites
+          // it: gold is debt's colour throughout the app and mint is
+          // cash's, so they read as two facts rather than a sum. The
+          // monthly payment stays in the liabilities panel with the
+          // other monthly figures. Stocks with stocks, flows with flows.
+          //
+          // With nothing borrowed the pair is CASH and RUN OUT, as it
+          // has always been. A row reading $symbol 0 would be a
+          // liability the owner does not have.
           Row(
             children: [
+              Expanded(child: _cash(l10n, symbol, nf)),
               Expanded(
-                child: _stat(
-                  l10n.cash,
-                  // An unloaded ledger has no balance to state. The
-                  // runway already says so with the same mark.
-                  model.cashIsKnown
-                      ? '$symbol ${nf.format(model.currentCash)}'
-                      : '—',
-                  // Negative cash is not life. An overdrawn balance in
-                  // the mint used for cash and runway reads as "you are
-                  // fine" at the exact moment that is least true.
-                  !model.cashIsKnown
-                      ? SC.unknown
-                      : model.currentCash < 0
-                      ? SC.numberCost
-                      : SC.numberLife,
-                ),
-              ),
-              Expanded(
-                child: _stat(
-                  l10n.runOut,
-                  fmtDate(model.runOutDate),
-                  SC.unknown,
-                ),
+                child: owed > 0
+                    ? _stat(
+                        l10n.owed,
+                        '$symbol ${nf.format(owed)}',
+                        SC.accentCost,
+                      )
+                    : _stat(l10n.runOut, fmtDate(model.runOutDate), SC.unknown),
               ),
             ],
           ),
+          if (owed > 0) ...[
+            const SizedBox(height: AppSpacing.md),
+            _stat(l10n.runOut, fmtDate(model.runOutDate), SC.unknown),
+          ],
           const SizedBox(height: AppSpacing.xs),
         ],
       ),
     );
   }
 
+  Widget _cash(AppLocalizations l10n, String symbol, NumberFormat nf) => _stat(
+    l10n.cash,
+    // An unloaded ledger has no balance to state. The runway already
+    // says so with the same mark.
+    model.cashIsKnown ? '$symbol ${nf.format(model.currentCash)}' : '—',
+    // Negative cash is not life. An overdrawn balance in the mint used
+    // for cash and runway reads as "you are fine" at the exact moment
+    // that is least true.
+    !model.cashIsKnown
+        ? SC.unknown
+        : model.currentCash < 0
+        ? SC.numberCost
+        : SC.numberLife,
+  );
+
   Widget _stat(String label, String value, Color color) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: AppTextStyles.label),
+        // The component shouts and the translation carries sentence case
+        // (#188). CASH and RUN OUT are still baked caps in the backlog, so
+        // this is the identity for them until they are written down.
+        Text(label.toUpperCase(), style: AppTextStyles.label),
         const SizedBox(height: AppSpacing.xxs),
         Text(
           value,

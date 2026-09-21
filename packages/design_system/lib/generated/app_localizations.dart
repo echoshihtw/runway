@@ -154,6 +154,12 @@ abstract class AppLocalizations {
   /// **'CASH'**
   String get cash;
 
+  /// Total outstanding loan principal, beside CASH on the runway card
+  ///
+  /// In en, this message translates to:
+  /// **'Owed'**
+  String get owed;
+
   /// No description provided for @loanPerMonth.
   ///
   /// In en, this message translates to:

@@ -33,6 +33,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get cash => 'EFECTIVO';
 
   @override
+  String get owed => 'Pendiente';
+
+  @override
   String get loanPerMonth => 'DEUDA/MES';
 
   @override

@@ -8,6 +8,7 @@
   "pressureLabel": "每月支出",
   "metrics": "重點",
   "cash": "現金",
+  "owed": "欠款",
   "loanPerMonth": "月債務",
   "runway": "可撐多久",
   "runOut": "用完時間",
@@ -292,7 +293,13 @@
   "runwayBasisSpending": "照你實際花的算，假設今天起沒收入",
   "runwayBasisAssumption": "照你設定的成本算，假設今天起沒收入",
   "computedCost": "照預算和記錄算出來是：{amount}",
-  "@computedCost": {"placeholders": {"amount": {"type": "String"}}},
+  "@computedCost": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "runwayNeedsCosts": "設定每月支出後即可看到可用月數",
   "monthSingular": "個月",
   "monthPlural": "個月",

@@ -33,6 +33,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cash => '現金';
 
   @override
+  String get owed => '欠款';
+
+  @override
   String get loanPerMonth => '月債務';
 
   @override

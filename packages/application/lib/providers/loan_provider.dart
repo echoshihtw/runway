@@ -39,6 +39,15 @@ final totalMonthlyLoanPaymentProvider = Provider<double>((ref) {
   );
 });
 
+/// What is still owed, for the runway card's OWED figure (#202).
+final totalOwedProvider = Provider<double>((ref) {
+  final summaries = ref.watch(loanSummariesProvider);
+  return totalOutstandingFromSummaries(
+    summaries,
+    now: ref.watch(clockProvider)(),
+  );
+});
+
 final addLoanUseCaseProvider = Provider<AddLoanUseCase>((ref) {
   return AddLoanUseCase(ref.watch(loanRepositoryProvider));
 });
