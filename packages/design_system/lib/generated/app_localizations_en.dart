@@ -172,7 +172,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get currencySymbolOnly =>
-      'Changes the display symbol only — your amounts are not converted.';
+      'Changes the display symbol only. Your amounts are not converted.';
 
   @override
   String get daysShort => 'd';
@@ -246,7 +246,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String subscriptionChargesDue(int count, String amount) {
-    return '$count subscription charges due — $amount';
+    return '$count subscription charges due: $amount';
   }
 
   @override
@@ -520,11 +520,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loans => 'LOANS';
 
   @override
-  String activeCount(int count) {
-    return '$count ACTIVE';
-  }
-
-  @override
   String get repayLoan => 'Repay loan';
 
   @override
@@ -538,9 +533,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get subscrPerYear => '/ year';
-
-  @override
-  String get removeConfirm => 'REMOVE?';
 
   @override
   String get remove => 'REMOVE';
@@ -561,10 +553,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get safety => 'SAFETY';
-
-  @override
-  String get deployableCapital =>
-      'Optional capital after protecting your runway';
 
   @override
   String get historyEntries => 'HISTORY & ENTRIES';
@@ -640,7 +628,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get budgetRuleHint =>
-      'Spending uses up its budget — only going over adds cost';
+      'Spending uses up its budget. Only going over adds cost.';
 
   @override
   String get subtotal => 'SUBTOTAL';
@@ -870,7 +858,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shareAsText => 'SHARE AS TEXT';
 
   @override
-  String get goalReached => 'Goal reached!';
+  String get goalReached => 'Goal reached';
 
   @override
   String monthsToGoal(int count) {
@@ -945,7 +933,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingPrivacyHidden => 'Hidden when you switch apps';
 
   @override
-  String get onboardingPrivacyDelete => 'Delete anytime, instantly';
+  String get onboardingPrivacyDelete => 'Delete anytime';
 
   @override
   String get onboardingIUnderstand => 'I UNDERSTAND';
@@ -972,7 +960,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String paywallOneTimePurchase(String price) {
-    return '$price once. This app counts your subscriptions — it will not be one.';
+    return '$price once. This app counts your subscriptions; it will not be one.';
   }
 
   @override

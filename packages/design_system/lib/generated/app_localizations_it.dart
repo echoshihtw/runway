@@ -172,7 +172,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get currencySymbolOnly =>
-      'Modifica solo il simbolo — i tuoi importi non vengono convertiti.';
+      'Modifica solo il simbolo. I tuoi importi non vengono convertiti.';
 
   @override
   String get daysShort => 'g';
@@ -246,7 +246,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String subscriptionChargesDue(int count, String amount) {
-    return '$count addebiti di abbonamento da confermare — $amount';
+    return '$count addebiti di abbonamento da confermare: $amount';
   }
 
   @override
@@ -521,11 +521,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get loans => 'PRESTITI';
 
   @override
-  String activeCount(int count) {
-    return '$count ATTIVO/I';
-  }
-
-  @override
   String get repayLoan => 'Rimborsa prestito';
 
   @override
@@ -539,9 +534,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get subscrPerYear => '/ year';
-
-  @override
-  String get removeConfirm => 'RIMUOVERE?';
 
   @override
   String get remove => 'RIMUOVI';
@@ -562,10 +554,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get safety => 'SICUREZZA';
-
-  @override
-  String get deployableCapital =>
-      'CAPITALE DISPONIBILE — SEPARATO DAL BUFFER DI SOPRAVVIVENZA';
 
   @override
   String get historyEntries => 'STORICO & VOCI';
@@ -641,7 +629,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get budgetRuleHint =>
-      'La spesa consuma il suo budget — solo lo sforamento aggiunge costo';
+      'La spesa consuma il suo budget. Solo lo sforamento aggiunge costo.';
 
   @override
   String get subtotal => 'SUBTOTALE';
@@ -874,7 +862,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get shareAsText => 'CONDIVIDI TESTO';
 
   @override
-  String get goalReached => 'Obiettivo raggiunto!';
+  String get goalReached => 'Obiettivo raggiunto';
 
   @override
   String monthsToGoal(int count) {
@@ -951,7 +939,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get onboardingPrivacyHidden => 'Nascosto quando cambi app';
 
   @override
-  String get onboardingPrivacyDelete => 'Elimina quando vuoi, all\'istante';
+  String get onboardingPrivacyDelete => 'Elimina quando vuoi';
 
   @override
   String get onboardingIUnderstand => 'HO CAPITO';

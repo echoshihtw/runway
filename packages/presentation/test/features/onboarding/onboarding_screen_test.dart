@@ -50,7 +50,7 @@ void main() {
     expect(find.text('Encrypted on device'), findsOneWidget);
     expect(find.text('Numbers stay on your device'), findsOneWidget);
     expect(find.text('Hidden when you switch apps'), findsOneWidget);
-    expect(find.text('Delete anytime, instantly'), findsOneWidget);
+    expect(find.text('Delete anytime'), findsOneWidget);
     expect(find.text('Never sent to servers'), findsNothing);
   });
 

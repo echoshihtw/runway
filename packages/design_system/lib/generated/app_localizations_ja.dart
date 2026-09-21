@@ -244,7 +244,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String subscriptionChargesDue(int count, String amount) {
-    return '未確認のサブスク請求 $count 件 — $amount';
+    return '未確認のサブスク請求 $count 件：$amount';
   }
 
   @override
@@ -514,11 +514,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get loans => 'ローン';
 
   @override
-  String activeCount(int count) {
-    return '$count 件有効';
-  }
-
-  @override
   String get repayLoan => 'ローン返済';
 
   @override
@@ -532,9 +527,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get subscrPerYear => '/ 年';
-
-  @override
-  String get removeConfirm => '削除？';
 
   @override
   String get remove => '削除';
@@ -555,9 +547,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get safety => '安全';
-
-  @override
-  String get deployableCapital => '運用可能資金 — 生存バッファとは別';
 
   @override
   String get historyEntries => '履歴 & 入力';
@@ -631,7 +620,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get livingExpenses => '生活費';
 
   @override
-  String get budgetRuleHint => '支出は予算を使うだけ — 超えた分だけ費用が増える';
+  String get budgetRuleHint => '支出は予算を使うだけ。超えた分だけ費用が増える。';
 
   @override
   String get subtotal => '小計';
@@ -854,7 +843,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get shareAsText => 'テキストで共有';
 
   @override
-  String get goalReached => '目標達成！';
+  String get goalReached => '目標達成';
 
   @override
   String monthsToGoal(int count) {
@@ -920,7 +909,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get onboardingPrivacyHidden => 'アプリ切替時は非表示';
 
   @override
-  String get onboardingPrivacyDelete => 'いつでも即時に削除';
+  String get onboardingPrivacyDelete => 'いつでも削除';
 
   @override
   String get onboardingIUnderstand => 'わかりました';

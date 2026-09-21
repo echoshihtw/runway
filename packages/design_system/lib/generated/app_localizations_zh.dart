@@ -244,7 +244,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String subscriptionChargesDue(int count, String amount) {
-    return '$count 筆訂閱費用待確認 — $amount';
+    return '$count 筆訂閱費用待確認：$amount';
   }
 
   @override
@@ -513,11 +513,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get loans => '貸款';
 
   @override
-  String activeCount(int count) {
-    return '$count 筆有效';
-  }
-
-  @override
   String get repayLoan => '還款';
 
   @override
@@ -531,9 +526,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get subscrPerYear => '/ 年';
-
-  @override
-  String get removeConfirm => '刪除？';
 
   @override
   String get remove => '刪除';
@@ -554,9 +546,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get safety => '安全';
-
-  @override
-  String get deployableCapital => '保留安全緩衝後，還能運用的資金';
 
   @override
   String get historyEntries => '歷史紀錄';
@@ -628,7 +617,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get livingExpenses => '生活費';
 
   @override
-  String get budgetRuleHint => '支出只是把預算用掉 — 超支才會多花錢';
+  String get budgetRuleHint => '支出只是把預算用掉，超支才會多花錢。';
 
   @override
   String get subtotal => '小計';
@@ -851,7 +840,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get shareAsText => '以文字分享';
 
   @override
-  String get goalReached => '目標達成！';
+  String get goalReached => '目標達成';
 
   @override
   String monthsToGoal(int count) {
@@ -917,7 +906,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingPrivacyHidden => '切到別的 App 就自動遮起來';
 
   @override
-  String get onboardingPrivacyDelete => '想刪就刪，馬上清光';
+  String get onboardingPrivacyDelete => '想刪就刪';
 
   @override
   String get onboardingIUnderstand => '了解';

@@ -12,7 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// said it only in a caption you had to open a settings sheet to read. Someone
 /// logging a large expense inside its budget watches the runway not move and
 /// concludes the app is broken.
-const _rule = 'Spending uses up its budget — only going over adds cost';
+const _rule = 'Spending uses up its budget. Only going over adds cost.';
 
 MonthlyBurn _burn({required double rent, required double living}) =>
     MonthlyBurn(
