@@ -299,6 +299,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get spendOnWhat => '這筆是花在什麼？';
 
   @override
+  String get moneyCameInInstead => '是收到錢嗎？';
+
+  @override
+  String get logIncome => '記錄收入';
+
+  @override
   String get presetCoffee => '咖啡';
 
   @override

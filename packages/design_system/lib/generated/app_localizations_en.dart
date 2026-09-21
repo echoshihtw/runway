@@ -304,6 +304,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get spendOnWhat => 'What was it for?';
 
   @override
+  String get moneyCameInInstead => 'Money came in instead?';
+
+  @override
+  String get logIncome => 'Log income';
+
+  @override
   String get presetCoffee => 'COFFEE';
 
   @override

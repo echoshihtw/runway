@@ -129,6 +129,8 @@
   "noActiveLoans": "AUCUN PRÊT ACTIF",
   "newLoan": "+ PRÊT",
   "spendOnWhat": "C'était pour quoi ?",
+  "moneyCameInInstead": "De l’argent est entré à la place ?",
+  "logIncome": "Noter un revenu",
   "presetCoffee": "CAFÉ",
   "presetCoffeeNote": "Café",
   "presetLunch": "DÉJEUNER",

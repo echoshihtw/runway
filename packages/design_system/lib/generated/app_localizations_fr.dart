@@ -305,6 +305,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get spendOnWhat => 'C\'était pour quoi ?';
 
   @override
+  String get moneyCameInInstead => 'De l’argent est entré à la place ?';
+
+  @override
+  String get logIncome => 'Noter un revenu';
+
+  @override
   String get presetCoffee => 'CAFÉ';
 
   @override

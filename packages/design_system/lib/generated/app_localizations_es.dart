@@ -305,6 +305,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get spendOnWhat => '¿Para qué fue?';
 
   @override
+  String get moneyCameInInstead => '¿Entró dinero en su lugar?';
+
+  @override
+  String get logIncome => 'Registrar ingreso';
+
+  @override
   String get presetCoffee => 'CAFÉ';
 
   @override

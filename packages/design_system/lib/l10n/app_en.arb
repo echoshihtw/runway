@@ -143,6 +143,14 @@
   "noActiveLoans": "NO ACTIVE LOANS",
   "newLoan": "+ LOAN",
   "spendOnWhat": "What was it for?",
+  "moneyCameInInstead": "Money came in instead?",
+  "logIncome": "Log income",
+  "@moneyCameInInstead": {
+    "description": "Under the spend tiles: the other direction has a door too"
+  },
+  "@logIncome": {
+    "description": "The action beside it; opens the form on income"
+  },
   "presetCoffee": "COFFEE",
   "presetCoffeeNote": "Coffee",
   "presetLunch": "LUNCH",

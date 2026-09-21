@@ -305,6 +305,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get spendOnWhat => 'Per cosa era?';
 
   @override
+  String get moneyCameInInstead => 'È entrato denaro invece?';
+
+  @override
+  String get logIncome => 'Registra entrata';
+
+  @override
   String get presetCoffee => 'CAFFÈ';
 
   @override

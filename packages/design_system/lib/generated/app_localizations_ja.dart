@@ -299,6 +299,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get spendOnWhat => '何に使いましたか？';
 
   @override
+  String get moneyCameInInstead => '入ってきたお金ですか？';
+
+  @override
+  String get logIncome => '収入を記録';
+
+  @override
   String get presetCoffee => 'コーヒー';
 
   @override

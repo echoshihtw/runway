@@ -670,6 +670,18 @@ abstract class AppLocalizations {
   /// **'What was it for?'**
   String get spendOnWhat;
 
+  /// Under the spend tiles: the other direction has a door too
+  ///
+  /// In en, this message translates to:
+  /// **'Money came in instead?'**
+  String get moneyCameInInstead;
+
+  /// The action beside it; opens the form on income
+  ///
+  /// In en, this message translates to:
+  /// **'Log income'**
+  String get logIncome;
+
   /// No description provided for @presetCoffee.
   ///
   /// In en, this message translates to:

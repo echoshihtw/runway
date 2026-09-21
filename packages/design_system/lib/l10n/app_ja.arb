@@ -129,6 +129,8 @@
   "noActiveLoans": "アクティブなローンなし",
   "newLoan": "+ ローン",
   "spendOnWhat": "何に使いましたか？",
+  "moneyCameInInstead": "入ってきたお金ですか？",
+  "logIncome": "収入を記録",
   "presetCoffee": "コーヒー",
   "presetCoffeeNote": "コーヒー",
   "presetLunch": "ランチ",
