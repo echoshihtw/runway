@@ -640,6 +640,11 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String budgetPaid(String amount) {
+    return '$amount payé';
+  }
+
+  @override
   String spentOfBudget(String spent, String budget) {
     return '$spent sur $budget';
   }

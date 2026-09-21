@@ -22,6 +22,10 @@ Future<void> showEntrySheet(
   TransactionType? preselectedType,
 }) {
   final loans = _loanChoices(ref, existing: existing);
+  // The rent a month costs is already stored. Typing it again on every rent
+  // entry is work the app can do, so the form is handed it the same way it
+  // is handed the loans.
+  final rentBudget = ref.read(budgetProvider).value?.rent ?? 0;
 
   return showModalBottomSheet<void>(
     context: context,
@@ -38,6 +42,7 @@ Future<void> showEntrySheet(
       prefillNote: prefillNote,
       preselectedType: preselectedType,
       loans: loans,
+      rentBudget: rentBudget,
       onSubmit: (type, amount, date, note, category, loanId) async {
         final now = DateTime.now();
         if (existing == null) {

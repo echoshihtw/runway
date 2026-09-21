@@ -10,6 +10,11 @@ class TransactionForm extends StatefulWidget {
   final Transaction? existing;
   final TransactionType? preselectedType;
 
+  /// What a month of rent costs, or zero when none is set. Offered as the
+  /// amount when RENT is chosen on a new entry, because the figure is one the
+  /// owner already told the app.
+  final double rentBudget;
+
   /// A note written for the owner, from a daily-spend preset. Only the note:
   /// the amount is the one thing the preset cannot know, and it stays empty
   /// and focused.
@@ -29,6 +34,7 @@ class TransactionForm extends StatefulWidget {
     super.key,
     this.existing,
     this.preselectedType,
+    this.rentBudget = 0,
     this.prefillNote,
     this.loans = const [],
     required this.onSubmit,
@@ -42,6 +48,10 @@ class _TransactionFormState extends State<TransactionForm> {
   final _amountCtrl = TextEditingController();
   final _noteCtrl = TextEditingController();
   final _amountFocus = FocusNode();
+
+  /// Whether the amount on screen is the app's suggestion rather than a
+  /// figure the owner typed.
+  bool _amountIsOffered = false;
 
   late bool _isInflow;
   late DateTime _date;
@@ -151,6 +161,26 @@ class _TransactionFormState extends State<TransactionForm> {
   /// offers the loan an existing entry names, even a closed one, and with no
   /// loans at all `_effectiveOutKind` falls back to living before the type can
   /// resolve to a repayment. It mirrors the handler so the two cannot drift.
+  /// Fills the amount with the rent budget when RENT is chosen, and takes it
+  /// back when it is not.
+  ///
+  /// Only ever on an empty field, and only on a new entry, so it cannot
+  /// overwrite something typed or quietly rewrite an amount being edited.
+  /// [_amountIsOffered] is cleared the moment the owner types, which is what
+  /// stops the handback from deleting their own figure.
+  void _offerRentAmount(_OutKind kind) {
+    if (widget.existing != null || widget.rentBudget <= 0) return;
+    if (kind == _OutKind.rent) {
+      if (_amountCtrl.text.trim().isEmpty) {
+        _amountCtrl.text = moneyField(widget.rentBudget);
+        _amountIsOffered = true;
+      }
+    } else if (_amountIsOffered) {
+      _amountCtrl.clear();
+      _amountIsOffered = false;
+    }
+  }
+
   bool get _valid {
     final amount = double.tryParse(_amountCtrl.text.trim());
     if (amount == null || amount <= 0) return false;
@@ -251,7 +281,7 @@ class _TransactionFormState extends State<TransactionForm> {
               focusNode: _amountFocus,
               inputType: NeoInputType.decimal,
               hint: '50,000',
-              onChanged: (_) => setState(() {}),
+              onChanged: (_) => setState(() => _amountIsOffered = false),
             ),
             const SizedBox(height: AppSpacing.md),
 
@@ -274,6 +304,7 @@ class _TransactionFormState extends State<TransactionForm> {
                   if (kind == _OutKind.loan && _selectedLoanId == null) {
                     _selectedLoanId = _defaultLoanId();
                   }
+                  _offerRentAmount(kind);
                 }),
               ),
               if (_effectiveOutKind == _OutKind.loan) ...[

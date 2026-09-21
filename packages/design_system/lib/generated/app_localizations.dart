@@ -1312,6 +1312,12 @@ abstract class AppLocalizations {
   /// **'{amount} left'**
   String budgetLeft(String amount);
 
+  /// A fixed cost logged in full this month
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} paid'**
+  String budgetPaid(String amount);
+
   /// Under the remainder: the working behind it
   ///
   /// In en, this message translates to:

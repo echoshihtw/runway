@@ -256,6 +256,7 @@
   "budgetRuleHint": "支出只是把預算用掉，超支才會多花錢。",
   "subtotal": "小計",
   "budgetLeft": "剩餘 {amount}",
+  "budgetPaid": "{amount} 已付",
   "spentOfBudget": "{budget} 用了 {spent}",
   "budgetOver": "超出預算 {amount}",
   "dailyAllowance": "{days, plural, =1{今天可用 {amount}} other{每天 {amount}，還有 {days} 天}}",

@@ -631,6 +631,11 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String budgetPaid(String amount) {
+    return '$amount 支払済み';
+  }
+
+  @override
   String spentOfBudget(String spent, String budget) {
     return '$budget 中 $spent';
   }

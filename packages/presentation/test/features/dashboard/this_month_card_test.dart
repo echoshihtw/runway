@@ -169,4 +169,77 @@ void main() {
 
     expect(find.text('No living expenses logged this month'), findsOneWidget);
   });
+
+  testWidgets('a fixed cost says when it has been logged', (tester) async {
+    // Its amount never changes, so the figure alone cannot acknowledge that
+    // anything happened. Logging rent in full moved cash, OUT and NET while
+    // this row — the one being looked at — said nothing.
+    await _pumpCard(
+      tester,
+      _burn(
+        rent: const BudgetBucket(
+          budget: 32000,
+          spentThisMonth: 32000,
+          typicalSpending: 32000,
+        ),
+        living: const BudgetBucket(
+          budget: 0,
+          spentThisMonth: 0,
+          typicalSpending: 0,
+        ),
+      ),
+    );
+
+    expect(find.textContaining(RegExp(r'32,000 paid$')), findsOneWidget);
+  });
+
+  testWidgets('a fixed cost shows the ratio while it is part paid', (
+    tester,
+  ) async {
+    await _pumpCard(
+      tester,
+      _burn(
+        rent: const BudgetBucket(
+          budget: 32000,
+          spentThisMonth: 12000,
+          typicalSpending: 12000,
+        ),
+        living: const BudgetBucket(
+          budget: 0,
+          spentThisMonth: 0,
+          typicalSpending: 0,
+        ),
+      ),
+    );
+
+    expect(find.textContaining(RegExp(r'12,000 of .*32,000')), findsOneWidget);
+    expect(find.textContaining('paid'), findsNothing);
+  });
+
+  testWidgets('a fixed cost with nothing logged states its amount and stops', (
+    tester,
+  ) async {
+    // Never "unpaid": the runway counts rent whether it is logged or not, so
+    // most people never log it, and saying "not paid" would report the
+    // absence of an entry as the absence of a payment.
+    await _pumpCard(
+      tester,
+      _burn(
+        rent: const BudgetBucket(
+          budget: 32000,
+          spentThisMonth: 0,
+          typicalSpending: 0,
+        ),
+        living: const BudgetBucket(
+          budget: 0,
+          spentThisMonth: 0,
+          typicalSpending: 0,
+        ),
+      ),
+    );
+
+    expect(find.textContaining(RegExp(r'32,000$')), findsOneWidget);
+    expect(find.textContaining('paid'), findsNothing);
+    expect(find.textContaining('of'), findsNothing);
+  });
 }

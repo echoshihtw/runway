@@ -256,6 +256,7 @@
   "budgetRuleHint": "El gasto consume su presupuesto. Solo pasarse añade coste.",
   "subtotal": "SUBTOTAL",
   "budgetLeft": "quedan {amount}",
+  "budgetPaid": "{amount} pagado",
   "spentOfBudget": "{spent} de {budget}",
   "budgetOver": "{amount} por encima del presupuesto",
   "dailyAllowance": "{days, plural, =1{{amount} para hoy} other{{amount} al día durante {days} días}}",

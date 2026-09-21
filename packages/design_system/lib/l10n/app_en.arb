@@ -301,6 +301,15 @@
   "budgetRuleHint": "Spending uses up its budget. Only going over adds cost.",
   "subtotal": "SUBTOTAL",
   "budgetLeft": "{amount} left",
+  "budgetPaid": "{amount} paid",
+  "@budgetPaid": {
+    "description": "A fixed cost logged in full this month",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "spentOfBudget": "{spent} of {budget}",
   "@spentOfBudget": {
     "description": "Under the remainder: the working behind it",
