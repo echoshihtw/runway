@@ -147,4 +147,49 @@ void main() {
 
     expect(burn.rent.spentThisMonth, 0);
   });
+
+  test('an unspent budget comes back whole, not larger', () {
+    // Spending less is already rewarded, in cash: 200 not spent is 200 still
+    // there, and the runway is cash over burn. Adding it to next month's
+    // allowance as well would count the same 200 twice.
+    final someLiving = Transaction(
+      id: 'living-sep',
+      date: DateTime(2026, 9, 10),
+      type: TransactionType.expense,
+      amount: Money(900),
+      createdAt: now,
+      updatedAt: now,
+    );
+
+    MonthlyBurn burnAt(DateTime when) => computeMonthlyBurn(
+      transactions: [opening, someLiving],
+      budget: budget,
+      loans: const [],
+      subscriptions: const [],
+      now: when,
+    );
+
+    final september = burnAt(DateTime(2026, 9, 20));
+    expect(september.living.spentThisMonth, 900);
+    expect(september.living.leftThisMonth, 200);
+
+    final october = burnAt(DateTime(2026, 10, 5));
+    expect(
+      october.living.leftThisMonth,
+      1100,
+      reason: 'the allowance returns whole',
+    );
+    expect(
+      october.living.leftThisMonth,
+      isNot(1300),
+      reason: 'and does not carry September\'s 200 on top of it',
+    );
+
+    // The 200 is not lost. It is cash, which is where spending less shows up.
+    final cash = [opening, someLiving].fold<double>(
+      0,
+      (sum, t) => sum + (t.type.isInflow ? t.amount.value : -t.amount.value),
+    );
+    expect(cash, 33100);
+  });
 }
