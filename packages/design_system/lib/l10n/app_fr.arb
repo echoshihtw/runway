@@ -8,6 +8,8 @@
   "pressureLabel": "Coûts mensuels",
   "metrics": "MÉTRIQUES",
   "cash": "LIQUIDITÉS",
+  "owed": "Reste dû",
+  "runsOut": "Épuisé en {date}",
   "loanPerMonth": "DETTE/MO",
   "runway": "AUTONOMIE",
   "runOut": "ÉPUISEMENT",
@@ -292,7 +294,13 @@
   "runwayBasisSpending": "Sur vos dépenses, si vos revenus s'arrêtaient aujourd'hui",
   "runwayBasisAssumption": "Sur votre hypothèse de coûts, si vos revenus s'arrêtaient aujourd'hui",
   "computedCost": "Calculé à partir de votre budget et du journal : {amount}",
-  "@computedCost": {"placeholders": {"amount": {"type": "String"}}},
+  "@computedCost": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "runwayNeedsCosts": "Renseignez vos coûts mensuels pour voir votre marge",
   "monthSingular": "mois",
   "monthPlural": "mois",

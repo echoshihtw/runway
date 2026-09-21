@@ -8,6 +8,8 @@
   "pressureLabel": "Costi mensili",
   "metrics": "METRICHE",
   "cash": "CONTANTI",
+  "owed": "Residuo",
+  "runsOut": "Si esaurisce {date}",
   "loanPerMonth": "DEBITO/MESE",
   "runway": "AUTONOMIA",
   "runOut": "ESAURIMENTO",
@@ -292,7 +294,13 @@
   "runwayBasisSpending": "Sulle tue spese, se il reddito si fermasse oggi",
   "runwayBasisAssumption": "Sulla tua ipotesi di costi, se il reddito si fermasse oggi",
   "computedCost": "Calcolato da budget e registro: {amount}",
-  "@computedCost": {"placeholders": {"amount": {"type": "String"}}},
+  "@computedCost": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "runwayNeedsCosts": "Imposta i costi mensili per vedere la tua autonomia",
   "monthSingular": "mese",
   "monthPlural": "mesi",

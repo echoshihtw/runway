@@ -8,6 +8,8 @@
   "pressureLabel": "プレッシャー",
   "metrics": "メトリクス",
   "cash": "現金",
+  "owed": "残債",
+  "runsOut": "{date} に枯渇",
   "loanPerMonth": "月間債務",
   "runway": "生存期間",
   "runOut": "枯渇日",
@@ -292,7 +294,13 @@
   "runwayBasisSpending": "支出実績ベース。今日収入が止まった場合",
   "runwayBasisAssumption": "コスト想定ベース。今日収入が止まった場合",
   "computedCost": "予算と記録からの計算値: {amount}",
-  "@computedCost": {"placeholders": {"amount": {"type": "String"}}},
+  "@computedCost": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "runwayNeedsCosts": "毎月のコストを設定すると残り月数がわかります",
   "monthSingular": "か月",
   "monthPlural": "か月",

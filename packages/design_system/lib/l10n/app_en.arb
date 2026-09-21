@@ -8,6 +8,19 @@
   "pressureLabel": "Monthly costs",
   "metrics": "Signals",
   "cash": "CASH",
+  "owed": "Owed",
+  "runsOut": "Runs out {date}",
+  "@runsOut": {
+    "description": "The run-out date, under the runway number it restates",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@owed": {
+    "description": "Total outstanding loan principal, beside CASH on the runway card"
+  },
   "loanPerMonth": "DEBT/MO",
   "runway": "RUNWAY",
   "runOut": "RUN OUT",
@@ -358,7 +371,13 @@
   "runwayBasisSpending": "On your spending, if income paused today",
   "runwayBasisAssumption": "On your cost assumption, if income paused today",
   "computedCost": "Computed from your budget and log: {amount}",
-  "@computedCost": {"placeholders": {"amount": {"type": "String"}}},
+  "@computedCost": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "runwayNeedsCosts": "Set your monthly costs to see your runway",
   "monthSingular": "month",
   "monthPlural": "months",
@@ -437,7 +456,13 @@
   "paywallLoadingPrice": "Loading price...",
   "paywallStoreUnreachable": "Couldn't reach the store. Check your connection and try again.",
   "paywallOneTimePurchase": "{price} once. This app counts your subscriptions — it will not be one.",
-  "@paywallOneTimePurchase": {"placeholders": {"price": {"type": "String"}}},
+  "@paywallOneTimePurchase": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
   "paywallUnavailable": "Pro isn't available right now. Please try again later.",
   "paywallRestore": "Restore purchase",
   "paywallMaybeLater": "Maybe later",
@@ -446,9 +471,21 @@
   "paywallNoPreviousPurchase": "No previous purchase found.",
   "paywallRestoreFailed": "Restore failed. Please try again.",
   "paywallTitleEntries": "You've used your {count} free entries.\nPro is what keeps the number true.",
-  "@paywallTitleEntries": {"placeholders": {"count": {"type": "int"}}},
+  "@paywallTitleEntries": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "paywallTitleSimulations": "You've run your {count} free simulations.\nPro is how you keep asking what if.",
-  "@paywallTitleSimulations": {"placeholders": {"count": {"type": "int"}}},
+  "@paywallTitleSimulations": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "paywallTitleDefault": "Unlock Runway Pro.",
   "paywallFeatureEntries": "Log everything, so the number never drifts",
   "paywallFeatureSimulations": "Ask what if as often as you like",
@@ -457,10 +494,22 @@
   "stepExpenseShort": "First expense",
   "stepSimShort": "Simulator",
   "stepsDone": "Done: {steps}",
-  "@stepsDone": {"placeholders": {"steps": {"type": "String"}}},
+  "@stepsDone": {
+    "placeholders": {
+      "steps": {
+        "type": "String"
+      }
+    }
+  },
   "optionalBadge": "OPTIONAL",
   "fixedCostsUnchanged": "Fixed costs unchanged: {amount}",
-  "@fixedCostsUnchanged": {"placeholders": {"amount": {"type": "String"}}},
+  "@fixedCostsUnchanged": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "simNeedsBalance": "Add your opening balance first",
   "simNeedsBalanceWhy": "A runway needs a starting balance to count down from.",
   "addOpeningBalance": "ADD MY BALANCE",
@@ -468,13 +517,37 @@
   "runwayUnlimitedHere": "Income covers costs in this plan",
   "runwayNoChange": "No change",
   "deltaDaysLonger": "{days, plural, =1{1 day longer} other{{days} days longer}}",
-  "@deltaDaysLonger": {"placeholders": {"days": {"type": "int"}}},
+  "@deltaDaysLonger": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
   "deltaDaysShorter": "{days, plural, =1{1 day shorter} other{{days} days shorter}}",
-  "@deltaDaysShorter": {"placeholders": {"days": {"type": "int"}}},
+  "@deltaDaysShorter": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
   "deltaMonthsLonger": "{months, plural, =1{1 month longer} other{{months} months longer}}",
-  "@deltaMonthsLonger": {"placeholders": {"months": {"type": "int"}}},
+  "@deltaMonthsLonger": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
   "deltaMonthsShorter": "{months, plural, =1{1 month shorter} other{{months} months shorter}}",
-  "@deltaMonthsShorter": {"placeholders": {"months": {"type": "int"}}},
+  "@deltaMonthsShorter": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
   "paywallTermsOfUse": "Terms of Use",
   "paywallPrivacyPolicy": "Privacy Policy",
   "@paywallTermsOfUse": {

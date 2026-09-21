@@ -33,6 +33,14 @@ class AppLocalizationsJa extends AppLocalizations {
   String get cash => '現金';
 
   @override
+  String get owed => '残債';
+
+  @override
+  String runsOut(String date) {
+    return '$date に枯渇';
+  }
+
+  @override
   String get loanPerMonth => '月間債務';
 
   @override

@@ -154,6 +154,18 @@ abstract class AppLocalizations {
   /// **'CASH'**
   String get cash;
 
+  /// Total outstanding loan principal, beside CASH on the runway card
+  ///
+  /// In en, this message translates to:
+  /// **'Owed'**
+  String get owed;
+
+  /// The run-out date, under the runway number it restates
+  ///
+  /// In en, this message translates to:
+  /// **'Runs out {date}'**
+  String runsOut(String date);
+
   /// No description provided for @loanPerMonth.
   ///
   /// In en, this message translates to:

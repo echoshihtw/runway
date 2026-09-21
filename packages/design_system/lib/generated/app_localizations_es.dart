@@ -33,6 +33,14 @@ class AppLocalizationsEs extends AppLocalizations {
   String get cash => 'EFECTIVO';
 
   @override
+  String get owed => 'Pendiente';
+
+  @override
+  String runsOut(String date) {
+    return 'Se agota $date';
+  }
+
+  @override
   String get loanPerMonth => 'DEUDA/MES';
 
   @override

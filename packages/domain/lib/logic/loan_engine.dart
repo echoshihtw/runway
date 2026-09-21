@@ -156,3 +156,23 @@ double totalMonthlyPaymentFromSummaries(
   summaries,
   now: now ?? DateTime.now(),
 ).fold(0.0, (sum, summary) => sum + summary.loan.monthlyPayment);
+
+/// What is still owed across every loan the app counts as active.
+///
+/// Borrowing is an inflow, so it raises cash and the runway with it while
+/// the other side of the same transaction appears nowhere. This is that
+/// other side.
+///
+/// Summed over [activeLoanSummaries], the same set the liabilities panel
+/// counts, so the figure and the count can never disagree. A loan whose
+/// principal is repaid but whose payments have not finished stays in that
+/// set; it contributes nothing rather than a negative, because money already
+/// repaid is not money owed back.
+double totalOutstandingFromSummaries(
+  List<LoanSummary> summaries, {
+  DateTime? now,
+}) => activeLoanSummaries(summaries, now: now ?? DateTime.now()).fold(
+  0.0,
+  (sum, summary) =>
+      sum + (summary.remainingBalance > 0 ? summary.remainingBalance : 0),
+);
