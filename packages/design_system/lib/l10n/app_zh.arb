@@ -21,7 +21,7 @@
   "edit": "編輯",
   "save": "儲存",
   "clear": "清除",
-  "transactionLog": "交易記錄",
+  "transactionLog": "交易紀錄",
   "newEntry": "+ 新增",
   "noEntries": "還沒有任何紀錄\n點 + 新增你的第一筆資料",
   "newLogEntry": "新增一筆",
@@ -33,7 +33,7 @@
   "noteOptional": "備註（選填）",
   "confirm": "確認",
   "abort": "取消",
-  "purgeEntry": "刪除這筆記錄？",
+  "purgeEntry": "刪除這筆紀錄？",
   "scenarioSimulator": "情境規劃",
   "overrideInputs": "規劃用數字",
   "burnRateOverride": "房租 + 生活費 / 月",
@@ -71,7 +71,7 @@
   "stepBalanceHint": "你現在有多少錢？",
   "stepBudgetLabel": "設定每月預算",
   "stepBudgetHint": "房租 + 生活費",
-  "stepExpenseLabel": "記錄第一筆支出",
+  "stepExpenseLabel": "紀錄第一筆支出",
   "stepExpenseHint": "追蹤你的花費",
   "stepSimLabel": "試試模擬器",
   "stepSimHint": "減少支出會怎樣？",
@@ -100,8 +100,8 @@
       }
     }
   },
-  "subscriptionPaidYes": "是，記錄下來",
-  "subscriptionChargeFailed": "無法記錄。請檢查訂閱金額。",
+  "subscriptionPaidYes": "是，紀錄下來",
+  "subscriptionChargeFailed": "無法紀錄。請檢查訂閱金額。",
   "subscriptionSaveFailed": "無法儲存訂閱。尚未新增。",
   "loanSaveFailed": "貸款沒存成功，還沒加進去。",
   "subscriptionPaidNo": "否",
@@ -124,7 +124,7 @@
     }
   },
   "deleteSubscription": "刪除訂閱",
-  "deleteSubscriptionKeepsEntries": "停止未來的記錄。已記錄的付款會保留。",
+  "deleteSubscriptionKeepsEntries": "停止未來的紀錄。已紀錄的付款會保留。",
   "liabilities": "負債",
   "noActiveLoans": "目前沒有貸款",
   "newLoan": "+ 貸款",
@@ -142,7 +142,7 @@
   "presetGroceries": "採買",
   "presetGroceriesNote": "採買",
   "presetSomethingElse": "其他",
-  "freeEntriesUsed": "免費記錄 {free} 筆已用 {used} 筆",
+  "freeEntriesUsed": "免費紀錄 {free} 筆已用 {used} 筆",
   "@freeEntriesUsed": {
     "placeholders": {
       "used": {
@@ -233,7 +233,7 @@
   "safetyFund": "安全基金",
   "safety": "安全",
   "deployableCapital": "保留安全緩衝後，還能運用的資金",
-  "historyEntries": "歷史記錄",
+  "historyEntries": "歷史紀錄",
   "addEntry": "+ 新增",
   "willRemoveLoan": "也會一起從貸款清單移除",
   "delete": "刪除",
@@ -298,7 +298,7 @@
   "runwayBasisBudget": "照你的預算算，假設今天起沒收入",
   "runwayBasisSpending": "照你實際花的算，假設今天起沒收入",
   "runwayBasisAssumption": "照你設定的成本算，假設今天起沒收入",
-  "computedCost": "照預算和記錄算出來是：{amount}",
+  "computedCost": "照預算和紀錄算出來是：{amount}",
   "@computedCost": {
     "placeholders": {
       "amount": {

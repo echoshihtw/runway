@@ -74,7 +74,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get clear => '清除';
 
   @override
-  String get transactionLog => '交易記錄';
+  String get transactionLog => '交易紀錄';
 
   @override
   String get newEntry => '+ 新增';
@@ -110,7 +110,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get abort => '取消';
 
   @override
-  String get purgeEntry => '刪除這筆記錄？';
+  String get purgeEntry => '刪除這筆紀錄？';
 
   @override
   String get scenarioSimulator => '情境規劃';
@@ -196,7 +196,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get stepBudgetHint => '房租 + 生活費';
 
   @override
-  String get stepExpenseLabel => '記錄第一筆支出';
+  String get stepExpenseLabel => '紀錄第一筆支出';
 
   @override
   String get stepExpenseHint => '追蹤你的花費';
@@ -254,10 +254,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get subscriptionReviewEach => '逐筆確認';
 
   @override
-  String get subscriptionPaidYes => '是，記錄下來';
+  String get subscriptionPaidYes => '是，紀錄下來';
 
   @override
-  String get subscriptionChargeFailed => '無法記錄。請檢查訂閱金額。';
+  String get subscriptionChargeFailed => '無法紀錄。請檢查訂閱金額。';
 
   @override
   String get subscriptionSaveFailed => '無法儲存訂閱。尚未新增。';
@@ -284,7 +284,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deleteSubscription => '刪除訂閱';
 
   @override
-  String get deleteSubscriptionKeepsEntries => '停止未來的記錄。已記錄的付款會保留。';
+  String get deleteSubscriptionKeepsEntries => '停止未來的紀錄。已紀錄的付款會保留。';
 
   @override
   String get liabilities => '負債';
@@ -339,7 +339,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String freeEntriesUsed(int used, int free) {
-    return '免費記錄 $free 筆已用 $used 筆';
+    return '免費紀錄 $free 筆已用 $used 筆';
   }
 
   @override
@@ -559,7 +559,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deployableCapital => '保留安全緩衝後，還能運用的資金';
 
   @override
-  String get historyEntries => '歷史記錄';
+  String get historyEntries => '歷史紀錄';
 
   @override
   String get addEntry => '+ 新增';
@@ -772,7 +772,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String computedCost(String amount) {
-    return '照預算和記錄算出來是：$amount';
+    return '照預算和紀錄算出來是：$amount';
   }
 
   @override
