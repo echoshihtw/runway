@@ -2,10 +2,12 @@ import 'package:application/application.dart';
 import 'package:design_system/design_system.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:presentation/features/paywall/paywall_screen.dart';
 import 'package:presentation/features/transactions/transactions_screen.dart';
+import 'package:presentation/product_config.dart';
 import 'package:presentation/router/nav_metrics.dart';
 import 'package:presentation/features/transactions/widgets/transaction_form.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -291,6 +293,61 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.textContaining('free entries used'), findsNothing);
+  });
+
+  testWidgets('each tile wears an icon, not the system\'s emoji artwork', (
+    tester,
+  ) async {
+    // Emoji are drawn by the OS in its own colours, which put a dozen hues
+    // the palette never chose into a sheet where every hue means one thing,
+    // and they cannot dim with the tile that holds them.
+    await _pump(tester);
+    await tester.tap(_addButton);
+    await tester.pumpAndSettle();
+
+    for (final preset in ProductConfig.presets) {
+      expect(
+        find.byIcon(preset.glyph),
+        findsOneWidget,
+        reason: 'a preset is missing its icon',
+      );
+    }
+
+    final dim = ProductConfig.presets.last;
+    expect(
+      tester.widget<Icon>(find.byIcon(dim.glyph)).color,
+      AppColors.textSecondary,
+      reason: 'the dim tile\'s icon dims with it; an emoji could not',
+    );
+  });
+
+  testWidgets('a tile is announced by its category, once, as a button', (
+    tester,
+  ) async {
+    // The tile was a Text beside an Icon with no button role: VoiceOver read
+    // it as static content and gave no sign it could be activated.
+    final semantics = tester.ensureSemantics();
+
+    await _pump(tester);
+    await tester.tap(_addButton);
+    await tester.pumpAndSettle();
+
+    // getSemantics throws on more than one match, so this also proves the
+    // icon does not contribute a second node carrying the same label.
+    final data = tester
+        .getSemantics(find.bySemanticsLabel('COFFEE'))
+        .getSemanticsData();
+    expect(
+      data.flagsCollection.isButton,
+      isTrue,
+      reason: 'the category is a control, and has to say so',
+    );
+    expect(
+      data.hasAction(SemanticsAction.tap),
+      isTrue,
+      reason: 'a screen reader must be able to activate it',
+    );
+    semantics.dispose();
   });
 
   testWidgets('every tile is big enough to hit', (tester) async {
