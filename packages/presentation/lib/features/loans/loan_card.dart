@@ -10,11 +10,18 @@ class LoanCard extends ConsumerWidget {
   final VoidCallback onTap;
   final VoidCallback onRepay;
 
+  /// The rule separates one loan from the next, so the last one has nothing
+  /// to separate from: NEW LOAN draws its own rule above itself, and the two
+  /// sat eight points apart in the same colour, reading as a stray line.
+  /// `_SubRow` in the subscriptions panel already takes this flag.
+  final bool showDivider;
+
   const LoanCard({
     super.key,
     required this.summary,
     required this.onTap,
     required this.onRepay,
+    this.showDivider = true,
   });
 
   @override
@@ -40,9 +47,12 @@ class LoanCard extends ConsumerWidget {
       onLongPress: onTap,
       child: Container(
         padding: const EdgeInsets.all(AppSpacing.md),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           border: Border(
-            bottom: BorderSide(color: AppColors.panelBorder, width: 1),
+            bottom: BorderSide(
+              color: showDivider ? AppColors.panelBorder : Colors.transparent,
+              width: 1,
+            ),
           ),
         ),
         child: Column(

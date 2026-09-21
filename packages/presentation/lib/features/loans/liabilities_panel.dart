@@ -114,16 +114,17 @@ class LiabilitiesPanel extends ConsumerWidget {
         ? null
         : Column(
             children: [
-              ...active.map(
-                (s) => Padding(
+              for (var i = 0; i < active.length; i++)
+                Padding(
                   padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                   child: LoanCard(
-                    summary: s,
-                    onTap: () => _confirmSettled(context, ref, s),
-                    onRepay: () => _showRepay(context, ref, s),
+                    summary: active[i],
+                    // The strip below draws the last rule.
+                    showDivider: i < active.length - 1,
+                    onTap: () => _confirmSettled(context, ref, active[i]),
+                    onRepay: () => _showRepay(context, ref, active[i]),
                   ),
                 ),
-              ),
               AddStrip(
                 label: l10n.newLoan,
                 color: SC.accentCost,
