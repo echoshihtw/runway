@@ -369,10 +369,11 @@ class AppLocalizationsIt extends AppLocalizations {
   String get repaid => '% RIMBORSATO';
 
   @override
-  String get stillPaying => 'CAPITALE RIMBORSATO — I PAGAMENTI CONTINUANO';
+  String get stillPaying =>
+      'Hai restituito quanto hai preso in prestito. I pagamenti continuano fino alla fine del termine.';
 
   @override
-  String get markSettled => 'SEGNA COME ESTINTO';
+  String get markSettled => 'Segna come estinto';
 
   @override
   String get markSettledExplain =>

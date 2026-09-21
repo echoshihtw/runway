@@ -162,7 +162,11 @@ class LiabilitiesPanel extends ConsumerWidget {
       useRootNavigator: true,
       builder: (dialogContext) => AlertDialog(
         backgroundColor: AppColors.surface,
-        title: Text(l10n.markSettled, style: AppTextStyles.label),
+        // A title, at title size. This dialog ends a financial commitment
+        // for good and its heading was set at the 11pt the app uses for row
+        // labels, which is also why it read as shouting: caps at label size
+        // is correct, caps at heading size is not.
+        title: Text(l10n.markSettled, style: AppTextStyles.title),
         content: Text(l10n.markSettledExplain, style: AppTextStyles.bodySmall),
         actions: [
           TextButton(
@@ -171,8 +175,9 @@ class LiabilitiesPanel extends ConsumerWidget {
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
+            // The action keeps its caps: a button is a label.
             child: Text(
-              l10n.markSettled,
+              l10n.markSettled.toUpperCase(),
               style: AppTextStyles.label.copyWith(color: SC.cost),
             ),
           ),

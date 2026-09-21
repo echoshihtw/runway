@@ -101,7 +101,17 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('PRINCIPAL REPAID — PAYMENTS CONTINUE'), findsOneWidget);
+    expect(
+      find.text(
+        'You have repaid what you borrowed. '
+        'Payments run to the end of the term.',
+      ),
+      findsOneWidget,
+      reason:
+          'the seam is explained in plain words, not bank vocabulary: '
+          'remainingBalance ignores interest, so repaid principal is not the '
+          'lender\'s view of the loan',
+    );
     // The installment is what leaves the runway, so it stays on the card, and
     // REPAY stays reachable: without it paidThisMonth can never be recorded
     // and the burn reserves the payment for ever.
@@ -163,7 +173,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('PRINCIPAL REPAID'), findsNothing);
+    expect(find.textContaining('repaid what you borrowed'), findsNothing);
     expect(find.text('MONTHS LEFT'), findsOneWidget);
   });
 }

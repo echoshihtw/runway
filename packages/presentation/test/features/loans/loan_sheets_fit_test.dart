@@ -132,7 +132,8 @@ void main() {
     expect(
       tester.takeException(),
       isNull,
-      reason: 'the wizard had no scroll view, so it overflowed by 247px and '
+      reason:
+          'the wizard had no scroll view, so it overflowed by 247px and '
           'CONFIRM could not be reached at all',
     );
   });
@@ -169,7 +170,8 @@ void main() {
     expect(
       _confirm(tester).onPressed,
       isNull,
-      reason: 'it used to be live while the handler returned early, so the '
+      reason:
+          'it used to be live while the handler returned early, so the '
           'tap did nothing and the sheet just sat there',
     );
 
@@ -247,7 +249,8 @@ void _loanEntryKeepsItsLoan() {
     expect(
       written.single.loanId,
       loan.id,
-      reason: 'clearing it orphaned the loan, and nothing could delete it after',
+      reason:
+          'clearing it orphaned the loan, and nothing could delete it after',
     );
   });
 }

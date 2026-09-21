@@ -363,7 +363,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get repaid => '% 已還';
 
   @override
-  String get stillPaying => '本金已還清 — 還要繼續繳';
+  String get stillPaying => '借的錢已經還完了，但還要付到期滿。';
 
   @override
   String get markSettled => '標記為已結清';

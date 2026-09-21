@@ -177,7 +177,8 @@ void main() {
     expect(
       tester.takeException(),
       isNull,
-      reason: 'the empty state must lay out on the smallest screen we support '
+      reason:
+          'the empty state must lay out on the smallest screen we support '
           'at the largest text size, not overflow',
     );
     expect(find.text('+ LOAN'), findsOneWidget);
@@ -198,7 +199,8 @@ void main() {
     expect(
       tester.getSize(strip).height,
       greaterThanOrEqualTo(44),
-      reason: "Apple's minimum; a control that looks tappable must be "
+      reason:
+          "Apple's minimum; a control that looks tappable must be "
           'reachable',
     );
   });

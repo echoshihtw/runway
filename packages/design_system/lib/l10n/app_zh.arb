@@ -169,7 +169,7 @@
   "paidThisMo": "本月已還",
   "monthsLeft": "剩餘月數",
   "repaid": "% 已還",
-  "stillPaying": "本金已還清 — 還要繼續繳",
+  "stillPaying": "借的錢已經還完了，但還要付到期滿。",
   "markSettled": "標記為已結清",
   "markSettledExplain": "每月還款不再計入，這筆貸款也會永久從清單上移除。紀錄會留著。",
   "repay": "還款",

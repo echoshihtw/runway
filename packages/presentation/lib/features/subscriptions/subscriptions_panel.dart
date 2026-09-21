@@ -101,12 +101,10 @@ class SubscriptionsPanel extends ConsumerWidget {
       initiallyExpanded: false,
       summary: summary,
       details: details,
-      trailing: active.isEmpty
-          ? null
-          : Text(
-              '${active.length}',
-              style: AppTextStyles.caption.copyWith(color: SC.subscr),
-            ),
+      // No trailing count. `_CountBadge` in the summary already says
+      // "3 ACTIVE" a few points below this, and the summary never collapses,
+      // so a bare number beside the chevron was the same fact twice. The
+      // liabilities panel states it once and was the consistent one.
     );
   }
 

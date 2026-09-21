@@ -793,13 +793,13 @@ abstract class AppLocalizations {
   /// No description provided for @stillPaying.
   ///
   /// In en, this message translates to:
-  /// **'PRINCIPAL REPAID — PAYMENTS CONTINUE'**
+  /// **'You have repaid what you borrowed. Payments run to the end of the term.'**
   String get stillPaying;
 
   /// No description provided for @markSettled.
   ///
   /// In en, this message translates to:
-  /// **'MARK AS SETTLED'**
+  /// **'Mark as settled'**
   String get markSettled;
 
   /// No description provided for @markSettledExplain.

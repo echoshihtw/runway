@@ -126,7 +126,20 @@ void main() {
 
     await tester.longPress(find.text('FUBON'));
     await tester.pumpAndSettle();
-    expect(find.text('MARK AS SETTLED'), findsWidgets);
+
+    // The heading is a heading and the action is a control, so they are not
+    // the same string on screen: the dialog that ends a commitment for good
+    // had its title set at the 11pt the app uses for row labels.
+    expect(
+      find.text('Mark as settled'),
+      findsOneWidget,
+      reason: 'the title reads as a question put to you, not as a button',
+    );
+    expect(
+      find.text('MARK AS SETTLED'),
+      findsOneWidget,
+      reason: 'the action keeps its caps: a button is a label',
+    );
 
     // Backing out writes nothing.
     await tester.tap(find.text('ABORT'));

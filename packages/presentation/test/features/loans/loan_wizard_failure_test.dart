@@ -6,7 +6,10 @@ import 'package:presentation/features/transactions/widgets/loan_wizard.dart';
 /// The wizard popped the route immediately after calling onSubmit, which was
 /// declared void, so it closed whether the write landed or not — and a loan
 /// creation is two writes, so the second could fail on its own (#133).
-Future<void> _pump(WidgetTester tester, Future<bool> Function() onSubmit) async {
+Future<void> _pump(
+  WidgetTester tester,
+  Future<bool> Function() onSubmit,
+) async {
   // The default 800x600 test view, deliberately: the wizard's step content
   // overflows horizontally at iPhone-Pro width, which is a separate defect
   // and not what this file is about.
