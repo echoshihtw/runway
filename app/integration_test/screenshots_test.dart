@@ -90,13 +90,20 @@ void main() {
     await pumpRealTime(tester, seconds: 2);
 
     await _tapNav(tester, 'LOG');
+    // With the sheet open. The caption promises speed, and the presets are the
+    // thing that delivers it — a list of past entries shows the result rather
+    // than the mechanism.
+    await tester.tap(find.byKey(const Key('add-fab')));
+    await pumpRealTime(tester, seconds: 2);
     await capture(
       '03-log',
       const _Caption(
         'Log a spend in seconds',
-        'Rent, living and repayments stay separate.',
+        'Pick the occasion, type the amount.',
       ),
     );
+    await tester.tap(find.byType(ModalBarrier).last, warnIfMissed: false);
+    await pumpRealTime(tester, seconds: 2);
 
     await _tapNav(tester, 'PLAN');
     await tester.enterText(
