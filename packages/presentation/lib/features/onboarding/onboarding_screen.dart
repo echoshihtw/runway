@@ -44,6 +44,15 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
     _fadeCtrl.forward();
   }
 
+  /// The screen fading itself in is motion nobody asked for, so under Reduce
+  /// Motion it arrives already here. MediaQuery is not safe in initState,
+  /// which is why this is not decided there.
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (AppMotion.isReduced(context)) _fadeCtrl.value = 1;
+  }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -52,12 +61,18 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
   }
 
   void _next() {
-    if (_page < _totalPages - 1) {
-      _controller.nextPage(
-        duration: const Duration(milliseconds: 350),
-        curve: Curves.easeInOut,
-      );
+    if (_page >= _totalPages - 1) return;
+    // A whole screen of content travelling sideways is the textbook
+    // vestibular trigger, and this is the first thing a new user sees. The
+    // page still changes; it arrives instead of travelling.
+    if (AppMotion.isReduced(context)) {
+      _controller.jumpToPage(_page + 1);
+      return;
     }
+    _controller.nextPage(
+      duration: const Duration(milliseconds: 350),
+      curve: Curves.easeInOut,
+    );
   }
 
   void _skip() => _finish();
@@ -114,7 +129,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
                         children: List.generate(
                           _totalPages,
                           (i) => AnimatedContainer(
-                            duration: const Duration(milliseconds: 250),
+                            duration: AppMotion.unprompted(
+                              context,
+                              const Duration(milliseconds: 250),
+                            ),
                             width: i == _page ? 20 : 6,
                             height: 6,
                             margin: const EdgeInsets.only(right: AppSpacing.xs),
