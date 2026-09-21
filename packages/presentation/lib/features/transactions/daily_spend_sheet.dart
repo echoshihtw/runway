@@ -46,7 +46,11 @@ Future<void> showDailySpendSheet(BuildContext context, WidgetRef ref) {
         // Let the sheet finish closing before the form's own sheet opens, or
         // the two routes animate over each other.
         WidgetsBinding.instance.addPostFrameCallback(
-          (_) => showEntrySheet(context, ref, prefillNote: preset.note?.call(l10n)),
+          (_) => showEntrySheet(
+            context,
+            ref,
+            prefillNote: preset.note?.call(l10n),
+          ),
         );
       }
 
@@ -100,46 +104,94 @@ Future<void> showDailySpendSheet(BuildContext context, WidgetRef ref) {
   );
 }
 
-class _Tile extends StatelessWidget {
+/// Stateful only to hold [_pressed].
+///
+/// The tile logged an entry and never acknowledged the finger, so the only
+/// confirmation was the sheet closing — and a tap that missed looked exactly
+/// like a tap that worked.
+class _Tile extends StatefulWidget {
   final DailySpendPreset preset;
   final VoidCallback onTap;
 
   const _Tile({required this.preset, required this.onTap});
 
   @override
-  Widget build(BuildContext context) {
-    final color = preset.dim ? AppColors.textSecondary : AppColors.neonGreen;
+  State<_Tile> createState() => _TileState();
+}
 
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        constraints: const BoxConstraints(minHeight: 44),
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.xs,
-          vertical: AppSpacing.md,
-        ),
-        decoration: BoxDecoration(
-          color: color.withAlpha(preset.dim ? 10 : 22),
-          borderRadius: BorderRadius.circular(AppSpacing.sm),
-          border: Border.all(color: color.withAlpha(preset.dim ? 45 : 80)),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(preset.glyph, style: const TextStyle(fontSize: 22)),
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              preset.label(context.l10n),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.caption.copyWith(
-                color: color,
-                fontWeight: FontWeight.w600,
+class _TileState extends State<_Tile> {
+  bool _pressed = false;
+
+  /// Press feedback is not ambient motion: it lasts as long as the finger is
+  /// down and is bounded by it, so it stays on under Reduce Motion, unlike
+  /// the runway badge's pulse.
+  static const _press = Duration(milliseconds: 90);
+
+  void _set(bool down) {
+    if (_pressed != down) setState(() => _pressed = down);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final preset = widget.preset;
+    final color = preset.dim ? AppColors.textSecondary : AppColors.neonGreen;
+    final lift = _pressed ? 2 : 0;
+
+    // One node, read as "Coffee, button". Without this the tile is a Text
+    // and an Icon side by side, announced as static content that gives no
+    // sign it can be activated. `excludeSemantics` drops the children's own
+    // nodes, so the category is said once and the icon is not described at
+    // all — it is a picture of the label, not a second fact.
+    return Semantics(
+      button: true,
+      label: preset.label(context.l10n),
+      onTap: widget.onTap,
+      excludeSemantics: true,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        onTapDown: (_) => _set(true),
+        onTapUp: (_) => _set(false),
+        onTapCancel: () => _set(false),
+        behavior: HitTestBehavior.opaque,
+        child: AnimatedScale(
+          scale: _pressed ? 0.94 : 1,
+          duration: _press,
+          curve: Curves.easeOut,
+          child: AnimatedContainer(
+            duration: _press,
+            curve: Curves.easeOut,
+            constraints: const BoxConstraints(minHeight: 44),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.xs,
+              vertical: AppSpacing.md,
+            ),
+            decoration: BoxDecoration(
+              color: color.withAlpha((preset.dim ? 10 : 22) + lift * 8),
+              borderRadius: BorderRadius.circular(AppSpacing.sm),
+              border: Border.all(
+                color: color.withAlpha((preset.dim ? 45 : 80) + lift * 30),
               ),
             ),
-          ],
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Takes the tile's colour, which the emoji it replaced could
+                // not do: the dim tile's icon dims with it.
+                Icon(preset.glyph, size: 24, color: color),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  preset.label(context.l10n),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.caption.copyWith(
+                    color: color,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
