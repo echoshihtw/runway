@@ -44,7 +44,10 @@ class PageIndicator extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   AnimatedContainer(
-                    duration: const Duration(milliseconds: 250),
+                    duration: AppMotion.unprompted(
+                      context,
+                      const Duration(milliseconds: 250),
+                    ),
                     curve: Curves.easeOut,
                     width: active ? 18 : 4,
                     height: 4,

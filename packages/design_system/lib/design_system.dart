@@ -1,6 +1,7 @@
 // Tokens
 export 'tokens/app_colors.dart';
 export 'tokens/app_semantic_colors.dart';
+export 'tokens/app_motion.dart';
 export 'tokens/app_spacing.dart';
 export 'tokens/app_text_styles.dart';
 

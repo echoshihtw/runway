@@ -76,12 +76,25 @@ class _LoanWizardState extends State<LoanWizard>
     super.dispose();
   }
 
+  /// Four steps means four slides while someone is typing numbers they had
+  /// to go and look up. Nothing about a form step needs to arrive from
+  /// somewhere, so under Reduce Motion it is simply there.
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (AppMotion.isReduced(context)) _slideCtrl.value = 1;
+  }
+
   void _next() {
-    if (_step < _totalSteps - 1) {
-      _slideCtrl.reset();
-      setState(() => _step++);
-      _slideCtrl.forward();
+    if (_step >= _totalSteps - 1) return;
+    setState(() => _step++);
+    if (AppMotion.isReduced(context)) {
+      _slideCtrl.value = 1;
+      return;
     }
+    _slideCtrl
+      ..reset()
+      ..forward();
   }
 
   void _prev() {
