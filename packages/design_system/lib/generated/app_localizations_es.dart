@@ -213,13 +213,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get loading => 'CARGANDO...';
 
   @override
-  String get navHud => 'HUD';
+  String get navHud => 'Resumen';
 
   @override
-  String get navLog => 'LOG';
+  String get navLog => 'Registro';
 
   @override
-  String get navSim => 'SIM';
+  String get navSim => 'Plan';
 
   @override
   String get typeExpense => 'GASTO';

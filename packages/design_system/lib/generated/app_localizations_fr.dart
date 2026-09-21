@@ -213,13 +213,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get loading => 'CHARGEMENT...';
 
   @override
-  String get navHud => 'HUD';
+  String get navHud => 'Aperçu';
 
   @override
-  String get navLog => 'LOG';
+  String get navLog => 'Journal';
 
   @override
-  String get navSim => 'SIM';
+  String get navSim => 'Plan';
 
   @override
   String get typeExpense => 'DÉPENSE';

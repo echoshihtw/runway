@@ -27,7 +27,7 @@ void main() {
   testWidgets('labels the three screens', (tester) async {
     await _pump(tester);
 
-    expect(find.text('HOME'), findsOneWidget);
+    expect(find.text('OVERVIEW'), findsOneWidget);
     expect(find.text('LOG'), findsOneWidget);
     expect(find.text('PLAN'), findsOneWidget);
   });
@@ -44,9 +44,16 @@ void main() {
   testWidgets('marks the current screen as selected', (tester) async {
     await _pump(tester, currentIndex: 1);
 
+    // The component uppercases for display; the semantics label keeps the
+    // written form, so a screen reader says "Log" instead of spelling it.
     expect(
-      tester.getSemantics(find.bySemanticsLabel('LOG')),
-      isSemantics(label: 'LOG', isButton: true, isSelected: true, hasTapAction: true),
+      tester.getSemantics(find.bySemanticsLabel('Log')),
+      isSemantics(
+        label: 'Log',
+        isButton: true,
+        isSelected: true,
+        hasTapAction: true,
+      ),
     );
   });
 }

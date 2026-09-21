@@ -211,13 +211,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get loading => '読み込み中...';
 
   @override
-  String get navHud => 'HUD';
+  String get navHud => '概要';
 
   @override
-  String get navLog => 'LOG';
+  String get navLog => '記録';
 
   @override
-  String get navSim => 'SIM';
+  String get navSim => '計画';
 
   @override
   String get typeExpense => '支出';
