@@ -628,6 +628,11 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String budgetPaid(String amount) {
+    return '$amount 已付';
+  }
+
+  @override
   String spentOfBudget(String spent, String budget) {
     return '$budget 用了 $spent';
   }

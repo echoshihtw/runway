@@ -256,6 +256,7 @@
   "budgetRuleHint": "Les dépenses consomment leur budget. Seul le dépassement ajoute un coût.",
   "subtotal": "SOUS-TOTAL",
   "budgetLeft": "reste {amount}",
+  "budgetPaid": "{amount} payé",
   "spentOfBudget": "{spent} sur {budget}",
   "budgetOver": "{amount} au-dessus du budget",
   "dailyAllowance": "{days, plural, =1{{amount} pour aujourd’hui} other{{amount} par jour pendant {days} jours}}",

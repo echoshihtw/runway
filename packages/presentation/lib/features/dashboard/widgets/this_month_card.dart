@@ -137,6 +137,28 @@ class _BudgetRow extends StatelessWidget {
     final l10n = context.l10n;
     final over = bucket.spentThisMonth - bucket.budget;
     final showProgress = !isFixed || over > 0;
+
+    /// What a fixed cost says, which depends on how much of it has been
+    /// logged. Its amount never changes, so the figure alone cannot
+    /// acknowledge that anything happened — and until this, logging rent in
+    /// full moved cash, OUT and NET while this row, the one being looked at,
+    /// said nothing at all.
+    ///
+    /// Silence when nothing is logged, never "unpaid": the runway counts rent
+    /// whether it is logged or not, because the budget is a floor, so most
+    /// people never log it. Reporting the absence of an entry as the absence
+    /// of a payment would be a claim the app cannot make.
+    String fixedValue() {
+      if (bucket.spentThisMonth <= 0) return fmt(bucket.budget);
+      if (bucket.spentThisMonth < bucket.budget) {
+        return l10n.spentOfBudget(
+          fmt(bucket.spentThisMonth),
+          fmt(bucket.budget),
+        );
+      }
+      return l10n.budgetPaid(fmt(bucket.budget));
+    }
+
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -162,7 +184,7 @@ class _BudgetRow extends StatelessWidget {
                       ? (over > 0
                             ? l10n.budgetOver(fmt(over))
                             : l10n.budgetLeft(fmt(bucket.leftThisMonth)))
-                      : fmt(bucket.budget),
+                      : fixedValue(),
                   style: AppTextStyles.metricSmall.copyWith(
                     color: !showProgress
                         ? AppColors.textPrimary
