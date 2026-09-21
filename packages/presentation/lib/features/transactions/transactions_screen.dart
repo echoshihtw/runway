@@ -166,15 +166,14 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
                       return Dismissible(
                         key: Key(tx.id),
                         direction: DismissDirection.endToStart,
+                        // Square, because the row is. A 16pt radius here
+                        // left the pink curving away inside the row's own
+                        // corners, so the swipe revealed a rounded card
+                        // behind a flat list.
                         background: Container(
                           alignment: Alignment.centerRight,
                           padding: const EdgeInsets.only(right: AppSpacing.lg),
-                          decoration: BoxDecoration(
-                            color: AppColors.hotPink.withAlpha(30),
-                            borderRadius: BorderRadius.circular(
-                              AppSpacing.cardRadius,
-                            ),
-                          ),
+                          color: AppColors.hotPink.withAlpha(30),
                           child: const Icon(
                             Icons.delete_rounded,
                             color: AppColors.hotPink,

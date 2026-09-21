@@ -27,6 +27,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get pressureLabel => '每月支出';
 
   @override
+  String get costsIncludeCommitments => '包含訂閱和貸款還款';
+
+  @override
   String get metrics => '重點';
 
   @override
@@ -107,7 +110,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get abort => '取消';
 
   @override
-  String get purgeEntry => '要刪除這筆嗎？';
+  String get purgeEntry => '刪除這筆記錄？';
 
   @override
   String get scenarioSimulator => '情境規劃';

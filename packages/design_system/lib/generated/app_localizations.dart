@@ -142,6 +142,12 @@ abstract class AppLocalizations {
   /// **'Monthly costs'**
   String get pressureLabel;
 
+  /// Under Monthly costs: the budget is only part of it
+  ///
+  /// In en, this message translates to:
+  /// **'Includes subscriptions and loan payments'**
+  String get costsIncludeCommitments;
+
   /// No description provided for @metrics.
   ///
   /// In en, this message translates to:
@@ -301,7 +307,7 @@ abstract class AppLocalizations {
   /// No description provided for @purgeEntry.
   ///
   /// In en, this message translates to:
-  /// **'PURGE ENTRY?'**
+  /// **'Delete entry?'**
   String get purgeEntry;
 
   /// No description provided for @scenarioSimulator.

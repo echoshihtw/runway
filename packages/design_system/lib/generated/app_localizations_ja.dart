@@ -27,6 +27,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get pressureLabel => 'プレッシャー';
 
   @override
+  String get costsIncludeCommitments => 'サブスクとローン返済を含みます';
+
+  @override
   String get metrics => 'メトリクス';
 
   @override
@@ -107,7 +110,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get abort => '中止';
 
   @override
-  String get purgeEntry => 'このエントリーを削除？';
+  String get purgeEntry => 'この記録を削除しますか？';
 
   @override
   String get scenarioSimulator => 'シナリオシミュレーター';

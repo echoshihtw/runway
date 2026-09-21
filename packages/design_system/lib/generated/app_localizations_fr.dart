@@ -27,6 +27,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get pressureLabel => 'Coûts mensuels';
 
   @override
+  String get costsIncludeCommitments =>
+      'Inclut les abonnements et les mensualités de prêt';
+
+  @override
   String get metrics => 'MÉTRIQUES';
 
   @override
@@ -107,7 +111,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get abort => 'ANNULER';
 
   @override
-  String get purgeEntry => 'SUPPRIMER CETTE ENTRÉE?';
+  String get purgeEntry => 'Supprimer l’entrée ?';
 
   @override
   String get scenarioSimulator => 'SIMULATEUR DE SCÉNARIO';

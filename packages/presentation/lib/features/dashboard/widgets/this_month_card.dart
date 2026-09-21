@@ -45,7 +45,12 @@ class ThisMonthCard extends ConsumerWidget {
       children: [
         flowSummary,
         if (burn.rent.budget > 0)
-          _BudgetRow(label: l10n.rentFixed, bucket: burn.rent, fmt: fmt),
+          _BudgetRow(
+            label: l10n.rentFixed,
+            bucket: burn.rent,
+            fmt: fmt,
+            isFixed: true,
+          ),
         if (burn.living.budget > 0)
           _BudgetRow(
             label: l10n.livingExpenses,
@@ -109,17 +114,29 @@ class _BudgetRow extends StatelessWidget {
   final String Function(double) fmt;
   final VoidCallback? onTap;
 
+  /// A fixed cost, where the ratio is not information.
+  ///
+  /// Rent is its budget. "1,450 / 1,450" and "0 left" say the same thing
+  /// twice and neither is a fact anyone acts on, unlike living expenses where
+  /// what is left is the whole point and opens a daily figure.
+  ///
+  /// Going over is the exception: that genuinely adds cost and moves the
+  /// runway, so the figures come back exactly when there is something to say.
+  final bool isFixed;
+
   const _BudgetRow({
     required this.label,
     required this.bucket,
     required this.fmt,
     this.onTap,
+    this.isFixed = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final over = bucket.spentThisMonth - bucket.budget;
+    final showProgress = !isFixed || over > 0;
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -133,19 +150,22 @@ class _BudgetRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  '${fmt(bucket.spentThisMonth)} / ${fmt(bucket.budget)}',
+                  showProgress
+                      ? '${fmt(bucket.spentThisMonth)} / ${fmt(bucket.budget)}'
+                      : fmt(bucket.budget),
                   style: AppTextStyles.metricSmall.copyWith(
                     color: AppColors.textPrimary,
                   ),
                 ),
-                Text(
-                  over > 0
-                      ? l10n.budgetOver(fmt(over))
-                      : l10n.budgetLeft(fmt(bucket.leftThisMonth)),
-                  style: AppTextStyles.metricCaption.copyWith(
-                    color: over > 0 ? SC.cost : SC.life,
+                if (showProgress)
+                  Text(
+                    over > 0
+                        ? l10n.budgetOver(fmt(over))
+                        : l10n.budgetLeft(fmt(bucket.leftThisMonth)),
+                    style: AppTextStyles.metricCaption.copyWith(
+                      color: over > 0 ? SC.cost : SC.life,
+                    ),
                   ),
-                ),
               ],
             ),
             if (onTap != null)

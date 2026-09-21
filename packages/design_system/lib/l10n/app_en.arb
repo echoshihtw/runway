@@ -6,6 +6,10 @@
   "lifeForce": "RUNWAY READINESS",
   "statusLabel": "Position",
   "pressureLabel": "Monthly costs",
+  "costsIncludeCommitments": "Includes subscriptions and loan payments",
+  "@costsIncludeCommitments": {
+    "description": "Under Monthly costs: the budget is only part of it"
+  },
   "metrics": "Signals",
   "cash": "CASH",
   "owed": "Owed",
@@ -43,7 +47,7 @@
   "noteOptional": "NOTE (OPTIONAL)",
   "confirm": "CONFIRM",
   "abort": "ABORT",
-  "purgeEntry": "PURGE ENTRY?",
+  "purgeEntry": "Delete entry?",
   "scenarioSimulator": "Scenario planning",
   "overrideInputs": "Planning inputs",
   "burnRateOverride": "Rent + living / month",
