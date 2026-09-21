@@ -99,14 +99,21 @@ class EveryMonthCard extends ConsumerWidget {
           // reads 2,803 here had nothing on screen accounting for the
           // difference. Settings shows the arithmetic in full; this is the
           // one line that says the arithmetic exists.
-          const SizedBox(height: AppSpacing.sm),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              l10n.costsIncludeCommitments,
-              style: AppTextStyles.caption,
+          //
+          // Except on an assumption, where the figure is a number somebody
+          // typed and includes nothing at all. Saying it includes
+          // commitments would be false in exactly the state where the owner
+          // is least sure where the number came from.
+          if (model.basis != RunwayBasis.assumption) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                l10n.costsIncludeCommitments,
+                style: AppTextStyles.caption,
+              ),
             ),
-          ),
+          ],
         ],
       ),
     );
