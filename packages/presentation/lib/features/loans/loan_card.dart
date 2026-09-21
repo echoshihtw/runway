@@ -107,11 +107,25 @@ class LoanCard extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: AppSpacing.xs),
+            // A tick reads as finished, and this card said "✓ PAID" directly
+            // above a line explaining that payments run to the end of the
+            // term. Both came from isFullyPaid, which is remainingBalance <= 0
+            // and ignores interest, so it means "you have paid in as much as
+            // you borrowed" rather than "this loan is over".
+            //
+            // The tick is kept for the only case that earns it: nothing left
+            // of what was borrowed and nothing left to pay. While the term is
+            // still charging, the figure is zero and the sentence below says
+            // what that does and does not mean.
             _row(
               l10n.remaining,
-              summary.isFullyPaid
+              summary.isFullyPaid && !isCosting
                   ? l10n.paid
-                  : nf.format(summary.remainingBalance),
+                  : nf.format(
+                      summary.remainingBalance > 0
+                          ? summary.remainingBalance
+                          : 0,
+                    ),
               color,
             ),
 

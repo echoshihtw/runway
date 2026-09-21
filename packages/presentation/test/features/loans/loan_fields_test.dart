@@ -112,6 +112,13 @@ void main() {
           'remainingBalance ignores interest, so repaid principal is not the '
           'lender\'s view of the loan',
     );
+
+    // A tick reads as finished, and it sat directly above that sentence.
+    expect(
+      find.text('✓ PAID'),
+      findsNothing,
+      reason: 'the term is still charging, so this loan is not over',
+    );
     // The installment is what leaves the runway, so it stays on the card, and
     // REPAY stays reachable: without it paidThisMonth can never be recorded
     // and the burn reserves the payment for ever.
