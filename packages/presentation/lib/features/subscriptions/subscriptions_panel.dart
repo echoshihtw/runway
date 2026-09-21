@@ -61,15 +61,7 @@ class SubscriptionsPanel extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: AppSpacing.md),
-              Row(
-                children: [
-                  Expanded(
-                    child: _NextBillingStrip(sub: next!, now: now),
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  _CountBadge(count: active.length),
-                ],
-              ),
+              _NextBillingStrip(sub: next!, now: now),
             ],
           );
 
@@ -101,10 +93,18 @@ class SubscriptionsPanel extends ConsumerWidget {
       initiallyExpanded: false,
       summary: summary,
       details: details,
-      // No trailing count. `_CountBadge` in the summary already says
-      // "3 ACTIVE" a few points below this, and the summary never collapses,
-      // so a bare number beside the chevron was the same fact twice. The
-      // liabilities panel states it once and was the consistent one.
+      // How many things are in the card is metadata about the card, so it
+      // sits with the title. The summary is for money.
+      //
+      // This was a chip in the summary reading "3 ACTIVE", where ACTIVE was
+      // a word that can never be false: the panel only ever lists active
+      // ones, so it described an invariant rather than the count.
+      trailing: active.isEmpty
+          ? null
+          : Text(
+              '${active.length}',
+              style: AppTextStyles.metricSmall.copyWith(color: SC.subscr),
+            ),
     );
   }
 
@@ -312,31 +312,6 @@ class _NextBillingStrip extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _CountBadge extends StatelessWidget {
-  final int count;
-
-  const _CountBadge({required this.count});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
-        vertical: AppSpacing.xs + 2,
-      ),
-      decoration: BoxDecoration(
-        color: SC.subscr.withAlpha(16),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: SC.subscr.withAlpha(55)),
-      ),
-      child: Text(
-        '$count ACTIVE',
-        style: AppTextStyles.caption.copyWith(color: SC.subscr),
       ),
     );
   }

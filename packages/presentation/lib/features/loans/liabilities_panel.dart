@@ -71,40 +71,26 @@ class LiabilitiesPanel extends ConsumerWidget {
               ],
             ),
           )
+        // One figure, and it is money. The second column held "1 ACTIVE",
+        // where ACTIVE can never be false — a settled loan is never rendered,
+        // so everything listed here is active by construction and the word
+        // described an invariant. What is left of it, the count, is metadata
+        // about the card and now sits with the title, as the subscriptions
+        // panel does.
         : Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
             children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(l10n.loanPerMonth, style: AppTextStyles.label),
-                    const SizedBox(height: AppSpacing.xxs),
-                    Text(
-                      '$symbol ${nf.format(total)}',
-                      style: AppTextStyles.metric.copyWith(
-                        color: SC.accentCost,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(l10n.loans, style: AppTextStyles.label),
-                    const SizedBox(height: AppSpacing.xxs),
-                    Text(
-                      l10n.activeCount(active.length),
-                      style: AppTextStyles.metric.copyWith(
-                        color: SC.captionColor,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+              Text(l10n.loanPerMonth, style: AppTextStyles.label),
+              const SizedBox(width: AppSpacing.sm),
+              Flexible(
+                child: Text(
+                  '$symbol ${nf.format(total)}',
+                  textAlign: TextAlign.right,
+                  style: AppTextStyles.metric.copyWith(color: SC.accentCost),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -139,6 +125,12 @@ class LiabilitiesPanel extends ConsumerWidget {
       initiallyExpanded: false,
       summary: summary,
       details: details,
+      trailing: active.isEmpty
+          ? null
+          : Text(
+              '${active.length}',
+              style: AppTextStyles.metricSmall.copyWith(color: SC.accentCost),
+            ),
     );
   }
 
