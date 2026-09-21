@@ -149,22 +149,38 @@ class _BudgetRow extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
+                // The answer leads. Mid-month nobody is asking what their
+                // budget was, they are asking what is left of it — and that
+                // figure was the 11pt caption under a 15pt ratio, so it had
+                // to be read past to be found.
+                //
+                // It also puts the row's one meaningful colour on its one
+                // meaningful number: the remainder is mint under budget and
+                // pink over, and it was the small one.
                 Text(
                   showProgress
-                      ? '${fmt(bucket.spentThisMonth)} / ${fmt(bucket.budget)}'
+                      ? (over > 0
+                            ? l10n.budgetOver(fmt(over))
+                            : l10n.budgetLeft(fmt(bucket.leftThisMonth)))
                       : fmt(bucket.budget),
                   style: AppTextStyles.metricSmall.copyWith(
-                    color: AppColors.textPrimary,
+                    color: !showProgress
+                        ? AppColors.textPrimary
+                        : over > 0
+                        ? SC.cost
+                        : SC.life,
                   ),
                 ),
+                // The working, for anyone who wants it. "of" rather than a
+                // slash: a slash reads as a fraction to be computed, which
+                // is what it was when it was the headline.
                 if (showProgress)
                   Text(
-                    over > 0
-                        ? l10n.budgetOver(fmt(over))
-                        : l10n.budgetLeft(fmt(bucket.leftThisMonth)),
-                    style: AppTextStyles.metricCaption.copyWith(
-                      color: over > 0 ? SC.cost : SC.life,
+                    l10n.spentOfBudget(
+                      fmt(bucket.spentThisMonth),
+                      fmt(bucket.budget),
                     ),
+                    style: AppTextStyles.metricCaption,
                   ),
               ],
             ),

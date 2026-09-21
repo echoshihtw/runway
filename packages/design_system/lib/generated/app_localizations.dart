@@ -1330,6 +1330,12 @@ abstract class AppLocalizations {
   /// **'{amount} left'**
   String budgetLeft(String amount);
 
+  /// Under the remainder: the working behind it
+  ///
+  /// In en, this message translates to:
+  /// **'{spent} of {budget}'**
+  String spentOfBudget(String spent, String budget);
+
   /// Spending above a monthly budget, e.g. $ 1,500 over budget
   ///
   /// In en, this message translates to:

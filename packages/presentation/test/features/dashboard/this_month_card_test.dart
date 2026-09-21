@@ -61,8 +61,25 @@ void main() {
 
     expect(find.text('RENT / FIXED'), findsOneWidget);
     expect(find.text('LIVING EXPENSES'), findsOneWidget);
-    expect(find.textContaining(RegExp(r'210 / .*30,000')), findsOneWidget);
+    // The answer leads and the working sits under it: mid-month the question
+    // is what is left, not what the budget was.
     expect(find.textContaining(RegExp(r'29,790 left$')), findsOneWidget);
+    expect(find.textContaining(RegExp(r'210 of .*30,000')), findsOneWidget);
+    expect(
+      find.textContaining(RegExp(r'210 / ')),
+      findsNothing,
+      reason: 'a slash reads as a fraction to be computed',
+    );
+
+    final left = tester.getCenter(find.textContaining(RegExp(r'29,790 left$')));
+    final working = tester.getCenter(
+      find.textContaining(RegExp(r'210 of .*30,000')),
+    );
+    expect(
+      left.dy,
+      lessThan(working.dy),
+      reason: 'the remainder is above the ratio, not below it',
+    );
 
     // Rent states its amount and stops. One tenancy is paid once, so
     // "32,000 / 32,000" and "32,000 left" say the same thing twice and
@@ -92,8 +109,8 @@ void main() {
       ),
     );
 
-    expect(find.textContaining(RegExp(r'33,000 / .*32,000')), findsOneWidget);
     expect(find.textContaining(RegExp(r'1,000 over budget$')), findsOneWidget);
+    expect(find.textContaining(RegExp(r'33,000 of .*32,000')), findsOneWidget);
   });
 
   testWidgets('shows how far spending is over budget', (tester) async {

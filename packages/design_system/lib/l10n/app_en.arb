@@ -311,6 +311,18 @@
   "budgetRuleHint": "Spending uses up its budget — only going over adds cost",
   "subtotal": "SUBTOTAL",
   "budgetLeft": "{amount} left",
+  "spentOfBudget": "{spent} of {budget}",
+  "@spentOfBudget": {
+    "description": "Under the remainder: the working behind it",
+    "placeholders": {
+      "spent": {
+        "type": "String"
+      },
+      "budget": {
+        "type": "String"
+      }
+    }
+  },
   "@budgetLeft": {
     "description": "Unused part of a monthly budget, e.g. $ 29,790 left",
     "placeholders": {

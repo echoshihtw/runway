@@ -259,6 +259,7 @@
   "budgetRuleHint": "支出は予算を使うだけ — 超えた分だけ費用が増える",
   "subtotal": "小計",
   "budgetLeft": "残り {amount}",
+  "spentOfBudget": "{budget} 中 {spent}",
   "budgetOver": "予算超過 {amount}",
   "dailyAllowance": "{days, plural, =1{今日は {amount}} other{1日 {amount}、残り {days} 日}}",
   "noLivingExpensesThisMonth": "今月の生活費はまだありません",

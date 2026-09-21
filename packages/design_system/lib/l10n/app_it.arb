@@ -259,6 +259,7 @@
   "budgetRuleHint": "La spesa consuma il suo budget — solo lo sforamento aggiunge costo",
   "subtotal": "SUBTOTALE",
   "budgetLeft": "restano {amount}",
+  "spentOfBudget": "{spent} di {budget}",
   "budgetOver": "{amount} oltre il budget",
   "dailyAllowance": "{days, plural, =1{{amount} per oggi} other{{amount} al giorno per {days} giorni}}",
   "noLivingExpensesThisMonth": "Nessuna spesa di vita questo mese",
