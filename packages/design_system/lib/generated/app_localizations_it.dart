@@ -27,6 +27,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get pressureLabel => 'Costi mensili';
 
   @override
+  String get costsIncludeCommitments =>
+      'Include abbonamenti e rate dei prestiti';
+
+  @override
   String get metrics => 'METRICHE';
 
   @override
@@ -80,7 +84,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get noEntries => 'No entries yet\nTap + ADD to log your first entry';
 
   @override
-  String get newLogEntry => 'NUOVA VOCE';
+  String get newLogEntry => 'Nuova voce';
 
   @override
   String get modifyEntry => 'MODIFICA VOCE';
@@ -107,7 +111,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get abort => 'ANNULLA';
 
   @override
-  String get purgeEntry => 'ELIMINARE QUESTA VOCE?';
+  String get purgeEntry => 'Eliminare la voce?';
 
   @override
   String get scenarioSimulator => 'SIMULATORE DI SCENARI';
@@ -298,7 +302,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get newLoan => '+ PRESTITO';
 
   @override
-  String get spendOnWhat => 'PER COSA HAI SPESO?';
+  String get spendOnWhat => 'Per cosa era?';
+
+  @override
+  String get moneyCameInInstead => 'È entrato denaro invece?';
+
+  @override
+  String get logIncome => 'Registra entrata';
 
   @override
   String get presetCoffee => 'CAFFÈ';
@@ -365,10 +375,11 @@ class AppLocalizationsIt extends AppLocalizations {
   String get repaid => '% RIMBORSATO';
 
   @override
-  String get stillPaying => 'CAPITALE RIMBORSATO — I PAGAMENTI CONTINUANO';
+  String get stillPaying =>
+      'Hai restituito quanto hai preso in prestito. I pagamenti continuano fino alla fine del termine.';
 
   @override
-  String get markSettled => 'SEGNA COME ESTINTO';
+  String get markSettled => 'Segna come estinto';
 
   @override
   String get markSettledExplain =>
@@ -387,7 +398,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get configButton => 'CFG';
 
   @override
-  String get loanWizardTitle => 'ASSISTENTE PRESTITO';
+  String get loanWizardTitle => 'Procedura prestito';
 
   @override
   String get whoAndHowMuch => 'CHI E QUANTO';
@@ -480,10 +491,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get newSubscription => '+ ABBONAMENTO';
 
   @override
-  String get editSubscription => 'MODIFICA ABBONAMENTO';
+  String get editSubscription => 'Modifica abbonamento';
 
   @override
-  String get addSubscription => 'NUOVO ABBONAMENTO';
+  String get addSubscription => 'Nuovo abbonamento';
 
   @override
   String get personal => 'PERSONALE';
@@ -515,7 +526,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get repayLoan => 'RIMBORSA PRESTITO';
+  String get repayLoan => 'Rimborsa prestito';
 
   @override
   String get repaymentAmount => 'IMPORTO DEL RIMBORSO';
@@ -626,7 +637,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get rentFixed => 'AFFITTO / FISSO';
 
   @override
-  String get livingExpenses => 'SPESE DI VITA';
+  String get livingExpenses => 'Spese di vita';
 
   @override
   String get budgetRuleHint =>
@@ -721,6 +732,10 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get futureInflowHint =>
       'Usa qui entrate future neutrali: freelance, contratti, redditi creator, dividendi o qualsiasi entrata prevista.';
+
+  @override
+  String get forecastDoesNotMoveRunway =>
+      'Il reddito non cambia l\'autonomia. L\'autonomia è ciò che coprono i tuoi contanti se il reddito si fermasse; questo indica se il mese la aumenta.';
 
   @override
   String get runwayGoal => 'Obiettivo runway';
@@ -869,6 +884,17 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get goalCashTarget => 'Obiettivo';
+
+  @override
+  String goalCashTargetFrom(int count, String cost) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count mesi × $cost al mese',
+      one: '1 mese × $cost al mese',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get goalCashToGo => 'Manca';

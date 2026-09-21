@@ -36,9 +36,23 @@ class GoalCard extends ConsumerWidget {
     // a cost basis.
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
     final nf = NumberFormat('#,##0', 'en_US');
+
+    // What a month actually costs, not what the Forecast card is currently
+    // assuming it might.
+    //
+    // `model.totalMonthlyOutflow` resolves to the expected-cost override when
+    // one is set, so typing an assumption in Forecast silently rewrote the
+    // goal: a 12-month goal against real costs of 2,803 asks for 33,636, and
+    // typing "expected costs 2,000" three cards away dropped it to 24,000
+    // with nobody touching the goal. A target that moves when you speculate
+    // is not a target, and "still to go" is money someone is actually setting
+    // aside against it.
+    //
+    // Planning a goal under an assumption is what the Plan screen is for.
+    final monthlyCost = ref.watch(monthlyBurnProvider).total;
     final cashTarget = runwayGoalCashTarget(
       targetMonths: goal.targetMonths,
-      monthlyCost: model.totalMonthlyOutflow,
+      monthlyCost: monthlyCost,
     );
     // What is still to go is measured against the cash on hand, so it cannot
     // be stated while the ledger has not loaded: currentCash is 0 then, and
@@ -47,7 +61,7 @@ class GoalCard extends ConsumerWidget {
     final cashToGo = model.cashIsKnown
         ? runwayGoalCashToGo(
             targetMonths: goal.targetMonths,
-            monthlyCost: model.totalMonthlyOutflow,
+            monthlyCost: monthlyCost,
             currentCash: model.currentCash,
           )
         : null;
@@ -106,6 +120,15 @@ class GoalCard extends ConsumerWidget {
         if (cashTarget != null) ...[
           const SizedBox(height: AppSpacing.sm),
           _CashRow(label: l10n.goalCashTarget, value: money(cashTarget)),
+          // The target is the goal in months times the monthly cost, and
+          // nobody typed it. Unstated, an unround figure nobody entered
+          // reads as arbitrary — so the card shows its own arithmetic, the
+          // way the budget card in settings does.
+          const SizedBox(height: AppSpacing.xxs),
+          Text(
+            l10n.goalCashTargetFrom(goal.targetMonths, money(monthlyCost)),
+            style: AppTextStyles.caption,
+          ),
           if (!achieved && cashToGo != null && cashToGo > 0) ...[
             const SizedBox(height: AppSpacing.xxs),
             _CashRow(

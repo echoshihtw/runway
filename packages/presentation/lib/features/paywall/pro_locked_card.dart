@@ -29,7 +29,8 @@ class ProLockedCard extends StatelessWidget {
           children: [
             // Accent bar
             Container(
-              width: 3, height: 36,
+              width: 3,
+              height: 36,
               decoration: BoxDecoration(
                 color: accentColor,
                 borderRadius: BorderRadius.circular(2),
@@ -38,31 +39,39 @@ class ProLockedCard extends StatelessWidget {
             ),
             // Title
             Expanded(
-              child: Text(title.toUpperCase(),
-                  style: AppTextStyles.sectionTitle),
+              child: Text(
+                title.toUpperCase(),
+                style: AppTextStyles.sectionTitle,
+              ),
             ),
             // Lock badge
             Container(
               padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.sm,
-                  vertical: AppSpacing.xs),
+                horizontal: AppSpacing.sm,
+                vertical: AppSpacing.xs,
+              ),
               decoration: BoxDecoration(
                 color: AppColors.neonGreen.withAlpha(15),
                 borderRadius: BorderRadius.circular(50),
-                border: Border.all(
-                    color: AppColors.neonGreen.withAlpha(40)),
+                border: Border.all(color: AppColors.neonGreen.withAlpha(40)),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.lock_rounded,
-                      color: AppColors.neonGreen, size: 11),
+                  const Icon(
+                    Icons.lock_rounded,
+                    color: AppColors.neonGreen,
+                    size: 11,
+                  ),
                   const SizedBox(width: 4),
-                  Text('PRO',
-                      style: AppTextStyles.caption.copyWith(
-                          color: AppColors.neonGreen,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700)),
+                  Text(
+                    'PRO',
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.neonGreen,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                 ],
               ),
             ),

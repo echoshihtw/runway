@@ -75,12 +75,16 @@ class _FreeTier implements PurchaseService {
   Future<bool> restorePurchases() async => false;
 }
 
-Loan _loan() => Loan(
-  id: 'loan-1',
-  name: 'Bank',
+Loan _loan({
+  String id = 'loan-1',
+  String name = 'Bank',
+  double payment = 10000,
+}) => Loan(
+  id: id,
+  name: name,
   source: 'BANK',
   originalAmount: 120000,
-  monthlyPayment: 10000,
+  monthlyPayment: payment,
   startDate: DateTime(2026, 3, 1),
   createdAt: DateTime(2026, 3, 1),
   updatedAt: DateTime(2026, 3, 1),
@@ -177,7 +181,8 @@ void main() {
     expect(
       tester.takeException(),
       isNull,
-      reason: 'the empty state must lay out on the smallest screen we support '
+      reason:
+          'the empty state must lay out on the smallest screen we support '
           'at the largest text size, not overflow',
     );
     expect(find.text('+ LOAN'), findsOneWidget);
@@ -198,8 +203,35 @@ void main() {
     expect(
       tester.getSize(strip).height,
       greaterThanOrEqualTo(44),
-      reason: "Apple's minimum; a control that looks tappable must be "
+      reason:
+          "Apple's minimum; a control that looks tappable must be "
           'reachable',
     );
+  });
+
+  testWidgets('the summary holds money and the header holds the count', (
+    tester,
+  ) async {
+    // The second column read "1 ACTIVE", where ACTIVE can never be false: a
+    // settled loan is never rendered, so everything listed is active by
+    // construction and the word described an invariant rather than the
+    // count. What was left of it belongs with the title, as the
+    // subscriptions panel has it.
+    await _pump(tester, [
+      _loan(id: 'a', name: 'Fubon', payment: 210),
+      _loan(id: 'b', name: 'Study', payment: 90),
+    ]);
+
+    expect(find.textContaining('ACTIVE'), findsNothing);
+    expect(
+      find.text('2'),
+      findsOneWidget,
+      reason: 'the count sits beside the chevron, as a plain number',
+    );
+
+    // And the summary keeps the one figure that is money.
+    expect(find.text('DEBT/MO'), findsOneWidget);
+    expect(find.textContaining('300'), findsOneWidget);
+    expect(find.text('LOANS'), findsNothing);
   });
 }

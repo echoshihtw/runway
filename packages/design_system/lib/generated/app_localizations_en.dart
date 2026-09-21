@@ -27,6 +27,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pressureLabel => 'Monthly costs';
 
   @override
+  String get costsIncludeCommitments =>
+      'Includes subscriptions and loan payments';
+
+  @override
   String get metrics => 'Signals';
 
   @override
@@ -80,7 +84,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noEntries => 'No entries yet\nTap + ADD to log your first entry';
 
   @override
-  String get newLogEntry => 'NEW LOG ENTRY';
+  String get newLogEntry => 'New log entry';
 
   @override
   String get modifyEntry => 'MODIFY ENTRY';
@@ -107,7 +111,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get abort => 'ABORT';
 
   @override
-  String get purgeEntry => 'PURGE ENTRY?';
+  String get purgeEntry => 'Delete entry?';
 
   @override
   String get scenarioSimulator => 'Scenario planning';
@@ -297,7 +301,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newLoan => '+ LOAN';
 
   @override
-  String get spendOnWhat => 'WHAT DID YOU SPEND ON?';
+  String get spendOnWhat => 'What was it for?';
+
+  @override
+  String get moneyCameInInstead => 'Money came in instead?';
+
+  @override
+  String get logIncome => 'Log income';
 
   @override
   String get presetCoffee => 'COFFEE';
@@ -364,10 +374,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get repaid => '% REPAID';
 
   @override
-  String get stillPaying => 'PRINCIPAL REPAID — PAYMENTS CONTINUE';
+  String get stillPaying =>
+      'You have repaid what you borrowed. Payments run to the end of the term.';
 
   @override
-  String get markSettled => 'MARK AS SETTLED';
+  String get markSettled => 'Mark as settled';
 
   @override
   String get markSettledExplain =>
@@ -386,7 +397,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get configButton => 'CFG';
 
   @override
-  String get loanWizardTitle => 'LOAN WIZARD';
+  String get loanWizardTitle => 'Loan wizard';
 
   @override
   String get whoAndHowMuch => 'WHO & HOW MUCH';
@@ -479,10 +490,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newSubscription => '+ SUBSCRIPTION';
 
   @override
-  String get editSubscription => 'EDIT SUBSCRIPTION';
+  String get editSubscription => 'Edit subscription';
 
   @override
-  String get addSubscription => 'NEW SUBSCRIPTION';
+  String get addSubscription => 'New subscription';
 
   @override
   String get personal => 'PERSONAL';
@@ -514,7 +525,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get repayLoan => 'REPAY LOAN';
+  String get repayLoan => 'Repay loan';
 
   @override
   String get repaymentAmount => 'REPAYMENT AMOUNT';
@@ -625,7 +636,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rentFixed => 'RENT / FIXED';
 
   @override
-  String get livingExpenses => 'LIVING EXPENSES';
+  String get livingExpenses => 'Living expenses';
 
   @override
   String get budgetRuleHint =>
@@ -721,6 +732,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get futureInflowHint =>
       'Any recurring or expected income, such as retainers, contracts, creator income or dividends.';
+
+  @override
+  String get forecastDoesNotMoveRunway =>
+      'Income does not move the runway. The runway is what your cash covers if income stopped; this says whether the month adds to it.';
 
   @override
   String get runwayGoal => 'Runway goal';
@@ -865,6 +880,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get goalCashTarget => 'Target cash';
+
+  @override
+  String goalCashTargetFrom(int count, String cost) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count months × $cost a month',
+      one: '1 month × $cost a month',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get goalCashToGo => 'Still to go';

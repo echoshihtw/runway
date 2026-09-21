@@ -33,20 +33,22 @@ Future<void> showAddSubscriptionSheet(BuildContext context, WidgetRef ref) {
       onSubmit: (name, category, amount, cycle, startDate, note) async {
         final now = DateTime.now();
         try {
-          await ref.read(addSubscriptionUseCaseProvider).execute(
-            Subscription(
-              id: const Uuid().v4(),
-              name: name,
-              category: category,
-              amount: amount,
-              cycle: cycle,
-              startDate: startDate,
-              nextBillingDate: computeNextBillingDate(startDate, cycle),
-              note: note,
-              createdAt: now,
-              updatedAt: now,
-            ),
-          );
+          await ref
+              .read(addSubscriptionUseCaseProvider)
+              .execute(
+                Subscription(
+                  id: const Uuid().v4(),
+                  name: name,
+                  category: category,
+                  amount: amount,
+                  cycle: cycle,
+                  startDate: startDate,
+                  nextBillingDate: computeNextBillingDate(startDate, cycle),
+                  note: note,
+                  createdAt: now,
+                  updatedAt: now,
+                ),
+              );
         } catch (_) {
           // Keeps the form open with the typing intact. Returning true would
           // dismiss it as though the subscription existed.

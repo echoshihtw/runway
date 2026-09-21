@@ -32,7 +32,9 @@ Future<void> _pumpCard(WidgetTester tester, MonthlyBurn burn) async {
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: const Scaffold(body: SingleChildScrollView(child: ThisMonthCard())),
+        home: const Scaffold(
+          body: SingleChildScrollView(child: ThisMonthCard()),
+        ),
       ),
     ),
   );
@@ -44,8 +46,16 @@ void main() {
     await _pumpCard(
       tester,
       _burn(
-        rent: const BudgetBucket(budget: 32000, spentThisMonth: 0, typicalSpending: 0),
-        living: const BudgetBucket(budget: 30000, spentThisMonth: 210, typicalSpending: 210),
+        rent: const BudgetBucket(
+          budget: 32000,
+          spentThisMonth: 0,
+          typicalSpending: 0,
+        ),
+        living: const BudgetBucket(
+          budget: 30000,
+          spentThisMonth: 210,
+          typicalSpending: 210,
+        ),
       ),
     );
 
@@ -53,15 +63,53 @@ void main() {
     expect(find.text('LIVING EXPENSES'), findsOneWidget);
     expect(find.textContaining(RegExp(r'210 / .*30,000')), findsOneWidget);
     expect(find.textContaining(RegExp(r'29,790 left$')), findsOneWidget);
-    expect(find.textContaining(RegExp(r'32,000 left$')), findsOneWidget);
+
+    // Rent states its amount and stops. One tenancy is paid once, so
+    // "32,000 / 32,000" and "32,000 left" say the same thing twice and
+    // neither is a fact anyone acts on.
+    expect(find.textContaining(RegExp(r'32,000 left$')), findsNothing);
+    expect(find.textContaining(RegExp(r'32,000 / ')), findsNothing);
+  });
+
+  testWidgets('rent shows the figures again once it is exceeded', (
+    tester,
+  ) async {
+    // Going over is the exception: it genuinely adds cost and moves the
+    // runway, so the ratio comes back exactly when there is something to say.
+    await _pumpCard(
+      tester,
+      _burn(
+        rent: const BudgetBucket(
+          budget: 32000,
+          spentThisMonth: 33000,
+          typicalSpending: 33000,
+        ),
+        living: const BudgetBucket(
+          budget: 0,
+          spentThisMonth: 0,
+          typicalSpending: 0,
+        ),
+      ),
+    );
+
+    expect(find.textContaining(RegExp(r'33,000 / .*32,000')), findsOneWidget);
+    expect(find.textContaining(RegExp(r'1,000 over budget$')), findsOneWidget);
   });
 
   testWidgets('shows how far spending is over budget', (tester) async {
     await _pumpCard(
       tester,
       _burn(
-        rent: const BudgetBucket(budget: 0, spentThisMonth: 0, typicalSpending: 0),
-        living: const BudgetBucket(budget: 30000, spentThisMonth: 31500, typicalSpending: 31500),
+        rent: const BudgetBucket(
+          budget: 0,
+          spentThisMonth: 0,
+          typicalSpending: 0,
+        ),
+        living: const BudgetBucket(
+          budget: 30000,
+          spentThisMonth: 31500,
+          typicalSpending: 31500,
+        ),
       ),
     );
 
@@ -73,20 +121,38 @@ void main() {
     await _pumpCard(
       tester,
       _burn(
-        rent: const BudgetBucket(budget: 0, spentThisMonth: 0, typicalSpending: 0),
-        living: const BudgetBucket(budget: 0, spentThisMonth: 210, typicalSpending: 210),
+        rent: const BudgetBucket(
+          budget: 0,
+          spentThisMonth: 0,
+          typicalSpending: 0,
+        ),
+        living: const BudgetBucket(
+          budget: 0,
+          spentThisMonth: 210,
+          typicalSpending: 210,
+        ),
       ),
     );
 
     expect(find.text('LIVING EXPENSES'), findsNothing);
   });
 
-  testWidgets('tapping the living budget opens the living sheet', (tester) async {
+  testWidgets('tapping the living budget opens the living sheet', (
+    tester,
+  ) async {
     await _pumpCard(
       tester,
       _burn(
-        rent: const BudgetBucket(budget: 32000, spentThisMonth: 0, typicalSpending: 0),
-        living: const BudgetBucket(budget: 30000, spentThisMonth: 210, typicalSpending: 210),
+        rent: const BudgetBucket(
+          budget: 32000,
+          spentThisMonth: 0,
+          typicalSpending: 0,
+        ),
+        living: const BudgetBucket(
+          budget: 30000,
+          spentThisMonth: 210,
+          typicalSpending: 210,
+        ),
       ),
     );
 

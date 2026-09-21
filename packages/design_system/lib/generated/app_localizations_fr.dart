@@ -27,6 +27,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get pressureLabel => 'Coûts mensuels';
 
   @override
+  String get costsIncludeCommitments =>
+      'Inclut les abonnements et les mensualités de prêt';
+
+  @override
   String get metrics => 'MÉTRIQUES';
 
   @override
@@ -80,7 +84,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get noEntries => 'No entries yet\nTap + ADD to log your first entry';
 
   @override
-  String get newLogEntry => 'NOUVELLE ENTRÉE';
+  String get newLogEntry => 'Nouvelle entrée';
 
   @override
   String get modifyEntry => 'MODIFIER L\'ENTRÉE';
@@ -107,7 +111,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get abort => 'ANNULER';
 
   @override
-  String get purgeEntry => 'SUPPRIMER CETTE ENTRÉE?';
+  String get purgeEntry => 'Supprimer l’entrée ?';
 
   @override
   String get scenarioSimulator => 'SIMULATEUR DE SCÉNARIO';
@@ -298,7 +302,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get newLoan => '+ PRÊT';
 
   @override
-  String get spendOnWhat => 'VOUS AVEZ DÉPENSÉ POUR QUOI ?';
+  String get spendOnWhat => 'C\'était pour quoi ?';
+
+  @override
+  String get moneyCameInInstead => 'De l’argent est entré à la place ?';
+
+  @override
+  String get logIncome => 'Noter un revenu';
 
   @override
   String get presetCoffee => 'CAFÉ';
@@ -365,10 +375,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get repaid => '% REMBOURSÉ';
 
   @override
-  String get stillPaying => 'CAPITAL REMBOURSÉ — LES PAIEMENTS CONTINUENT';
+  String get stillPaying =>
+      'Vous avez remboursé ce que vous avez emprunté. Les paiements continuent jusqu’à la fin du terme.';
 
   @override
-  String get markSettled => 'MARQUER COMME SOLDÉ';
+  String get markSettled => 'Marquer comme soldé';
 
   @override
   String get markSettledExplain =>
@@ -387,7 +398,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get configButton => 'CFG';
 
   @override
-  String get loanWizardTitle => 'ASSISTANT PRÊT';
+  String get loanWizardTitle => 'Assistant de prêt';
 
   @override
   String get whoAndHowMuch => 'QUI & COMBIEN';
@@ -480,10 +491,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get newSubscription => '+ ABONNEMENT';
 
   @override
-  String get editSubscription => 'MODIFIER ABONNEMENT';
+  String get editSubscription => 'Modifier l’abonnement';
 
   @override
-  String get addSubscription => 'NOUVEL ABONNEMENT';
+  String get addSubscription => 'Nouvel abonnement';
 
   @override
   String get personal => 'PERSONNEL';
@@ -515,7 +526,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get repayLoan => 'REMBOURSER LE PRÊT';
+  String get repayLoan => 'Rembourser le prêt';
 
   @override
   String get repaymentAmount => 'MONTANT DU REMBOURSEMENT';
@@ -626,7 +637,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get rentFixed => 'LOYER / FIXE';
 
   @override
-  String get livingExpenses => 'DÉPENSES DE VIE';
+  String get livingExpenses => 'Dépenses courantes';
 
   @override
   String get budgetRuleHint =>
@@ -721,6 +732,10 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get futureInflowHint =>
       'Ajoutez ici des entrées futures neutres : missions freelance, contrats, revenus de création, dividendes ou toute entrée attendue.';
+
+  @override
+  String get forecastDoesNotMoveRunway =>
+      'Les revenus ne changent pas la marge. La marge correspond à ce que vos liquidités couvrent si vos revenus s\'arrêtaient ; ceci indique si le mois l\'augmente.';
 
   @override
   String get runwayGoal => 'Objectif de runway';
@@ -869,6 +884,17 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get goalCashTarget => 'Montant visé';
+
+  @override
+  String goalCashTargetFrom(int count, String cost) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count mois × $cost par mois',
+      one: '1 mois × $cost par mois',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get goalCashToGo => 'Reste';

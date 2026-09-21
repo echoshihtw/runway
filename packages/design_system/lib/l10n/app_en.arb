@@ -6,6 +6,10 @@
   "lifeForce": "RUNWAY READINESS",
   "statusLabel": "Position",
   "pressureLabel": "Monthly costs",
+  "costsIncludeCommitments": "Includes subscriptions and loan payments",
+  "@costsIncludeCommitments": {
+    "description": "Under Monthly costs: the budget is only part of it"
+  },
   "metrics": "Signals",
   "cash": "CASH",
   "owed": "Owed",
@@ -34,7 +38,7 @@
   "transactionLog": "TRANSACTION LOG",
   "newEntry": "+ NEW",
   "noEntries": "No entries yet\nTap + ADD to log your first entry",
-  "newLogEntry": "NEW LOG ENTRY",
+  "newLogEntry": "New log entry",
   "modifyEntry": "MODIFY ENTRY",
   "type": "TYPE",
   "date": "DATE",
@@ -43,7 +47,7 @@
   "noteOptional": "NOTE (OPTIONAL)",
   "confirm": "CONFIRM",
   "abort": "ABORT",
-  "purgeEntry": "PURGE ENTRY?",
+  "purgeEntry": "Delete entry?",
   "scenarioSimulator": "Scenario planning",
   "overrideInputs": "Planning inputs",
   "burnRateOverride": "Rent + living / month",
@@ -138,7 +142,15 @@
   "liabilities": "Liabilities",
   "noActiveLoans": "NO ACTIVE LOANS",
   "newLoan": "+ LOAN",
-  "spendOnWhat": "WHAT DID YOU SPEND ON?",
+  "spendOnWhat": "What was it for?",
+  "moneyCameInInstead": "Money came in instead?",
+  "logIncome": "Log income",
+  "@moneyCameInInstead": {
+    "description": "Under the spend tiles: the other direction has a door too"
+  },
+  "@logIncome": {
+    "description": "The action beside it; opens the form on income"
+  },
   "presetCoffee": "COFFEE",
   "presetCoffeeNote": "Coffee",
   "presetLunch": "LUNCH",
@@ -179,14 +191,14 @@
   "paidThisMo": "PAID THIS MO",
   "monthsLeft": "MONTHS LEFT",
   "repaid": "% REPAID",
-  "stillPaying": "PRINCIPAL REPAID — PAYMENTS CONTINUE",
-  "markSettled": "MARK AS SETTLED",
+  "stillPaying": "You have repaid what you borrowed. Payments run to the end of the term.",
+  "markSettled": "Mark as settled",
   "markSettledExplain": "The monthly payment stops counting and the loan leaves this list for good. Entries are kept.",
   "repay": "REPAY",
   "repayTitle": "REPAY",
   "extra": "EXTRA",
   "configButton": "CFG",
-  "loanWizardTitle": "LOAN WIZARD",
+  "loanWizardTitle": "Loan wizard",
   "whoAndHowMuch": "WHO & HOW MUCH",
   "loanTerms": "LOAN TERMS",
   "confirmPayment": "CONFIRM PAYMENT",
@@ -217,8 +229,8 @@
   "totalPerMonth": "TOTAL/MO",
   "totalPerYear": "TOTAL/YR",
   "newSubscription": "+ SUBSCRIPTION",
-  "editSubscription": "EDIT SUBSCRIPTION",
-  "addSubscription": "NEW SUBSCRIPTION",
+  "editSubscription": "Edit subscription",
+  "addSubscription": "New subscription",
   "personal": "PERSONAL",
   "business": "BUSINESS",
   "weekly": "WEEKLY",
@@ -235,7 +247,7 @@
       }
     }
   },
-  "repayLoan": "REPAY LOAN",
+  "repayLoan": "Repay loan",
   "repaymentAmount": "REPAYMENT AMOUNT",
   "cancel": "CANCEL",
   "paid": "✓ PAID",
@@ -295,7 +307,7 @@
   "close": "CLOSE",
   "monthlyBudget": "Monthly budget",
   "rentFixed": "RENT / FIXED",
-  "livingExpenses": "LIVING EXPENSES",
+  "livingExpenses": "Living expenses",
   "budgetRuleHint": "Spending uses up its budget — only going over adds cost",
   "subtotal": "SUBTOTAL",
   "budgetLeft": "{amount} left",
@@ -349,6 +361,10 @@
   "expectedMonthlyBurn": "Expected monthly costs",
   "useCurrentBurn": "Use current costs",
   "futureInflowHint": "Any recurring or expected income, such as retainers, contracts, creator income or dividends.",
+  "forecastDoesNotMoveRunway": "Income does not move the runway. The runway is what your cash covers if income stopped; this says whether the month adds to it.",
+  "@forecastDoesNotMoveRunway": {
+    "description": "In the Forecast card: income is deliberately outside the runway"
+  },
   "runwayGoal": "Runway goal",
   "goal": "Goal",
   "none": "None",
@@ -425,6 +441,18 @@
   "goalReached": "Goal reached!",
   "monthsToGoal": "{count, plural, =1{1 month of cover to build} other{{count} months of cover to build}}",
   "goalCashTarget": "Target cash",
+  "goalCashTargetFrom": "{count, plural, =1{1 month × {cost} a month} other{{count} months × {cost} a month}}",
+  "@goalCashTargetFrom": {
+    "description": "Under Target cash: the arithmetic behind a figure nobody typed",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "cost": {
+        "type": "String"
+      }
+    }
+  },
   "goalCashToGo": "Still to go",
   "@monthsToGoal": {
     "placeholders": {

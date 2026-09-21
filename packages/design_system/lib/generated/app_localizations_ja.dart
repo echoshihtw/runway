@@ -27,6 +27,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get pressureLabel => 'プレッシャー';
 
   @override
+  String get costsIncludeCommitments => 'サブスクとローン返済を含みます';
+
+  @override
   String get metrics => 'メトリクス';
 
   @override
@@ -107,7 +110,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get abort => '中止';
 
   @override
-  String get purgeEntry => 'このエントリーを削除？';
+  String get purgeEntry => 'この記録を削除しますか？';
 
   @override
   String get scenarioSimulator => 'シナリオシミュレーター';
@@ -293,7 +296,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get newLoan => '+ ローン';
 
   @override
-  String get spendOnWhat => '何に使った？';
+  String get spendOnWhat => '何に使いましたか？';
+
+  @override
+  String get moneyCameInInstead => '入ってきたお金ですか？';
+
+  @override
+  String get logIncome => '収入を記録';
 
   @override
   String get presetCoffee => 'コーヒー';
@@ -360,7 +369,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get repaid => '% 返済済み';
 
   @override
-  String get stillPaying => '元本は完済 — 支払いは継続';
+  String get stillPaying => '借りた分は返し終わりました。支払いは期間の終わりまで続きます。';
 
   @override
   String get markSettled => '完済にする';
@@ -712,6 +721,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get futureInflowHint => 'フリーランス、契約収入、クリエイター収入、配当など、想定される将来の流入を入力します。';
 
   @override
+  String get forecastDoesNotMoveRunway =>
+      '収入で残り月数は変わりません。残り月数は収入が止まった場合に現金でもつ期間で、これはその月に増えるかどうかを示します。';
+
+  @override
   String get runwayGoal => 'ランウェイ目標';
 
   @override
@@ -845,6 +858,16 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get goalCashTarget => '目標額';
+
+  @override
+  String goalCashTargetFrom(int count, String cost) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countか月 × 月$cost',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get goalCashToGo => '残り';

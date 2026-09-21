@@ -130,23 +130,25 @@ void main() {
     expect(
       tester.takeException(),
       isNull,
-      reason: 'the name input allows 50 characters; the card must degrade, '
+      reason:
+          'the name input allows 50 characters; the card must degrade, '
           'not overflow',
     );
   });
 
-  testWidgets('a twelve-digit total is bounded like its subscriptions sibling', (
-    tester,
-  ) async {
-    await _pump(tester, [_loan(monthlyPayment: 999999999999)]);
+  testWidgets(
+    'a twelve-digit total is bounded like its subscriptions sibling',
+    (tester) async {
+      await _pump(tester, [_loan(monthlyPayment: 999999999999)]);
 
-    // The summary row renders before the card's own payment line.
-    final total = tester.widget<Text>(
-      find.textContaining('999,999,999,999').first,
-    );
-    expect(total.maxLines, 1);
-    expect(total.overflow, TextOverflow.ellipsis);
-  });
+      // The summary row renders before the card's own payment line.
+      final total = tester.widget<Text>(
+        find.textContaining('999,999,999,999').first,
+      );
+      expect(total.maxLines, 1);
+      expect(total.overflow, TextOverflow.ellipsis);
+    },
+  );
 
   testWidgets('a twelve-digit installment fits the expanded card', (
     tester,

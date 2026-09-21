@@ -1,4 +1,5 @@
 import 'package:application/application.dart';
+import 'package:domain/domain.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -96,12 +97,86 @@ Future<void> showDailySpendSheet(BuildContext context, WidgetRef ref) {
                   ),
                 ),
               ],
+              // Income has no door of its own on the one screen people open
+              // every day (#118). It arrives through a tile called
+              // "Something else", on a sheet that asks what the money was
+              // for — four steps, and a framing that says it does not belong.
+              //
+              // Not a seventh tile: the grid is exactly two rows of three,
+              // and "money in" is not an answer to "what was it for". A line
+              // underneath instead, which lets the sheet keep asking one
+              // thing quickly while admitting the other direction exists.
+              const SizedBox(height: AppSpacing.lg),
+              _IncomeLine(
+                onTap: () {
+                  Navigator.of(sheetContext).pop();
+                  WidgetsBinding.instance.addPostFrameCallback(
+                    (_) => showEntrySheet(
+                      context,
+                      ref,
+                      preselectedType: TransactionType.income,
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ),
       );
     },
   );
+}
+
+/// The other direction, stated once and quietly.
+///
+/// Dim rather than mint: this sheet is for spending, and six of its six tiles
+/// say so. The line admits income exists without competing with the thing
+/// that is tapped fifty times more often.
+class _IncomeLine extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _IncomeLine({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Semantics(
+      button: true,
+      label: l10n.logIncome,
+      onTap: onTap,
+      excludeSemantics: true,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Container(
+          width: double.infinity,
+          // The same 44pt minimum the preset tiles and the add strip take.
+          constraints: const BoxConstraints(minHeight: 44),
+          padding: const EdgeInsets.only(top: AppSpacing.md),
+          decoration: const BoxDecoration(
+            border: Border(top: BorderSide(color: SC.dividerColor)),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Flexible(
+                child: Text(
+                  l10n.moneyCameInInstead,
+                  style: AppTextStyles.bodySmall,
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Text(
+                l10n.logIncome,
+                style: AppTextStyles.label.copyWith(color: SC.numberLife),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 /// Stateful only to hold [_pressed].

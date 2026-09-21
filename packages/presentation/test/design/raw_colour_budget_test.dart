@@ -16,7 +16,7 @@ import 'package:flutter_test/flutter_test.dart';
 /// request, and usually means the semantic layer is missing a token, which is
 /// its own piece of work rather than a licence to reach past it.
 const budget = <String, int>{
-  'features/config/config_screen.dart': 33,
+  'features/config/config_screen.dart': 32,
   'features/transactions/widgets/loan_wizard.dart': 33,
   'features/dashboard/widgets/getting_started_card.dart': 21,
   'features/subscriptions/subscription_form.dart': 21,

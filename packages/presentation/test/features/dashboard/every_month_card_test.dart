@@ -9,18 +9,22 @@ import 'package:presentation/features/dashboard/widgets/every_month_card.dart';
 /// showed only as one caption under the status badge, once the forecast sheet
 /// had been filled in, so the app said plenty about money leaving and nothing
 /// about money arriving.
-ModelState _model({double? expectedInflow, bool hasCostBasis = true}) =>
-    ModelState(
-      hasCostBasis: hasCostBasis,
-      currentCash: 34000,
-      burnRate: 2800,
-      effectiveBurnRate: 2800,
-      monthlyPayment: 0,
-      subscriptionMonthlyCost: 0,
-      expectedMonthlyInflow: expectedInflow,
-      runwayMonths: 12,
-      runwayDays: 365,
-    );
+ModelState _model({
+  double? expectedInflow,
+  bool hasCostBasis = true,
+  RunwayBasis basis = RunwayBasis.budget,
+}) => ModelState(
+  basis: basis,
+  hasCostBasis: hasCostBasis,
+  currentCash: 34000,
+  burnRate: 2800,
+  effectiveBurnRate: 2800,
+  monthlyPayment: 0,
+  subscriptionMonthlyCost: 0,
+  expectedMonthlyInflow: expectedInflow,
+  runwayMonths: 12,
+  runwayDays: 365,
+);
 
 Future<void> _pump(
   WidgetTester tester,
@@ -105,5 +109,29 @@ void main() {
     expect(withIncome.runwayMonths, without.runwayMonths);
     expect(withIncome.sustainableNetMonthlyFlow, 1400);
     expect(without.hasSustainableProjection, isFalse);
+  });
+
+  testWidgets('the costs caption is absent on an assumption', (tester) async {
+    // Monthly costs is normally the budget plus subscriptions plus loan
+    // payments, and the caption says so. On an expected-cost assumption it is
+    // a number somebody typed and includes nothing, so the caption would be
+    // false in exactly the state where its reader is least sure where the
+    // figure came from.
+    await _pump(tester, _model(expectedInflow: 3200));
+    expect(
+      find.text('Includes subscriptions and loan payments'),
+      findsOneWidget,
+      reason: 'a computed figure does have parts',
+    );
+
+    await _pump(
+      tester,
+      _model(expectedInflow: 3200, basis: RunwayBasis.assumption),
+    );
+    expect(
+      find.text('Includes subscriptions and loan payments'),
+      findsNothing,
+      reason: 'a typed assumption includes nothing',
+    );
   });
 }

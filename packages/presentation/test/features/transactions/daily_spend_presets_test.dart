@@ -144,7 +144,7 @@ void main() {
     await tester.tap(_addButton);
     await tester.pumpAndSettle();
 
-    expect(find.text('WHAT DID YOU SPEND ON?'), findsOneWidget);
+    expect(find.text('What was it for?'), findsOneWidget);
     for (final label in const [
       'COFFEE',
       'LUNCH',
@@ -375,5 +375,44 @@ void main() {
         reason: '$label is smaller than the 44pt minimum',
       );
     }
+  });
+
+  testWidgets('income has a door of its own', (tester) async {
+    // It used to arrive through a tile called "Something else", on a sheet
+    // asking what the money was for: four interactions, and a framing that
+    // said income did not belong here (#118).
+    await _pump(tester);
+    await tester.tap(_addButton);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Money came in instead?'), findsOneWidget);
+    await tester.tap(find.text('Log income'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(TransactionForm), findsOneWidget);
+    expect(
+      _fieldText(tester, 1),
+      isEmpty,
+      reason: 'no preset note: nothing was chosen',
+    );
+  });
+
+  testWidgets('what the income door writes is income', (tester) async {
+    // The form opens on expense by default, so arriving here without the
+    // type preselected would log the opposite of what was asked for.
+    final written = await _pump(tester);
+    await tester.tap(_addButton);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Log income'));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField).at(0), '2400');
+    await tester.pump();
+    await tester.tap(find.text('CONFIRM'));
+    await tester.pumpAndSettle();
+
+    expect(written.items, hasLength(1));
+    expect(written.items.single.type, TransactionType.income);
+    expect(written.items.single.amount.value, 2400);
   });
 }

@@ -71,40 +71,26 @@ class LiabilitiesPanel extends ConsumerWidget {
               ],
             ),
           )
+        // One figure, and it is money. The second column held "1 ACTIVE",
+        // where ACTIVE can never be false — a settled loan is never rendered,
+        // so everything listed here is active by construction and the word
+        // described an invariant. What is left of it, the count, is metadata
+        // about the card and now sits with the title, as the subscriptions
+        // panel does.
         : Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
             children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(l10n.loanPerMonth, style: AppTextStyles.label),
-                    const SizedBox(height: AppSpacing.xxs),
-                    Text(
-                      '$symbol ${nf.format(total)}',
-                      style: AppTextStyles.metric.copyWith(
-                        color: SC.accentCost,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(l10n.loans, style: AppTextStyles.label),
-                    const SizedBox(height: AppSpacing.xxs),
-                    Text(
-                      l10n.activeCount(active.length),
-                      style: AppTextStyles.metric.copyWith(
-                        color: SC.captionColor,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+              Text(l10n.loanPerMonth, style: AppTextStyles.label),
+              const SizedBox(width: AppSpacing.sm),
+              Flexible(
+                child: Text(
+                  '$symbol ${nf.format(total)}',
+                  textAlign: TextAlign.right,
+                  style: AppTextStyles.metric.copyWith(color: SC.accentCost),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -114,16 +100,17 @@ class LiabilitiesPanel extends ConsumerWidget {
         ? null
         : Column(
             children: [
-              ...active.map(
-                (s) => Padding(
+              for (var i = 0; i < active.length; i++)
+                Padding(
                   padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                   child: LoanCard(
-                    summary: s,
-                    onTap: () => _confirmSettled(context, ref, s),
-                    onRepay: () => _showRepay(context, ref, s),
+                    summary: active[i],
+                    // The strip below draws the last rule.
+                    showDivider: i < active.length - 1,
+                    onTap: () => _confirmSettled(context, ref, active[i]),
+                    onRepay: () => _showRepay(context, ref, active[i]),
                   ),
                 ),
-              ),
               AddStrip(
                 label: l10n.newLoan,
                 color: SC.accentCost,
@@ -138,6 +125,12 @@ class LiabilitiesPanel extends ConsumerWidget {
       initiallyExpanded: false,
       summary: summary,
       details: details,
+      trailing: active.isEmpty
+          ? null
+          : Text(
+              '${active.length}',
+              style: AppTextStyles.metricSmall.copyWith(color: SC.accentCost),
+            ),
     );
   }
 
@@ -161,7 +154,11 @@ class LiabilitiesPanel extends ConsumerWidget {
       useRootNavigator: true,
       builder: (dialogContext) => AlertDialog(
         backgroundColor: AppColors.surface,
-        title: Text(l10n.markSettled, style: AppTextStyles.label),
+        // A title, at title size. This dialog ends a financial commitment
+        // for good and its heading was set at the 11pt the app uses for row
+        // labels, which is also why it read as shouting: caps at label size
+        // is correct, caps at heading size is not.
+        title: Text(l10n.markSettled, style: AppTextStyles.title),
         content: Text(l10n.markSettledExplain, style: AppTextStyles.bodySmall),
         actions: [
           TextButton(
@@ -170,8 +167,9 @@ class LiabilitiesPanel extends ConsumerWidget {
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
+            // The action keeps its caps: a button is a label.
             child: Text(
-              l10n.markSettled,
+              l10n.markSettled.toUpperCase(),
               style: AppTextStyles.label.copyWith(color: SC.cost),
             ),
           ),
