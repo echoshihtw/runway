@@ -235,13 +235,13 @@ abstract class AppLocalizations {
   /// No description provided for @newLogEntry.
   ///
   /// In en, this message translates to:
-  /// **'> NEW LOG ENTRY'**
+  /// **'NEW LOG ENTRY'**
   String get newLogEntry;
 
   /// No description provided for @modifyEntry.
   ///
   /// In en, this message translates to:
-  /// **'> MODIFY ENTRY'**
+  /// **'MODIFY ENTRY'**
   String get modifyEntry;
 
   /// No description provided for @type.
@@ -289,7 +289,7 @@ abstract class AppLocalizations {
   /// No description provided for @purgeEntry.
   ///
   /// In en, this message translates to:
-  /// **'> PURGE ENTRY?'**
+  /// **'PURGE ENTRY?'**
   String get purgeEntry;
 
   /// No description provided for @scenarioSimulator.
@@ -637,7 +637,7 @@ abstract class AppLocalizations {
   /// No description provided for @noActiveLoans.
   ///
   /// In en, this message translates to:
-  /// **'> NO ACTIVE LOANS'**
+  /// **'NO ACTIVE LOANS'**
   String get noActiveLoans;
 
   /// No description provided for @newLoan.
@@ -799,7 +799,7 @@ abstract class AppLocalizations {
   /// No description provided for @repayTitle.
   ///
   /// In en, this message translates to:
-  /// **'> REPAY'**
+  /// **'REPAY'**
   String get repayTitle;
 
   /// No description provided for @extra.
@@ -925,7 +925,7 @@ abstract class AppLocalizations {
   /// No description provided for @noSubscriptions.
   ///
   /// In en, this message translates to:
-  /// **'> NO ACTIVE SUBSCRIPTIONS'**
+  /// **'NO ACTIVE SUBSCRIPTIONS'**
   String get noSubscriptions;
 
   /// No description provided for @subscriptionName.

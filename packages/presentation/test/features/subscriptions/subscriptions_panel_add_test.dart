@@ -87,7 +87,7 @@ void main() {
   ) async {
     await _pump(tester, const []);
 
-    expect(find.text('> NO ACTIVE SUBSCRIPTIONS'), findsOneWidget);
+    expect(find.text('NO ACTIVE SUBSCRIPTIONS'), findsOneWidget);
     expect(find.text('+ SUBSCRIPTION'), findsOneWidget);
 
     await tester.tap(find.text('+ SUBSCRIPTION'));
@@ -121,7 +121,7 @@ void main() {
   testWidgets('the empty state fits a narrow screen at double text size', (
     tester,
   ) async {
-    // "> NO ACTIVE SUBSCRIPTIONS" and "+ SUBSCRIPTION" share one row, and the
+    // "NO ACTIVE SUBSCRIPTIONS" and "+ SUBSCRIPTION" share one row, and the
     // label was the only child of that row without a flex, so it kept its
     // full intrinsic width and pushed the row past the screen. Italian is
     // longer still: "> NESSUN ABBONAMENTO ATTIVO" beside "+ ABBONAMENTO".

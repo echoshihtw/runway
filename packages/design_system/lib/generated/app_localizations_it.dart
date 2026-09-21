@@ -72,10 +72,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get noEntries => 'No entries yet\nTap + ADD to log your first entry';
 
   @override
-  String get newLogEntry => '> NUOVA VOCE';
+  String get newLogEntry => 'NUOVA VOCE';
 
   @override
-  String get modifyEntry => '> MODIFICA VOCE';
+  String get modifyEntry => 'MODIFICA VOCE';
 
   @override
   String get type => 'TIPO';
@@ -99,7 +99,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get abort => 'ANNULLA';
 
   @override
-  String get purgeEntry => '> ELIMINARE QUESTA VOCE?';
+  String get purgeEntry => 'ELIMINARE QUESTA VOCE?';
 
   @override
   String get scenarioSimulator => 'SIMULATORE DI SCENARI';
@@ -284,7 +284,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get liabilities => 'Debiti';
 
   @override
-  String get noActiveLoans => '> NESSUN PRESTITO ATTIVO';
+  String get noActiveLoans => 'NESSUN PRESTITO ATTIVO';
 
   @override
   String get newLoan => '+ PRESTITO';
@@ -370,7 +370,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get repay => 'RIMBORSA';
 
   @override
-  String get repayTitle => '> RIMBORSA';
+  String get repayTitle => 'RIMBORSA';
 
   @override
   String get extra => 'EXTRA';
@@ -433,7 +433,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get subscriptions => 'Abbonamenti';
 
   @override
-  String get noSubscriptions => '> NESSUN ABBONAMENTO ATTIVO';
+  String get noSubscriptions => 'NESSUN ABBONAMENTO ATTIVO';
 
   @override
   String get subscriptionName => 'NOME';
