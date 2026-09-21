@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:presentation/features/paywall/paywall_screen.dart';
 import 'package:presentation/features/transactions/transactions_screen.dart';
+import 'package:presentation/router/nav_metrics.dart';
 import 'package:presentation/features/transactions/widgets/transaction_form.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -113,6 +114,27 @@ Future<_Transactions> _pump(
 }
 
 void main() {
+  testWidgets('the add button clears the band the page indicator occupies', (
+    tester,
+  ) async {
+    // The router draws a scrim kNavBandHeight tall so scrolled content fades
+    // out behind the labels. At the default floating position the button sat
+    // inside it: the lower half was painted over and it could not be tapped on
+    // a device (#201). This screen does not host the indicator, so the check is
+    // on the gap the button leaves at the foot of the screen.
+    await _pump(tester);
+
+    final button = tester.getRect(_addButton);
+    final screenHeight =
+        tester.view.physicalSize.height / tester.view.devicePixelRatio;
+
+    expect(
+      screenHeight - button.bottom,
+      greaterThanOrEqualTo(kNavBandHeight),
+      reason: 'the scrim behind the nav labels would cover the add button',
+    );
+  });
+
   testWidgets('the add button asks what you bought, not which record type', (
     tester,
   ) async {
