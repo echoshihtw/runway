@@ -163,14 +163,15 @@ class TransactionRow extends ConsumerWidget {
                     alignment: Alignment.centerRight,
                     child: Text(
                       '$sign$symbol $amount',
-                      style: AppTextStyles.metricSmall.copyWith(
-                        // The opening balance is where counting starts, not
-                        // money that moved; it must not sum with the day.
-                        color:
-                            transaction.type == TransactionType.openingBalance
-                            ? AppColors.textSecondary
-                            : AppColors.textPrimary,
-                      ),
+                      // The figure takes its category's colour, like every
+                      // other number in the app: pink is an outflow, mint is
+                      // money in, gold is a loan, purple is a subscription.
+                      // The log was the one place a number stayed neutral.
+                      //
+                      // The opening balance falls out for free: [_typeColor]
+                      // already gives it no category colour, because it is
+                      // where counting starts rather than money that moved.
+                      style: AppTextStyles.metricSmall.copyWith(color: color),
                       maxLines: 1,
                     ),
                   ),
