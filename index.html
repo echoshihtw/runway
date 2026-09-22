@@ -3,30 +3,124 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Financial Runway — how long your money lasts</title>
+  <title>Financial Runway: how long your money lasts</title>
   <meta name="description" content="How many months your money covers if income paused today. An iPhone app with no account and no bank connection, and a one-time price.">
   <link rel="icon" type="image/png" sizes="180x180" href="assets/icon-180.png">
   <link rel="apple-touch-icon" href="assets/icon-180.png">
   <meta name="theme-color" content="#040d1a">
   <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/landing.css">
 </head>
-<body>
+<body class="landing">
   <div class="wrap">
     <header class="site">
-      <a class="brand" href="./"><img src="assets/icon-180.png" alt="" width="28" height="28">Financial <span>Runway</span></a>
-      <nav>
+      <a class="brand" href="./"><span class="app-mark"><img src="assets/icon-180.png" alt="" width="30" height="30"></span>Financial <span>Runway</span></a>
+      <nav aria-label="Main navigation">
+        <a href="#how-it-works">How it works</a>
         <a href="privacy/">Privacy</a>
         <a href="support/">Support</a>
       </nav>
+      <span class="review-badge"><i></i> In App Store review</span>
     </header>
 
     <main>
-      <h1>Stop guessing how long your money lasts.</h1>
-      <p class="lede">One number on your iPhone: how many months your money covers if income paused today, and the month it would run out. No account. No bank connection.</p>
+      <section class="hero" id="why-now">
+        <div class="hero-copy">
+          <p class="eyebrow">I was planning two years abroad from savings.</p>
+          <h1>Know how long your money can carry you.</h1>
+          <p class="lede">I needed to know whether the plan could work, and how much time I really had.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#how-it-works">See how it works</a>
+            <span class="store-status"><i></i> Coming soon to the App Store</span>
+          </div>
+        </div>
+        <div class="hero-field">
+          <span class="hero-shape" aria-hidden="true"></span>
+          <span class="hero-shard" aria-hidden="true"></span>
+          <div class="metric-card"><span>YOUR RUNWAY</span><strong>12 mo</strong><small>Running out September 2027</small></div>
+          <div class="device-frame"><img src="assets/device/01-runway.png" width="900" height="1956" alt="Financial Runway overview showing twelve months of runway, cash, loans and monthly movement."></div>
+        </div>
+      </section>
 
-      <p>It is built for people in a defined financial chapter: studying abroad, between jobs, bootstrapping a project, or living off savings. Your records are encrypted on your device and there is no server to read them, because setting it up is a balance and a budget rather than a bank login.</p>
+      <section class="problem-section" id="problem">
+        <div class="life-transition">
+          <span class="cut-shape cut-leaf" aria-hidden="true"></span>
+          <span class="cut-shape cut-star" aria-hidden="true"></span>
+          <span class="cut-shape cut-ribbon" aria-hidden="true"></span>
+          <div class="life-copy">
+            <h2>When life changes shape, money becomes time.</h2>
+          </div>
+          <p class="life-context">A study plan, a new direction, something you are building, or an adventure you are not ready to give up.</p>
+        </div>
+        <div class="question-shift">
+          <div><p class="eyebrow">A budget could tell me</p><p>Where did my money go?</p></div>
+          <div class="answer"><p class="eyebrow">I needed it to keep telling me</p><p>How long will it last?</p></div>
+        </div>
+      </section>
 
-      <p>Runway Pro is a one-time purchase, not a subscription. An app that counts what your subscriptions cost you has no business being one of them.</p>
+      <section class="solution-section" id="solution">
+        <div class="solution-copy">
+          <p class="eyebrow">The spreadsheet gave me an answer once.</p>
+          <h2>So I built Runway to keep the answer current.</h2>
+          <p>Enter the money you have, what each month costs and the income you still expect. Runway turns that pile of numbers into time.</p>
+          <ul class="input-list"><li><span class="mint-dot"></span>Cash you can use</li><li><span class="pink-dot"></span>Monthly commitments</li><li><span class="blue-dot"></span>Expected income</li></ul>
+        </div>
+        <div class="story-field">
+          <span class="story-shape" aria-hidden="true"></span>
+          <div class="runway-answer">
+            <div class="monthly-breakdown">
+              <p class="monthly-label">EVERY MONTH <span>Example</span></p>
+              <dl>
+                <div><dt><i class="rent-dot" aria-hidden="true"></i>Rent</dt><dd>$1,450</dd></div>
+                <div><dt><i class="living-dot" aria-hidden="true"></i>Living budget</dt><dd>$1,100</dd></div>
+                <div><dt><i class="subscription-dot" aria-hidden="true"></i>Subscriptions</dt><dd>$43</dd></div>
+                <div><dt><i class="loan-dot" aria-hidden="true"></i>Loan payments</dt><dd>$210</dd></div>
+              </dl>
+            </div>
+            <div class="runway-heading"><p>YOUR RUNWAY</p><span class="status-badge"><i></i>STABLE</span></div>
+            <div class="runway-number"><strong>12</strong><span>months</span></div>
+            <div class="runway-meta"><small>Running out September 2027</small></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="stories" id="how-it-works">
+        <div class="section-heading compact"><h2>A few seconds of upkeep keeps the months honest as life happens.</h2></div>
+        <article class="story">
+          <div class="story-shot"><img src="assets/device/02-living.png" width="720" height="1564" alt="Living budget screen showing what is left this month as an amount per day." loading="lazy" decoding="async"></div>
+          <div class="story-copy"><p class="step">01 / LIVE</p><h3>Know what today can cost.</h3><p>Your living budget becomes a daily amount for the days left this month. Spend within the cap and your underlying monthly plan stays intact.</p><strong>One glance before you say yes.</strong></div>
+        </article>
+        <article class="story reverse">
+          <div class="story-shot"><img src="assets/device/03-log.png" width="720" height="1564" alt="Quick log sheet for spending and income." loading="lazy" decoding="async"></div>
+          <div class="story-copy"><p class="step">02 / KEEP CURRENT</p><h3>Keep the number honest in seconds.</h3><p>Pick the occasion and enter the amount. Income has a line of its own, so your runway follows real life without a bank connection.</p><strong>You typed every figure, so you can check it.</strong></div>
+        </article>
+        <article class="story">
+          <div class="story-shot"><img src="assets/device/04-plan.png" width="720" height="1564" alt="Scenario plan comparing a projected runway with the current runway." loading="lazy" decoding="async"></div>
+          <div class="story-copy"><p class="step">03 / DECIDE</p><h3>See what one change buys you.</h3><p>Reduce a cost or add income and see the months it adds before changing your real plan.</p><strong>Try the cut before you make it.</strong></div>
+        </article>
+      </section>
+
+      <section class="trust-section" id="why-runway">
+        <div class="section-heading compact"><h2>Four things Runway does without.</h2></div>
+        <div class="trust-grid">
+          <article><span>◎</span><h3>No bank connection</h3><p>Start with a balance and a budget, not a financial login.</p></article>
+          <article><span>⌁</span><h3>Encrypted on your phone</h3><p>An AES-256 database, with the key kept in the iOS Keychain. No sign-in, no cloud sync.</p></article>
+          <article><span>○</span><h3>No judgment mechanics</h3><p>No score, streak or rank. A bad month is information.</p></article>
+          <article><span>∞</span><h3>No subscription for Pro</h3><p>Pay once. Subscription tracking stays free and unlimited.</p></article>
+        </div>
+      </section>
+
+      <section class="pricing-section" id="pricing">
+        <div class="price-intro"><h2><span>$3.99</span> once.</h2><p>An app that counts what subscriptions cost you has no business becoming one.</p><span class="store-status"><i></i> Coming soon to the App Store</span></div>
+        <div class="plans">
+          <article><p>FREE</p><h3>Know your runway</h3><ul><li>Core runway, budgets and loans</li><li>Unlimited subscription tracking</li><li>First five entries</li><li>First three simulations</li></ul></article>
+          <article class="pro"><p>RUNWAY PRO</p><h3>Keep planning freely</h3><ul><li>Everything in Free</li><li>Unlimited entries</li><li>Unlimited scenario simulations</li><li>One-time purchase</li><li>More Pro features to come</li></ul></article>
+        </div>
+      </section>
+
+      <section class="founder"><blockquote>I was planning two years abroad funded from savings, and I worked it out in a spreadsheet. I didn't like it: boring to look at, and a chore to keep up. I wanted to make it fun, so I built something I would use.</blockquote></section>
+
+      <section class="final-cta"><span class="app-mark app-mark-large"><img src="assets/icon-180.png" alt="" width="72" height="72"></span><div><p class="eyebrow">Financial Runway</p><h2>Make the money question smaller.</h2><p>Know the time you have, then decide what to do with it.</p></div><span class="store-status"><i></i> Coming soon to the App Store</span></section>
 
       <div class="links">
         <a href="privacy/">
@@ -48,5 +142,40 @@
       <p>Financial Runway</p>
     </footer>
   </div>
+  <script>
+    const floatingNav = document.querySelector('.landing header.site');
+    const updateFloatingNav = () => floatingNav.classList.toggle('is-scrolled', window.scrollY > 24);
+    updateFloatingNav();
+    window.addEventListener('scroll', updateFloatingNav, { passive: true });
+    const heroCta = document.querySelector('.hero-actions .button.primary');
+    let previousCorner = -1;
+    const chooseCtaCorner = () => {
+      const choices = [0, 1, 2, 3].filter(corner => corner !== previousCorner);
+      previousCorner = choices[Math.floor(Math.random() * choices.length)];
+      heroCta.style.setProperty('--cta-corners',
+        [0, 1, 2, 3].map(corner => corner === previousCorner ? '2rem' : '.85rem').join(' '));
+    };
+    heroCta.addEventListener('pointerenter', event => {
+      if (event.pointerType !== 'touch') chooseCtaCorner();
+    });
+    heroCta.addEventListener('focus', () => {
+      if (heroCta.matches(':focus-visible')) chooseCtaCorner();
+    });
+    if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const storyObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.12) {
+            entry.target.classList.add('is-visible');
+          } else if (!entry.isIntersecting) {
+            entry.target.classList.remove('is-visible');
+          }
+        });
+      }, { threshold:[0, 0.12] });
+      document.querySelectorAll('.stories > .section-heading, .stories .story-shot, .stories .story-copy').forEach(element => {
+        element.classList.add('reveal-ready');
+        storyObserver.observe(element);
+      });
+    }
+  </script>
 </body>
 </html>
