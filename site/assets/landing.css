@@ -1761,9 +1761,11 @@ body.landing .wrap {
     left: 5%;
     width: 58%;
   }
+  /* Lower, so it overlaps the phone's lower half rather than the runway
+     number, which is the one thing the screenshot is there to show. */
   .hero-field .metric-card {
     right: 4%;
-    top: 29%;
+    top: 50%;
     width: 48%;
     padding: 1rem;
   }
@@ -1895,11 +1897,35 @@ body.landing .wrap {
    doing the same job as on a wide screen, stacked instead of side by side,
    so there is one behaviour to maintain rather than two. */
 @media (max-width: 48rem) {
+  /* The sticky choreography needs two columns. Stacked, the copy panel pinned
+     at 48vh landed inside the stage, which grows past 48vh to fit the phone,
+     so the panel covered the thing it was describing. On a phone the section
+     is linear: the screen, then the three points, all open. */
   .story-scroll {
     grid-template-columns: 1fr;
   }
   .story-product-stage {
-    min-height: 48vh;
+    position: static;
+    min-height: 0;
+    padding: 2.5rem 0;
+  }
+  .story-point-stack {
+    position: static;
+    background: transparent;
+  }
+  .story-point {
+    max-height: none;
+    opacity: 1;
+    translate: none;
+    padding: 1.15rem 0.25rem;
+    border-top-width: 1px;
+  }
+  .story-copy-stage {
+    min-height: 0;
+    padding-bottom: 2rem;
+  }
+  .story-triggers {
+    display: none;
   }
   .story-phone {
     width: min(58%, 14rem);

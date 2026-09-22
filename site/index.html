@@ -317,53 +317,58 @@
       heroCta.addEventListener("focus", () => {
         if (heroCta.matches(":focus-visible")) recutCta();
       });
-      const storySection = document.querySelector(".stories");
-      const storyPoints = [...storySection.querySelectorAll(".story-point")];
-      const storyScreens = [...storySection.querySelectorAll(".story-screen")];
-      const storyDetails = [...storySection.querySelectorAll(".story-detail-image")];
-      const storyTriggers = [...storySection.querySelectorAll(".story-trigger")];
-      const storyProgress = storySection.querySelector(".story-progress span");
-      // The step's label appears twice: over the detail crop, and in the progress
-      // rail. Both read from the same data-label, so neither can drift.
-      const storyLabels = [...storySection.querySelectorAll(".story-detail-frame p, .story-progress b")];
-      let activeStoryIndex = -1;
-      const setStoryIndex = (index) => {
-        if (index === activeStoryIndex) return;
-        activeStoryIndex = index;
-        storyPoints.forEach((point, pointIndex) => {
-          point.classList.toggle("is-shown", pointIndex <= index);
-          point.toggleAttribute("aria-current", pointIndex === index);
-          if (pointIndex === index) point.setAttribute("aria-current", "step");
-        });
-        storyScreens.forEach((screen, screenIndex) => screen.classList.toggle("is-active", screenIndex === index));
-        storyDetails.forEach((detail, detailIndex) => detail.classList.toggle("is-active", detailIndex === index));
-        storyProgress.textContent = `${storyPoints[index].dataset.index} / 03`;
-        const label = storyPoints[index].dataset.label;
-        storyLabels.forEach((element) => {
-          element.textContent = label;
-        });
-      };
-      let storyTicking = false;
-      const updateStoryFromScroll = () => {
-        storyTicking = false;
-        const marker = window.innerHeight * 0.62;
-        let index = 0;
-        storyTriggers.forEach((trigger, triggerIndex) => {
-          if (trigger.getBoundingClientRect().top <= marker) index = triggerIndex;
-        });
-        setStoryIndex(index);
-      };
-      window.addEventListener(
-        "scroll",
-        () => {
-          if (!storyTicking) {
-            storyTicking = true;
-            window.requestAnimationFrame(updateStoryFromScroll);
-          }
-        },
-        { passive: true },
-      );
-      updateStoryFromScroll();
+      // The scroll stage is a two-column idea. On a phone the section is a
+      // plain list with every point open, so none of this is wired up.
+      const wideEnough = window.matchMedia("(min-width: 48.01rem)").matches;
+      const storySection = wideEnough ? document.querySelector(".stories") : null;
+      if (storySection) {
+        const storyPoints = [...storySection.querySelectorAll(".story-point")];
+        const storyScreens = [...storySection.querySelectorAll(".story-screen")];
+        const storyDetails = [...storySection.querySelectorAll(".story-detail-image")];
+        const storyTriggers = [...storySection.querySelectorAll(".story-trigger")];
+        const storyProgress = storySection.querySelector(".story-progress span");
+        // The step's label appears twice: over the detail crop, and in the progress
+        // rail. Both read from the same data-label, so neither can drift.
+        const storyLabels = [...storySection.querySelectorAll(".story-detail-frame p, .story-progress b")];
+        let activeStoryIndex = -1;
+        const setStoryIndex = (index) => {
+          if (index === activeStoryIndex) return;
+          activeStoryIndex = index;
+          storyPoints.forEach((point, pointIndex) => {
+            point.classList.toggle("is-shown", pointIndex <= index);
+            point.toggleAttribute("aria-current", pointIndex === index);
+            if (pointIndex === index) point.setAttribute("aria-current", "step");
+          });
+          storyScreens.forEach((screen, screenIndex) => screen.classList.toggle("is-active", screenIndex === index));
+          storyDetails.forEach((detail, detailIndex) => detail.classList.toggle("is-active", detailIndex === index));
+          storyProgress.textContent = `${storyPoints[index].dataset.index} / 03`;
+          const label = storyPoints[index].dataset.label;
+          storyLabels.forEach((element) => {
+            element.textContent = label;
+          });
+        };
+        let storyTicking = false;
+        const updateStoryFromScroll = () => {
+          storyTicking = false;
+          const marker = window.innerHeight * 0.62;
+          let index = 0;
+          storyTriggers.forEach((trigger, triggerIndex) => {
+            if (trigger.getBoundingClientRect().top <= marker) index = triggerIndex;
+          });
+          setStoryIndex(index);
+        };
+        window.addEventListener(
+          "scroll",
+          () => {
+            if (!storyTicking) {
+              storyTicking = true;
+              window.requestAnimationFrame(updateStoryFromScroll);
+            }
+          },
+          { passive: true },
+        );
+        updateStoryFromScroll();
+      }
     </script>
   </body>
 </html>

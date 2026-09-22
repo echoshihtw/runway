@@ -1,0 +1,61 @@
+<style>
+  html,
+  body {
+    margin: 0;
+    background: #111;
+    color: #fff;
+    font: 11.5px/1.6 monospace;
+  }
+  #o {
+    padding: 10px;
+    white-space: pre-wrap;
+  }
+  iframe {
+    width: 390px;
+    height: 844px;
+    border: 0;
+    position: absolute;
+    left: 700px;
+    top: 0;
+    visibility: hidden;
+  }
+</style>
+<div id="o">…</div>
+<iframe src="/" onload="r(this)"></iframe>
+<script>
+  function r(f) {
+    const d = f.contentDocument,
+      L = [];
+    const b = (s) => {
+      const e = d.querySelector(s);
+      if (!e) return s + "  MISSING";
+      const r = e.getBoundingClientRect(),
+        cs = getComputedStyle(e);
+      return (
+        s.padEnd(26) +
+        " x " +
+        String(Math.round(r.left)).padStart(4) +
+        ".." +
+        String(Math.round(r.right)).padStart(4) +
+        "  w " +
+        String(Math.round(r.width)).padStart(4) +
+        "  pos " +
+        cs.position +
+        " top " +
+        cs.top
+      );
+    };
+    [
+      ".hero-field .device-frame",
+      ".hero-field .metric-card",
+      ".story-product-stage",
+      ".story-point-stack",
+      ".story-progress",
+      ".story-detail-frame",
+      ".story-phone",
+    ].forEach((s) => L.push(b(s)));
+    L.push("");
+    L.push("viewport " + d.documentElement.clientWidth + "  scrollWidth " + d.documentElement.scrollWidth);
+    document.getElementById("o").textContent = L.join("\n");
+  }
+</script>
