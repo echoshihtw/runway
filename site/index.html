@@ -85,19 +85,30 @@
       </section>
 
       <section class="stories" id="how-it-works">
-        <div class="section-heading compact"><h2>A few seconds of upkeep keeps the months honest as life happens.</h2></div>
-        <article class="story">
-          <div class="story-shot"><img src="assets/device/02-living.png" width="720" height="1564" alt="Living budget screen showing what is left this month as an amount per day." loading="lazy" decoding="async"></div>
-          <div class="story-copy"><p class="step">01 / LIVE</p><h3>Know what today can cost.</h3><p>Your living budget becomes a daily amount for the days left this month. Spend within the cap and your underlying monthly plan stays intact.</p><strong>One glance before you say yes.</strong></div>
-        </article>
-        <article class="story reverse">
-          <div class="story-shot"><img src="assets/device/03-log.png" width="720" height="1564" alt="Quick log sheet for spending and income." loading="lazy" decoding="async"></div>
-          <div class="story-copy"><p class="step">02 / KEEP CURRENT</p><h3>Keep the number honest in seconds.</h3><p>Pick the occasion and enter the amount. Income has a line of its own, so your runway follows real life without a bank connection.</p><strong>You typed every figure, so you can check it.</strong></div>
-        </article>
-        <article class="story">
-          <div class="story-shot"><img src="assets/device/04-plan.png" width="720" height="1564" alt="Scenario plan comparing a projected runway with the current runway." loading="lazy" decoding="async"></div>
-          <div class="story-copy"><p class="step">03 / DECIDE</p><h3>See what one change buys you.</h3><p>Reduce a cost or add income and see the months it adds before changing your real plan.</p><strong>Try the cut before you make it.</strong></div>
-        </article>
+        <div class="story-intro"><p>THREE SMALL HABITS</p><h2>A few seconds keeps your runway current.</h2><span>Log what changed. See what it means. Keep making decisions with today's numbers.</span></div>
+        <div class="story-scroll">
+          <div class="story-product-stage" aria-live="polite">
+            <i class="story-shape story-shape-field" aria-hidden="true"></i><i class="story-shape story-shape-star" aria-hidden="true"></i>
+            <div class="story-phone">
+              <img class="story-screen is-active" data-index="01" src="assets/device/02-living.png" width="720" height="1564" alt="Living budget screen showing what is left this month as an amount per day." loading="lazy" decoding="async">
+              <img class="story-screen" data-index="02" src="assets/device/03-log.png" width="720" height="1564" alt="Quick log sheet for spending and income." loading="lazy" decoding="async">
+              <img class="story-screen" data-index="03" src="assets/device/04-plan.png" width="720" height="1564" alt="Scenario plan comparing a projected runway with the current runway." loading="lazy" decoding="async">
+            </div>
+            <aside class="story-detail-frame">
+              <div class="story-detail-crop" aria-hidden="true"><i class="story-detail-image detail-living is-active" data-index="01"></i><i class="story-detail-image detail-log" data-index="02"></i><i class="story-detail-image detail-plan" data-index="03"></i></div>
+              <p>DAILY AMOUNT / $31</p>
+            </aside>
+          </div>
+          <div class="story-copy-stage">
+            <div class="story-point-stack">
+              <div class="story-progress"><span>01 / 03</span><i></i><b>KEEP CURRENT</b></div>
+              <article class="story-point is-shown" aria-current="step" data-index="01" data-label="DAILY AMOUNT / $31"><h3>Know what today can cost.</h3><p>Your monthly living budget becomes one useful number for today.</p></article>
+              <article class="story-point" data-index="02" data-label="LOG A CHANGE / SECONDS"><h3>Keep the number honest.</h3><p>Record what changed without handing over a bank connection.</p></article>
+              <article class="story-point" data-index="03" data-label="CURRENT TO PLAN"><h3>See what one change buys you.</h3><p>Try the decision first, then compare it with the runway you have.</p></article>
+            </div>
+            <div class="story-triggers" aria-hidden="true"><i class="story-trigger" data-index="01"></i><i class="story-trigger" data-index="02"></i><i class="story-trigger" data-index="03"></i></div>
+          </div>
+        </div>
       </section>
 
       <section class="trust-section" id="why-runway">
@@ -174,21 +185,44 @@
     heroCta.addEventListener('focus', () => {
       if (heroCta.matches(':focus-visible')) chooseCtaCorner();
     });
-    if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      const storyObserver = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.12) {
-            entry.target.classList.add('is-visible');
-          } else if (!entry.isIntersecting) {
-            entry.target.classList.remove('is-visible');
-          }
-        });
-      }, { threshold:[0, 0.12] });
-      document.querySelectorAll('.stories > .section-heading, .stories .story-shot, .stories .story-copy').forEach(element => {
-        element.classList.add('reveal-ready');
-        storyObserver.observe(element);
+    const storySection = document.querySelector('.stories');
+    const storyPoints = [...storySection.querySelectorAll('.story-point')];
+    const storyScreens = [...storySection.querySelectorAll('.story-screen')];
+    const storyDetails = [...storySection.querySelectorAll('.story-detail-image')];
+    const storyTriggers = [...storySection.querySelectorAll('.story-trigger')];
+    const storyProgress = storySection.querySelector('.story-progress span');
+    const storyDetailLabel = storySection.querySelector('.story-detail-frame p');
+    let activeStoryIndex = -1;
+    const setStoryIndex = index => {
+      if (index === activeStoryIndex) return;
+      activeStoryIndex = index;
+      storyPoints.forEach((point, pointIndex) => {
+        point.classList.toggle('is-shown', pointIndex <= index);
+        point.toggleAttribute('aria-current', pointIndex === index);
+        if (pointIndex === index) point.setAttribute('aria-current', 'step');
       });
-    }
+      storyScreens.forEach((screen, screenIndex) => screen.classList.toggle('is-active', screenIndex === index));
+      storyDetails.forEach((detail, detailIndex) => detail.classList.toggle('is-active', detailIndex === index));
+      storyProgress.textContent = `${storyPoints[index].dataset.index} / 03`;
+      storyDetailLabel.textContent = storyPoints[index].dataset.label;
+    };
+    let storyTicking = false;
+    const updateStoryFromScroll = () => {
+      storyTicking = false;
+      const marker = window.innerHeight * .62;
+      let index = 0;
+      storyTriggers.forEach((trigger, triggerIndex) => {
+        if (trigger.getBoundingClientRect().top <= marker) index = triggerIndex;
+      });
+      setStoryIndex(index);
+    };
+    window.addEventListener('scroll', () => {
+      if (!storyTicking) {
+        storyTicking = true;
+        window.requestAnimationFrame(updateStoryFromScroll);
+      }
+    }, { passive:true });
+    updateStoryFromScroll();
   </script>
 </body>
 </html>

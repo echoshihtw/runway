@@ -83,6 +83,18 @@ class LandingPageTest(unittest.TestCase):
             self.assertIn(f"assets/device/{image}", HTML)
         self.assertIn("prefers-reduced-motion: reduce", CSS)
 
+    def test_how_it_works_uses_one_sticky_stage_and_cumulative_scroll_stack(self):
+        section = HTML[HTML.index('<section class="stories"'):HTML.index('</section>', HTML.index('<section class="stories"'))]
+        self.assertIn("A few seconds keeps your runway current.", section)
+        self.assertEqual(section.count('class="story-screen"'), 3)
+        self.assertEqual(section.count('class="story-point'), 3)
+        self.assertEqual(section.count('class="story-trigger"'), 3)
+        self.assertIn('class="story-product-stage"', section)
+        self.assertIn('class="story-point-stack"', section)
+        self.assertIn("updateStoryFromScroll", HTML)
+        self.assertIn("is-shown", HTML)
+        self.assertNotIn('class="story reverse"', section)
+
     def test_mobile_layout_has_a_deliberate_breakpoint(self):
         self.assertRegex(CSS, r"@media\s*\(max-width:\s*48rem\)")
 
