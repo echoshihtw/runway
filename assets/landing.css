@@ -230,7 +230,10 @@ body.landing .wrap {
 
 /* ── Who built it, and why ──────────────────────────────────────────────── */
 .why {
-  border-left: 2px solid var(--mint);
+  /* Not mint. Mint means cash on every other line of this page, and a rule
+     that borrows it to decorate a paragraph spends the one thing the app's
+     colour system is for. */
+  border-left: 2px solid var(--border);
   padding-left: 1.4rem;
   margin: 0 0 3.5rem;
 }
