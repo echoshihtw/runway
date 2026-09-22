@@ -170,6 +170,16 @@ body.landing .wrap { max-width:76rem; padding-bottom:3rem; }
 .founder blockquote { margin:0; font-size:clamp(1.5rem,3vw,2.25rem); line-height:1.45; letter-spacing:-.025em; }
 /* Marks rather than characters, so the sentence stays byte-identical to the
    one in the submission and can be grepped against it. */
+.founder blockquote::before,
+.founder blockquote::after {
+  /* The quote is set in the body sans; the marks take the display face, and
+     a muted colour so they frame the sentence without competing with it.
+     Not mint: mint means cash everywhere else on this page. */
+  font-family:'Newsreader',Georgia,"Times New Roman",serif;
+  color:var(--muted);
+  font-size:1.35em;
+  line-height:0;
+}
 .founder blockquote::before { content:"\201C"; }
 .founder blockquote::after { content:"\201D"; }
 .final-cta { display:grid; grid-template-columns:auto 1fr auto; gap:1.5rem 2rem; align-items:center; padding:2.2rem; margin-bottom:2rem; border:1px solid var(--border); border-radius:1.3rem; background:linear-gradient(100deg,rgba(143,221,170,.08),rgba(169,135,255,.08)); }
