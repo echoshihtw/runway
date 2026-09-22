@@ -684,6 +684,7 @@ body.landing .wrap { max-width:88rem; padding:1.15rem clamp(1rem,2.6vw,2.4rem) 3
 .rent-dot { background:#5b9dc4; }
 .living-dot { background:#e8829e; }
 .subscription-dot { background:#bb6dff; }
+.loan-dot { background:#cb9a3e; }
 .runway-heading>p { margin:0; color:#657087; font:.7rem "JetBrains Mono",ui-monospace,monospace; letter-spacing:.16em; }
 .story-field .runway-number { margin-top:auto; }
 .story-field .runway-number strong { color:var(--ink); }
