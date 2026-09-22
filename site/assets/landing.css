@@ -694,13 +694,26 @@ body.landing .wrap {
   color: var(--ink);
   box-shadow: none;
 }
+/* Cut paper, not a pill. The shape lives on a ::before rather than on the
+   link, because clip-path clips everything including the focus ring, and a
+   button a keyboard cannot see is worse than a round one. Keeping the link
+   itself unclipped also keeps the whole rectangle clickable, so the torn
+   corners are not dead. The script re-cuts it on hover. */
 .hero-actions .button.primary {
-  transition:
-    border-radius 260ms ease,
-    transform 180ms ease;
+  position: relative;
+  isolation: isolate;
+  background: transparent;
+  box-shadow: none;
+  transition: transform 180ms ease;
 }
-.hero-actions .button.primary:is(:hover, :focus-visible) {
-  border-radius: var(--cta-corners, 0.85rem);
+.hero-actions .button.primary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--mint);
+  clip-path: var(--cta-cut, polygon(2% 12%, 97% 0%, 100% 82%, 4% 100%));
+  transition: clip-path 260ms ease;
 }
 .hero-actions .button.primary:focus-visible {
   outline: 2px solid var(--ink);
@@ -2006,4 +2019,10 @@ body.landing .wrap {
   background: #0b1831;
   margin-inline: calc(clamp(1rem, 2.6vw, 2.4rem) * -1);
   padding: clamp(2rem, 4vw, 3.2rem) clamp(1.5rem, 4vw, 3rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-actions .button.primary::before {
+    transition: none;
+  }
 }

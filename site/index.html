@@ -299,21 +299,23 @@
       </footer>
     </div>
     <script>
+      // Each hover tears the paper again: a fresh quadrilateral, corners
+      // jittered within a few percent so it always reads as the same button
+      // cut a different way.
       const heroCta = document.querySelector(".hero-actions .button.primary");
-      let previousCorner = -1;
-      const chooseCtaCorner = () => {
-        const choices = [0, 1, 2, 3].filter((corner) => corner !== previousCorner);
-        previousCorner = choices[Math.floor(Math.random() * choices.length)];
+      const between = (a, b) => (a + Math.random() * (b - a)).toFixed(1);
+      const recutCta = () => {
         heroCta.style.setProperty(
-          "--cta-corners",
-          [0, 1, 2, 3].map((corner) => (corner === previousCorner ? "2rem" : ".85rem")).join(" "),
+          "--cta-cut",
+          `polygon(${between(0, 5)}% ${between(0, 16)}%, ${between(94, 100)}% ${between(0, 9)}%,
+                   ${between(95, 100)}% ${between(82, 100)}%, ${between(0, 6)}% ${between(86, 100)}%)`,
         );
       };
       heroCta.addEventListener("pointerenter", (event) => {
-        if (event.pointerType !== "touch") chooseCtaCorner();
+        if (event.pointerType !== "touch") recutCta();
       });
       heroCta.addEventListener("focus", () => {
-        if (heroCta.matches(":focus-visible")) chooseCtaCorner();
+        if (heroCta.matches(":focus-visible")) recutCta();
       });
       const storySection = document.querySelector(".stories");
       const storyPoints = [...storySection.querySelectorAll(".story-point")];
