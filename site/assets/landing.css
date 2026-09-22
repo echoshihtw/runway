@@ -426,8 +426,7 @@ body.landing .wrap { max-width:88rem; padding:1.15rem clamp(1rem,2.6vw,2.4rem) 3
   width:2rem;
   height:2rem;
   background:var(--mint);
-  clip-path:polygon(50% 0%,60% 28%,89% 19%,73% 45%,99% 61%,69% 65%,72% 95%,50% 74%,28% 95%,31% 65%,1% 61%,27% 45%,11% 19%,40% 28%);
-}
+  clip-path:polygon(50% 0%,60% 28%,89% 19%,73% 45%,99% 61%,69% 65%,72% 95%,50% 74%,28% 95%,31% 65%,1% 61%,27% 45%,11% 19%,40% 28%); transform:rotate(-12deg);}
 .question-shift .eyebrow { color:#a4b2c5; margin-bottom:1rem; line-height:1.6; }
 .question-shift>div>p:last-child { margin:0; max-width:15ch; color:#b5bfd0; font-size:clamp(1.6rem,2.8vw,2.4rem); line-height:1.2; }
 .question-shift .answer { position:relative; padding:2.8rem 0 1rem 2.5rem; border-left:1px solid rgba(143,221,170,.4); }
@@ -571,7 +570,7 @@ body.landing .wrap { max-width:88rem; padding:1.15rem clamp(1rem,2.6vw,2.4rem) 3
   height:9rem;
   background:var(--mint);
   opacity:.62;
-  clip-path:polygon(50% 0%,60% 28%,89% 19%,73% 45%,99% 61%,69% 65%,72% 95%,50% 74%,28% 95%,31% 65%,1% 61%,27% 45%,11% 19%,40% 28%);
+  clip-path:polygon(50% 0,59% 39%,100% 50%,59% 60%,50% 100%,40% 60%,0 50%,40% 39%);
   transform:rotate(14deg);
   z-index:-1;
 }
@@ -585,7 +584,7 @@ body.landing .wrap { max-width:88rem; padding:1.15rem clamp(1rem,2.6vw,2.4rem) 3
 .privacy-orbit::after { content:""; position:absolute; inset:2.4rem; border:1px dashed rgba(11,24,49,.2); border-radius:50%; }
 .privacy-phone { position:absolute; left:50%; top:50%; width:6.8rem; height:11.6rem; border:.33rem solid #0b1831; border-radius:1.55rem; background:#f2efe7; transform:translate(-50%,-50%) rotate(7deg); box-shadow:.8rem 1rem 0 rgba(43,98,255,.16); }
 .privacy-phone::before { content:""; position:absolute; width:2rem; height:.28rem; left:50%; top:.6rem; border-radius:1rem; background:#0b1831; transform:translateX(-50%); }
-.privacy-phone i { position:absolute; inset:3.3rem 1.65rem auto; aspect-ratio:1; background:#8fddaa; clip-path:polygon(50% 0%,60% 28%,89% 19%,73% 45%,99% 61%,69% 65%,72% 95%,50% 74%,28% 95%,31% 65%,1% 61%,27% 45%,11% 19%,40% 28%); }
+.privacy-phone i { position:absolute; inset:3.3rem 1.65rem auto; aspect-ratio:1; background:#8fddaa; clip-path:polygon(50% 0%,60% 28%,89% 19%,73% 45%,99% 61%,69% 65%,72% 95%,50% 74%,28% 95%,31% 65%,1% 61%,27% 45%,11% 19%,40% 28%); transform:rotate(-12deg);}
 .privacy-spark { position:absolute; right:13%; top:18%; width:3.6rem; height:3.6rem; background:#bb6dff; clip-path:polygon(50% 0,61% 35%,96% 20%,72% 49%,100% 67%,63% 64%,59% 100%,44% 68%,11% 87%,29% 55%,0 39%,38% 39%); transform:rotate(16deg); }
 .trust-bank { right:-2%; bottom:0; display:grid; grid-template-columns:7.5rem minmax(12rem,18rem); align-items:center; gap:1.25rem; padding:.9rem 1.5rem .9rem .9rem; background:#0b1831; color:#f2efe7; transform:rotate(-2.5deg); }
 .trust-bank p { color:#aebbd0; }
