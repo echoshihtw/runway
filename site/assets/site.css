@@ -3,35 +3,35 @@
    purpose: a page that promises your data stays on your phone should not ask
    a third party for a font. */
 @font-face {
-  font-family: 'Inter';
+  font-family: "Inter";
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
-  src: url(fonts/inter.woff2) format('woff2');
+  src: url(fonts/inter.woff2) format("woff2");
 }
 
 @font-face {
-  font-family: 'Newsreader';
+  font-family: "Newsreader";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url(fonts/newsreader-400.woff2) format('woff2');
+  src: url(fonts/newsreader-400.woff2) format("woff2");
 }
 
 @font-face {
-  font-family: 'Newsreader';
+  font-family: "Newsreader";
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url(fonts/newsreader-500.woff2) format('woff2');
+  src: url(fonts/newsreader-500.woff2) format("woff2");
 }
 
 @font-face {
-  font-family: 'JetBrains Mono';
+  font-family: "JetBrains Mono";
   font-style: normal;
   font-weight: 100 800;
   font-display: swap;
-  src: url(fonts/jetbrains-mono.woff2) format('woff2');
+  src: url(fonts/jetbrains-mono.woff2) format("woff2");
 }
 
 :root {
@@ -59,15 +59,27 @@
   }
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
-html { -webkit-text-size-adjust: 100%; }
+html {
+  -webkit-text-size-adjust: 100%;
+}
 
 body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font: 16px/1.65 Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font:
+    16px/1.65 Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
 }
 
 .wrap {
@@ -99,7 +111,9 @@ header.site {
   text-decoration: none;
 }
 
-.brand span { color: var(--accent); }
+.brand span {
+  color: var(--accent);
+}
 
 .brand img {
   width: 28px;
@@ -115,8 +129,13 @@ nav a {
   font-size: 0.95rem;
 }
 
-nav a:first-child { margin-left: 0; }
-nav a[aria-current="page"] { color: var(--text); font-weight: 600; }
+nav a:first-child {
+  margin-left: 0;
+}
+nav a[aria-current="page"] {
+  color: var(--text);
+  font-weight: 600;
+}
 
 h1 {
   font-size: 2rem;
@@ -135,15 +154,31 @@ h3 {
   margin: 1.5rem 0 0.25rem;
 }
 
-p, li { color: var(--text); }
+p,
+li {
+  color: var(--text);
+}
 
-.lede { color: var(--muted); font-size: 1.05rem; margin-top: 0; }
-.meta { color: var(--muted); font-size: 0.9rem; }
+.lede {
+  color: var(--muted);
+  font-size: 1.05rem;
+  margin-top: 0;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
 
-a { color: var(--link); }
+a {
+  color: var(--link);
+}
 
-ul { padding-left: 1.25rem; }
-li { margin: 0.3rem 0; }
+ul {
+  padding-left: 1.25rem;
+}
+li {
+  margin: 0.3rem 0;
+}
 
 .card {
   background: var(--surface);
@@ -153,7 +188,10 @@ li { margin: 0.3rem 0; }
   margin: 1.5rem 0;
 }
 
-.card h2:first-child, .card h3:first-child { margin-top: 0; }
+.card h2:first-child,
+.card h3:first-child {
+  margin-top: 0;
+}
 
 .button {
   display: inline-block;
@@ -166,7 +204,11 @@ li { margin: 0.3rem 0; }
   margin: 0.25rem 0 1rem;
 }
 
-.links { display: grid; gap: 0.75rem; margin-top: 2rem; }
+.links {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
 
 .links a {
   display: block;
@@ -178,10 +220,17 @@ li { margin: 0.3rem 0; }
   text-decoration: none;
 }
 
-.links a strong { display: block; }
-.links a span { color: var(--muted); font-size: 0.95rem; }
+.links a strong {
+  display: block;
+}
+.links a span {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
 
-.table-wrap { overflow-x: auto; }
+.table-wrap {
+  overflow-x: auto;
+}
 
 table {
   width: 100%;
@@ -190,14 +239,18 @@ table {
   margin: 0.75rem 0 1rem;
 }
 
-th, td {
+th,
+td {
   text-align: left;
   padding: 0.5rem 0.6rem;
   border-bottom: 1px solid var(--border);
   vertical-align: top;
 }
 
-th { color: var(--muted); font-weight: 600; }
+th {
+  color: var(--muted);
+  font-weight: 600;
+}
 
 code {
   font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -212,4 +265,6 @@ footer.site {
   font-size: 0.9rem;
 }
 
-footer.site a { color: var(--muted); }
+footer.site a {
+  color: var(--muted);
+}

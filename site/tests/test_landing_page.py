@@ -8,6 +8,11 @@ ROOT = Path(__file__).resolve().parents[1]
 HTML = (ROOT / "index.html").read_text(encoding="utf-8")
 CSS = (ROOT / "assets" / "landing.css").read_text(encoding="utf-8")
 
+# The source is prettier-formatted, so assertions match against whitespace-
+# normalised copies: a reformat must never fail a test about behaviour.
+HTML_FLAT = re.sub(r"\s+", " ", HTML)
+CSS_TIGHT = re.sub(r"\s+", "", CSS)
+
 
 class LandingParser(HTMLParser):
     def __init__(self):
@@ -43,7 +48,7 @@ class LandingPageTest(unittest.TestCase):
         self.assertIn(
             "A study plan, a new direction, something you are building, "
             "or an adventure you are not ready to give up.",
-            HTML,
+            HTML_FLAT,
         )
         self.assertNotIn('class="trigger-list"', HTML)
         # The same four situations used to be stated twice, once in the hero
@@ -92,8 +97,8 @@ class LandingPageTest(unittest.TestCase):
         # The wording of this section has changed four times; its shape has not.
         # Assert the intro carries an eyebrow, a heading and a standfirst.
         self.assertRegex(
-            section,
-            r'class="story-intro"><p>[^<]+</p><h2>[^<]+</h2><span>[^<]+</span>',
+            re.sub(r"\s+", " ", section),
+            r'class="story-intro"> ?<p>[^<]+</p> ?<h2>[^<]+</h2> ?<span>[^<]+</span>',
         )
         # Match the class token, not the exact attribute: the first screen also
         # carries is-active so the stage is not blank before any scrolling.
@@ -134,7 +139,7 @@ class LandingPageTest(unittest.TestCase):
         self.assertIn('class="status-badge"', HTML)
         runway_rule = re.search(r"\.runway-answer\s*\{([^}]*)\}", CSS)
         self.assertIsNotNone(runway_rule)
-        self.assertNotIn("border-radius:50%", runway_rule.group(1).replace(" ", ""))
+        self.assertNotIn("border-radius:50%", re.sub(r"\s+", "", runway_rule.group(1)))
 
     def test_editorial_redesign_uses_layered_shape_language(self):
         for class_name in (
@@ -169,12 +174,12 @@ class LandingPageTest(unittest.TestCase):
         self.assertRegex(combined, r"top:[^;]+")
         self.assertIn("background:transparent", combined)
         self.assertIn("header.site.is-scrolled", CSS)
-        self.assertIn("background:rgba(242,239,231,.72)", CSS.replace(" ", ""))
-        self.assertIn("backdrop-filter:blur(22px)", CSS.replace(" ", ""))
+        self.assertIn("background:rgba(242,239,231,0.72)", CSS_TIGHT)
+        self.assertIn("backdrop-filter:blur(22px)", CSS_TIGHT)
         self.assertIn("window.scrollY", HTML)
         self.assertIn("is-scrolled", HTML)
         self.assertIn("header.site:not(.is-scrolled)", CSS)
-        self.assertIn("color:#f3f5fa", CSS.replace(" ", ""))
+        self.assertIn("color:#f3f5fa", CSS_TIGHT)
 
     def test_large_one_corner_radius_is_not_repeated_across_surfaces(self):
         for repeated_shape in (
