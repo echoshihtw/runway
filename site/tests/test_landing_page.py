@@ -55,7 +55,7 @@ class LandingPageTest(unittest.TestCase):
             "two years abroad",
             "The spreadsheet gave me an answer",
             "So I built Runway",
-            "Four things Runway does without",
+            "Your money story stays with you",
         ):
             self.assertIn(phrase, HTML)
         for internal_label in (
@@ -68,6 +68,15 @@ class LandingPageTest(unittest.TestCase):
             "Why I built it",
         ):
             self.assertNotIn(f'<p class="eyebrow">{internal_label}', HTML)
+
+    def test_privacy_section_leads_with_control_not_missing_features(self):
+        self.assertIn("Your records stay on your phone.", HTML)
+        self.assertIn("Encrypted locally and never sent to us.", HTML)
+        self.assertIn("No bank connection.", HTML)
+        self.assertNotIn("No sign-in, no cloud sync", HTML)
+        self.assertNotIn("No judgment mechanics", HTML)
+        self.assertNotIn("No subscription for Pro", HTML)
+        self.assertIn('class="trust-scene"', HTML)
 
     def test_real_product_images_and_accessible_motion_are_preserved(self):
         for image in ("01-runway.png", "02-living.png", "03-log.png", "04-plan.png"):
