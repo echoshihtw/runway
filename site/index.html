@@ -309,10 +309,6 @@
       </footer>
     </div>
     <script>
-      const floatingNav = document.querySelector(".landing header.site");
-      const updateFloatingNav = () => floatingNav.classList.toggle("is-scrolled", window.scrollY > 24);
-      updateFloatingNav();
-      window.addEventListener("scroll", updateFloatingNav, { passive: true });
       const heroCta = document.querySelector(".hero-actions .button.primary");
       let previousCorner = -1;
       const chooseCtaCorner = () => {

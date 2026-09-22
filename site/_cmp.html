@@ -1,0 +1,45 @@
+<style>
+  html,
+  body {
+    margin: 0;
+    background: #000;
+  }
+  iframe {
+    width: 1240px;
+    height: 820px;
+    border: 0;
+    display: block;
+  }
+</style>
+<iframe id="f" src="/" onload="go(this)"></iframe>
+<script>
+  function go(f) {
+    const d = f.contentDocument,
+      p = new URLSearchParams(location.search);
+    const s = d.createElement("style");
+    let css = "*,*::before,*::after{animation:none!important;transition:none!important}";
+    if (p.get("flat"))
+      css += `
+    .pricing-section{border:0!important;border-radius:0!important;
+      margin-inline:calc(clamp(1rem,2.6vw,2.4rem)*-1)!important;background:#0b1831!important;
+      padding:clamp(2.5rem,5vw,4.5rem) clamp(1.5rem,4vw,3rem)!important}
+    .plans article{border-radius:0!important}
+    .final-cta{border:0!important;border-radius:0!important;
+      margin-inline:calc(clamp(1rem,2.6vw,2.4rem)*-1)!important;background:#0b1831!important;
+      padding:clamp(2rem,4vw,3rem) clamp(1.5rem,4vw,3rem)!important}
+    .landing .links a{border-radius:0!important}`;
+    if (p.get("nonav"))
+      css +=
+        ".landing header.site{position:static!important;background:none!important;border-color:transparent!important;backdrop-filter:none!important;box-shadow:none!important}";
+    s.textContent = css;
+    d.head.appendChild(s);
+    d.documentElement.style.scrollBehavior = "auto";
+    const sel = p.get("sel");
+    const off = +(p.get("off") || 0);
+    if (sel) {
+      const el = d.querySelector(sel);
+      d.scrollingElement.scrollTop = el.getBoundingClientRect().top + d.scrollingElement.scrollTop + off;
+    }
+    f.contentWindow.dispatchEvent(new Event("scroll"));
+  }
+</script>

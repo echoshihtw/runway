@@ -638,51 +638,23 @@ body.landing .wrap {
   padding: 1.15rem clamp(1rem, 2.6vw, 2.4rem) 3rem;
 }
 
+/* A plain header. It floated, with two colour states and a blur, to keep a
+   wordmark, three links and a status badge in reach: nothing to act on, over
+   the section showing the product. It earns the sticky back when it has an
+   App Store link to carry. */
 .landing header.site {
-  position: sticky;
-  top: 1rem;
-  z-index: 20;
-  min-height: 4.4rem;
   margin: 0;
   padding: 0.75rem 1rem 0.75rem 1.2rem;
-  border: 1px solid transparent;
-  border-radius: 1.15rem;
-  color: var(--ink);
-  background: transparent;
-  backdrop-filter: none;
-  box-shadow: none;
-  transition:
-    background-color 180ms ease,
-    border-color 180ms ease,
-    box-shadow 180ms ease,
-    backdrop-filter 180ms ease;
-}
-.landing header.site.is-scrolled {
-  border-color: rgba(255, 255, 255, 0.42);
-  background: rgba(242, 239, 231, 0.72);
-  backdrop-filter: blur(22px) saturate(135%);
-  box-shadow: 0 0.8rem 2.2rem rgba(0, 0, 0, 0.15);
-}
-.landing header.site:not(.is-scrolled) .brand,
-.landing header.site:not(.is-scrolled) nav a {
-  color: #f3f5fa;
-  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.4);
-}
-.landing header.site:not(.is-scrolled) .brand > span:last-child {
-  color: var(--mint);
-}
-.landing header.site:not(.is-scrolled) .review-badge {
-  color: #b8c3d1;
 }
 .landing header.site .brand,
 .landing header.site nav a {
-  color: var(--ink);
+  color: #f3f5fa;
 }
 .landing header.site .brand > span:last-child {
-  color: #28563b;
+  color: var(--mint);
 }
 .landing header.site .review-badge {
-  color: #657087;
+  color: #b8c3d1;
 }
 
 .hero {
@@ -1756,8 +1728,6 @@ body.landing .wrap {
      a phone it is a normal header and scrolls away. It earns the sticky back
      when it has the App Store link to carry. */
   .landing header.site {
-    position: static;
-    min-height: 0;
     padding: 0.65rem 0.75rem;
   }
   .landing header.site nav {

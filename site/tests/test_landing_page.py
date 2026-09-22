@@ -166,20 +166,19 @@ class LandingPageTest(unittest.TestCase):
         self.assertIn("assets/device/01-runway.png", hero_field)
         self.assertRegex(CSS, r"\.hero-field\s*\{[^}]*overflow:\s*hidden")
 
-    def test_navigation_floats_above_the_page_while_scrolling(self):
+    def test_navigation_is_a_plain_header(self):
+        # It floated, with two colour states and a blur, to keep a wordmark,
+        # three links and a status badge in reach over the section showing the
+        # product. Nothing in it was actionable. It earns the sticky back when
+        # it has an App Store link to carry.
         header_rules = re.findall(r"\.landing header\.site\s*\{([^}]*)\}", CSS)
         self.assertTrue(header_rules)
-        combined = "".join(header_rules).replace(" ", "")
-        self.assertIn("position:sticky", combined)
-        self.assertRegex(combined, r"top:[^;]+")
-        self.assertIn("background:transparent", combined)
-        self.assertIn("header.site.is-scrolled", CSS)
-        self.assertIn("background:rgba(242,239,231,0.72)", CSS_TIGHT)
-        self.assertIn("backdrop-filter:blur(22px)", CSS_TIGHT)
-        self.assertIn("window.scrollY", HTML)
-        self.assertIn("is-scrolled", HTML)
-        self.assertIn("header.site:not(.is-scrolled)", CSS)
-        self.assertIn("color:#f3f5fa", CSS_TIGHT)
+        combined = re.sub(r"\s+", "", "".join(header_rules))
+        self.assertNotIn("position:sticky", combined)
+        self.assertNotIn("blur(22px)", CSS_TIGHT)  # the hero card keeps its own blur
+        self.assertNotIn("is-scrolled", CSS)
+        self.assertNotIn("is-scrolled", HTML)
+        self.assertNotIn("window.scrollY", HTML)
 
     def test_large_one_corner_radius_is_not_repeated_across_surfaces(self):
         for repeated_shape in (
