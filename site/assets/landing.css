@@ -69,10 +69,6 @@ body.landing {
 
 /* ── Who built it, and why ──────────────────────────────────────────────── */
 
-.landing .links {
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-}
-
 @media (max-width: 54rem) {
   .hero {
     grid-template-columns: 1fr;
@@ -532,9 +528,6 @@ html {
   margin: 0.5rem 0 0;
   color: var(--muted);
 }
-.landing .links {
-  grid-template-columns: repeat(3, 1fr);
-}
 
 @keyframes runway-stable-pulse {
   from {
@@ -594,9 +587,6 @@ html {
   .pricing-section {
     padding: 1.4rem;
     gap: 2.5rem;
-  }
-  .landing .links {
-    grid-template-columns: 1fr;
   }
 }
 @media (prefers-reduced-motion: reduce) {
