@@ -41,17 +41,21 @@ class LandingPageTest(unittest.TestCase):
 
     def test_life_chapter_line_is_inclusive_not_segmented(self):
         self.assertIn(
-            "For studying, changing direction, building something, or taking an adventure.",
+            "A study plan, a new direction, something you are building, "
+            "or an adventure you are not ready to give up.",
             HTML,
         )
         self.assertNotIn('class="trigger-list"', HTML)
+        # The same four situations used to be stated twice, once in the hero
+        # and once here. One of them was padding.
+        self.assertNotIn('class="chapter-line"', HTML)
 
     def test_page_tells_the_study_story_without_outline_labels(self):
         for phrase in (
             "two years abroad",
             "The spreadsheet gave me an answer",
             "So I built Runway",
-            "It stays simple enough to trust",
+            "Four things Runway does without",
         ):
             self.assertIn(phrase, HTML)
         for internal_label in (
