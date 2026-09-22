@@ -513,7 +513,7 @@ body.landing .wrap { max-width:88rem; padding:1.15rem clamp(1rem,2.6vw,2.4rem) 3
 .story-detail-image.is-active { opacity:1; }
 .detail-living { background-image:url("../assets/device/02-living.png"); background-position:0% 65%; background-size:185% auto; }
 .detail-log { background-image:url("../assets/device/03-log.png"); background-position:50% 86%; background-size:200% auto; }
-.detail-plan { background-image:url("../assets/device/04-plan.png"); background-position:50% 69%; }
+.detail-plan { background-image:url("../assets/device/04-plan.png"); background-position:19% 67%; background-size:175% auto; }
 .story-detail-frame p { margin:.75rem 0 0; font:.72rem "JetBrains Mono",ui-monospace,monospace; letter-spacing:.1em; }
 .story-copy-stage { position:relative; min-height:330vh; padding:0 clamp(1.5rem,4vw,4rem) 85vh; }
 .story-point-stack { position:sticky; z-index:4; top:4.5rem; background:#071329; }
