@@ -290,3 +290,16 @@ footer.site a { color: var(--muted); }
   .hero-shot img { max-width: 15rem; margin: 0 auto; }
   .showcase { padding: 1.5rem 1.1rem; border-radius: 14px; }
 }
+
+.why {
+  margin-top: 2.75rem;
+  padding-left: 1.15rem;
+  border-left: 2px solid var(--accent);
+}
+
+.why p {
+  margin: 0;
+  max-width: 46ch;
+  font-size: 1.15rem;
+  line-height: 1.55;
+}
