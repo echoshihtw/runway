@@ -1898,54 +1898,49 @@ body.landing .wrap {
    doing the same job as on a wide screen, stacked instead of side by side,
    so there is one behaviour to maintain rather than two. */
 @media (max-width: 48rem) {
-  /* The sticky choreography needs two columns. Stacked, the copy panel pinned
-     at 48vh landed inside the stage, which grows past 48vh to fit the phone,
-     so the panel covered the thing it was describing. On a phone the section
-     is linear: the screen, then the three points, all open. */
+  /* Stacked, only the phone pins. The copy scrolls up and passes behind it,
+     which is why the stage sits above the copy and carries its own ground.
+     The stage is bounded and the phone sized to fit inside it: an earlier
+     version let the stage grow past its own sticky offset, and the copy panel
+     ended up pinned inside the thing it was describing. */
   .story-scroll {
     grid-template-columns: 1fr;
   }
   .story-product-stage {
-    position: static;
-    min-height: 0;
-    padding: 2.5rem 0;
-  }
-  .story-point-stack {
-    position: static;
-    background: transparent;
-  }
-  .story-point {
-    max-height: none;
-    opacity: 1;
-    translate: none;
-    padding: 1.15rem 0.25rem;
-    border-top-width: 1px;
-  }
-  .story-copy-stage {
-    min-height: 0;
-    padding-bottom: 2rem;
-  }
-  .story-triggers {
-    display: none;
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    min-height: 44vh;
+    max-height: 44vh;
+    padding: 0;
   }
   .story-phone {
-    width: min(58%, 14rem);
+    width: min(38%, 10rem);
   }
   .story-detail-frame {
     right: 3%;
-    top: 6%;
-    width: 10rem;
-    padding: 0.7rem;
+    top: 8%;
+    width: 8.5rem;
+    padding: 0.6rem;
   }
   .story-detail-crop {
-    height: 5rem;
+    height: 4.2rem;
+  }
+  /* Pinned directly under the stage, which is exactly 44vh here, so the
+     points stay readable beside the phone instead of scrolling off while the
+     triggers carry the remaining scroll. Below the stage in the stacking
+     order, so a revealed point passes behind the phone, not over it. */
+  .story-point-stack {
+    top: 44vh;
+    z-index: 1;
+    background: transparent;
   }
   .story-copy-stage {
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
+    min-height: 0;
+    padding: 1.5rem 1.25rem 24vh;
   }
-  .story-point-stack {
-    top: 48vh;
+  .story-trigger {
+    min-height: 52vh;
   }
 }
 

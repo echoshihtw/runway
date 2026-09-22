@@ -317,10 +317,7 @@
       heroCta.addEventListener("focus", () => {
         if (heroCta.matches(":focus-visible")) recutCta();
       });
-      // The scroll stage is a two-column idea. On a phone the section is a
-      // plain list with every point open, so none of this is wired up.
-      const wideEnough = window.matchMedia("(min-width: 48.01rem)").matches;
-      const storySection = wideEnough ? document.querySelector(".stories") : null;
+      const storySection = document.querySelector(".stories");
       if (storySection) {
         const storyPoints = [...storySection.querySelectorAll(".story-point")];
         const storyScreens = [...storySection.querySelectorAll(".story-screen")];
