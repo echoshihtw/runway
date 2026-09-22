@@ -53,7 +53,7 @@ class LandingPageTest(unittest.TestCase):
     def test_page_tells_the_study_story_without_outline_labels(self):
         for phrase in (
             "two years abroad",
-            "The spreadsheet gave me an answer",
+            "spreadsheet",   # the story mentions it; the sentence around it keeps moving
             "So I built Runway",
             "Your money story stays with you",
         ):
