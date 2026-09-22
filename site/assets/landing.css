@@ -1948,3 +1948,36 @@ body.landing .wrap {
 .plans article.pro {
   background: linear-gradient(180deg, rgba(143, 221, 170, 0.05), rgba(4, 13, 26, 0.55) 12rem);
 }
+
+/* The three legal links were bordered cards carrying a line of description
+   each, which is three more rounded boxes on a page made of cut paper. They
+   are links, so they sit in the footer and look like links. */
+.landing footer.site {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem 2rem;
+}
+
+.landing .footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.landing .footer-links a {
+  color: var(--muted);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.landing .footer-links a:hover,
+.landing .footer-links a:focus-visible {
+  color: var(--tx, #cdd5e0);
+  border-bottom-color: var(--mint);
+}
+
+.landing footer.site p {
+  margin: 0;
+}
