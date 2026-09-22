@@ -1628,12 +1628,16 @@ body.landing .wrap {
 /* A stroke cannot survive a clip-path: the border is drawn and then cut, which
    left a blue square with a sliver of roof. Every other shape on this page is
    a solid fill, so this one is too. */
+/* Centred and sized against its own box, not placed with fixed offsets: the
+   box is a different size on a phone, and the offsets left the bank low and
+   left with dead blue around it. */
 .bank-visual span {
   position: absolute;
-  left: 1.35rem;
-  top: 1.6rem;
-  width: 4.8rem;
-  height: 3.7rem;
+  left: 50%;
+  top: 50%;
+  width: 68%;
+  aspect-ratio: 4.8 / 3.7;
+  transform: translate(-50%, -50%);
   background: #f2efe7;
   clip-path: polygon(
     50% 0%,
@@ -1660,14 +1664,15 @@ body.landing .wrap {
   height: 40%;
   background: repeating-linear-gradient(90deg, #2b62ff 0 0.18rem, transparent 0.18rem 0.58rem);
 }
+/* Long enough to cross the icon at any box size, struck through the middle. */
 .bank-visual i {
   position: absolute;
-  width: 7.8rem;
+  width: 124%;
   height: 0.28rem;
-  left: -0.05rem;
-  top: 3.35rem;
+  left: 50%;
+  top: 50%;
   background: #e8829e;
-  transform: rotate(-38deg);
+  transform: translate(-50%, -50%) rotate(-38deg);
   box-shadow: 0 0 0 0.12rem #2b62ff;
 }
 
@@ -1877,11 +1882,6 @@ body.landing .wrap {
   }
   .bank-visual {
     height: 6rem;
-  }
-  .bank-visual span {
-    left: 0.85rem;
-    top: 1.35rem;
-    transform: scale(0.85);
   }
 }
 @media (prefers-reduced-motion: reduce) {
