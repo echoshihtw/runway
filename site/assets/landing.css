@@ -627,7 +627,7 @@ body.landing .wrap { max-width:88rem; padding:1.15rem clamp(1rem,2.6vw,2.4rem) 3
   .problem-section,.solution-section,.trust-section,.pricing-section{margin-inline:-.75rem}
   .problem-section,.trust-section{padding-left:1.5rem;padding-right:1.5rem}
   .life-transition{min-height:39rem;gap:2rem}.life-copy h2{font-size:clamp(3.2rem,15vw,5rem)}.life-context{max-width:23rem}
-  .cut-leaf{top:12rem;right:-3rem;width:8rem;height:14rem}.cut-star{top:18rem;right:31%;width:5rem;height:5rem}.cut-ribbon{left:-3rem;bottom:5rem;width:19rem;height:6rem}
+  .cut-leaf{top:12rem;right:-3rem;width:8rem;height:14rem}.cut-star{top:18rem;right:31%;width:5rem;height:5rem}.cut-ribbon{left:-3rem;bottom:10rem;width:19rem;height:6rem}
   .question-shift{grid-template-columns:1fr;gap:2.5rem;margin-top:4rem}.question-shift .answer{margin-left:1rem;padding-left:1.5rem}
   .solution-section{grid-template-columns:1fr}.story-field{min-height:33rem}
   .story-field .runway-answer{inset:9% 6% 8% 8%}
