@@ -825,6 +825,10 @@ body.landing .wrap {
 .life-context {
   position: relative;
   z-index: 2;
+  /* The cut shapes travel behind this line and one of them is bright yellow.
+     The text sits on top, but its colour is chosen for a dark ground, so a
+     soft shadow keeps it legible wherever a shape passes under it. */
+  text-shadow: 0 1px 10px rgba(4, 13, 26, 0.55);
   max-width: 28rem;
   margin: 0 0 1.25rem;
   color: #b9c5d5;
@@ -1939,6 +1943,22 @@ body.landing .wrap {
   }
   .story-trigger {
     min-height: 52vh;
+  }
+  /* The closing block collapsed to one column, which gave the mark a whole
+     row to itself with the width beside it empty. It sits next to the words
+     it belongs to, and the store line takes the row under both. */
+  .final-cta {
+    grid-template-columns: auto 1fr;
+    gap: 1rem 1.1rem;
+    align-items: center;
+  }
+  .final-cta .store-status {
+    grid-column: 1 / -1;
+  }
+  .app-mark-large {
+    width: 58px;
+    height: 58px;
+    border-radius: 17px;
   }
 }
 
