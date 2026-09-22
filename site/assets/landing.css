@@ -570,6 +570,9 @@ body.landing .wrap {
     display: flex;
     gap: 1rem;
   }
+  /* The header wraps here, and margin-left:auto sent the badge to the far
+     right of its own row, under a brand sitting at the far left. Once it has
+     wrapped it is a second line, so it starts where the first line starts. */
   .review-badge {
     margin-left: auto;
   }
@@ -1745,6 +1748,9 @@ body.landing .wrap {
   }
   .landing header.site nav {
     display: none;
+  }
+  .review-badge {
+    margin-left: 0;
   }
   .hero {
     grid-template-columns: 1fr;
