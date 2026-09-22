@@ -1296,6 +1296,9 @@ body.landing .wrap {
   background-size: 175% auto;
 }
 .story-detail-frame p {
+  /* Stated, not inherited: it was resolving to a near-white on the frame's
+     cream, which made the label a ghost. */
+  color: #071329;
   margin: 0.75rem 0 0;
   font:
     0.72rem "JetBrains Mono",
@@ -1917,14 +1920,19 @@ body.landing .wrap {
   .story-phone {
     width: min(38%, 10rem);
   }
+  /* Centred over the phone. On a phone the screenshot reads as a ground and
+     this frame is the thing being looked at, so it stops hiding in a corner
+     against the edge of the screen. */
   .story-detail-frame {
-    right: 3%;
-    top: 8%;
-    width: 8.5rem;
-    padding: 0.6rem;
+    left: 50%;
+    right: auto;
+    top: 26%;
+    width: 11rem;
+    padding: 0.7rem;
+    transform: translateX(-50%) rotate(3deg);
   }
   .story-detail-crop {
-    height: 4.2rem;
+    height: 5.4rem;
   }
   /* Pinned directly under the stage, which is exactly 44vh here, so the
      points stay readable beside the phone instead of scrolling off while the
