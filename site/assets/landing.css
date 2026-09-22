@@ -426,7 +426,7 @@ body.landing .wrap { max-width:88rem; padding:1.15rem clamp(1rem,2.6vw,2.4rem) 3
   width:2rem;
   height:2rem;
   background:var(--mint);
-  clip-path:polygon(50% 0%,60% 28%,89% 19%,73% 45%,99% 61%,69% 65%,72% 95%,50% 74%,28% 95%,31% 65%,1% 61%,27% 45%,11% 19%,40% 28%); transform:rotate(-12deg);}
+  clip-path:polygon(50% 0%,60% 28%,89% 19%,73% 45%,99% 61%,69% 65%,72% 95%,50% 74%,28% 95%,31% 65%,1% 61%,27% 45%,11% 19%,40% 28%);}
 .question-shift .eyebrow { color:#a4b2c5; margin-bottom:1rem; line-height:1.6; }
 .question-shift>div>p:last-child { margin:0; max-width:15ch; color:#b5bfd0; font-size:clamp(1.6rem,2.8vw,2.4rem); line-height:1.2; }
 .question-shift .answer { position:relative; padding:2.8rem 0 1rem 2.5rem; border-left:1px solid rgba(143,221,170,.4); }
@@ -589,8 +589,15 @@ body.landing .wrap { max-width:88rem; padding:1.15rem clamp(1rem,2.6vw,2.4rem) 3
 .trust-bank { right:-2%; bottom:0; display:grid; grid-template-columns:7.5rem minmax(12rem,18rem); align-items:center; gap:1.25rem; padding:.9rem 1.5rem .9rem .9rem; background:#0b1831; color:#f2efe7; transform:rotate(-2.5deg); }
 .trust-bank p { color:#aebbd0; }
 .bank-visual { position:relative; height:7rem; overflow:hidden; background:#2b62ff; }
-.bank-visual span { position:absolute; left:1.35rem; top:1.7rem; width:4.8rem; height:3.55rem; border:.22rem solid #f2efe7; clip-path:polygon(50% 0,100% 28%,92% 28%,92% 100%,8% 100%,8% 28%,0 28%); }
-.bank-visual span::before { content:""; position:absolute; left:.62rem; right:.62rem; top:1.12rem; height:.22rem; background:#f2efe7; box-shadow:0 .72rem 0 #f2efe7; }
+/* A stroke cannot survive a clip-path: the border is drawn and then cut, which
+   left a blue square with a sliver of roof. Every other shape on this page is
+   a solid fill, so this one is too. */
+.bank-visual span { position:absolute; left:1.35rem; top:1.6rem; width:4.8rem; height:3.7rem;
+  background:#f2efe7;
+  clip-path:polygon(50% 0%,100% 26%,100% 36%,90% 36%,90% 82%,100% 82%,100% 100%,0% 100%,0% 82%,10% 82%,10% 36%,0% 36%); }
+/* The columns, cut out of the silhouette in the ground colour. */
+.bank-visual span::before { content:""; position:absolute; left:22%; right:22%; top:40%; height:40%;
+  background:repeating-linear-gradient(90deg,#2b62ff 0 .18rem,transparent .18rem .58rem); }
 .bank-visual i { position:absolute; width:7.8rem; height:.28rem; left:-.05rem; top:3.35rem; background:#e8829e; transform:rotate(-38deg); box-shadow:0 0 0 .12rem #2b62ff; }
 
 .pricing-section { margin:0 calc(clamp(1rem,2.6vw,2.4rem)*-1) 7rem; border:0; border-radius:0; background:#0b1831; }
