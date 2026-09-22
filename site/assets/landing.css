@@ -13,9 +13,7 @@ body.landing {
   --bg: #040d1a;
   --bg-top: #071229;
   --surface: #060f1e;
-  --border: #0d1f3a;
-  --text: #cdd5e0;
-  --muted: #6e8298;
+
   --dim: #456594;
   --mint: #8fddaa; /* cash, and the runway itself */
   --pink: #e8829e; /* what a month costs */
@@ -25,7 +23,6 @@ body.landing {
   color-scheme: dark;
   /* The app's own backgroundTop, falling to background. Ends before the fold
      on a laptop, so the rest of the page is the flat ground the app uses. */
-  background: linear-gradient(180deg, var(--bg-top), var(--bg) 46rem) no-repeat;
 }
 
 /* The app's row labels: mono, upper, tracked out. Used here for the same job. */
@@ -33,10 +30,6 @@ body.landing {
 /* ── The hero: the claim, and the screen that makes it ──────────────────── */
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 20rem);
-  gap: 3rem;
-  align-items: start;
-  margin: 1.5rem 0 4rem;
 }
 
 .hero h1 {
@@ -77,10 +70,6 @@ body.landing {
   --muted: #9aa9bc;
   --text: #edf3fa;
   --border: #17304e;
-  background:
-    radial-gradient(circle at 78% 8%, rgba(106, 78, 191, 0.23), transparent 30rem),
-    radial-gradient(circle at 20% 23%, rgba(58, 154, 116, 0.12), transparent 26rem),
-    linear-gradient(180deg, var(--bg-top), var(--bg) 52rem) no-repeat;
 }
 body.landing::before {
   content: "";
@@ -376,7 +365,6 @@ html {
   display: grid;
   grid-template-columns: 0.8fr 1.2fr;
   gap: 4rem;
-  padding: clamp(2rem, 5vw, 4.5rem);
 }
 .price-intro h2 span {
   color: var(--mint);
@@ -508,9 +496,6 @@ html {
   /* The header wraps here, and margin-left:auto sent the badge to the far
      right of its own row, under a brand sitting at the far left. Once it has
      wrapped it is a second line, so it starts where the first line starts. */
-  .review-badge {
-    margin-left: auto;
-  }
   .hero {
     min-height: auto;
 
@@ -1627,9 +1612,6 @@ body.landing .wrap {
 
 .pricing-section {
   margin: 0 calc(clamp(1rem, 2.6vw, 2.4rem) * -1) 7rem;
-  border: 0;
-  border-radius: 0;
-  background: #0b1831;
 }
 
 @keyframes hero-device-float {
