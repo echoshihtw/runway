@@ -9,8 +9,9 @@
   <link rel="apple-touch-icon" href="assets/icon-180.png">
   <meta name="theme-color" content="#040d1a">
   <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/landing.css">
 </head>
-<body>
+<body class="landing">
   <div class="wrap">
     <header class="site">
       <a class="brand" href="./"><img src="assets/icon-180.png" alt="" width="28" height="28">Financial <span>Runway</span></a>
@@ -21,52 +22,75 @@
     </header>
 
     <main>
-      <h1>Stop guessing how long your money lasts.</h1>
-      <p class="lede">One number: how many months your money covers if income paused today, and what would change it. No account, no bank connection, nothing to reconcile.</p>
-      <p>For studying abroad, between jobs, bootstrapping, or living off savings.</p>
-
-      <section class="showcase">
-        <div class="hero-shot">
-          <img src="assets/shots/01-runway.png" width="515" height="1120" alt="The app's overview screen: twelve months of runway, the month it runs out, and cash beside what is owed." loading="lazy" decoding="async">
-          <div class="says">
-            <span class="number">12<small>months</small></span>
+      <section class="hero">
+        <div>
+          <h1>Stop guessing how long your money lasts.</h1>
+          <p class="lede">One number: how many months your money covers if income paused today, and what would change it. No account, no bank connection, nothing to reconcile.</p>
+          <p class="who">For studying abroad, between jobs, bootstrapping, or living off savings.</p>
+          <div class="reads">
+          <div>
+            <p class="fig num"><b class="mint big">12</b> <span class="unit">months</span></p>
             <p><b>Counted from today, on your budget, if income paused today.</b> Underneath is the month it runs out.</p>
-            <p>Setting it up is a balance and a budget, not a bank login. Every figure is one you typed, so you can check it.</p>
+          </div>
+          <div>
+            <p class="fig">
+              <span class="pair"><span class="k">Cash</span><b class="mint">$ 34,336</b></span>
+              <span class="pair"><span class="k">Owed</span><b class="gold">$ 17,790</b></span>
+            </p>
             <p>Borrowing raises your cash, and your runway with it. So the app shows what you still owe beside what you have.</p>
+          </div>
+          <div>
+            <p class="fig">
+              <span class="pair"><span class="k">In</span><b class="mint">$ 2,400</b></span>
+              <span class="pair"><span class="k">Out</span><b class="pink">$ 2,064</b></span>
+            </p>
             <p>It tracks what comes in too, so you can see whether a month adds to your runway or spends it.</p>
           </div>
+          </div>
+        </div>
+        <div class="hero-device">
+          <img src="assets/device/01-runway.png" width="900" height="1956" alt="The app's overview screen: twelve months, running out September 2027, with cash in mint beside what is owed in gold.">
         </div>
       </section>
 
-      <p>Your records are encrypted on your device, and there is no server holding them.</p>
+      <div class="plain">
+        <p>Setting it up is a balance and a budget, not a bank login. Every figure is one you typed, so you can check it.</p>
+        <p>Your records are encrypted on your device, and there is no server holding them.</p>
+      </div>
 
-      <section class="showcase">
+      <section class="screens">
         <h2>Three screens</h2>
-        <p class="lede-dark">A budget you spend down, a log that takes seconds, and a way to try a change before you make it.</p>
+        <p class="lede">A budget you spend down, a log that takes seconds, and a way to try a change before you make it.</p>
         <div class="shots">
           <figure>
-            <img src="assets/shots/02-living.png" width="515" height="1120" alt="The living budget sheet, showing what is left this month as an amount per day." loading="lazy" decoding="async">
+            <img src="assets/device/02-living.png" width="720" height="1564" alt="The living budget sheet, showing what is left this month as an amount per day." loading="lazy" decoding="async">
             <figcaption>Know what you can spend today<span>Your living budget as a daily amount, for the days that are left.</span></figcaption>
           </figure>
           <figure>
-            <img src="assets/shots/03-log.png" width="515" height="1120" alt="The log, with the add sheet open on six spending occasions and a line for logging income." loading="lazy" decoding="async">
+            <img src="assets/device/03-log.png" width="720" height="1564" alt="The log, with the add sheet open on six spending occasions and a line for logging income." loading="lazy" decoding="async">
             <figcaption>Log a spend in seconds<span>Pick the occasion, type the amount. Income has a line of its own.</span></figcaption>
           </figure>
           <figure>
-            <img src="assets/shots/04-plan.png" width="515" height="1120" alt="The plan screen, showing a projected runway of thirteen months against a current twelve." loading="lazy" decoding="async">
+            <img src="assets/device/04-plan.png" width="720" height="1564" alt="The plan screen, showing a projected runway of thirteen months against a current twelve." loading="lazy" decoding="async">
             <figcaption>Model a change before you make it<span>Cut a cost or add income, and see the months it buys you.</span></figcaption>
           </figure>
         </div>
       </section>
 
-      <h2>A budget is a cap, not a cost</h2>
-      <p>Logging a coffee uses up your living budget instead of adding to your monthly costs, so the number only moves when you go over. The app says so on the screen where it applies.</p>
-
-      <h2>Nothing here grades you</h2>
-      <p>There is no score, no streak and no rank. A bad month is information, and the number is yours to move rather than a mark you are given.</p>
-
-      <h2>Runway Pro is $3.99, paid once</h2>
-      <p>An app that counts what your subscriptions cost you has no business being one of them. Subscription tracking is free for everyone and has no limit, because a runway that leaves out a commitment is wrong.</p>
+      <section class="stances">
+        <div>
+          <h2>A budget is a cap, not a cost</h2>
+          <p>Logging a coffee uses up your living budget instead of adding to your monthly costs, so the number only moves when you go over. The app says so on the screen where it applies.</p>
+        </div>
+        <div>
+          <h2>Nothing here grades you</h2>
+          <p>There is no score, no streak and no rank. A bad month is information, and the number is yours to move rather than a mark you are given.</p>
+        </div>
+        <div>
+          <h2>Runway Pro is $3.99, paid once</h2>
+          <p>An app that counts what your subscriptions cost you has no business being one of them. Subscription tracking is free for everyone and has no limit, because a runway that leaves out a commitment is wrong.</p>
+        </div>
+      </section>
 
       <section class="why">
         <p>I was planning two years abroad funded from savings, and I worked it out in a spreadsheet. It was boring to look at and a chore to keep up, so I built something I enjoy opening instead, something I would use.</p>
