@@ -1914,9 +1914,9 @@ body.landing .wrap {
      this frame is the thing being looked at, so it stops hiding in a corner
      against the edge of the screen. */
   .story-detail-frame {
-    left: 50%;
+    left: 58%;
     right: auto;
-    top: 26%;
+    top: 24%;
     width: 11rem;
     padding: 0.7rem;
     transform: translateX(-50%) rotate(3deg);

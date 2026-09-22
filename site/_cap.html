@@ -1,0 +1,21 @@
+<style>
+  html,
+  body {
+    margin: 0;
+    background: #000;
+  }
+  iframe {
+    border: 0;
+    display: block;
+  }
+</style>
+<script>
+  const w = +(new URLSearchParams(location.search).get("w") || 1240);
+  document.write('<iframe src="/" scrolling="no" onload="f(this)" style="width:' + w + 'px;height:9000px"></iframe>');
+  function f(fr) {
+    const d = fr.contentDocument,
+      s = d.createElement("style");
+    s.textContent = "*,*::before,*::after{animation:none!important;transition:none!important}";
+    d.head.appendChild(s);
+  }
+</script>
