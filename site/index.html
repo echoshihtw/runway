@@ -191,7 +191,9 @@
     const storyDetails = [...storySection.querySelectorAll('.story-detail-image')];
     const storyTriggers = [...storySection.querySelectorAll('.story-trigger')];
     const storyProgress = storySection.querySelector('.story-progress span');
-    const storyDetailLabel = storySection.querySelector('.story-detail-frame p');
+    // The step's label appears twice: over the detail crop, and in the progress
+    // rail. Both read from the same data-label, so neither can drift.
+    const storyLabels = [...storySection.querySelectorAll('.story-detail-frame p, .story-progress b')];
     let activeStoryIndex = -1;
     const setStoryIndex = index => {
       if (index === activeStoryIndex) return;
@@ -204,7 +206,8 @@
       storyScreens.forEach((screen, screenIndex) => screen.classList.toggle('is-active', screenIndex === index));
       storyDetails.forEach((detail, detailIndex) => detail.classList.toggle('is-active', detailIndex === index));
       storyProgress.textContent = `${storyPoints[index].dataset.index} / 03`;
-      storyDetailLabel.textContent = storyPoints[index].dataset.label;
+      const label = storyPoints[index].dataset.label;
+      storyLabels.forEach(element => { element.textContent = label; });
     };
     let storyTicking = false;
     const updateStoryFromScroll = () => {

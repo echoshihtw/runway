@@ -102,6 +102,17 @@ class LandingPageTest(unittest.TestCase):
         self.assertIn("is-shown", HTML)
         self.assertNotIn('class="story reverse"', section)
 
+    def test_step_labels_rest_on_the_first_step_and_are_script_driven(self):
+        # The label shows twice, over the detail crop and in the progress rail.
+        # Both must start on step 01 and both must be updated from data-label,
+        # or one of them silently states a step the page is not on.
+        first = re.search(r'class="story-point is-shown"[^>]*data-label="([^"]+)"', HTML).group(1)
+        rail = re.search(r'class="story-progress">.*?<b>([^<]*)</b>', HTML, re.S).group(1)
+        aside = re.search(r'class="story-detail-frame">.*?<p>([^<]*)</p>', HTML, re.S).group(1)
+        self.assertEqual(rail, first)
+        self.assertEqual(aside, first)
+        self.assertIn(".story-detail-frame p, .story-progress b", HTML)
+
     def test_mobile_layout_has_a_deliberate_breakpoint(self):
         self.assertRegex(CSS, r"@media\s*\(max-width:\s*48rem\)")
 
