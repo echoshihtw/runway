@@ -825,10 +825,15 @@ body.landing .wrap {
 .life-context {
   position: relative;
   z-index: 2;
-  /* The cut shapes travel behind this line and one of them is bright yellow.
-     The text sits on top, but its colour is chosen for a dark ground, so a
-     soft shadow keeps it legible wherever a shape passes under it. */
-  text-shadow: 0 1px 10px rgba(4, 13, 26, 0.55);
+  /* This line's colour is chosen for the dark ground, where it sits at
+     10.1:1. A cut shape travels behind it and one of them is bright yellow,
+     where the same colour falls to 1.29:1 and the words all but vanish. A
+     soft glow cannot lift that, so the shadow is dense enough to put a dark
+     ground behind each glyph rather than to soften its edge. */
+  text-shadow:
+    0 0 3px rgba(4, 13, 26, 1),
+    0 0 6px rgba(4, 13, 26, 1),
+    0 0 12px rgba(4, 13, 26, 0.9);
   max-width: 28rem;
   margin: 0 0 1.25rem;
   color: #b9c5d5;
