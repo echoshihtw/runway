@@ -624,3 +624,22 @@ body.landing .wrap { max-width:88rem; padding:1.15rem clamp(1rem,2.6vw,2.4rem) 3
 @media (prefers-reduced-motion:reduce) {
   .hero-field .device-frame,.hero-shape{animation:none}
 }
+
+/* ── The scroll stage on a phone ──────────────────────────────────────────
+   This section shipped with no rules below 48rem, so its two columns kept
+   their 25rem and 20rem minimums on a 390px screen: the copy column began
+   past the right edge and .stories{overflow:clip} cut it away, so the text
+   was not off-screen but unreachable.
+
+   Layout only. The stage, the triggers and the reveal are the same objects
+   doing the same job as on a wide screen, stacked instead of side by side,
+   so there is one behaviour to maintain rather than two. */
+@media (max-width:48rem) {
+  .story-scroll { grid-template-columns:1fr; }
+  .story-product-stage { min-height:48vh; }
+  .story-phone { width:min(58%,14rem); }
+  .story-detail-frame { right:3%; top:6%; width:10rem; padding:.7rem; }
+  .story-detail-crop { height:5rem; }
+  .story-copy-stage { padding-left:1.25rem; padding-right:1.25rem; }
+  .story-point-stack { top:48vh; }
+}
