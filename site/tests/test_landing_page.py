@@ -71,7 +71,11 @@ class LandingPageTest(unittest.TestCase):
 
     def test_privacy_section_leads_with_control_not_missing_features(self):
         self.assertIn("Your records stay on your phone.", HTML)
-        self.assertIn("Encrypted locally and never sent to us.", HTML)
+        # The claim must name a mechanism a sceptic can check, and must not
+        # invent a company: this page is first person singular throughout.
+        self.assertIn("AES-256", HTML)
+        self.assertIn("Keychain", HTML)
+        self.assertNotRegex(HTML, r"\bsent to us\b")
         self.assertIn("No bank connection.", HTML)
         self.assertNotIn("No sign-in, no cloud sync", HTML)
         self.assertNotIn("No judgment mechanics", HTML)
