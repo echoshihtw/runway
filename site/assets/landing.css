@@ -126,7 +126,10 @@ body.landing .wrap { max-width:76rem; padding-bottom:3rem; }
 .metric-card strong { color:var(--mint); font:750 2.35rem/1 "JetBrains Mono",ui-monospace,monospace; }
 .metric-card span { margin-top:.28rem; color:var(--muted); font-size:.78rem; }
 
-.section-heading h2,.solution-section h2,.price-intro h2,.final-cta h2 { margin:0; font-size:clamp(2rem,4.5vw,3.55rem); line-height:1.07; letter-spacing:-.04em; }
+.section-heading h2,.solution-section h2,.price-intro h2,.final-cta h2 {
+  /* These two were the only section headings left in the body sans. */
+  font-family:'Newsreader',Georgia,"Times New Roman",serif;
+  font-weight:400; margin:0; font-size:clamp(2rem,4.5vw,3.55rem); line-height:1.07; letter-spacing:-.04em; }
 
 .problem-section { padding:7rem 0; border-top:1px solid var(--border); }
 
@@ -165,6 +168,10 @@ body.landing .wrap { max-width:76rem; padding-bottom:3rem; }
 .plans li::before { content:"✓"; margin-right:.55rem; color:var(--mint); }
 .founder { max-width:58rem; margin:0 auto 7rem; text-align:center; }
 .founder blockquote { margin:0; font-size:clamp(1.5rem,3vw,2.25rem); line-height:1.45; letter-spacing:-.025em; }
+/* Marks rather than characters, so the sentence stays byte-identical to the
+   one in the submission and can be grepped against it. */
+.founder blockquote::before { content:"\201C"; }
+.founder blockquote::after { content:"\201D"; }
 .final-cta { display:grid; grid-template-columns:auto 1fr auto; gap:1.5rem 2rem; align-items:center; padding:2.2rem; margin-bottom:2rem; border:1px solid var(--border); border-radius:1.3rem; background:linear-gradient(100deg,rgba(143,221,170,.08),rgba(169,135,255,.08)); }
 .final-cta .eyebrow{margin-bottom:.45rem}.final-cta h2{font-size:clamp(1.6rem,3vw,2.35rem)}.final-cta div>p:last-child{margin:.5rem 0 0;color:var(--muted)}
 .landing .links { grid-template-columns:repeat(3,1fr); }
@@ -643,3 +650,18 @@ body.landing .wrap { max-width:88rem; padding:1.15rem clamp(1rem,2.6vw,2.4rem) 3
   .story-copy-stage { padding-left:1.25rem; padding-right:1.25rem; }
   .story-point-stack { top:48vh; }
 }
+
+
+/* ── The two plans ────────────────────────────────────────────────────────
+   They differed by a border tint, carried the same mint ticks and showed no
+   price, so nothing said which one costs money or which one you would pick.
+   Each states its own price now, and only the paid one is lit. */
+.plans .cost { display:flex; align-items:baseline; gap:.5rem; margin:.55rem 0 0; }
+.plans .cost b { font:400 2.3rem/1 'Newsreader',Georgia,"Times New Roman",serif;
+                 letter-spacing:-.03em; color:var(--muted); }
+.plans .cost span { color:var(--muted); font-size:.82rem; }
+.plans .pro .cost b { color:var(--mint); }
+.plans h3 { min-height:0; margin:1.1rem 0 1.2rem; }
+.plans li::before { color:#3f5f88; }
+.plans .pro li::before { color:var(--mint); }
+.plans article.pro { background:linear-gradient(180deg,rgba(143,221,170,.05),rgba(4,13,26,.55) 12rem); }
