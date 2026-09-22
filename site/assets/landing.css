@@ -28,11 +28,6 @@ body.landing {
   background: linear-gradient(180deg, var(--bg-top), var(--bg) 46rem) no-repeat;
 }
 
-body.landing .wrap {
-  max-width: 70rem;
-  padding-bottom: 5rem;
-}
-
 /* The app's row labels: mono, upper, tracked out. Used here for the same job. */
 
 /* ── The hero: the claim, and the screen that makes it ──────────────────── */
@@ -117,10 +112,6 @@ body.landing::before {
 }
 html {
   scroll-behavior: smooth;
-}
-body.landing .wrap {
-  max-width: 76rem;
-  padding-bottom: 3rem;
 }
 .landing header.site {
   display: flex;
@@ -636,8 +627,12 @@ body.landing {
 body.landing::before {
   display: none;
 }
+/* No cap. The sections are colour blocks that run to the edges, and an 88rem
+   wrap stopped them short of the screen on a wide monitor, leaving the page
+   ground showing down both sides. The reading widths are set on the copy
+   itself, so the text does not stretch with the window. */
 body.landing .wrap {
-  max-width: 88rem;
+  max-width: none;
   padding: 1.15rem clamp(1rem, 2.6vw, 2.4rem) 3rem;
 }
 
