@@ -1981,3 +1981,29 @@ body.landing .wrap {
 .landing footer.site p {
   margin: 0;
 }
+
+/* ── The last two boxes ───────────────────────────────────────────────────
+   Pricing and the closing block were rounded bordered cards, where the five
+   sections above them are colour running to the edges. Below 48rem pricing
+   already did this, so the box only existed on a wide screen. The two plan
+   cards keep their borders: those separate two things you are meant to
+   compare, which is a border doing work rather than decorating. */
+.pricing-section {
+  border: 0;
+  border-radius: 0;
+  background: #0b1831;
+  margin-inline: calc(clamp(1rem, 2.6vw, 2.4rem) * -1);
+  padding: clamp(2.5rem, 5vw, 4.5rem) clamp(1.5rem, 4vw, 3rem);
+}
+
+.plans article {
+  border-radius: 0;
+}
+
+.final-cta {
+  border: 0;
+  border-radius: 0;
+  background: #0b1831;
+  margin-inline: calc(clamp(1rem, 2.6vw, 2.4rem) * -1);
+  padding: clamp(2rem, 4vw, 3.2rem) clamp(1.5rem, 4vw, 3rem);
+}
