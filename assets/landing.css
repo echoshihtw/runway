@@ -555,7 +555,13 @@ body.landing .wrap { max-width:88rem; padding:1.15rem clamp(1rem,2.6vw,2.4rem) 3
 }
 @media (max-width:48rem) {
   body.landing .wrap{padding-inline:.75rem}
-  .landing header.site{padding:.65rem .75rem}.landing header.site nav{display:none}
+  /* Below 48rem the nav links are hidden, which leaves a sticky bar holding a
+     wordmark and a review badge: no navigation and nothing to act on, for
+     about a tenth of the viewport on every screen of a very long page. So on
+     a phone it is a normal header and scrolls away. It earns the sticky back
+     when it has the App Store link to carry. */
+  .landing header.site{position:static;min-height:0;padding:.65rem .75rem}
+  .landing header.site nav{display:none}
   .hero{grid-template-columns:1fr;margin-inline:-.75rem;padding-top:5.55rem}.hero-copy{padding:5rem 1.5rem}.hero-field{min-height:38rem}
   .hero-field .device-frame{left:5%;width:58%}.hero-field .metric-card{right:4%;top:29%;width:48%;padding:1rem}
   .problem-section,.solution-section,.trust-section,.pricing-section{margin-inline:-.75rem}
