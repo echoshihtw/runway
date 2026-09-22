@@ -86,8 +86,15 @@ class LandingPageTest(unittest.TestCase):
     def test_how_it_works_uses_one_sticky_stage_and_cumulative_scroll_stack(self):
         section = HTML[HTML.index('<section class="stories"'):HTML.index('</section>', HTML.index('<section class="stories"'))]
         self.assertIn("A few seconds keeps your runway current.", section)
-        self.assertEqual(section.count('class="story-screen"'), 3)
-        self.assertEqual(section.count('class="story-point'), 3)
+        # Match the class token, not the exact attribute: the first screen also
+        # carries is-active so the stage is not blank before any scrolling.
+        screens = re.findall(r'class="story-screen(?:\s[^"]*)?"', section)
+        self.assertEqual(len(screens), 3)
+        self.assertEqual(section.count("story-screen is-active"), 1)
+        # Token match again: the prefix also hits the story-point-stack wrapper.
+        points = re.findall(r'class="story-point(?:\s[^"]*)?"', section)
+        self.assertEqual(len(points), 3)
+        self.assertEqual(section.count("story-point is-shown"), 1)
         self.assertEqual(section.count('class="story-trigger"'), 3)
         self.assertIn('class="story-product-stage"', section)
         self.assertIn('class="story-point-stack"', section)
