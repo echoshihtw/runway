@@ -1241,33 +1241,42 @@ body.landing .wrap {
   height: 1px;
   background: var(--border);
 }
+/* Revealing a step must not change this box's height. .story-point-stack is
+   sticky, so it still takes its normal-flow space, and .story-triggers sits
+   after it: a step that opened pushed every trigger down, and the script
+   decides which step is current by testing those same triggers. So showing a
+   step moved the trigger that had just qualified back out of range, the next
+   scroll event un-showed it, and that moved it back in. The two states
+   alternated for as long as scroll events kept arriving, which on a phone is
+   about a second after a flick and on a trackpad is as long as the momentum
+   runs. The thing being measured was moved by the outcome of the measurement.
+
+   So the steps hold their space and only fade. The space costs nothing to
+   look at: .story-point-stack is the same colour as .stories behind it, and
+   on a phone it is transparent. */
 .story-point {
   position: relative;
   width: 100%;
-  max-height: 0;
   overflow: hidden;
-  padding: 0 0.5rem 0 3.4rem;
-  border-top: 0 solid var(--border);
+  padding: 1.35rem 0.5rem 1.35rem 3.4rem;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid transparent;
   color: var(--muted);
   opacity: 0;
   translate: 0 1rem;
   transition:
-    max-height 0.42s ease,
     opacity 0.28s ease,
     translate 0.35s ease,
-    padding 0.35s ease,
     color 0.2s ease;
 }
 .story-point.is-shown {
-  max-height: 10rem;
-  padding-top: 1.35rem;
-  padding-bottom: 1.35rem;
-  border-top-width: 1px;
   opacity: 1;
   translate: 0 0;
 }
+/* Only the closing step draws its lower rule, and it is held in the box from
+   the start so that drawing it does not add a pixel. */
 .story-point.is-shown:last-child {
-  border-bottom: 1px solid var(--border);
+  border-bottom-color: var(--border);
 }
 .story-point::before {
   content: attr(data-index);
@@ -1841,35 +1850,6 @@ body.landing .wrap {
     top: 44vh;
     z-index: 1;
     background: transparent;
-  }
-  /* Revealing a step must not resize this box. It is sticky, so it still
-     takes its normal-flow space, and .story-triggers sits after it: opening a
-     point grew the stack and pushed every trigger down 120px. The script
-     makes a step current by testing those same triggers, so showing a step
-     moved the trigger that had just qualified back out of range, and the next
-     scroll event un-showed it, which moved it back in. On a phone the
-     momentum from a flick keeps firing scroll events for a second or so after
-     the finger leaves, so the two states alternated for as long as that ran:
-     the step blinked, and it never settled.
-
-     So the points hold their space here and only fade. The space they reserve
-     is behind a transparent stack on a phone, so nothing shows in it until
-     the step it belongs to arrives. */
-  .story-point,
-  .story-point.is-shown {
-    max-height: none;
-    padding-top: 1.35rem;
-    padding-bottom: 1.35rem;
-    border-top-width: 1px;
-  }
-  /* The closing rule draws this border only once the last step is shown,
-     which grew the box by the one pixel the rules above had just accounted
-     for. It is transparent until then instead. */
-  .story-point:last-child {
-    border-bottom: 1px solid transparent;
-  }
-  .story-point.is-shown:last-child {
-    border-bottom-color: var(--border);
   }
   .story-copy-stage {
     min-height: 0;

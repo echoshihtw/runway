@@ -139,19 +139,37 @@ class LandingPageTest(unittest.TestCase):
         self.assertNotIn("innerHeight", marker)
         self.assertIn("viewportProbe", marker)
 
-    def test_revealing_a_step_does_not_resize_the_stack_on_a_phone(self):
+    def test_revealing_a_step_cannot_change_its_height(self):
         # .story-point-stack is sticky, so it still takes its normal-flow
-        # space, and .story-triggers sits after it. When the reveal grew the
-        # stack every trigger moved down 120px, which is further than the
-        # distance that had just made that step current: showing a step moved
-        # the trigger back out of range, the next scroll event un-showed it,
-        # and that moved it back in. A flick keeps firing scroll events for
-        # about a second after the finger leaves, so the step blinked for as
-        # long as the momentum ran and never settled.
-        self.assertIn(".story-point,.story-point.is-shown{max-height:none;", CSS_TIGHT)
-        # The closing border is drawn only once the last step shows, which put
-        # a pixel back into the height the rule above had just pinned.
-        self.assertIn(".story-point:last-child{border-bottom:1pxsolidtransparent;}", CSS_TIGHT)
+        # space, and .story-triggers sits after it. A step that opened pushed
+        # every trigger down, and the script decides which step is current by
+        # testing those same triggers: showing a step moved the trigger that
+        # had just qualified back out of range, the next scroll event un-showed
+        # it, and that moved it back in. The two states alternated for as long
+        # as scroll events kept arriving, which after a flick on a phone is
+        # about a second. Measured at 120px per step before the fix, 0 after.
+        #
+        # Assert the property rather than the spelling: whatever .is-shown
+        # changes, none of it may affect the box's height, at any width.
+        affects_height = (
+            "height", "max-height", "min-height", "padding", "padding-top",
+            "padding-bottom", "border-top-width", "border-bottom-width",
+            "border-top", "border-bottom", "border", "margin", "margin-top",
+            "margin-bottom", "display", "line-height", "font-size",
+        )
+        rules = re.findall(r"([^{}]*\.story-point\.is-shown[^{}]*)\{([^}]*)\}", CSS)
+        self.assertTrue(rules, "no .story-point.is-shown rule found")
+        for selector, body in rules:
+            for declaration in body.split(";"):
+                if ":" not in declaration:
+                    continue
+                prop = declaration.split(":", 1)[0].strip()
+                self.assertNotIn(
+                    prop,
+                    affects_height,
+                    f"{selector.strip()} sets {prop}, which resizes the step it "
+                    f"reveals and so un-reveals it",
+                )
 
     def test_phone_scroll_rests_on_a_step_and_never_on_the_boundary(self):
         # proximity, never mandatory: snap points sit only on the triggers, so
