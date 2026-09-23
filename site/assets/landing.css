@@ -1867,12 +1867,57 @@ body.landing .wrap {
     z-index: 1;
     background: transparent;
   }
+  /* Revealing a step must not resize this box. It is sticky, so it still
+     takes its normal-flow space, and .story-triggers sits after it: opening a
+     point grew the stack and pushed every trigger down 120px. The script
+     makes a step current by testing those same triggers, so showing a step
+     moved the trigger that had just qualified back out of range, and the next
+     scroll event un-showed it, which moved it back in. On a phone the
+     momentum from a flick keeps firing scroll events for a second or so after
+     the finger leaves, so the two states alternated for as long as that ran:
+     the step blinked, and it never settled.
+
+     So the points hold their space here and only fade. The space they reserve
+     is behind a transparent stack on a phone, so nothing shows in it until
+     the step it belongs to arrives. */
+  .story-point,
+  .story-point.is-shown {
+    max-height: none;
+    padding-top: 1.35rem;
+    padding-bottom: 1.35rem;
+    border-top-width: 1px;
+  }
+  /* The closing rule draws this border only once the last step is shown,
+     which grew the box by the one pixel the rules above had just accounted
+     for. It is transparent until then instead. */
+  .story-point:last-child {
+    border-bottom: 1px solid transparent;
+  }
+  .story-point.is-shown:last-child {
+    border-bottom-color: var(--border);
+  }
   .story-copy-stage {
     min-height: 0;
     padding: 1.5rem 1.25rem 24vh;
   }
+  /* Three discrete steps, so the scroll comes to rest on one of them rather
+     than halfway between two. Only the triggers carry a snap point, so the
+     rest of the page scrolls normally, and proximity rather than mandatory
+     because a mandatory container pulls the reader back toward a step every
+     time they try to leave the section.
+
+     scroll-margin-top decides where a step settles: the snap area starts
+     40vh above the trigger, so at rest the trigger's top sits 40vh down the
+     screen. The script makes a trigger current at 62vh, so a resting step is
+     22vh clear of the line it is being tested against, and the position the
+     scroll settles on is never the boundary itself. */
+  html {
+    scroll-snap-type: y proximity;
+  }
   .story-trigger {
     min-height: 52vh;
+    scroll-snap-align: start;
+    scroll-margin-top: 40vh;
   }
   /* The closing block collapsed to one column, which gave the mark a whole
      row to itself with the width beside it empty. It sits next to the words
@@ -1994,5 +2039,10 @@ body.landing .wrap {
 @media (prefers-reduced-motion: reduce) {
   .hero-actions .button.primary::before {
     transition: none;
+  }
+  /* Snapping moves the page the reader did not ask to move. Last in the file
+     so it wins over the phone rule that turns it on. */
+  html {
+    scroll-snap-type: none;
   }
 }

@@ -139,6 +139,35 @@ class LandingPageTest(unittest.TestCase):
         self.assertNotIn("innerHeight", marker)
         self.assertIn("viewportProbe", marker)
 
+    def test_revealing_a_step_does_not_resize_the_stack_on_a_phone(self):
+        # .story-point-stack is sticky, so it still takes its normal-flow
+        # space, and .story-triggers sits after it. When the reveal grew the
+        # stack every trigger moved down 120px, which is further than the
+        # distance that had just made that step current: showing a step moved
+        # the trigger back out of range, the next scroll event un-showed it,
+        # and that moved it back in. A flick keeps firing scroll events for
+        # about a second after the finger leaves, so the step blinked for as
+        # long as the momentum ran and never settled.
+        self.assertIn(".story-point,.story-point.is-shown{max-height:none;", CSS_TIGHT)
+        # The closing border is drawn only once the last step shows, which put
+        # a pixel back into the height the rule above had just pinned.
+        self.assertIn(".story-point:last-child{border-bottom:1pxsolidtransparent;}", CSS_TIGHT)
+
+    def test_phone_scroll_rests_on_a_step_and_never_on_the_boundary(self):
+        # proximity, never mandatory: snap points sit only on the triggers, so
+        # the rest of the page scrolls normally instead of being pulled back
+        # toward the section. scroll-margin-top puts a resting trigger at 40vh
+        # while the script makes one current at 62vh, so the position the
+        # scroll settles on is never the line it is being tested against.
+        self.assertIn("html{scroll-snap-type:yproximity;}", CSS_TIGHT)
+        self.assertIn("scroll-snap-align:start;scroll-margin-top:40vh;", CSS_TIGHT)
+        # Snapping moves the page unasked, so it comes off with reduced motion,
+        # and that rule has to come after the one that turns it on.
+        self.assertLess(
+            CSS_TIGHT.index("html{scroll-snap-type:yproximity;}"),
+            CSS_TIGHT.index("html{scroll-snap-type:none;}"),
+        )
+
     def test_mobile_layout_has_a_deliberate_breakpoint(self):
         self.assertRegex(CSS, r"@media\s*\(max-width:\s*48rem\)")
 
