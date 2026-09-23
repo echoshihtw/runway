@@ -20,8 +20,7 @@ while you are in one, so neither does the app.
   <img src="docs/screenshots/04-plan.png" width="24%" alt="Plan — a lower monthly cost and the months it adds">
 </p>
 
-Demo data. The runway reads 12 months because 34,336 in cash against 2,803 a
-month is 12.25 — the number is computed, not mocked.
+Demo data, computed rather than mocked.
 
 ## See it, log it, try it
 
@@ -50,28 +49,14 @@ paid for.
 
 ## Status
 
-**1.0.0 is in App Review.** Build 174 was submitted on 22 September 2026.
-
-No release tag has been cut, so nothing has been published to TestFlight or
-Play. The release workflows build signed iOS and Android artefacts when a
-release PR merges into `main`.
-
-Pro is wired end to end: a $3.99 one-time purchase through RevenueCat, gating
-the sixth entry and the fourth simulation. The free plan allows five entries in
-total and three simulations; the opening balance does not count toward the five
-and subscriptions are unlimited.
+Not yet on the App Store. Runway Pro is a one-time purchase, never a
+subscription.
 
 ---
 
 ## What's next
 
 **Android.** The same number on whatever phone you carry.
-
-Also on the list: one commitment model, so rent, loans and subscriptions stop
-being three objects that differ only in a cadence and an end date; the liability
-behind a loan and not just its payment; the income half, which today has no
-screens at all; and asking about a subscription charge on the day it happens
-rather than the next time the app is opened.
 
 ---
 
@@ -98,13 +83,3 @@ make analyze      # every package
 make test         # every package
 make run          # on a connected device
 ```
-
-Bundle id `com.silverfern.survivaloptimizer`.
-
----
-
-*This README says what the app does and how to build it. It deliberately does
-not document the architecture in prose: the previous version described a safety
-buffer, an investable split and four test classes that no longer existed, and
-nobody noticed because nothing fails when a README goes out of date. The code
-is the reference.*
