@@ -46,10 +46,6 @@
 - [Component Inventory — design_system](./component-inventory-design_system.md)
 - [Component Inventory — presentation](./component-inventory-presentation.md)
 
-### Machine-readable
-- [`project-parts.json`](./project-parts.json) — parts, dependency graph, integration points, platform identifiers
-- [`project-scan-report.json`](./project-scan-report.json) — scan state, findings, counts, known gaps
-
 ### Operations
 - [Development Guide](./development-guide.md) — prerequisites, Makefile targets, codegen, testing, conventions
 - [Deployment Guide](./deployment-guide.md) — CI/CD, signing, secrets, release checklist
