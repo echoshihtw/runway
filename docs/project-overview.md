@@ -22,7 +22,7 @@ totalMonthlyBurn = budgetBurnRate + subscriptions + debtPayments
 budgetBurnRate   = max(actualSpending, budgetEstimate)
 ```
 
-Budget is a **floor**, never a ceiling — when actual spending exceeds the budget, reality wins. Implemented in `application/lib/providers/model_provider.dart` (the `max`) and `domain/lib/logic/survival_engine.dart` (`computeModel`).
+Budget is a **floor**, never a ceiling — when actual spending exceeds the budget, reality wins. Implemented in `application/lib/providers/model_provider.dart` (the `max`) and `domain/lib/logic/burn_engine.dart`.
 
 Status thresholds: `≥24 months → STABLE`, `≥12 → CAUTION`, else `CRITICAL`.
 
@@ -100,7 +100,6 @@ Measured against `CONTRACTS.md`, which is binding on both humans and AI agents i
 | Missing token | §4.2 specifies a 72px hero; no style above 42px exists in `app_text_styles.dart` |
 | Identifier mismatch | iOS `com.silverfern.survivaloptimizer` vs Android `com.survival.app`; `make db-reset-android` targets the wrong one |
 | Hardcoded strings | §6.3 forbids hardcoded user-facing strings; `app_router.dart`'s action sheet uses literal `'ENTRY'`/`'LOAN'`/`'SUBSCRIPTIONS'` |
-| Duplicated logic | `_computeBurnRate` exists in both `survival_engine.dart` and `model_provider.dart` |
 | Duplicated file | `app_input_formatters.dart` in both `components/` and `utils/` |
 | No migration tests | Drift schema snapshots / migration verification are absent |
 
@@ -121,7 +120,7 @@ Conventional Commits (`feat/fix/refactor/style/test/chore`). Branches: `main` = 
 1. `CONTRACTS.md` — the binding rules.
 2. [Source Tree Analysis](./source-tree-analysis.md) — the annotated map.
 3. [Integration Architecture](./integration-architecture.md) — how the parts talk.
-4. `packages/domain/lib/logic/survival_engine.dart` — the product, in one function.
+4. `packages/domain/lib/logic/burn_engine.dart` and `runway_engine.dart` — the product, in two functions.
 
 ## See Also
 

@@ -231,7 +231,7 @@ All domain logic changes require corresponding tests in `packages/domain/test/`.
 
 ### 7.2 Test Coverage Areas
 - `MonthlyAggregator` — always test edge cases (empty, opening only, mixed)
-- `SurvivalEngine` — always test status thresholds and runway math
+- the runway engine — always test status thresholds and runway math
 - `LoanEngine` — always test months remaining calculation
 - New domain logic → new test file
 

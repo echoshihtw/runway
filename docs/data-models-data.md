@@ -15,7 +15,7 @@ Source: `packages/data/lib/tables/transactions_table.dart`
 | Column | Type | Null | Default | Notes |
 |---|---|---|---|---|
 | `id` | TEXT | no | — | **PK**, client-generated UUID |
-| `date` | DATETIME | no | — | Drives the derived `SurvivalMonth` |
+| `date` | DATETIME | no | — | Drives the derived `LedgerMonth` |
 | `type` | TEXT | no | — | `TransactionType.name`: `expense`, `income`, `loan`, `repayment`, `openingBalance`. An unknown name, such as `investment` from a database written before that feature was removed, reads as `expense` |
 | `amount` | REAL | no | — | Always non-negative; sign derived from `type.isInflow` |
 | `note` | TEXT | yes | — | |
