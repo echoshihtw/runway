@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:data/data.dart';
@@ -62,6 +63,81 @@ void main() {
     debugPrint('cipher_version: $cipherVersion');
     expect(cipherVersion, isNotNull);
     await expectEncryptedOnDisk();
+  });
+
+  testWidgets('a wrong key cannot open the database, and does not harm it', (
+    tester,
+  ) async {
+    // The residual risk the orphaned-database guard cannot catch. That guard
+    // refuses to mint a key when one is missing and a database exists. It says
+    // nothing about a key that exists and is simply wrong — a Keychain restored
+    // from a different install, or a key rewritten by anything else.
+    //
+    // What has to be true then is not that the open succeeds. It is that the
+    // failure costs nothing: the file must come through untouched, so the right
+    // key still opens it afterwards. A failed open that truncated the header, or
+    // that mistook the file for plaintext and re-encrypted it, would destroy the
+    // data the correct key could still have read.
+    final db = AppDatabase();
+    await DriftFinancialSettingsRepository(
+      db,
+    ).saveBudget(const domain.Budget(rent: 5150, living: 2020));
+    await db.close();
+
+    final realKey = await kDatabaseKeyStorage.read(key: kDatabaseKeyName);
+    expect(
+      realKey,
+      isNotNull,
+      reason: 'the production path mints and keeps one',
+    );
+    final before = await file.readAsBytes();
+
+    // Put the real key back however this test exits. Nothing else restores it:
+    // the shared teardown deletes the database files and leaves the Keychain
+    // alone, so a failure below would strand the wrong key and lose the only
+    // key that can read anything already on this device.
+    addTearDown(
+      () => kDatabaseKeyStorage.write(key: kDatabaseKeyName, value: realKey),
+    );
+
+    // The same shape as a real key -- base64url of 32 bytes -- because that is
+    // what a Keychain restored from another install holds. A malformed key
+    // would prove something weaker.
+    await kDatabaseKeyStorage.write(
+      key: kDatabaseKeyName,
+      value: base64Url.encode(List<int>.filled(32, 0x2a)),
+    );
+
+    Object? error;
+    final wrong = AppDatabase();
+    try {
+      await wrong.customSelect('SELECT count(*) FROM sqlite_master;').get();
+    } catch (e) {
+      error = e;
+    } finally {
+      // Closed even when the open failed, so no handle is left on the file the
+      // next two steps read and reopen.
+      await wrong.close();
+    }
+    debugPrint('open with the wrong key: $error');
+    expect(error, isNotNull, reason: 'a wrong key must not open the database');
+
+    // The point of the test.
+    expect(
+      await file.readAsBytes(),
+      before,
+      reason: 'a failed open rewrote the file, so the right key cannot help',
+    );
+
+    await kDatabaseKeyStorage.write(key: kDatabaseKeyName, value: realKey);
+    final recovered = AppDatabase();
+    final budget = await DriftFinancialSettingsRepository(
+      recovered,
+    ).getBudget();
+    await recovered.close();
+
+    expect(budget.rent, 5150);
+    expect(budget.living, 2020);
   });
 
   testWidgets(
