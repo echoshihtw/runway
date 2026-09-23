@@ -134,13 +134,20 @@ MonthlyBurn computeMonthlyBurn({
 }) {
   final month = LedgerMonth(now);
 
-  // The earliest month with anything in it at all, including the opening
-  // balance: how long the app has known this owner. Null until they log one.
-  final earliestKnownMonth = transactions.isEmpty
+  // The earliest month the owner recorded something they lived through, which
+  // is how far back an average may reach. Null until they log one.
+  //
+  // An opening balance is excluded. It is a statement about the past, not a
+  // month spent with the app, and its date is picked freely as far back as
+  // 2020: someone who says "my balance in January 2020 was X" and starts
+  // logging in September 2026 would otherwise have six months of real spending
+  // divided by eighty, which reads as almost no burn and stretches the runway.
+  final lived = transactions.where(
+    (t) => t.type != TransactionType.openingBalance,
+  );
+  final earliestKnownMonth = lived.isEmpty
       ? null
-      : transactions
-            .map((t) => t.month)
-            .reduce((a, b) => a.isBefore(b) ? a : b);
+      : lived.map((t) => t.month).reduce((a, b) => a.isBefore(b) ? a : b);
 
   BudgetBucket bucket({
     required bool Function(Transaction) counts,
@@ -167,15 +174,15 @@ MonthlyBurn computeMonthlyBurn({
       }
     }
     // Averaged over the months that have passed, not over the months that
-    // happen to hold an entry. Dividing by completedMonths.length divided by
-    // the months someone logged in, so eight quiet months after one 40,000
-    // January read as 40,000 typical, for ever, and shortened the runway for
-    // anyone who logs intermittently. A month with nothing logged is a month
-    // that was lived through.
+    // happen to hold an entry. Dividing by completedMonths.length measured
+    // only the months someone logged in, so eight quiet months after one
+    // 40,000 January read as 40,000 typical, for ever, and shortened the
+    // runway for anyone who logs intermittently. A month with nothing logged
+    // is still a month that was lived through.
     //
-    // The range starts at the earliest month the app knows of at all, not the
-    // earliest in this bucket, so a first rent entry in month six does not
-    // make rent look like a six-month-old habit.
+    // The range starts at the earliest month in the ledger, not the earliest
+    // in this bucket, so a first rent entry in month six does not make rent
+    // look like a six-month-old habit.
     final elapsed = earliestKnownMonth == null
         ? 0
         : month.monthsSince(earliestKnownMonth);

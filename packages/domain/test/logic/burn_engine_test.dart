@@ -442,6 +442,32 @@ void _typicalOverElapsedMonths() {
       );
     });
 
+    test('a balance backdated years does not stretch the average', () {
+      // The date picker on an opening balance reaches back to 2020, and the
+      // figure is a statement about the past, not a month lived with the app.
+      // Counting it would divide six months of spending by eighty.
+      final burn = _burn(
+        transactions: [
+          _tx(
+            'open',
+            TransactionType.openingBalance,
+            100000,
+            DateTime(2020, 1, 1),
+          ),
+          ...onlyJanuary().where(
+            (t) => t.type != TransactionType.openingBalance,
+          ),
+        ],
+        budget: const Budget(living: 1),
+        now: now,
+      );
+      expect(
+        burn.living.typicalSpending,
+        closeTo(5000, 0.01),
+        reason: 'the window starts at the first month actually lived through',
+      );
+    });
+
     test('the first month falls back to what has been spent so far', () {
       final burn = _burn(
         transactions: [
