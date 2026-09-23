@@ -181,13 +181,17 @@ class LandingPageTest(unittest.TestCase):
         self.assertNotIn("window.scrollY", HTML)
 
     def test_large_one_corner_radius_is_not_repeated_across_surfaces(self):
+        # Matched against the whitespace-stripped copy. Written against CSS it
+        # searched for "border-radius:1rem ..." with no space after the colon,
+        # which prettier does not produce, so the guard could never fire and
+        # the shape it exists to keep out could have come back unnoticed.
         for repeated_shape in (
-            "border-radius:1rem 2.8rem 1rem 1rem",
-            "border-radius:1.4rem 4.6rem 1.4rem 1.4rem",
-            "border-radius:1.7rem 4rem 1.7rem 1.7rem",
-            "border-radius:1.4rem 4.5rem 1.4rem 1.4rem",
+            "border-radius:1rem2.8rem1rem1rem",
+            "border-radius:1.4rem4.6rem1.4rem1.4rem",
+            "border-radius:1.7rem4rem1.7rem1.7rem",
+            "border-radius:1.4rem4.5rem1.4rem1.4rem",
         ):
-            self.assertNotIn(repeated_shape, CSS)
+            self.assertNotIn(repeated_shape, CSS_TIGHT)
 
 
 if __name__ == "__main__":

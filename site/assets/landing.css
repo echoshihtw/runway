@@ -13,19 +13,30 @@ body.landing {
   --bg: #040d1a;
   --bg-top: #071229;
   --surface: #060f1e;
-
   --dim: #456594;
   --mint: #8fddaa; /* cash, and the runway itself */
   --pink: #e8829e; /* what a month costs */
   --gold: #cb9a3e; /* what you still owe */
   --accent: var(--mint);
   --link: #7fb6ef;
-  color-scheme: dark;
-  /* The app's own backgroundTop, falling to background. Ends before the fold
-     on a laptop, so the rest of the page is the flat ground the app uses. */
-}
 
-/* The app's row labels: mono, upper, tracked out. Used here for the same job. */
+  /* The poster's own: a second surface, and the four cut-paper grounds the
+     sections are blocked out in. The app has no use for any of them. */
+  --surface-2: #0b1930;
+  --violet: #a987ff;
+  --paper: #f2efe7;
+  --ink: #08142b;
+  --violet-field: #6327d4;
+  --yellow-field: #f4d84b;
+
+  /* Three of the app's values the poster overrides, each a step lighter. */
+  --text: #edf3fa;
+  --muted: #9aa9bc;
+  --border: #17304e;
+
+  color-scheme: dark;
+  background: var(--bg);
+}
 
 /* ── The hero: the claim, and the screen that makes it ──────────────────── */
 .hero {
@@ -63,14 +74,6 @@ body.landing {
   }
 }
 
-/* 2026 marketing narrative: change → question → answer → proof → trust. */
-body.landing {
-  --surface-2: #0b1930;
-  --violet: #a987ff;
-  --muted: #9aa9bc;
-  --text: #edf3fa;
-  --border: #17304e;
-}
 body.landing::before {
   content: "";
   position: fixed;
@@ -543,13 +546,6 @@ html {
 /* Editorial direction: the product moves through the story instead of sitting
    inside a stack of equal cards. Shapes borrow the app icon's angles and the
    runway number remains the visual anchor. */
-body.landing {
-  --paper: #f2efe7;
-  --ink: #08142b;
-  --violet-field: #6327d4;
-  --yellow-field: #f4d84b;
-  background: var(--bg);
-}
 body.landing::before {
   display: none;
 }
