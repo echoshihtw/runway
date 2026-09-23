@@ -1,15 +1,10 @@
 # Open Graph image
 
-`card.html` uses the marketing page's Newsreader, Inter, and JetBrains Mono
-fonts. Render it from this directory:
+`../og.png` is 2400 × 1260, which is 1.91:1 at 2x — the ratio Open Graph and
+Twitter expect. It is referenced absolutely by all three pages.
 
-```sh
-"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
-  --headless --disable-gpu --allow-file-access-from-files --hide-scrollbars \
-  --force-device-scale-factor=2 --window-size=1200,630 \
-  --screenshot=../og.png card.html
-```
-
-2400 × 1260, which is 1.91:1 at 2x -- the ratio Open Graph and Twitter expect.
-Re-render when the hero copy or `device/01-runway.png` changes, so the preview
-and the page cannot drift apart.
+The HTML here does **not** produce the shipped image. `card.html` renders an
+earlier all-CSS card, and the current `og.png` is a composed render. Keeping
+them is fine; treating either as the source is not. If you change the card,
+replace `og.png` directly and update `og:image:alt` on the three pages, which
+is the only thing that describes it to a screen reader.
