@@ -85,10 +85,10 @@
   "typeRepay": "貸款還款",
   "typeOpening": "初始",
   "typeSubscription": "訂閱",
-  "subscriptionPaidQuestion": "你在{date}支付了{name}的{amount}嗎？",
-  "subscriptionChargesDue": "{count} 筆訂閱費用待確認：{amount}",
+  "subscriptionPaidQuestion": "{date}有扣 {name} 的 {amount} 嗎？",
+  "subscriptionChargesDue": "有 {count} 筆訂閱還沒確認，共 {amount}",
   "subscriptionConfirmAll": "全部確認",
-  "subscriptionReviewEach": "逐筆確認",
+  "subscriptionReviewEach": "一筆一筆看",
   "@subscriptionChargesDue": {
     "description": "How many subscription charges are waiting to be confirmed, and their total",
     "placeholders": {
@@ -100,15 +100,15 @@
       }
     }
   },
-  "subscriptionPaidYes": "是，記錄下來",
-  "subscriptionChargeFailed": "無法記錄。請檢查訂閱金額。",
-  "subscriptionSaveFailed": "無法儲存訂閱。尚未新增。",
+  "subscriptionPaidYes": "有，記一筆",
+  "subscriptionChargeFailed": "沒記成功，看一下訂閱的金額。",
+  "subscriptionSaveFailed": "訂閱沒存成功，還沒加進去。",
   "loanSaveFailed": "貸款沒存成功，還沒加進去。",
-  "subscriptionPaidNo": "否",
-  "subscriptionWhatHappened": "發生了什麼？",
-  "subscriptionReasonCancelled": "我已取消",
-  "subscriptionReasonPriceChanged": "價格變了",
-  "subscriptionReasonNotPaid": "我沒有支付",
+  "subscriptionPaidNo": "沒有",
+  "subscriptionWhatHappened": "怎麼了？",
+  "subscriptionReasonCancelled": "我取消了",
+  "subscriptionReasonPriceChanged": "價錢變了",
+  "subscriptionReasonNotPaid": "我沒付",
   "@subscriptionPaidQuestion": {
     "description": "Asks whether a subscription charge was actually paid",
     "placeholders": {

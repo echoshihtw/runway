@@ -58,6 +58,7 @@ final _charge = Transaction(
 Future<_FakeTransactionRepository> _pump(
   WidgetTester tester, {
   required List<Transaction> pending,
+  Locale locale = const Locale('en'),
 }) async {
   SharedPreferences.setMockInitialValues({});
   final repository = _FakeTransactionRepository();
@@ -69,6 +70,7 @@ Future<_FakeTransactionRepository> _pump(
         pendingSubscriptionChargesProvider.overrideWithValue(pending),
       ],
       child: MaterialApp(
+        locale: locale,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: const Scaffold(
@@ -130,12 +132,28 @@ void _batchTests() {
     await tester.pumpAndSettle();
 
     expect(find.text('Yes, log it'), findsOneWidget);
-    expect(find.textContaining('3 Jul'), findsOneWidget);
+    // Sep 3, not 3 Sep: the date in this sentence takes the reader's own
+    // order now. The mono date labels elsewhere keep their one pattern.
+    expect(find.textContaining('Jul 3'), findsOneWidget);
     expect(repository.added, isEmpty, reason: 'reviewing writes nothing');
   });
 }
 
 void main() {
+  testWidgets('the date in the question is written the reader\'s way', (
+    tester,
+  ) async {
+    // The date sits inside a sentence, so it cannot keep one pattern for every
+    // language the way the mono labels do. It was built from 'd MMM' with no
+    // locale, so a Chinese reader was asked "你在3 Sep支付了..." with an English
+    // date in the middle of it. Passing the locale to that same pattern would
+    // not have fixed it either: 'd MMM' renders as "3 9月" in Chinese, which is
+    // the day and the month the wrong way round.
+    await _pump(tester, pending: [_charge], locale: const Locale('zh'));
+    expect(find.textContaining('9月3日'), findsOneWidget);
+    expect(find.textContaining('Sep'), findsNothing);
+  });
+
   testWidgets('a write that fails is not silently treated as recorded', (
     tester,
   ) async {
@@ -165,7 +183,7 @@ void main() {
 
     expect(find.textContaining('Spotify'), findsOneWidget);
     expect(find.textContaining('980'), findsOneWidget);
-    expect(find.textContaining('3 Sep'), findsOneWidget);
+    expect(find.textContaining('Sep 3'), findsOneWidget);
     expect(find.text('Yes, log it'), findsOneWidget);
     expect(find.text('No'), findsOneWidget);
   });
