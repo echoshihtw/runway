@@ -62,7 +62,42 @@ void main() {
       expect(charge.id, 'subchg-sub-1-20260903');
     });
 
-    test('a billing day still ahead is not written yet', () {
+    test('added today, billing today, asks today whatever the clock said', () {
+    // createdAt is a timestamp; a billing date is midnight. Comparing the two
+    // as instants meant a subscription added at half past two whose bill falls
+    // today was dropped, because midnight is before half past two.
+    //
+    // Whether it happened at all depended on something invisible. The form
+    // defaults the start date to DateTime.now(), which carries the time and
+    // slipped past the comparison, but opening the date picker and choosing
+    // the same day returns midnight and did not. Same day, opposite outcome.
+    final createdAt = DateTime(2026, 9, 23, 14, 30);
+    final now = DateTime(2026, 9, 23, 14, 31);
+
+    for (final (label, startDate) in [
+      ('left on the default, carrying the time', createdAt),
+      ('picked from the date picker, at midnight', DateTime(2026, 9, 23)),
+    ]) {
+      final due = dueSubscriptionCharges(
+        subscriptions: [_sub(startDate: startDate, createdAt: createdAt)],
+        transactions: const [],
+        now: now,
+      );
+      expect(due, hasLength(1), reason: label);
+      // Asserted by day. The charge keeps whatever time the start date had,
+      // because the charge id is derived from that date and normalising it
+      // would stop already-recorded charges matching, so they would all be
+      // asked again. That is a migration, not a fix for this.
+      final date = due.single.date;
+      expect(
+        DateTime(date.year, date.month, date.day),
+        DateTime(2026, 9, 23),
+        reason: label,
+      );
+    }
+  });
+
+  test('a billing day still ahead is not written yet', () {
       expect(
         dueSubscriptionCharges(
           subscriptions: [_sub(startDate: DateTime(2026, 9, 28))],

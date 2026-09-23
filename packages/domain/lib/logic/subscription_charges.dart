@@ -27,10 +27,24 @@ import 'subscription_billing.dart';
 /// the safeguard — the owner reads the amount and says no if it is wrong. As a
 /// bound it was actively harmful, because `updatedAt` moves on *any* edit, so
 /// correcting a name silently dropped every unanswered charge for good.
+/// Compared by day, because a billing date is a day and not an instant.
+///
+/// createdAt is a timestamp. A billing date is midnight. Someone adding a
+/// subscription at half past two whose bill falls today was therefore compared
+/// as "midnight is before half past two" and the charge was dropped, so the
+/// question never came. Whether it came at all depended on something invisible:
+/// leaving the date field alone kept DateTime.now(), which carried the time and
+/// slipped past, while opening the picker and choosing the same day returned
+/// midnight and did not.
+DateTime _startOfDay(DateTime d) => DateTime(d.year, d.month, d.day);
+
 DateTime _earliestWritableDate(Subscription s, DateTime? openingBalanceDate) {
-  var earliest = s.startDate.isAfter(s.createdAt) ? s.startDate : s.createdAt;
-  if (openingBalanceDate != null && openingBalanceDate.isAfter(earliest)) {
-    earliest = openingBalanceDate;
+  final startDate = _startOfDay(s.startDate);
+  final createdAt = _startOfDay(s.createdAt);
+  var earliest = startDate.isAfter(createdAt) ? startDate : createdAt;
+  if (openingBalanceDate != null) {
+    final opening = _startOfDay(openingBalanceDate);
+    if (opening.isAfter(earliest)) earliest = opening;
   }
   return earliest;
 }
