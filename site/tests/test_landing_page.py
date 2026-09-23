@@ -255,3 +255,93 @@ class LandingPageTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class LinkPreviewTest(unittest.TestCase):
+    """The og: tags are what every chat app and social platform reads.
+
+    Nothing here is visible on the page, so a broken one is silent: the
+    preview falls back to scraping the first large image it finds, which is a
+    portrait screenshot cropped to a tall tile.
+    """
+
+    BASE = "https://echoshihtw.github.io/runway/"
+    PAGES = {"": ROOT / "index.html",
+             "privacy/": ROOT / "privacy" / "index.html",
+             "support/": ROOT / "support" / "index.html"}
+
+    def _meta(self, html, prop):
+        match = re.search(
+            r'<meta\s+(?:property|name)="%s"\s+content="([^"]*)"' % re.escape(prop),
+            re.sub(r"\s+", " ", html),
+        )
+        return match.group(1) if match else None
+
+    def test_every_shareable_page_declares_a_preview(self):
+        for slug, path in self.PAGES.items():
+            html = path.read_text(encoding="utf-8")
+            for prop in ("og:type", "og:site_name", "og:title", "og:description",
+                         "og:image", "og:image:alt", "twitter:card"):
+                self.assertIsNotNone(
+                    self._meta(html, prop), f"{slug or 'index'} has no {prop}")
+
+    def test_each_page_points_at_itself(self):
+        # A shared /privacy/ link that says og:url is the home page resolves to
+        # the wrong place.
+        for slug, path in self.PAGES.items():
+            html = path.read_text(encoding="utf-8")
+            self.assertEqual(self._meta(html, "og:url"), self.BASE + slug)
+            self.assertIn(f'rel="canonical" href="{self.BASE + slug}"',
+                          re.sub(r"\s+", " ", html))
+
+    def test_descriptions_are_not_all_the_same(self):
+        seen = {self._meta(p.read_text(encoding="utf-8"), "og:description")
+                for p in self.PAGES.values()}
+        self.assertEqual(len(seen), len(self.PAGES))
+
+    def test_the_image_is_absolute_and_exists(self):
+        for slug, path in self.PAGES.items():
+            url = self._meta(path.read_text(encoding="utf-8"), "og:image")
+            # Scrapers do not resolve relative paths.
+            self.assertTrue(url.startswith("https://"), f"{slug}: {url}")
+            self.assertTrue((ROOT / url[len(self.BASE):]).exists(),
+                            f"{slug}: {url} is not in site/")
+
+    def test_declared_size_matches_the_file_and_the_expected_ratio(self):
+        html = self.PAGES[""].read_text(encoding="utf-8")
+        width = int(self._meta(html, "og:image:width"))
+        height = int(self._meta(html, "og:image:height"))
+        url = self._meta(html, "og:image")
+        data = (ROOT / url[len(self.BASE):]).read_bytes()
+
+        actual = _jpeg_size(data) if url.endswith(".jpg") else _png_size(data)
+        self.assertEqual((width, height), actual, "declared size is not the file's")
+        self.assertAlmostEqual(width / height, 1.91, delta=0.02)
+
+    def test_the_image_is_small_enough_to_scrape(self):
+        # X caps at 5 MB, LinkedIn 5 MB, Facebook 8 MB. Staying well under
+        # keeps the first scrape fast.
+        url = self._meta(self.PAGES[""].read_text(encoding="utf-8"), "og:image")
+        size = (ROOT / url[len(self.BASE):]).stat().st_size
+        self.assertLess(size, 1_000_000, f"{size} bytes is larger than it needs to be")
+
+
+def _png_size(data):
+    return (int.from_bytes(data[16:20], "big"), int.from_bytes(data[20:24], "big"))
+
+
+def _jpeg_size(data):
+    i = 2
+    while i < len(data):
+        if data[i] != 0xFF:
+            i += 1
+            continue
+        marker = data[i + 1]
+        if marker in (0xC0, 0xC1, 0xC2):
+            return (int.from_bytes(data[i + 7:i + 9], "big"),
+                    int.from_bytes(data[i + 5:i + 7], "big"))
+        if marker in (0xD8, 0xD9) or 0xD0 <= marker <= 0xD7:
+            i += 2
+            continue
+        i += 2 + int.from_bytes(data[i + 2:i + 4], "big")
+    raise AssertionError("no JPEG dimensions found")
