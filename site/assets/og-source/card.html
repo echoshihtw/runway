@@ -4,17 +4,17 @@
     <meta charset="utf-8" />
     <style>
       @font-face {
-        font-family: "Newsreader";
-        src: url("../fonts/newsreader-500.woff2") format("woff2");
+        font-family: Newsreader;
+        src: url("../fonts/newsreader-500.woff2");
         font-weight: 500;
       }
       @font-face {
-        font-family: "Inter";
-        src: url("../fonts/inter.woff2") format("woff2");
+        font-family: Inter;
+        src: url("../fonts/inter.woff2");
       }
       @font-face {
-        font-family: "JetBrains Mono";
-        src: url("../fonts/jetbrains-mono.woff2") format("woff2");
+        font-family: JetBrains;
+        src: url("../fonts/jetbrains-mono.woff2");
       }
       * {
         box-sizing: border-box;
@@ -27,201 +27,175 @@
       }
       body {
         overflow: hidden;
-        background: #f2efe7;
         color: #08142b;
-        font-family: "Inter", sans-serif;
+        background: #f2efe7;
+        font-family: Inter, sans-serif;
       }
       main {
         position: relative;
+        width: 100%;
         height: 100%;
-        display: grid;
-        grid-template-columns: 54% 46%;
-        align-items: center;
-        gap: 0;
       }
       .copy {
-        position: relative;
-        z-index: 3;
-        align-self: stretch;
+        position: absolute;
+        z-index: 5;
+        inset: 0 45% 0 0;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding: 50px 58px;
-        background: transparent;
-      }
-      .field {
-        position: relative;
-        align-self: stretch;
-        overflow: hidden;
-        background: #6327d4;
-        clip-path: polygon(11% 0, 100% 0, 100% 100%, 0 100%, 7% 58%);
-        margin-left: -72px;
+        padding: 52px 72px;
       }
       .brand {
         display: flex;
         align-items: center;
-        gap: 18px;
-        margin-bottom: 24px;
-        color: #596379;
+        gap: 14px;
+        margin-bottom: 42px;
+        color: #08142b;
         font:
-          15px/1 "JetBrains Mono",
-          monospace;
-        letter-spacing: 0.14em;
+          700 14px/1 Inter,
+          sans-serif;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
       }
+      .brand b {
+        color: #2f8b56;
+      }
       .brand img {
-        width: 52px;
-        height: 52px;
+        width: 48px;
+        height: 48px;
         border-radius: 13px;
       }
       h1 {
-        max-width: 590px;
+        max-width: 520px;
         margin: 0;
         font:
-          500 96px/0.84 "Newsreader",
+          500 82px/0.9 Newsreader,
           Georgia,
           serif;
-        letter-spacing: -0.055em;
-        transform: rotate(-2deg);
-        transform-origin: left center;
+        letter-spacing: -0.06em;
       }
       .question {
-        max-width: 560px;
-        margin: 25px 0 0;
+        max-width: 480px;
+        margin: 30px 0 0;
         color: #49546a;
-        font:
-          24px/1.45 "Inter",
-          sans-serif;
+        font-size: 21px;
+        line-height: 1.48;
       }
       .details {
-        margin-top: 28px;
+        margin: 33px 0 0;
         color: #244538;
         font:
-          15px/1 "JetBrains Mono",
+          13px/1 JetBrains,
           monospace;
-        letter-spacing: 0.06em;
+        letter-spacing: 0.07em;
         text-transform: uppercase;
+      }
+      .field {
+        position: absolute;
+        inset: 0 0 0 55%;
+        overflow: hidden;
+        background: #6327d4;
       }
       .blob {
         position: absolute;
-        width: 650px;
-        height: 480px;
-        left: -118px;
-        top: 68px;
+        left: -155px;
+        top: 70px;
+        width: 670px;
+        height: 500px;
         border-radius: 52% 35% 47% 41%;
         background: #8fddaa;
-        transform: rotate(-14deg);
+        transform: rotate(-8deg);
       }
       .shard {
         position: absolute;
-        right: -78px;
-        bottom: -62px;
+        right: -80px;
+        bottom: -78px;
         width: 330px;
-        height: 310px;
+        height: 300px;
         background: #f4d84b;
         clip-path: polygon(0 48%, 100% 0, 77% 100%);
-      }
-      .star {
-        position: absolute;
-        left: 18px;
-        top: 14px;
-        width: 145px;
-        height: 145px;
-        background: #f08b72;
-        clip-path: polygon(
-          50% 0,
-          61% 35%,
-          96% 20%,
-          72% 49%,
-          100% 67%,
-          63% 64%,
-          59% 100%,
-          44% 68%,
-          11% 87%,
-          29% 55%,
-          0 39%,
-          38% 39%
-        );
-        transform: rotate(-21deg);
-      }
-      .ribbon {
-        position: absolute;
-        z-index: 1;
-        left: -12px;
-        bottom: 40px;
-        width: 305px;
-        height: 88px;
-        background: #f08b72;
-        clip-path: polygon(0 48%, 24% 4%, 52% 34%, 79% 2%, 100% 42%, 76% 82%, 48% 59%, 20% 100%);
-        transform: rotate(8deg);
       }
       .metric {
         position: absolute;
         z-index: 4;
-        right: 18px;
-        top: 42px;
-        display: flex;
-        align-items: baseline;
-        gap: 8px;
-        padding: 13px 18px 11px;
+        right: 19px;
+        top: 208px;
+        width: 176px;
+        padding: 16px 17px 15px;
         color: #08142b;
-        background: #f4d84b;
-        clip-path: polygon(3% 8%, 96% 0, 100% 86%, 5% 100%);
+        background: #f8f7f2;
+        border-radius: 13px;
+        box-shadow: 0 20px 45px rgba(3, 7, 22, 0.28);
+        transform: rotate(5deg);
+      }
+      .metric span {
+        display: block;
+        color: #657087;
         font:
-          16px/1 "JetBrains Mono",
+          10px/1 JetBrains,
           monospace;
-        transform: rotate(6deg);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
       }
       .metric strong {
-        font-size: 34px;
+        display: block;
+        margin: 7px 0 4px;
+        font:
+          700 44px/0.9 JetBrains,
+          monospace;
         letter-spacing: -0.08em;
       }
+      .metric small {
+        color: #657087;
+        font-size: 9px;
+      }
       .phone {
-        position: relative;
-        z-index: 2;
-        width: 380px;
-        height: 535px;
-        margin: 60px auto 0;
+        position: absolute;
+        z-index: 3;
+        left: 42px;
+        top: 72px;
+        width: 310px;
+        height: 482px;
         overflow: hidden;
         border: 8px solid #020916;
-        border-radius: 42px;
+        border-radius: 37px;
         background: #040d1a;
         box-shadow: 0 34px 90px rgba(3, 7, 22, 0.45);
-        transform: rotate(-7deg);
+        transform: rotate(-4deg);
       }
       .phone img {
         position: absolute;
-        top: -48px;
+        top: -34px;
         left: 0;
-        width: 380px;
+        width: 310px;
       }
       .fade {
         position: absolute;
         inset: auto 0 0;
-        height: 116px;
-        background: linear-gradient(transparent, rgba(4, 13, 26, 0.88));
+        height: 86px;
+        background: linear-gradient(transparent, rgba(4, 13, 26, 0.82));
       }
     </style>
   </head>
   <body>
     <main>
       <section class="copy">
-        <div class="brand"><img src="../icon-180.png" alt="" /> Private money planning</div>
-        <h1>Financial<br />Runway</h1>
-        <p class="question">How many months does your money cover?</p>
-        <p class="details">One phone · no account · no bank connection</p>
+        <div class="brand"><img src="../icon-180.png" alt="" /> Financial <b>Runway</b></div>
+        <h1>How long will your money last?</h1>
+        <p class="question">One number, counted from today, and the month it runs out.</p>
+        <p class="details">Private · on device · iPhone</p>
       </section>
-      <div class="field">
+      <section class="field">
         <div class="blob"></div>
         <div class="shard"></div>
-        <div class="star"></div>
-        <div class="ribbon"></div>
-        <div class="metric"><strong>12</strong> months</div>
+        <div class="metric">
+          <span>Your runway</span><strong>12 mo</strong><small>Running out September 2027</small>
+        </div>
         <div class="phone">
           <img src="../device/01-runway.png" alt="" />
           <div class="fade"></div>
         </div>
-      </div>
+      </section>
     </main>
   </body>
 </html>
