@@ -357,6 +357,7 @@
   "paywallOneTimePurchase": "{price} una vez. Esta app cuenta tus suscripciones; no va a ser una.",
   "paywallUnavailable": "Pro no está disponible ahora mismo. Inténtalo más tarde.",
   "paywallRestore": "Restaurar compra",
+  "proUnlocked": "Desbloqueado. Entradas y simulaciones ilimitadas.",
   "paywallMaybeLater": "Quizá más tarde",
   "paywallPurchaseFailed": "La compra falló. Inténtalo de nuevo.",
   "paywallSomethingWrong": "Algo salió mal. Inténtalo de nuevo.",

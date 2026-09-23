@@ -357,6 +357,7 @@
   "paywallOneTimePurchase": "{price} 一回きり。サブスクを数えるアプリが、サブスクになるわけにはいきません。",
   "paywallUnavailable": "Proは現在ご利用いただけません。しばらくしてからお試しください。",
   "paywallRestore": "購入を復元",
+  "proUnlocked": "解除済み。記録もシミュレーションも無制限です。",
   "paywallMaybeLater": "あとで",
   "paywallPurchaseFailed": "購入に失敗しました。もう一度お試しください。",
   "paywallSomethingWrong": "問題が発生しました。もう一度お試しください。",

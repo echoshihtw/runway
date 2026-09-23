@@ -949,6 +949,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get paywallRestore => '購入を復元';
 
   @override
+  String get proUnlocked => '解除済み。記録もシミュレーションも無制限です。';
+
+  @override
   String get paywallMaybeLater => 'あとで';
 
   @override

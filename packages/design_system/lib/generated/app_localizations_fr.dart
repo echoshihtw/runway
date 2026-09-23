@@ -980,6 +980,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get paywallRestore => 'Restaurer l\'achat';
 
   @override
+  String get proUnlocked => 'Débloqué. Entrées et simulations illimitées.';
+
+  @override
   String get paywallMaybeLater => 'Plus tard';
 
   @override
