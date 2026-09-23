@@ -104,16 +104,23 @@ class RevenueCatService implements PurchaseService {
     }
   }
 
+  /// Whether the store currently recognises the Pro entitlement.
+  ///
+  /// Two failures that look alike and are not. **No store at all** answers no,
+  /// which is honest: there is nothing configured to hold an entitlement, and
+  /// nothing to listen to afterwards. **A store that cannot answer** throws,
+  /// because the caller treats that as offline and keeps whatever the owner
+  /// already paid for.
+  ///
+  /// This used to swallow the second into the first and return false. The
+  /// provider's guard for it — "only a store that answers may revoke" — was
+  /// therefore unreachable in production, and a single failed call revoked a
+  /// paying owner's Pro and wrote that to disk for the next launch as well.
   @override
   Future<bool> checkProEntitlement() async {
     if (_unavailable != null) return false;
-    try {
-      final info = await Purchases.getCustomerInfo();
-      return info.entitlements.active.containsKey(kProEntitlementId);
-    } catch (e) {
-      debugPrint('[RevenueCat] checkProEntitlement error: $e');
-      return false;
-    }
+    final info = await Purchases.getCustomerInfo();
+    return info.entitlements.active.containsKey(kProEntitlementId);
   }
 
   @override

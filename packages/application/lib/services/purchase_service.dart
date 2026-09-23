@@ -8,7 +8,11 @@ abstract class PurchaseService {
   /// Restore previous purchases. Returns true if Pro entitlement is active.
   Future<bool> restorePurchases();
 
-  /// Check if the Pro entitlement is currently active server-side.
+  /// Whether the store currently recognises the Pro entitlement.
+  ///
+  /// Throws when the store cannot answer. Returning false for that instead
+  /// tells the caller the owner does not own Pro, which is a different claim,
+  /// and one the caller acts on by taking it away.
   Future<bool> checkProEntitlement();
 
   /// Emits whether the Pro entitlement is active each time purchase data

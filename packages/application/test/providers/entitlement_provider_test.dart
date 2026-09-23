@@ -131,6 +131,29 @@ void main() {
     },
   );
 
+  test('a store that answers no does take Pro away', () async {
+    // The other half of the one above, and the reason the pair matters. The
+    // provider tells "cannot answer" from "answered no" by catching a throw,
+    // so false has to mean the store really said no. The live service used to
+    // catch its own errors and return false, which made every failure read as
+    // this case and revoked a paying owner's Pro — to disk, so the next launch
+    // agreed. Its contract now says it throws when it cannot answer.
+    SharedPreferences.setMockInitialValues({kIsProPreferenceKey: true});
+    final container = _containerWith(_FakePurchaseService(serverPro: false));
+
+    expect((await container.read(entitlementProvider.future)).isPro, isTrue,
+        reason: 'the cache answers first, so nobody waits on the network');
+    await _settle();
+
+    expect(
+      container.read(entitlementProvider).value?.isPro,
+      isFalse,
+      reason: 'a refund or a lapse has to be able to land',
+    );
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getBool(kIsProPreferenceKey), isFalse);
+  });
+
   test('an unreachable store never takes Pro away', () async {
     SharedPreferences.setMockInitialValues({kIsProPreferenceKey: true});
     final container = _containerWith(_FakePurchaseService(offline: true));
