@@ -6,6 +6,7 @@ import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
 
 import 'widgets/delete_all_data_card.dart';
+import 'widgets/pro_status_card.dart';
 import '../../shared/money_field.dart';
 
 class ConfigScreen extends ConsumerStatefulWidget {
@@ -662,6 +663,10 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                         ],
                       ),
                     ),
+                    const SizedBox(height: AppSpacing.cardGap),
+
+                    // ── RUNWAY PRO ────────────────────
+                    const ProStatusCard(),
                     const SizedBox(height: AppSpacing.cardGap),
 
                     // ── YOUR DATA ─────────────────────

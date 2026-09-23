@@ -504,6 +504,10 @@
   },
   "paywallUnavailable": "Pro isn't available right now. Please try again later.",
   "paywallRestore": "Restore purchase",
+  "proUnlocked": "Unlocked. Entries and simulations are unlimited.",
+  "@proUnlocked": {
+    "description": "Shown in settings when the owner has Runway Pro"
+  },
   "paywallMaybeLater": "Maybe later",
   "paywallPurchaseFailed": "Purchase failed. Please try again.",
   "paywallSomethingWrong": "Something went wrong. Please try again.",

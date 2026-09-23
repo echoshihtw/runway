@@ -976,6 +976,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paywallRestore => 'Restore purchase';
 
   @override
+  String get proUnlocked => 'Unlocked. Entries and simulations are unlimited.';
+
+  @override
   String get paywallMaybeLater => 'Maybe later';
 
   @override

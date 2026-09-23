@@ -357,6 +357,7 @@
   "paywallOneTimePurchase": "{price} 買斷。這個 App 幫你算訂閱，自己當然不會變成訂閱。",
   "paywallUnavailable": "Pro 現在暫時買不到，晚點再試試。",
   "paywallRestore": "恢復購買",
+  "proUnlocked": "已解鎖。紀錄和模擬都沒有上限。",
   "paywallMaybeLater": "下次再說",
   "paywallPurchaseFailed": "購買沒成功，再試一次吧。",
   "paywallSomethingWrong": "出了點問題，再試一次吧。",

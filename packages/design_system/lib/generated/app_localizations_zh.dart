@@ -946,6 +946,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get paywallRestore => '恢復購買';
 
   @override
+  String get proUnlocked => '已解鎖。紀錄和模擬都沒有上限。';
+
+  @override
   String get paywallMaybeLater => '下次再說';
 
   @override

@@ -28,11 +28,21 @@ bool allowsSimulation(BuildContext context, WidgetRef ref) => _allows(
   trigger: 'simulation',
 );
 
-/// Whether the current owner is Pro, for callers that only need to know
-/// whether to show a free-allowance caption.
-bool isProOwner(WidgetRef ref) =>
-    FeatureFlags.devProEntitlement ||
-    (ref.read(entitlementProvider).value?.isPro ?? false);
+/// Whether the owner is Pro, read once.
+///
+/// For a tap handler, where watching is not allowed and a stale answer cannot
+/// happen because the read is the last thing before the decision.
+bool isProOwner(WidgetRef ref) => _isPro(ref.read(entitlementProvider));
+
+/// Whether the owner is Pro, and rebuild when that changes.
+///
+/// For anything inside a build. Reading instead leaves a widget showing the
+/// state at the moment it was built: buy Pro from the settings card and the
+/// card that offered it would still say you had not.
+bool watchProOwner(WidgetRef ref) => _isPro(ref.watch(entitlementProvider));
+
+bool _isPro(AsyncValue<EntitlementState> entitlement) =>
+    FeatureFlags.devProEntitlement || (entitlement.value?.isPro ?? false);
 
 bool _allows(
   BuildContext context,

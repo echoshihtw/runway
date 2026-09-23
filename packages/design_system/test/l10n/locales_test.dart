@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -42,6 +45,45 @@ void main() {
       AppLocalizations.supportedLocales.map((l) => l.toString()).toList(),
       ['en', 'es', 'fr', 'it', 'ja', 'zh'],
     );
+  });
+
+  test('every locale says exactly what the template declares', () {
+    // A message added to the template and forgotten elsewhere ships English
+    // into that language. gen-l10n does not fail for it: it warns during a
+    // build nobody reads, then falls back, so the app runs and the tests pass
+    // and the only way to find out is to switch language and look.
+    //
+    // The files are read from the directory rather than listed here. A list
+    // would be a second thing to keep in step, which is the fault this is for.
+    Set<String> messagesIn(File f) {
+      final json = jsonDecode(f.readAsStringSync()) as Map<String, dynamic>;
+      // @-prefixed entries describe a message rather than being one.
+      return json.keys.where((k) => !k.startsWith('@')).toSet();
+    }
+
+    final files = Directory('lib/l10n')
+        .listSync()
+        .whereType<File>()
+        .where((f) => f.path.endsWith('.arb'))
+        .toList();
+    final template = files.singleWhere((f) => f.path.endsWith('app_en.arb'));
+    final expected = messagesIn(template);
+    expect(expected, isNotEmpty, reason: 'the template declares nothing');
+
+    final problems = <String>[];
+    for (final file in files.where((f) => f != template)) {
+      final name = file.uri.pathSegments.last;
+      final messages = messagesIn(file);
+      final missing = expected.difference(messages);
+      final extra = messages.difference(expected);
+      if (missing.isNotEmpty) {
+        problems.add('$name falls back to English for: ${missing.join(', ')}');
+      }
+      if (extra.isNotEmpty) {
+        problems.add('$name keeps messages nothing reaches: ${extra.join(', ')}');
+      }
+    }
+    expect(problems, isEmpty, reason: problems.join('\n'));
   });
 
   testWidgets('the Chinese locale serves Traditional characters', (

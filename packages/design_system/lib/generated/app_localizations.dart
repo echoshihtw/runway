@@ -1876,6 +1876,12 @@ abstract class AppLocalizations {
   /// **'Restore purchase'**
   String get paywallRestore;
 
+  /// Shown in settings when the owner has Runway Pro
+  ///
+  /// In en, this message translates to:
+  /// **'Unlocked. Entries and simulations are unlimited.'**
+  String get proUnlocked;
+
   /// No description provided for @paywallMaybeLater.
   ///
   /// In en, this message translates to:
