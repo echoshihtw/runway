@@ -99,8 +99,6 @@ make test         # every package
 make run          # on a connected device
 ```
 
-Bundle id `com.silverfern.survivaloptimizer`.
-
 ---
 
 *This README says what the app does and how to build it. It deliberately does
