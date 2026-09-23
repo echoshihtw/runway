@@ -239,46 +239,46 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String subscriptionPaidQuestion(String amount, String name, String date) {
-    return '你在$date支付了$name的$amount嗎？';
+    return '$date有扣 $name 的 $amount 嗎？';
   }
 
   @override
   String subscriptionChargesDue(int count, String amount) {
-    return '$count 筆訂閱費用待確認：$amount';
+    return '有 $count 筆訂閱還沒確認，共 $amount';
   }
 
   @override
   String get subscriptionConfirmAll => '全部確認';
 
   @override
-  String get subscriptionReviewEach => '逐筆確認';
+  String get subscriptionReviewEach => '一筆一筆看';
 
   @override
-  String get subscriptionPaidYes => '是，記錄下來';
+  String get subscriptionPaidYes => '有，記一筆';
 
   @override
-  String get subscriptionChargeFailed => '無法記錄。請檢查訂閱金額。';
+  String get subscriptionChargeFailed => '沒記成功，看一下訂閱的金額。';
 
   @override
-  String get subscriptionSaveFailed => '無法儲存訂閱。尚未新增。';
+  String get subscriptionSaveFailed => '訂閱沒存成功，還沒加進去。';
 
   @override
   String get loanSaveFailed => '貸款沒存成功，還沒加進去。';
 
   @override
-  String get subscriptionPaidNo => '否';
+  String get subscriptionPaidNo => '沒有';
 
   @override
-  String get subscriptionWhatHappened => '發生了什麼？';
+  String get subscriptionWhatHappened => '怎麼了？';
 
   @override
-  String get subscriptionReasonCancelled => '我已取消';
+  String get subscriptionReasonCancelled => '我取消了';
 
   @override
-  String get subscriptionReasonPriceChanged => '價格變了';
+  String get subscriptionReasonPriceChanged => '價錢變了';
 
   @override
-  String get subscriptionReasonNotPaid => '我沒有支付';
+  String get subscriptionReasonNotPaid => '我沒付';
 
   @override
   String get deleteSubscription => '刪除訂閱';
@@ -629,12 +629,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String budgetPaid(String amount) {
-    return '$amount 已付';
+    return '已付 $amount';
   }
 
   @override
   String spentOfBudget(String spent, String budget) {
-    return '$budget 用了 $spent';
+    return '已付 $spent / $budget';
   }
 
   @override

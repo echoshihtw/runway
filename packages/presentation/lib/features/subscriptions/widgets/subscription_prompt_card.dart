@@ -46,7 +46,15 @@ class _SubscriptionPromptCardState
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
     final amount =
         '$symbol ${NumberFormat('#,##0', 'en_US').format(charge.amount.value)}';
-    final date = DateFormat('d MMM').format(charge.date);
+    // Dates elsewhere in the app are mono uppercase labels, where one pattern
+    // for every language is a design choice. This one is inside a sentence, so
+    // it takes the reader's own order: "Sep 3", "9月3日", "3 sept.". Passing
+    // the locale to 'd MMM' would not have been enough — that pattern renders
+    // as "3 9月" in Chinese and Japanese, which is the day and the month in the
+    // wrong order. With no locale at all it stayed English in all six.
+    final date = DateFormat.MMMd(
+      Localizations.localeOf(context).toLanguageTag(),
+    ).format(charge.date);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.cardGap),
