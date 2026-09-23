@@ -127,6 +127,18 @@ class LandingPageTest(unittest.TestCase):
         self.assertEqual(aside, first)
         self.assertIn(".story-detail-frame p, .story-progress b", HTML)
 
+    def test_scroll_threshold_is_measured_in_the_same_unit_as_the_layout(self):
+        # The section is laid out entirely in vh, which is locked to the
+        # viewport with the address bar retracted and does not move. Deriving
+        # the threshold from window.innerHeight instead put it on the address
+        # bar, which slid it about 63px while the triggers stayed still: three
+        # bands of scroll where the bar alone decided which screen showed, so
+        # the page changed with no scrolling at all.
+        self.assertIn("height:100vh", HTML_FLAT.replace(" ", ""))
+        marker = re.search(r"const marker = ([^;]+);", HTML).group(1)
+        self.assertNotIn("innerHeight", marker)
+        self.assertIn("viewportProbe", marker)
+
     def test_mobile_layout_has_a_deliberate_breakpoint(self):
         self.assertRegex(CSS, r"@media\s*\(max-width:\s*48rem\)")
 
@@ -181,13 +193,17 @@ class LandingPageTest(unittest.TestCase):
         self.assertNotIn("window.scrollY", HTML)
 
     def test_large_one_corner_radius_is_not_repeated_across_surfaces(self):
+        # Matched against the whitespace-stripped copy. Written against CSS it
+        # searched for "border-radius:1rem ..." with no space after the colon,
+        # which prettier does not produce, so the guard could never fire and
+        # the shape it exists to keep out could have come back unnoticed.
         for repeated_shape in (
-            "border-radius:1rem 2.8rem 1rem 1rem",
-            "border-radius:1.4rem 4.6rem 1.4rem 1.4rem",
-            "border-radius:1.7rem 4rem 1.7rem 1.7rem",
-            "border-radius:1.4rem 4.5rem 1.4rem 1.4rem",
+            "border-radius:1rem2.8rem1rem1rem",
+            "border-radius:1.4rem4.6rem1.4rem1.4rem",
+            "border-radius:1.7rem4rem1.7rem1.7rem",
+            "border-radius:1.4rem4.5rem1.4rem1.4rem",
         ):
-            self.assertNotIn(repeated_shape, CSS)
+            self.assertNotIn(repeated_shape, CSS_TIGHT)
 
 
 if __name__ == "__main__":
