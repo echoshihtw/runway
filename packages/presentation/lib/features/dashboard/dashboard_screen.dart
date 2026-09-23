@@ -232,7 +232,7 @@ class RunwayBadgeState extends ConsumerState<RunwayBadge>
 
     return AnimatedBuilder(
       animation: _curve,
-      builder: (_, __) => _BadgeFrame(
+      builder: (_, _) => _BadgeFrame(
         glow: pulse.low + (pulse.high - pulse.low) * _curve.value,
         color: color,
       ),

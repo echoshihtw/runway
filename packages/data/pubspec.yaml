@@ -8,6 +8,8 @@ environment:
   sdk: '^3.11.5'
 
 dependencies:
+  application:
+    path: ../application
   domain:
     path: ../domain
   drift: ^2.26.1
@@ -20,6 +22,8 @@ dependencies:
     sdk: flutter
 
 dev_dependencies:
+  flutter_test:
+    sdk: flutter
   drift_dev: ^2.26.1
   build_runner: ^2.10.4
   lints: ^6.0.0

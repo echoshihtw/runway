@@ -93,7 +93,11 @@ class MonthlyBurn {
 
   /// Days left in [month], counting today.
   int get daysLeftThisMonth {
-    final daysInMonth = DateTime(month.value.year, month.value.month + 1, 0).day;
+    final daysInMonth = DateTime(
+      month.value.year,
+      month.value.month + 1,
+      0,
+    ).day;
     return (fractionOfMonthLeft * daysInMonth).round();
   }
 
@@ -130,6 +134,27 @@ MonthlyBurn computeMonthlyBurn({
 }) {
   final month = LedgerMonth(now);
 
+  final endOfToday = DateTime(now.year, now.month, now.day, 23, 59, 59, 999);
+
+  // How far back an average of this owner's spending may reach.
+  //
+  // Only spending sets it. The date picker takes any entry back to 2020, and a
+  // backdated balance, salary or loan would widen the window without adding
+  // anything to divide over: six months of spending over eighty months reads
+  // as almost no burn and lengthens the runway.
+  //
+  // One window for both buckets, so a first rent entry in month six does not
+  // make rent look like a six-month-old habit.
+  LedgerMonth? earliestSpendingMonth;
+  for (final t in transactions) {
+    if (t.date.isAfter(endOfToday)) continue;
+    if (!countsAsRent(t) && !countsAsLiving(t)) continue;
+    if (earliestSpendingMonth == null ||
+        t.month.isBefore(earliestSpendingMonth)) {
+      earliestSpendingMonth = t.month;
+    }
+  }
+
   BudgetBucket bucket({
     required bool Function(Transaction) counts,
     required double budgetAmount,
@@ -137,7 +162,6 @@ MonthlyBurn computeMonthlyBurn({
     final spending = transactions.where(counts);
     var spentThisMonth = 0.0;
     final completedMonths = <LedgerMonth, double>{};
-    final endOfToday = DateTime(now.year, now.month, now.day, 23, 59, 59, 999);
     for (final t in spending) {
       if (t.date.isAfter(endOfToday)) {
         // A plan, not a cost. Cash already ignores these; the month must too,
@@ -154,10 +178,16 @@ MonthlyBurn computeMonthlyBurn({
         );
       }
     }
-    final typicalSpending = completedMonths.isEmpty
+    // Over the months that passed, not the months holding an entry. Dividing
+    // by completedMonths.length made eight quiet months after one 40,000
+    // January read as 40,000 typical, for ever. A quiet month was still
+    // lived through.
+    final elapsed = earliestSpendingMonth == null
+        ? 0
+        : month.monthsSince(earliestSpendingMonth);
+    final typicalSpending = elapsed <= 0
         ? spentThisMonth
-        : completedMonths.values.reduce((a, b) => a + b) /
-              completedMonths.length;
+        : completedMonths.values.fold(0.0, (a, b) => a + b) / elapsed;
     return BudgetBucket(
       budget: budgetAmount,
       spentThisMonth: spentThisMonth,
@@ -174,7 +204,10 @@ MonthlyBurn computeMonthlyBurn({
     rent: bucket(counts: countsAsRent, budgetAmount: budget.rent),
     living: bucket(counts: countsAsLiving, budgetAmount: budget.living),
     subscriptions: totalSubscriptionMonthlyCost(subscriptions),
-    loanPayments: activeLoans.fold(0.0, (sum, l) => sum + l.loan.monthlyPayment),
+    loanPayments: activeLoans.fold(
+      0.0,
+      (sum, l) => sum + l.loan.monthlyPayment,
+    ),
     loanPaymentsLeftThisMonth: activeLoans.fold(
       0.0,
       (sum, l) => sum + math.max(l.loan.monthlyPayment - l.paidThisMonth, 0),

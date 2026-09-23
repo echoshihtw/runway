@@ -115,7 +115,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
               ),
               // Reachable now that fetchOffering lets a failed call propagate
               // instead of swallowing it to null.
-              error: (_, __) => _PriceButton(
+              error: (_, _) => _PriceButton(
                 label: l10n.paywallUnlock,
                 priceLabel: l10n.paywallStoreUnreachable,
                 loading: false,

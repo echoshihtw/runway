@@ -1,4 +1,4 @@
-library application;
+library;
 
 export 'state/transaction_state.dart';
 export 'state/scenario_state.dart';

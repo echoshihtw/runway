@@ -20,7 +20,7 @@ Future<void> _pump(
       home: Scaffold(
         body: SingleChildScrollView(
           child: LoanWizard(
-            onSubmit: (_, __, ___, ____, _____, ______, _______) async =>
+            onSubmit: (_, _, _, _, _, _, _) async =>
                 onSubmit(),
           ),
         ),

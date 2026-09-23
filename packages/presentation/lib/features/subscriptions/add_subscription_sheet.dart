@@ -31,7 +31,8 @@ Future<void> showAddSubscriptionSheet(BuildContext context, WidgetRef ref) {
     // typing, which needs no Scaffold and reads better besides.
     builder: (_) => SubscriptionForm(
       onSubmit: (name, category, amount, cycle, startDate, note) async {
-        final now = DateTime.now();
+        // One clock for the whole record, so a frozen clock stays frozen.
+        final now = ref.read(clockProvider)();
         try {
           await ref
               .read(addSubscriptionUseCaseProvider)
@@ -43,7 +44,7 @@ Future<void> showAddSubscriptionSheet(BuildContext context, WidgetRef ref) {
                   amount: amount,
                   cycle: cycle,
                   startDate: startDate,
-                  nextBillingDate: computeNextBillingDate(startDate, cycle),
+                  nextBillingDate: nextBillingDateAfter(startDate, cycle, now),
                   note: note,
                   createdAt: now,
                   updatedAt: now,

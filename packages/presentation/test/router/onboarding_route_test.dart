@@ -44,11 +44,11 @@ void main() {
       routes: [
         GoRoute(
           path: '/onboarding',
-          builder: (_, __) => const OnboardingScreen(),
+          builder: (_, _) => const OnboardingScreen(),
         ),
         GoRoute(
           path: '/dashboard',
-          builder: (_, __) => const Placeholder(),
+          builder: (_, _) => const Placeholder(),
         ),
       ],
     );

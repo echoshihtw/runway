@@ -86,9 +86,9 @@ void main() {
     );
     addTearDown(container.dispose);
     final subscriptions = [
-      container.listen(transactionsProvider, (_, __) {}),
-      container.listen(loansProvider, (_, __) {}),
-      container.listen(subscriptionsProvider, (_, __) {}),
+      container.listen(transactionsProvider, (_, _) {}),
+      container.listen(loansProvider, (_, _) {}),
+      container.listen(subscriptionsProvider, (_, _) {}),
     ];
     addTearDown(() {
       for (final s in subscriptions) {

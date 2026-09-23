@@ -217,7 +217,11 @@ lint: format analyze ## Format + analyze all packages
 .PHONY: test
 test: ## Run all tests
 	@echo "→ domain"
-	@cd packages/domain && dart test
+# Pinned to a zone that observes daylight saving. A billing date is a calendar
+# day, and the arithmetic that gets that wrong is invisible in UTC: the weekly
+# schedule slipped an hour, and so a day, only across a DST change. Four of the
+# six shipped locales are in such a zone. The whole suite passes under it.
+	@cd packages/domain && TZ=Europe/Paris dart test
 	@echo "→ data"
 	@cd packages/data && flutter test
 	@echo "→ application"

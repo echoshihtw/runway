@@ -11,8 +11,11 @@ class LedgerMonth {
     return LedgerMonth._(DateTime(year, month, 1));
   }
 
-  LedgerMonth next() =>
-      LedgerMonth(DateTime(value.year, value.month + 1, 1));
+  LedgerMonth next() => LedgerMonth(DateTime(value.year, value.month + 1, 1));
+
+  /// Whole months from [other] to this one. Negative when [other] is later.
+  int monthsSince(LedgerMonth other) =>
+      (value.year - other.value.year) * 12 + (value.month - other.value.month);
 
   bool isBefore(LedgerMonth other) => value.isBefore(other.value);
   bool isAfter(LedgerMonth other) => value.isAfter(other.value);

@@ -46,10 +46,6 @@
 - [Component Inventory — design_system](./component-inventory-design_system.md)
 - [Component Inventory — presentation](./component-inventory-presentation.md)
 
-### Machine-readable
-- [`project-parts.json`](./project-parts.json) — parts, dependency graph, integration points, platform identifiers
-- [`project-scan-report.json`](./project-scan-report.json) — scan state, findings, counts, known gaps
-
 ### Operations
 - [Development Guide](./development-guide.md) — prerequisites, Makefile targets, codegen, testing, conventions
 - [Deployment Guide](./deployment-guide.md) — CI/CD, signing, secrets, release checklist
@@ -81,7 +77,7 @@ make precommit   # lint + tests before committing
 ```
 
 Reading order for a new contributor:
-1. `CONTRACTS.md` → 2. [Project Overview](./project-overview.md) → 3. [Source Tree Analysis](./source-tree-analysis.md) → 4. `packages/domain/lib/logic/survival_engine.dart`
+1. `CONTRACTS.md` → 2. [Project Overview](./project-overview.md) → 3. [Source Tree Analysis](./source-tree-analysis.md) → 4. `packages/domain/lib/logic/burn_engine.dart` and `runway_engine.dart`
 
 ## Caveats
 

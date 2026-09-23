@@ -29,19 +29,97 @@ Subscription _sub({
   updatedAt: updatedAt ?? createdAt ?? startDate,
 );
 
-Transaction _tx(String id, TransactionType type, double amount, DateTime date) =>
-    Transaction(
-      id: id,
-      type: type,
-      amount: Money(amount),
-      date: date,
-      createdAt: date,
-      updatedAt: date,
-    );
+Transaction _tx(
+  String id,
+  TransactionType type,
+  double amount,
+  DateTime date,
+) => Transaction(
+  id: id,
+  type: type,
+  amount: Money(amount),
+  date: date,
+  createdAt: date,
+  updatedAt: date,
+);
 
 void main() {
+  group('a charge confirmed before the drift fix', () {
+    // The old schedule stepped date to date, so a plan starting on the 31st
+    // billed the 3rd for ever after. Those charges are on devices now, under
+    // ids the corrected schedule no longer produces.
+    List<DateTime> oldWalk(DateTime start, DateTime to, int monthStep) {
+      final dates = <DateTime>[];
+      var d = start;
+      while (!d.isAfter(to)) {
+        dates.add(d);
+        d = DateTime(d.year, d.month + monthStep, d.day);
+      }
+      return dates;
+    }
+
+    test('is not asked about again, so it cannot be paid twice', () {
+      final now = DateTime(2026, 9, 23);
+      final s = _sub(
+        cycle: BillingCycle.quarterly,
+        startDate: DateTime(2025, 1, 31),
+      );
+      final confirmed = [
+        for (final date in oldWalk(s.startDate, now, 3))
+          Transaction(
+            id: subscriptionChargeId(s.id, date),
+            type: TransactionType.subscriptionCharge,
+            amount: Money(s.amount),
+            date: date,
+            createdAt: now,
+            updatedAt: now,
+          ),
+      ];
+
+      expect(
+        dueSubscriptionCharges(
+          subscriptions: [s],
+          transactions: confirmed,
+          now: now,
+        ),
+        isEmpty,
+        reason: 'every one of these was already answered and paid',
+      );
+      expect(
+        subscriptionsUnpaidThisMonth(
+          subscriptions: [s],
+          transactions: confirmed,
+          now: now,
+        ),
+        0,
+      );
+    });
+
+    test('a genuinely unpaid bill is still asked about', () {
+      final now = DateTime(2026, 9, 23);
+      final s = _sub(
+        cycle: BillingCycle.monthly,
+        startDate: DateTime(2026, 7, 31),
+      );
+      expect(
+        dueSubscriptionCharges(
+          subscriptions: [s],
+          transactions: const [],
+          now: now,
+        ),
+        isNotEmpty,
+        reason: 'recognising old ids must not suppress real questions',
+      );
+    });
+  });
+
   final now = DateTime(2026, 9, 17, 10);
-  final opening = _tx('open', TransactionType.openingBalance, 100000, DateTime(2026, 9, 1));
+  final opening = _tx(
+    'open',
+    TransactionType.openingBalance,
+    100000,
+    DateTime(2026, 9, 1),
+  );
 
   group('dueSubscriptionCharges', () {
     test('writes one entry per billing day that has passed', () {
@@ -63,41 +141,41 @@ void main() {
     });
 
     test('added today, billing today, asks today whatever the clock said', () {
-    // createdAt is a timestamp; a billing date is midnight. Comparing the two
-    // as instants meant a subscription added at half past two whose bill falls
-    // today was dropped, because midnight is before half past two.
-    //
-    // Whether it happened at all depended on something invisible. The form
-    // defaults the start date to DateTime.now(), which carries the time and
-    // slipped past the comparison, but opening the date picker and choosing
-    // the same day returns midnight and did not. Same day, opposite outcome.
-    final createdAt = DateTime(2026, 9, 23, 14, 30);
-    final now = DateTime(2026, 9, 23, 14, 31);
+      // createdAt is a timestamp; a billing date is midnight. Comparing the two
+      // as instants meant a subscription added at half past two whose bill falls
+      // today was dropped, because midnight is before half past two.
+      //
+      // Whether it happened at all depended on something invisible. The form
+      // defaults the start date to DateTime.now(), which carries the time and
+      // slipped past the comparison, but opening the date picker and choosing
+      // the same day returns midnight and did not. Same day, opposite outcome.
+      final createdAt = DateTime(2026, 9, 23, 14, 30);
+      final now = DateTime(2026, 9, 23, 14, 31);
 
-    for (final (label, startDate) in [
-      ('left on the default, carrying the time', createdAt),
-      ('picked from the date picker, at midnight', DateTime(2026, 9, 23)),
-    ]) {
-      final due = dueSubscriptionCharges(
-        subscriptions: [_sub(startDate: startDate, createdAt: createdAt)],
-        transactions: const [],
-        now: now,
-      );
-      expect(due, hasLength(1), reason: label);
-      // Asserted by day. The charge keeps whatever time the start date had,
-      // because the charge id is derived from that date and normalising it
-      // would stop already-recorded charges matching, so they would all be
-      // asked again. That is a migration, not a fix for this.
-      final date = due.single.date;
-      expect(
-        DateTime(date.year, date.month, date.day),
-        DateTime(2026, 9, 23),
-        reason: label,
-      );
-    }
-  });
+      for (final (label, startDate) in [
+        ('left on the default, carrying the time', createdAt),
+        ('picked from the date picker, at midnight', DateTime(2026, 9, 23)),
+      ]) {
+        final due = dueSubscriptionCharges(
+          subscriptions: [_sub(startDate: startDate, createdAt: createdAt)],
+          transactions: const [],
+          now: now,
+        );
+        expect(due, hasLength(1), reason: label);
+        // Asserted by day. The charge keeps whatever time the start date had,
+        // because the charge id is derived from that date and normalising it
+        // would stop already-recorded charges matching, so they would all be
+        // asked again. That is a migration, not a fix for this.
+        final date = due.single.date;
+        expect(
+          DateTime(date.year, date.month, date.day),
+          DateTime(2026, 9, 23),
+          reason: label,
+        );
+      }
+    });
 
-  test('a billing day still ahead is not written yet', () {
+    test('a billing day still ahead is not written yet', () {
       expect(
         dueSubscriptionCharges(
           subscriptions: [_sub(startDate: DateTime(2026, 9, 28))],
@@ -130,9 +208,19 @@ void main() {
     test('catches up several periods in one pass', () {
       final charges = dueSubscriptionCharges(
         subscriptions: [
-          _sub(startDate: DateTime(2026, 6, 3), createdAt: DateTime(2026, 6, 3)),
+          _sub(
+            startDate: DateTime(2026, 6, 3),
+            createdAt: DateTime(2026, 6, 3),
+          ),
         ],
-        transactions: [_tx('open', TransactionType.openingBalance, 100000, DateTime(2026, 6, 1))],
+        transactions: [
+          _tx(
+            'open',
+            TransactionType.openingBalance,
+            100000,
+            DateTime(2026, 6, 1),
+          ),
+        ],
         now: now,
       );
 
@@ -149,7 +237,10 @@ void main() {
       // already inside it and writing them would take the money twice.
       final charges = dueSubscriptionCharges(
         subscriptions: [
-          _sub(startDate: DateTime(2020, 1, 3), createdAt: DateTime(2020, 1, 3)),
+          _sub(
+            startDate: DateTime(2020, 1, 3),
+            createdAt: DateTime(2020, 1, 3),
+          ),
         ],
         transactions: [opening],
         now: now,
@@ -161,7 +252,10 @@ void main() {
     test('never writes a period from before the app knew the subscription', () {
       final charges = dueSubscriptionCharges(
         subscriptions: [
-          _sub(startDate: DateTime(2019, 5, 3), createdAt: DateTime(2026, 9, 1)),
+          _sub(
+            startDate: DateTime(2019, 5, 3),
+            createdAt: DateTime(2026, 9, 1),
+          ),
         ],
         transactions: const [],
         now: now,
@@ -183,7 +277,14 @@ void main() {
             updatedAt: DateTime(2026, 9, 17, 9),
           ),
         ],
-        transactions: [_tx('open', TransactionType.openingBalance, 100000, DateTime(2026, 7, 1))],
+        transactions: [
+          _tx(
+            'open',
+            TransactionType.openingBalance,
+            100000,
+            DateTime(2026, 7, 1),
+          ),
+        ],
         now: now,
       );
 
@@ -213,7 +314,9 @@ void main() {
     test('an inactive subscription writes nothing', () {
       expect(
         dueSubscriptionCharges(
-          subscriptions: [_sub(startDate: DateTime(2026, 9, 3), isActive: false)],
+          subscriptions: [
+            _sub(startDate: DateTime(2026, 9, 3), isActive: false),
+          ],
           transactions: [opening],
           now: now,
         ),
@@ -257,7 +360,11 @@ void main() {
       ).single;
 
       expect(charge.type.isInflow, isFalse);
-      expect(countsAsLiving(charge), isFalse, reason: 'burn counts subscriptions separately');
+      expect(
+        countsAsLiving(charge),
+        isFalse,
+        reason: 'burn counts subscriptions separately',
+      );
       expect(countsAsRent(charge), isFalse);
     });
   });

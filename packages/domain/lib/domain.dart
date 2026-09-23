@@ -1,4 +1,4 @@
-library domain;
+library;
 
 export 'enums/transaction_type.dart';
 export 'enums/expense_category.dart';

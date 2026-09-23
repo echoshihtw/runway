@@ -13,12 +13,43 @@ import '../enums/billing_cycle.dart';
 /// Nothing here writes a transaction. A derived charge says "the rule says this
 /// bills today", not "this was paid", and the two must not be confused.
 
-DateTime _advance(DateTime date, BillingCycle cycle) => switch (cycle) {
-  BillingCycle.weekly => date.add(const Duration(days: 7)),
-  BillingCycle.monthly => DateTime(date.year, date.month + 1, date.day),
-  BillingCycle.quarterly => DateTime(date.year, date.month + 3, date.day),
-  BillingCycle.yearly => DateTime(date.year + 1, date.month, date.day),
-};
+/// [months] after [from], with the day taken from [from] every time.
+///
+/// A short month clamps to its last day and the next long one goes back to the
+/// original: the 31st bills on the 31st, the 28th in February, the 31st again
+/// in March. That is what every card and bank does with a date that does not
+/// exist in the month it lands in.
+DateTime _addMonths(DateTime from, int months) {
+  final zeroBased = from.month - 1 + months;
+  final year = from.year + zeroBased ~/ 12;
+  final month = zeroBased % 12 + 1;
+  // Day zero of the next month is the last day of this one.
+  final lastDay = DateTime(year, month + 1, 0).day;
+  return DateTime(year, month, from.day < lastDay ? from.day : lastDay);
+}
+
+/// Calendar days after [from].
+///
+/// Not a Duration: Duration is absolute time, so seven days across a daylight
+/// saving change lands an hour earlier, and at midnight that is the day
+/// before. The charge id is built from the day.
+DateTime _addDays(DateTime from, int days) =>
+    DateTime(from.year, from.month, from.day + days);
+
+/// The [periods]th billing date of a plan starting [start] on [cycle].
+/// Period 0 is the start date. Always midnight: a billing date is a calendar
+/// day, and a time of day made a bill due at 14:30 read as still ahead at 09:00.
+///
+/// Counted from the start, never stepped from the date before it. Stepping made
+/// a clamp permanent, because DateTime(2026, 2, 31) is 3 March: a plan starting
+/// 31 January billed 31 Jan, then the 3rd for ever, skipping February.
+DateTime billingDateAt(DateTime start, BillingCycle cycle, int periods) =>
+    switch (cycle) {
+      BillingCycle.weekly => _addDays(start, 7 * periods),
+      BillingCycle.monthly => _addMonths(start, periods),
+      BillingCycle.quarterly => _addMonths(start, 3 * periods),
+      BillingCycle.yearly => _addMonths(start, 12 * periods),
+    };
 
 /// Only a guard against a runaway loop. It has to be far beyond any real
 /// start date, because truncating the walk would stop a plan billing at all:
@@ -29,11 +60,10 @@ const _maxPeriods = 10000;
 /// Billing dates of [s] from its start date up to and including [to].
 List<DateTime> billingDatesUpTo(Subscription s, DateTime to) {
   final dates = <DateTime>[];
-  var date = s.startDate;
-  var periods = 0;
-  while (!date.isAfter(to) && periods++ < _maxPeriods) {
+  for (var periods = 0; periods < _maxPeriods; periods++) {
+    final date = billingDateAt(s.startDate, s.cycle, periods);
+    if (date.isAfter(to)) break;
     dates.add(date);
-    date = _advance(date, s.cycle);
   }
   return dates;
 }
@@ -61,6 +91,46 @@ double subscriptionsChargedInMonth({
   }
   return total;
 }
+
+/// The dates the schedule produced before the drift fix, by period.
+///
+/// Charges confirmed on a device are recorded under ids derived from those
+/// dates. Without them the corrected dates read as unpaid, and answering the
+/// prompt again writes a second row for money already spent.
+///
+/// By period, not by value: the old walk skipped whole months.
+///
+/// Recognition only, never written. Empty where the dates never moved, which
+/// is every weekly plan and every start day up to the 28th. Delete once a
+/// migration has rewritten the stored ids.
+List<DateTime> legacyBillingDates(Subscription s, DateTime to) {
+  if (s.cycle == BillingCycle.weekly || s.startDate.day <= 28) return const [];
+  final dates = <DateTime>[];
+  var date = s.startDate;
+  for (var periods = 0; periods < _maxPeriods && !date.isAfter(to); periods++) {
+    dates.add(date);
+    date = switch (s.cycle) {
+      BillingCycle.weekly => date,
+      BillingCycle.monthly => DateTime(date.year, date.month + 1, date.day),
+      BillingCycle.quarterly => DateTime(date.year, date.month + 3, date.day),
+      BillingCycle.yearly => DateTime(date.year + 1, date.month, date.day),
+    };
+  }
+  return dates;
+}
+
+/// Whether [period] of [s] is in [recorded], under the id derived now or the
+/// one derived before the drift fix.
+bool chargeAlreadyRecorded({
+  required Subscription s,
+  required int period,
+  required DateTime date,
+  required List<DateTime> legacy,
+  required Set<String> recorded,
+}) =>
+    recorded.contains(subscriptionChargeId(s.id, date)) ||
+    (period < legacy.length &&
+        recorded.contains(subscriptionChargeId(s.id, legacy[period])));
 
 /// A charge's id is derived from its subscription and payment date, so a
 /// second copy collides with the primary key and a confirmed charge can be
@@ -90,8 +160,21 @@ double subscriptionsUnpaidThisMonth({
   final recorded = transactions.map((t) => t.id).toSet();
   var owed = 0.0;
   for (final s in subscriptions.where((s) => s.isActive)) {
-    for (final date in billingDatesInRange(s, from: first, to: last)) {
-      if (recorded.contains(subscriptionChargeId(s.id, date))) continue;
+    // From period 0, so the index is the period a legacy id matches on.
+    final dates = billingDatesUpTo(s, last);
+    final legacy = legacyBillingDates(s, last);
+    for (var period = 0; period < dates.length; period++) {
+      final date = dates[period];
+      if (date.isBefore(first)) continue;
+      if (chargeAlreadyRecorded(
+        s: s,
+        period: period,
+        date: date,
+        legacy: legacy,
+        recorded: recorded,
+      )) {
+        continue;
+      }
       owed += s.amount;
     }
   }
@@ -106,22 +189,30 @@ double subscriptionsUnpaidThisMonth({
 /// as 8 rather than flooring a part-day to 7.
 int daysUntilNextBilling(Subscription s, DateTime now) {
   final startOfToday = DateTime(now.year, now.month, now.day);
-  return nextBillingDateAfter(s, now)
-      .difference(startOfToday)
-      .inDays
-      .clamp(0, 9999);
+  return nextBillingDateAfter(
+    s.startDate,
+    s.cycle,
+    now,
+  ).difference(startOfToday).inDays.clamp(0, 9999);
 }
 
-/// The first billing date still ahead of [now].
+/// The first billing date of a plan starting [start] on [cycle] that is still
+/// ahead of [now].
 ///
 /// The stored `nextBillingDate` is never advanced after creation, so once a
 /// date passes it stays in the past and the countdown sticks at 0. Deriving it
 /// cannot go stale.
-DateTime nextBillingDateAfter(Subscription s, DateTime now) {
-  var date = s.startDate;
-  var periods = 0;
-  while (!date.isAfter(now) && periods++ < _maxPeriods) {
-    date = _advance(date, s.cycle);
+///
+/// Takes the two fields the schedule depends on rather than a Subscription, so
+/// the sheet that is still building one can ask the same question.
+DateTime nextBillingDateAfter(
+  DateTime start,
+  BillingCycle cycle,
+  DateTime now,
+) {
+  for (var periods = 0; periods < _maxPeriods; periods++) {
+    final date = billingDateAt(start, cycle, periods);
+    if (date.isAfter(now)) return date;
   }
-  return date;
+  return billingDateAt(start, cycle, _maxPeriods);
 }

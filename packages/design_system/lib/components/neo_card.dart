@@ -83,7 +83,7 @@ class NeoCard extends StatelessWidget {
           // toUpperCase is the identity on Japanese and Chinese.
           Text(title!.toUpperCase(), style: AppTextStyles.sectionTitle),
           const Spacer(),
-          if (trailing != null) trailing!,
+          ?trailing,
         ],
       ),
     );

@@ -16,11 +16,11 @@ import 'page_indicator.dart';
 final appRouter = GoRouter(
   initialLocation: '/boot',
   routes: [
-    GoRoute(path: '/boot', builder: (_, __) => const BootScreen()),
+    GoRoute(path: '/boot', builder: (_, _) => const BootScreen()),
     // A route, not an imperative push. Pushing it onto the navigator left
     // go_router's match list holding only /boot, so the iOS back swipe popped
     // a page go_router did not own and emptied the configuration.
-    GoRoute(path: '/onboarding', builder: (_, __) => const OnboardingScreen()),
+    GoRoute(path: '/onboarding', builder: (_, _) => const OnboardingScreen()),
     StatefulShellRoute.indexedStack(
       builder: (context, state, shell) => _ScaffoldWithNav(shell: shell),
       branches: [
@@ -28,7 +28,7 @@ final appRouter = GoRouter(
           routes: [
             GoRoute(
               path: '/dashboard',
-              builder: (_, __) => const DashboardScreen(),
+              builder: (_, _) => const DashboardScreen(),
             ),
           ],
         ),
@@ -36,7 +36,7 @@ final appRouter = GoRouter(
           routes: [
             GoRoute(
               path: '/transactions',
-              builder: (_, __) => const TransactionsScreen(),
+              builder: (_, _) => const TransactionsScreen(),
             ),
           ],
         ),
@@ -44,7 +44,7 @@ final appRouter = GoRouter(
           routes: [
             GoRoute(
               path: '/scenarios',
-              builder: (_, __) => const ScenariosScreen(),
+              builder: (_, _) => const ScenariosScreen(),
             ),
           ],
         ),

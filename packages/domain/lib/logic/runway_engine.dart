@@ -4,6 +4,18 @@ import '../entities/model_state.dart';
 import 'burn_engine.dart';
 
 const _unlimitedMonths = 9999;
+
+/// [months] floored to the same ceiling the runway figure uses, so the date
+/// and the number above it cannot disagree.
+///
+/// Non-finite counts as the ceiling: floor() throws on infinity and NaN, so
+/// without this the guard would crash on the worst input it exists for.
+int _cappedMonths(double months) {
+  if (!months.isFinite) return _unlimitedMonths;
+  final whole = months.floor();
+  return whole < _unlimitedMonths ? whole : _unlimitedMonths;
+}
+
 const _unlimitedDays = 99999;
 
 /// The model shown on the dashboard.
@@ -120,8 +132,7 @@ ModelState modelForScenario({
   final income = simulatedIncome ?? 0.0;
 
   final monthlyBurn = math.max(baseMonthly + variableChange - income, 0.0);
-  final changeThisMonth =
-      (variableChange - income) * burn.fractionOfMonthLeft;
+  final changeThisMonth = (variableChange - income) * burn.fractionOfMonthLeft;
   return modelForMonthlyBurn(
     currentCash: currentCash,
     burn: burn,
@@ -170,6 +181,13 @@ ModelState modelForScenario({
   final fullMonths = (cash - dueThisMonth) / monthlyBurn;
   return (
     months: burn.fractionOfMonthLeft + fullMonths,
-    runOutMonth: DateTime(start.year, start.month + fullMonths.floor() + 1),
+    // Clamped like the months and days beside it. DateTime wraps rather than
+    // refusing a month offset it cannot hold: a cash to burn ratio near 3.3
+    // million gives year 275360, and a larger one a negative year. The amount
+    // field takes fifteen digits and has no floor, so a typo reaches it.
+    runOutMonth: DateTime(
+      start.year,
+      start.month + _cappedMonths(fullMonths) + 1,
+    ),
   );
 }

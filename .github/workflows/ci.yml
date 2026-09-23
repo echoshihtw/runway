@@ -73,6 +73,10 @@ jobs:
         run: cd app && flutter analyze --fatal-infos
 
       - name: Test — domain
+        # A zone with daylight saving. Date arithmetic that is wrong by an hour
+        # is invisible in UTC, and four of the six shipped locales observe it.
+        env:
+          TZ: Europe/Paris
         run: cd packages/domain && dart test --reporter=github
 
       - name: Test — data

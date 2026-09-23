@@ -28,7 +28,7 @@ void main() {
     await tester.pumpWidget(
       _wrap(
         TransactionForm(
-          onSubmit: (_, __, ___, ____, _____, ______) => submitted++,
+          onSubmit: (_, _, _, _, _, _) => submitted++,
         ),
       ),
     );
@@ -56,7 +56,7 @@ void main() {
     await tester.pumpWidget(
       _wrap(
         LoanWizard(
-          onSubmit: (_, __, ___, ____, _____, ______, _______) async => true,
+          onSubmit: (_, _, _, _, _, _, _) async => true,
         ),
       ),
     );

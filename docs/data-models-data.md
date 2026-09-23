@@ -15,7 +15,7 @@ Source: `packages/data/lib/tables/transactions_table.dart`
 | Column | Type | Null | Default | Notes |
 |---|---|---|---|---|
 | `id` | TEXT | no | — | **PK**, client-generated UUID |
-| `date` | DATETIME | no | — | Drives the derived `SurvivalMonth` |
+| `date` | DATETIME | no | — | Drives the derived `LedgerMonth` |
 | `type` | TEXT | no | — | `TransactionType.name`: `expense`, `income`, `loan`, `repayment`, `openingBalance`. An unknown name, such as `investment` from a database written before that feature was removed, reads as `expense` |
 | `amount` | REAL | no | — | Always non-negative; sign derived from `type.isInflow` |
 | `note` | TEXT | yes | — | |
@@ -54,7 +54,7 @@ Source: `packages/data/lib/tables/subscriptions_table.dart`
 | `amount` | REAL | no | — | In the billing cycle's own units, not monthly |
 | `cycle` | TEXT | no | — | `BillingCycle.name`: `weekly` \| `monthly` \| `quarterly` \| `yearly` |
 | `startDate` | DATETIME | no | — | |
-| `nextBillingDate` | DATETIME | no | — | Rolled forward by `computeNextBillingDate` |
+| `nextBillingDate` | DATETIME | no | — | Written once at creation and never advanced; nothing reads it. Every date shown or counted is derived from `startDate` + `cycle` |
 | `note` | TEXT | yes | — | |
 | `isActive` | BOOLEAN | no | `true` | |
 | `createdAt` | DATETIME | no | — | |
