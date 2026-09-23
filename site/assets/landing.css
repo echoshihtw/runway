@@ -19,7 +19,6 @@ body.landing {
   --gold: #cb9a3e; /* what you still owe */
   --accent: var(--mint);
   --link: #7fb6ef;
-
   /* The poster's own: a second surface, and the four cut-paper grounds the
      sections are blocked out in. The app has no use for any of them. */
   --surface-2: #0b1930;
@@ -28,12 +27,10 @@ body.landing {
   --ink: #08142b;
   --violet-field: #6327d4;
   --yellow-field: #f4d84b;
-
   /* Three of the app's values the poster overrides, each a step lighter. */
   --text: #edf3fa;
   --muted: #9aa9bc;
   --border: #17304e;
-
   color-scheme: dark;
   background: var(--bg);
 }
@@ -46,21 +43,6 @@ body.landing {
 .hero h1 {
   text-wrap: balance;
 }
-
-/* ── What the screen is saying, in the colours it says it in ────────────── */
-/* These sit in the hero's copy column, beside the screen that proves them:
-   the claim on the left, the figure it is making on the right, in the colour
-   the app gives it. */
-
-/* A bold word in the prose is emphasis, not a figure. */
-
-/* The two facts with no figure to show. Quieter, and out of the hero. */
-
-/* ── The other three screens ────────────────────────────────────────────── */
-
-/* ── The three things it refuses to do ──────────────────────────────────── */
-
-/* ── Who built it, and why ──────────────────────────────────────────────── */
 
 @media (max-width: 54rem) {
   .hero {
@@ -162,7 +144,6 @@ html {
 }
 .hero .lede {
   margin: 1.6rem 0 0;
-
   font-size: clamp(1.08rem, 2vw, 1.28rem);
   line-height: 1.6;
 }
@@ -255,7 +236,6 @@ html {
 
 .solution-section {
   display: grid;
-
   margin-inline: calc(clamp(1.5rem, 5vw, 5rem) * -1);
   border-block: 1px solid var(--border);
 }
@@ -388,7 +368,6 @@ html {
 .plans article {
   padding: 1.6rem;
   border: 1px solid var(--border);
-
   background: rgba(4, 13, 26, 0.55);
 }
 .plans article.pro {
@@ -457,7 +436,6 @@ html {
   grid-template-columns: auto 1fr auto;
   gap: 1.5rem 2rem;
   align-items: center;
-
   margin-bottom: 2rem;
 }
 .final-cta .eyebrow {
@@ -493,15 +471,10 @@ html {
   .landing header.site nav {
     order: 3;
     width: 100%;
-
     gap: 1rem;
   }
-  /* The header wraps here, and margin-left:auto sent the badge to the far
-     right of its own row, under a brand sitting at the far left. Once it has
-     wrapped it is a second line, so it starts where the first line starts. */
   .hero {
     min-height: auto;
-
     padding: 4rem 0 5rem;
     gap: 4rem;
   }
@@ -1555,12 +1528,11 @@ body.landing .wrap {
   overflow: hidden;
   background: #2b62ff;
 }
-/* A stroke cannot survive a clip-path: the border is drawn and then cut, which
-   left a blue square with a sliver of roof. Every other shape on this page is
-   a solid fill, so this one is too. */
-/* Centred and sized against its own box, not placed with fixed offsets: the
-   box is a different size on a phone, and the offsets left the bank low and
-   left with dead blue around it. */
+/* A solid fill, and centred against its own box. A stroke cannot survive the
+   clip-path: the border is drawn and then cut, which left a blue square with a
+   sliver of roof, and every other shape on this page is a fill anyway. Fixed
+   offsets did not survive either, because the box is a different size on a
+   phone and they left the bank low and left with dead blue around it. */
 .bank-visual span {
   position: absolute;
   left: 50%;
@@ -1676,6 +1648,9 @@ body.landing .wrap {
   .landing header.site nav {
     display: none;
   }
+  /* The header wraps here, and margin-left:auto sent the badge to the far
+     right of its own row, under a brand sitting at the far left. Once it has
+     wrapped it is a second line, so it starts where the first line starts. */
   .review-badge {
     margin-left: 0;
   }
