@@ -86,6 +86,44 @@ void main() {
     expect(find.text(l10n.proUnlocked), findsNothing);
   });
 
+  testWidgets('the card changes the moment the purchase lands', (tester) async {
+    // The whole point of the card, and the one thing reading instead of
+    // watching breaks: isProOwner uses ref.read, which is right for a tap
+    // handler and wrong in a build. With it, you buy Pro from this card and the
+    // card that offered it goes on saying you have not.
+    SharedPreferences.setMockInitialValues({'is_pro': false});
+    final container = ProviderContainer(
+      overrides: [
+        purchaseServiceProvider.overrideWithValue(_Store(isPro: false)),
+        usageCountStoreProvider.overrideWithValue(_Counts({})),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          theme: ThemeData.dark(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const Scaffold(
+            body: SingleChildScrollView(child: ProStatusCard()),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+    expect(find.text(l10n.proUnlocked), findsNothing);
+
+    await container.read(entitlementProvider.notifier).unlockPro();
+    await tester.pumpAndSettle();
+
+    expect(find.text(l10n.proUnlocked), findsOneWidget);
+    expect(find.text(l10n.paywallUnlock), findsNothing);
+  });
+
   testWidgets('what is left is stated in the words the gates use', (
     tester,
   ) async {

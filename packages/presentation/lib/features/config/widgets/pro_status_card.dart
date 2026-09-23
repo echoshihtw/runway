@@ -27,7 +27,9 @@ class ProStatusCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final isPro = isProOwner(ref);
+    // Watched, not read: the card has to change the moment the
+    // purchase lands, which is the one thing it is for.
+    final isPro = watchProOwner(ref);
 
     return NeoCard(
       // The product name, which is these words in all six languages.
