@@ -127,6 +127,18 @@ class LandingPageTest(unittest.TestCase):
         self.assertEqual(aside, first)
         self.assertIn(".story-detail-frame p, .story-progress b", HTML)
 
+    def test_scroll_threshold_is_measured_in_the_same_unit_as_the_layout(self):
+        # The section is laid out entirely in vh, which is locked to the
+        # viewport with the address bar retracted and does not move. Deriving
+        # the threshold from window.innerHeight instead put it on the address
+        # bar, which slid it about 63px while the triggers stayed still: three
+        # bands of scroll where the bar alone decided which screen showed, so
+        # the page changed with no scrolling at all.
+        self.assertIn("height:100vh", HTML_FLAT.replace(" ", ""))
+        marker = re.search(r"const marker = ([^;]+);", HTML).group(1)
+        self.assertNotIn("innerHeight", marker)
+        self.assertIn("viewportProbe", marker)
+
     def test_mobile_layout_has_a_deliberate_breakpoint(self):
         self.assertRegex(CSS, r"@media\s*\(max-width:\s*48rem\)")
 

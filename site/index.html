@@ -347,10 +347,26 @@
             element.textContent = label;
           });
         };
+        // The threshold has to be measured in the same unit the section is
+        // laid out in. Every length here is vh: the stage is 44vh on a phone,
+        // each trigger 52vh, the run-up 34vh. vh is locked to the viewport
+        // with the address bar retracted, so none of them move while you
+        // scroll. window.innerHeight follows the address bar instead, so on a
+        // phone the threshold slid about 63px as the bar hid and reappeared
+        // while the triggers stayed still: three bands of scroll where the bar
+        // alone decided which screen showed, and the page changed under you
+        // with no scrolling at all. This reads 100vh off a probe, so the
+        // threshold sits in the same coordinates as the things it is compared
+        // against. On a desktop it is the same number innerHeight gives.
+        const viewportProbe = document.createElement("div");
+        viewportProbe.style.cssText =
+          "position:fixed;top:0;left:0;width:0;height:100vh;visibility:hidden;pointer-events:none";
+        document.body.appendChild(viewportProbe);
+
         let storyTicking = false;
         const updateStoryFromScroll = () => {
           storyTicking = false;
-          const marker = window.innerHeight * 0.62;
+          const marker = viewportProbe.getBoundingClientRect().height * 0.62;
           let index = 0;
           storyTriggers.forEach((trigger, triggerIndex) => {
             if (trigger.getBoundingClientRect().top <= marker) index = triggerIndex;
