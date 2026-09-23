@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:data/data.dart';
@@ -84,23 +85,39 @@ void main() {
     await db.close();
 
     final realKey = await kDatabaseKeyStorage.read(key: kDatabaseKeyName);
-    expect(realKey, isNotNull, reason: 'the production path mints and keeps one');
+    expect(
+      realKey,
+      isNotNull,
+      reason: 'the production path mints and keeps one',
+    );
     final before = await file.readAsBytes();
 
-    // A key that exists and is wrong, which is what a Keychain from another
-    // install leaves behind.
+    // Put the real key back however this test exits. Nothing else restores it:
+    // the shared teardown deletes the database files and leaves the Keychain
+    // alone, so a failure below would strand the wrong key and lose the only
+    // key that can read anything already on this device.
+    addTearDown(
+      () => kDatabaseKeyStorage.write(key: kDatabaseKeyName, value: realKey),
+    );
+
+    // The same shape as a real key -- base64url of 32 bytes -- because that is
+    // what a Keychain restored from another install holds. A malformed key
+    // would prove something weaker.
     await kDatabaseKeyStorage.write(
       key: kDatabaseKeyName,
-      value: 'Zm9yIHRoZSB3cm9uZyBrZXkgdGVzdCwgMzIgYnl0ZXMgbG9uZw==',
+      value: base64Url.encode(List<int>.filled(32, 0x2a)),
     );
 
     Object? error;
+    final wrong = AppDatabase();
     try {
-      final wrong = AppDatabase();
       await wrong.customSelect('SELECT count(*) FROM sqlite_master;').get();
-      await wrong.close();
     } catch (e) {
       error = e;
+    } finally {
+      // Closed even when the open failed, so no handle is left on the file the
+      // next two steps read and reopen.
+      await wrong.close();
     }
     debugPrint('open with the wrong key: $error');
     expect(error, isNotNull, reason: 'a wrong key must not open the database');
@@ -112,9 +129,11 @@ void main() {
       reason: 'a failed open rewrote the file, so the right key cannot help',
     );
 
-    await kDatabaseKeyStorage.write(key: kDatabaseKeyName, value: realKey!);
+    await kDatabaseKeyStorage.write(key: kDatabaseKeyName, value: realKey);
     final recovered = AppDatabase();
-    final budget = await DriftFinancialSettingsRepository(recovered).getBudget();
+    final budget = await DriftFinancialSettingsRepository(
+      recovered,
+    ).getBudget();
     await recovered.close();
 
     expect(budget.rent, 5150);
