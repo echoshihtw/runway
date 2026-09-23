@@ -2,16 +2,25 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
-/// App Store Connect asks the export compliance question on every upload and
-/// holds the build undistributable until it is answered. Declaring the answer
-/// in Info.plist answers it once, which matters most for TestFlight, where an
-/// unanswered build cannot reach a tester.
+/// The export compliance key must stay **out** of Info.plist.
 ///
-/// The value is a declaration about the app, not a build setting: false says
-/// the app uses no *non-exempt* encryption. Financial Runway ships AES through
-/// SQLCipher to encrypt its own database, which is the exemption that was
-/// claimed in App Store Connect for the 1.0.0 submission. This test exists so
-/// the file and that answer cannot drift apart silently.
+/// It has been all three states and only one of them works:
+///
+/// - `false` tells App Store Connect there is nothing to ask about, so it skips
+///   the compliance questions entirely. The app bundles SQLCipher, so there is
+///   something to ask about.
+/// - `true` asserts that approved export documentation already exists and that
+///   its code sits alongside as `ITSEncryptionExportComplianceCode`. There is no
+///   such code, so the upload is refused outright — ITMS-90592, hit on the first
+///   attempt at 1.0.0.
+/// - Absent is the third state and the right one. App Store Connect marks the
+///   build Missing Compliance and asks, and the honest answers are standard
+///   algorithms, contains third-party cryptography, and the mass market
+///   exemption under EAR 740.17(b)(1) with ECCN 5D992.c.
+///
+/// Recorded in CONTRACTS.md, decided in #199, and re-added as `false` by #237
+/// by someone who read neither. This test is why that cannot happen a third
+/// time: the decision was written down, and writing it down was not enough.
 void main() {
   late String plist;
 
@@ -19,33 +28,20 @@ void main() {
     plist = File('ios/Runner/Info.plist').readAsStringSync();
   });
 
-  test('the export compliance answer is declared, so uploads stop asking', () {
+  test('the export compliance key is absent, so Apple asks the question', () {
     expect(
       plist,
-      contains('<key>ITSAppUsesNonExemptEncryption</key>'),
-      reason: 'every upload will prompt, and the build waits until it is '
-          'answered by hand',
+      isNot(contains('ITSAppUsesNonExemptEncryption')),
+      reason: 'false skips the questions and true needs a code that does not '
+          'exist; absent is the state that lets the questionnaire be answered',
     );
   });
 
-  test('it claims the exemption, matching what was answered for 1.0.0', () {
-    final value = plist
-        .split('<key>ITSAppUsesNonExemptEncryption</key>')[1]
-        .trimLeft()
-        .split('\n')
-        .first
-        .trim();
+  test('no compliance code is declared, because none was ever issued', () {
     expect(
-      value,
-      '<false/>',
-      reason: 'true means non-exempt encryption, which also requires '
-          'ITSEncryptionExportComplianceCode from a CCATS submission',
+      plist,
+      isNot(contains('ITSEncryptionExportComplianceCode')),
+      reason: 'a code here without approved documentation is ITMS-90592',
     );
-  });
-
-  test('no compliance code is declared, because none is needed', () {
-    // The code only applies to the true branch. Carrying one alongside false
-    // would state two different answers to the same question.
-    expect(plist, isNot(contains('ITSEncryptionExportComplianceCode')));
   });
 }
