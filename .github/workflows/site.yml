@@ -1,0 +1,61 @@
+name: Site
+
+# Publishes site/ to the gh-pages branch, which is what GitHub Pages serves.
+#
+# Before this existed the two were kept in step by hand, and they drifted: the
+# page went live from a branch frozen days earlier while the source moved on,
+# and the only way to tell was to read the live HTML. gh-pages is an output
+# now. Nothing should be edited there.
+
+on:
+  push:
+    branches: [staging]
+    paths: ['site/**', '.github/workflows/site.yml']
+  workflow_dispatch:
+
+concurrency:
+  group: site-publish
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    name: Test & publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Test the page
+        working-directory: site
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Publish site/ to gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_AUTHOR_NAME: github-actions[bot]
+          GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+          GIT_COMMITTER_NAME: github-actions[bot]
+          GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+        run: |
+          set -euo pipefail
+          # A fresh single commit each time, so gh-pages does not accumulate a
+          # second history for a directory that already has one on staging.
+          work="$(mktemp -d)"
+          cp -R site/. "$work/"
+          # Source-side only: the tests, the formatter config and the ignore
+          # file are how the page is built, not part of what it serves.
+          rm -rf "$work/tests" "$work/.prettierrc.json" "$work/.gitignore"
+          touch "$work/.nojekyll"
+          cd "$work"
+          git init -q -b gh-pages
+          git add -A
+          git commit -q -m "site: published from ${GITHUB_SHA}
+
+          Built by .github/workflows/site.yml. Do not edit this branch;
+          edit site/ on staging and let this workflow publish it."
+          git push -q --force \
+            "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            gh-pages
