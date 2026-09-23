@@ -51,6 +51,7 @@ class _SubscriptionPromptCardState
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.cardGap),
       child: NeoCard(
+        title: l10n.subscriptions,
         accentColor: SC.subscr,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,6 +99,7 @@ class _SubscriptionPromptCardState
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.cardGap),
       child: NeoCard(
+        title: l10n.subscriptions,
         accentColor: SC.subscr,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

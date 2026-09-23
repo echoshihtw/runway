@@ -13,6 +13,9 @@ import 'subscription_billing.dart';
 /// entry and never an earlier one. No price history has to be stored, because
 /// each entry carries its own amount.
 
+/// Midnight on the day of [d], so a timestamp can be compared with a date.
+DateTime _startOfDay(DateTime d) => DateTime(d.year, d.month, d.day);
+
 /// The earliest payment date an entry may be written for.
 ///
 /// - An opening balance is a stated truth at its date, so charges before it are
@@ -27,10 +30,21 @@ import 'subscription_billing.dart';
 /// the safeguard — the owner reads the amount and says no if it is wrong. As a
 /// bound it was actively harmful, because `updatedAt` moves on *any* edit, so
 /// correcting a name silently dropped every unanswered charge for good.
+///
+/// Every bound is compared by day, because a billing date is a day and the
+/// dates it is compared against are timestamps. Someone adding a subscription
+/// at half past two whose bill falls today was read as "midnight is before half
+/// past two" and the charge was dropped, so the question never came. Whether it
+/// came at all depended on something invisible: the form leaves the start date
+/// at DateTime.now(), which carries the time and slipped past, while opening
+/// the date picker and choosing the same day returns midnight, which did not.
 DateTime _earliestWritableDate(Subscription s, DateTime? openingBalanceDate) {
-  var earliest = s.startDate.isAfter(s.createdAt) ? s.startDate : s.createdAt;
-  if (openingBalanceDate != null && openingBalanceDate.isAfter(earliest)) {
-    earliest = openingBalanceDate;
+  final startDate = _startOfDay(s.startDate);
+  final createdAt = _startOfDay(s.createdAt);
+  var earliest = startDate.isAfter(createdAt) ? startDate : createdAt;
+  if (openingBalanceDate != null) {
+    final opening = _startOfDay(openingBalanceDate);
+    if (opening.isAfter(earliest)) earliest = opening;
   }
   return earliest;
 }
