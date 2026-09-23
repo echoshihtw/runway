@@ -34,12 +34,13 @@ List<Subscription> sortedByNextBilling(
   required DateTime now,
 }) {
   final active = subscriptions.where((s) => s.isActive).toList();
-  active.sort(
-    (a, b) => nextBillingDateAfter(
-      a.startDate,
-      a.cycle,
-      now,
-    ).compareTo(nextBillingDateAfter(b.startDate, b.cycle, now)),
-  );
+  // Keyed once per plan. Deriving a next bill walks the schedule, so doing it
+  // inside the comparator walked it O(n log n) times: ten milliseconds for
+  // twenty-four plans, on every rebuild of the panel.
+  final nextBill = {
+    for (final s in active)
+      s.id: nextBillingDateAfter(s.startDate, s.cycle, now),
+  };
+  active.sort((a, b) => nextBill[a.id]!.compareTo(nextBill[b.id]!));
   return active;
 }

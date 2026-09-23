@@ -262,12 +262,31 @@ void main() {
       expect(nextBillingDateAfter(future, BillingCycle.monthly, now), future);
     });
 
-    test('weekly: six days ago advances by one week', () {
+    test('weekly: six days ago advances by one week, at midnight', () {
+      // The start carries a clock time, because the form leaves it at
+      // DateTime.now() unless the picker is opened. A billing date is a
+      // calendar day, so the time is dropped rather than carried into every
+      // period: charges for one plan used to disagree with each other, and a
+      // bill due today at 14:30 read as still ahead at 09:00.
       final sixDaysAgo = DateTime(2026, 9, 17, 14, 30);
       expect(
         nextBillingDateAfter(sixDaysAgo, BillingCycle.weekly, now),
-        DateTime(2026, 9, 24, 14, 30),
+        DateTime(2026, 9, 24),
       );
+    });
+
+    test('every derived date is midnight, whatever the start carried', () {
+      final start = DateTime(2026, 3, 15, 14, 30, 45);
+      for (final cycle in BillingCycle.values) {
+        for (var period = 0; period <= 5; period++) {
+          final date = billingDateAt(start, cycle, period);
+          expect(
+            [date.hour, date.minute, date.second, date.millisecond],
+            [0, 0, 0, 0],
+            reason: '$cycle period $period carried a clock time',
+          );
+        }
+      }
     });
 
     test('monthly: lands on the first date not yet past', () {

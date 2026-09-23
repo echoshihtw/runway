@@ -2,54 +2,64 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
-/// Every package is linted, and every package is analysed.
+/// Every package is linted, and CI analyses every package.
 ///
-/// Five of the six packages carried a lints dev dependency and no
-/// analysis_options.yaml to apply it, so `dart analyze` ran with only the
-/// built-in errors on. `make analyze` was green while ninety-odd issues stood,
-/// two of them real: application imported shared_preferences from a dev
-/// dependency, and uuid was never declared at all. Both worked only because
-/// another package in the workspace happened to pull them in.
+/// No package carried an analysis_options.yaml, so `dart analyze` ran with only
+/// the built-in errors on and the build was green while ninety-odd issues
+/// stood. Two were real: `application` imported shared_preferences from a dev
+/// dependency and used uuid without declaring it.
 ///
-/// Nothing announced that. The dependency was paid for and the rules were
-/// never loaded, which is the failure mode a passing build hides best. A
-/// seventh package would arrive the same way, so this asserts the two things
-/// that have to be true of every one of them.
+/// Checked against ci.yml, not the Makefile. CI enumerates its own steps, so a
+/// package added to the Makefile alone is never analysed on a pull request.
 void main() {
   final root = Directory('..');
 
-  List<Directory> packages() =>
-      Directory('${root.path}/packages')
-          .listSync()
-          .whereType<Directory>()
-          .where((d) => File('${d.path}/pubspec.yaml').existsSync())
-          .toList()
-        ..sort((a, b) => a.path.compareTo(b.path));
+  /// Every workspace package, `app` included. `app` holds the rule set for the
+  /// shipped binary and lives outside packages/.
+  List<Directory> packages() => [
+    ...Directory('${root.path}/packages')
+        .listSync()
+        .whereType<Directory>()
+        .where((d) => File('${d.path}/pubspec.yaml').existsSync()),
+    Directory('${root.path}/app'),
+  ]..sort((a, b) => a.path.compareTo(b.path));
 
   test('every package applies a lint rule set', () {
-    expect(packages(), isNotEmpty, reason: 'no packages found to check');
+    expect(packages(), hasLength(greaterThan(1)));
     for (final package in packages()) {
+      final options = File('${package.path}/analysis_options.yaml');
+      final name = package.path.split('/').last;
+
+      expect(options.existsSync(), isTrue, reason: '$name has no lint config');
+      // Existing is not enough: a file with no include applies no rules.
       expect(
-        File('${package.path}/analysis_options.yaml').existsSync(),
-        isTrue,
-        reason:
-            '${package.path.split('/').last} has no analysis_options.yaml, so '
-            'its lint dependency is never applied',
+        options.readAsStringSync(),
+        contains('include: package:'),
+        reason: '$name has a lint config that pulls in no rule set',
       );
     }
   });
 
-  test('make analyze reaches every package', () {
-    // The target names its packages one line at a time, so a new one is
-    // linted by the rule above and still never looked at by CI.
-    final makefile = File('${root.path}/Makefile').readAsStringSync();
-    final analyze = makefile.split('\nanalyze:')[1].split('\n\n')[0];
+  test('CI analyses every package', () {
+    final ci = File('${root.path}/.github/workflows/ci.yml').readAsStringSync();
+    // Comments do not run, so a step commented out must not satisfy this.
+    final steps = ci
+        .split('\n')
+        .where((l) => !l.trimLeft().startsWith('#'))
+        .join('\n');
+
     for (final package in packages()) {
       final name = package.path.split('/').last;
+      final dir = name == 'app' ? 'app' : 'packages/$name';
       expect(
-        analyze,
-        contains('packages/$name'),
-        reason: 'make analyze never analyses $name',
+        steps,
+        contains('cd $dir && '),
+        reason: 'ci.yml never runs anything in $dir',
+      );
+      expect(
+        RegExp('cd ${RegExp.escape(dir)} && (dart|flutter) analyze'),
+        predicate<RegExp>((r) => r.hasMatch(steps)),
+        reason: 'ci.yml never analyses $dir',
       );
     }
   });

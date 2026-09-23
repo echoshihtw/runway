@@ -442,6 +442,31 @@ void _typicalOverElapsedMonths() {
       );
     });
 
+    test('no backdated entry of any kind stretches the average', () {
+      // The date picker reaches back to 2020 for every type, not just an
+      // opening balance. None of these is a month lived through with the app,
+      // and none of them adds anything to divide over, so each would push the
+      // divisor from eight to eighty and read as a tenth of the real burn.
+      for (final type in TransactionType.values) {
+        if (type == TransactionType.expense) continue;
+        final burn = _burn(
+          transactions: [
+            _tx('old', type, 100000, DateTime(2020, 1, 1)),
+            ...onlyJanuary().where(
+              (t) => t.type != TransactionType.openingBalance,
+            ),
+          ],
+          budget: const Budget(living: 1),
+          now: now,
+        );
+        expect(
+          burn.living.typicalSpending,
+          closeTo(5000, 0.01),
+          reason: 'a backdated ${type.name} moved the window',
+        );
+      }
+    });
+
     test('a balance backdated years does not stretch the average', () {
       // The date picker on an opening balance reaches back to 2020, and the
       // figure is a statement about the past, not a month lived with the app.

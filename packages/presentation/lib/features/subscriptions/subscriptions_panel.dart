@@ -163,6 +163,9 @@ class SubscriptionsPanel extends ConsumerWidget {
       builder: (_) => SubscriptionForm(
         existing: subscription,
         onSubmit: (name, category, amount, cycle, startDate, note) async {
+          // One clock for the whole record, read at submit rather than build,
+          // so a sheet left open overnight still stamps today.
+          final now = ref.read(clockProvider)();
           final updated = Subscription(
             id: subscription.id,
             name: name,
@@ -170,15 +173,11 @@ class SubscriptionsPanel extends ConsumerWidget {
             amount: amount,
             cycle: cycle,
             startDate: startDate,
-            nextBillingDate: nextBillingDateAfter(
-              startDate,
-              cycle,
-              ref.read(clockProvider)(),
-            ),
+            nextBillingDate: nextBillingDateAfter(startDate, cycle, now),
             note: note,
             isActive: subscription.isActive,
             createdAt: subscription.createdAt,
-            updatedAt: DateTime.now(),
+            updatedAt: now,
           );
           await ref.read(editSubscriptionUseCaseProvider).execute(updated);
           return true;
