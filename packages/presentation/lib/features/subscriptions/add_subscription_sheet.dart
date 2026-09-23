@@ -43,7 +43,11 @@ Future<void> showAddSubscriptionSheet(BuildContext context, WidgetRef ref) {
                   amount: amount,
                   cycle: cycle,
                   startDate: startDate,
-                  nextBillingDate: computeNextBillingDate(startDate, cycle),
+                  nextBillingDate: nextBillingDateAfter(
+                    startDate,
+                    cycle,
+                    ref.read(clockProvider)(),
+                  ),
                   note: note,
                   createdAt: now,
                   updatedAt: now,

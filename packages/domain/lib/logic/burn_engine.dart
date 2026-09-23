@@ -93,7 +93,11 @@ class MonthlyBurn {
 
   /// Days left in [month], counting today.
   int get daysLeftThisMonth {
-    final daysInMonth = DateTime(month.value.year, month.value.month + 1, 0).day;
+    final daysInMonth = DateTime(
+      month.value.year,
+      month.value.month + 1,
+      0,
+    ).day;
     return (fractionOfMonthLeft * daysInMonth).round();
   }
 
@@ -130,6 +134,14 @@ MonthlyBurn computeMonthlyBurn({
 }) {
   final month = LedgerMonth(now);
 
+  // The earliest month with anything in it at all, including the opening
+  // balance: how long the app has known this owner. Null until they log one.
+  final earliestKnownMonth = transactions.isEmpty
+      ? null
+      : transactions
+            .map((t) => t.month)
+            .reduce((a, b) => a.isBefore(b) ? a : b);
+
   BudgetBucket bucket({
     required bool Function(Transaction) counts,
     required double budgetAmount,
@@ -154,10 +166,22 @@ MonthlyBurn computeMonthlyBurn({
         );
       }
     }
-    final typicalSpending = completedMonths.isEmpty
+    // Averaged over the months that have passed, not over the months that
+    // happen to hold an entry. Dividing by completedMonths.length divided by
+    // the months someone logged in, so eight quiet months after one 40,000
+    // January read as 40,000 typical, for ever, and shortened the runway for
+    // anyone who logs intermittently. A month with nothing logged is a month
+    // that was lived through.
+    //
+    // The range starts at the earliest month the app knows of at all, not the
+    // earliest in this bucket, so a first rent entry in month six does not
+    // make rent look like a six-month-old habit.
+    final elapsed = earliestKnownMonth == null
+        ? 0
+        : month.monthsSince(earliestKnownMonth);
+    final typicalSpending = elapsed <= 0
         ? spentThisMonth
-        : completedMonths.values.reduce((a, b) => a + b) /
-              completedMonths.length;
+        : completedMonths.values.fold(0.0, (a, b) => a + b) / elapsed;
     return BudgetBucket(
       budget: budgetAmount,
       spentThisMonth: spentThisMonth,
@@ -174,7 +198,10 @@ MonthlyBurn computeMonthlyBurn({
     rent: bucket(counts: countsAsRent, budgetAmount: budget.rent),
     living: bucket(counts: countsAsLiving, budgetAmount: budget.living),
     subscriptions: totalSubscriptionMonthlyCost(subscriptions),
-    loanPayments: activeLoans.fold(0.0, (sum, l) => sum + l.loan.monthlyPayment),
+    loanPayments: activeLoans.fold(
+      0.0,
+      (sum, l) => sum + l.loan.monthlyPayment,
+    ),
     loanPaymentsLeftThisMonth: activeLoans.fold(
       0.0,
       (sum, l) => sum + math.max(l.loan.monthlyPayment - l.paidThisMonth, 0),

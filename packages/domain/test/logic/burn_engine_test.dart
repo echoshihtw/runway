@@ -1,7 +1,11 @@
 import 'package:domain/domain.dart';
 import 'package:test/test.dart';
 
-final _now = DateTime(2026, 9, 15); // September has 30 days: 16 left, counting today.
+final _now = DateTime(
+  2026,
+  9,
+  15,
+); // September has 30 days: 16 left, counting today.
 
 Transaction _tx(
   String id,
@@ -38,17 +42,18 @@ LoanSummary _loan({required double payment, double paidThisMonth = 0}) =>
       paidThisMonth: paidThisMonth,
     );
 
-Subscription _subscription(double monthly, {int billingDay = 1}) => Subscription(
-  id: 'sub-1',
-  name: 'Music',
-  category: SubscriptionCategory.values.first,
-  amount: monthly,
-  cycle: BillingCycle.monthly,
-  startDate: DateTime(2026, 1, billingDay),
-  nextBillingDate: DateTime(2026, 10, 1),
-  createdAt: DateTime(2026, 1, 1),
-  updatedAt: DateTime(2026, 1, 1),
-);
+Subscription _subscription(double monthly, {int billingDay = 1}) =>
+    Subscription(
+      id: 'sub-1',
+      name: 'Music',
+      category: SubscriptionCategory.values.first,
+      amount: monthly,
+      cycle: BillingCycle.monthly,
+      startDate: DateTime(2026, 1, billingDay),
+      nextBillingDate: DateTime(2026, 10, 1),
+      createdAt: DateTime(2026, 1, 1),
+      updatedAt: DateTime(2026, 1, 1),
+    );
 
 MonthlyBurn _burn({
   List<Transaction> transactions = const [],
@@ -67,20 +72,24 @@ MonthlyBurn _burn({
 const _budget = Budget(rent: 32000, living: 30000);
 
 void main() {
+  _typicalOverElapsedMonths();
   _readsLongTests();
 
-  test('a logged expense uses up the living budget instead of adding to it', () {
-    final burn = _burn(
-      budget: _budget,
-      transactions: [_tx('lunch', TransactionType.expense, 210, _now)],
-    );
+  test(
+    'a logged expense uses up the living budget instead of adding to it',
+    () {
+      final burn = _burn(
+        budget: _budget,
+        transactions: [_tx('lunch', TransactionType.expense, 210, _now)],
+      );
 
-    expect(burn.total, 62000);
-    expect(burn.living.spentThisMonth, 210);
-    expect(burn.living.leftThisMonth, 29790);
-    expect(burn.rent.leftThisMonth, 32000);
-    expect(burn.dueThisMonth, 61790);
-  });
+      expect(burn.total, 62000);
+      expect(burn.living.spentThisMonth, 210);
+      expect(burn.living.leftThisMonth, 29790);
+      expect(burn.rent.leftThisMonth, 32000);
+      expect(burn.dueThisMonth, 61790);
+    },
+  );
 
   test('rent logged with the rent category is not counted twice', () {
     final burn = _burn(
@@ -159,7 +168,12 @@ void main() {
   test('income, loans received and opening balances are not burn', () {
     final burn = _burn(
       transactions: [
-        _tx('open', TransactionType.openingBalance, 500000, DateTime(2026, 8, 1)),
+        _tx(
+          'open',
+          TransactionType.openingBalance,
+          500000,
+          DateTime(2026, 8, 1),
+        ),
         _tx('salary', TransactionType.income, 90000, _now),
         _tx('loan', TransactionType.loan, 100000, _now),
       ],
@@ -208,11 +222,23 @@ void main() {
     expect(countsAsLiving(_tx('a', TransactionType.expense, 1, _now)), isTrue);
     expect(
       countsAsLiving(
-        _tx('b', TransactionType.expense, 1, _now, category: ExpenseCategory.food),
+        _tx(
+          'b',
+          TransactionType.expense,
+          1,
+          _now,
+          category: ExpenseCategory.food,
+        ),
       ),
       isTrue,
     );
-    final rent = _tx('c', TransactionType.expense, 1, _now, category: ExpenseCategory.rent);
+    final rent = _tx(
+      'c',
+      TransactionType.expense,
+      1,
+      _now,
+      category: ExpenseCategory.rent,
+    );
     expect(countsAsLiving(rent), isFalse);
     expect(countsAsRent(rent), isTrue);
     expect(countsAsLiving(_tx('d', TransactionType.income, 1, _now)), isFalse);
@@ -253,7 +279,12 @@ void _readsLongTests() {
       // charging the budget remainder handed a new user a free month.
       final now = DateTime(2026, 9, 1);
       final txs = [
-        entry('ob', DateTime(2026, 8, 1), TransactionType.openingBalance, 400000),
+        entry(
+          'ob',
+          DateTime(2026, 8, 1),
+          TransactionType.openingBalance,
+          400000,
+        ),
         entry('aug', DateTime(2026, 8, 10), TransactionType.expense, 40000),
       ];
       final burn = computeMonthlyBurn(
@@ -279,7 +310,12 @@ void _readsLongTests() {
     test('a budget above typical spending still drives the remainder', () {
       final now = DateTime(2026, 9, 16);
       final txs = [
-        entry('ob', DateTime(2026, 9, 1), TransactionType.openingBalance, 34000),
+        entry(
+          'ob',
+          DateTime(2026, 9, 1),
+          TransactionType.openingBalance,
+          34000,
+        ),
         entry('lunch', DateTime(2026, 9, 6), TransactionType.expense, 18),
       ];
       final burn = computeMonthlyBurn(
@@ -325,10 +361,7 @@ void _readsLongTests() {
     });
 
     test('an expense dated today does count', () {
-      final today = [
-        ...base(),
-        entry('t', now, TransactionType.expense, 5000),
-      ];
+      final today = [...base(), entry('t', now, TransactionType.expense, 5000)];
 
       expect(burnFor(today).living.spentThisMonth, 5000);
     });
@@ -345,8 +378,13 @@ void _readsLongTests() {
         updatedAt: now,
       );
       final later = [
-        entry('r', DateTime(2026, 9, 30), TransactionType.repayment, 10000,
-            loanId: 'l'),
+        entry(
+          'r',
+          DateTime(2026, 9, 30),
+          TransactionType.repayment,
+          10000,
+          loanId: 'l',
+        ),
       ];
 
       final summary = computeLoanSummaries(
@@ -358,6 +396,68 @@ void _readsLongTests() {
       expect(summary.paidThisMonth, 0);
       expect(summary.remainingBalance, 100000);
       expect(summary.isFullyPaid, isFalse);
+    });
+  });
+}
+
+/// Typical spending used to be averaged over the months that happened to hold
+/// an entry, not over the months that had passed. Someone who logged 40,000 in
+/// January and nothing afterwards divided by one for ever, so "typical" stayed
+/// at 40,000 and the runway stayed short — and the app treats logging
+/// intermittently as normal, because budgets are the primary basis.
+void _typicalOverElapsedMonths() {
+  group('typical spending', () {
+    final now = DateTime(2026, 9, 15);
+
+    List<Transaction> onlyJanuary() => [
+      _tx('open', TransactionType.openingBalance, 100000, DateTime(2026, 1, 1)),
+      _tx('jan', TransactionType.expense, 40000, DateTime(2026, 1, 10)),
+    ];
+
+    test('divides by the months that passed, not the months with entries', () {
+      final burn = _burn(
+        transactions: onlyJanuary(),
+        budget: const Budget(living: 1),
+        now: now,
+      );
+      // January to August is eight completed months. 40,000 over eight.
+      expect(burn.living.typicalSpending, closeTo(5000, 0.01));
+    });
+
+    test('a quiet month lowers it, because it was still lived through', () {
+      final early = _burn(
+        transactions: onlyJanuary(),
+        budget: const Budget(living: 1),
+        now: DateTime(2026, 3, 15),
+      );
+      final later = _burn(
+        transactions: onlyJanuary(),
+        budget: const Budget(living: 1),
+        now: DateTime(2026, 9, 15),
+      );
+      expect(
+        later.living.typicalSpending,
+        lessThan(early.living.typicalSpending),
+        reason: 'six more quiet months have to bring the average down',
+      );
+    });
+
+    test('the first month falls back to what has been spent so far', () {
+      final burn = _burn(
+        transactions: [
+          _tx(
+            'open',
+            TransactionType.openingBalance,
+            100000,
+            DateTime(2026, 9, 1),
+          ),
+          _tx('a', TransactionType.expense, 700, DateTime(2026, 9, 3)),
+        ],
+        budget: const Budget(living: 1),
+        now: now,
+      );
+      // No month has completed, so there is nothing to average over yet.
+      expect(burn.living.typicalSpending, closeTo(700, 0.01));
     });
   });
 }

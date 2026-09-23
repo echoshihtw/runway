@@ -86,13 +86,13 @@ Future<GoRouter> _pump(WidgetTester tester, {Locale? locale}) async {
     routes: [
       GoRoute(
         path: '/dashboard',
-        builder: (_, __) => const Scaffold(
+        builder: (_, _) => const Scaffold(
           body: SingleChildScrollView(child: GettingStartedCard()),
         ),
       ),
       GoRoute(
         path: '/transactions',
-        builder: (_, __) => const Scaffold(body: Text('LOG TAB')),
+        builder: (_, _) => const Scaffold(body: Text('LOG TAB')),
       ),
     ],
   );

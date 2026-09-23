@@ -51,7 +51,7 @@ void main() {
     await tester.pumpWidget(
       _wrap(
         LoanWizard(
-          onSubmit: (_, __, ___, ____, source, name, note) async {
+          onSubmit: (_, _, _, _, source, name, note) async {
             gotSource = source;
             gotName = name;
             gotNote = note;

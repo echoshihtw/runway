@@ -11,6 +11,8 @@ dependencies:
   domain:
     path: ../domain
   flutter_riverpod: ^3.0.3
+  shared_preferences: ^2.2.0
+  uuid: ^4.0.0
   riverpod_annotation: ^3.0.3
   flutter:
     sdk: flutter
@@ -22,4 +24,3 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
-  shared_preferences: ^2.2.0

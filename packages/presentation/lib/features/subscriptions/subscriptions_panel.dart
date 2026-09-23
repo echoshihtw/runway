@@ -170,7 +170,11 @@ class SubscriptionsPanel extends ConsumerWidget {
             amount: amount,
             cycle: cycle,
             startDate: startDate,
-            nextBillingDate: computeNextBillingDate(startDate, cycle),
+            nextBillingDate: nextBillingDateAfter(
+              startDate,
+              cycle,
+              ref.read(clockProvider)(),
+            ),
             note: note,
             isActive: subscription.isActive,
             createdAt: subscription.createdAt,

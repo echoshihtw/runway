@@ -83,6 +83,29 @@ void main() {
       expect(m.runOutDate, isNull);
     });
 
+    test('a mistyped budget cannot produce a nonsense run-out date', () {
+      // The months and days were clamped and this date was not, so a large enough
+      // cash to burn ratio walked DateTime past what it can hold. It does not
+      // refuse: it wraps, giving year 275360 and then negative years, rendered to
+      // the owner as the month their money runs out. Reachable by typo, because
+      // the amount field takes fifteen digits and has no floor.
+      final m = _model(
+        cash: 40000000,
+        now: DateTime(2026, 9, 1),
+        budget: const Budget(living: 1),
+      );
+
+      expect(m.runwayMonths, 9999, reason: 'the months clamp');
+      expect(
+        m.runOutDate!.year,
+        lessThan(3000),
+        reason:
+            'the date has to clamp with them, or it disagrees with the number '
+            'printed directly above it',
+      );
+      expect(m.runOutDate!.year, greaterThan(2026));
+    });
+
     test('runway has no cap', () {
       final m = _model(
         cash: 300000,
@@ -122,7 +145,11 @@ void main() {
   test('an expected burn override replaces the monthly burn', () {
     final now = DateTime(2026, 9, 15);
     final baseline = _model(cash: 300000, now: now);
-    final m = _model(cash: 300000, now: now, expectedMonthlyBurnOverride: 25000);
+    final m = _model(
+      cash: 300000,
+      now: now,
+      expectedMonthlyBurnOverride: 25000,
+    );
 
     expect(m.effectiveBurnRate, 25000);
     expect(m.runwayMonths, greaterThan(baseline.runwayMonths));
@@ -147,26 +174,28 @@ void main() {
   });
 }
 
-Transaction _entry(
-  DateTime date,
-  TransactionType type,
-  double amount,
-) => Transaction(
-  id: 'e-${date.toIso8601String()}-${type.name}',
-  date: date,
-  type: type,
-  amount: Money(amount),
-  createdAt: date,
-  updatedAt: date,
-);
+Transaction _entry(DateTime date, TransactionType type, double amount) =>
+    Transaction(
+      id: 'e-${date.toIso8601String()}-${type.name}',
+      date: date,
+      type: type,
+      amount: Money(amount),
+      createdAt: date,
+      updatedAt: date,
+    );
 
 void _cashAndStatusTests() {
   group('cash counts only what has happened', () {
     final now = DateTime(2026, 9, 16);
 
     test('a future-dated income does not lengthen the runway', () {
-      final settled = [_entry(DateTime(2026, 9, 1), TransactionType.openingBalance, 100000)];
-      final planned = [...settled, _entry(DateTime(2026, 12, 20), TransactionType.income, 500000)];
+      final settled = [
+        _entry(DateTime(2026, 9, 1), TransactionType.openingBalance, 100000),
+      ];
+      final planned = [
+        ...settled,
+        _entry(DateTime(2026, 12, 20), TransactionType.income, 500000),
+      ];
 
       expect(
         currentCashAsOf(transactions: planned, now: now),
@@ -175,8 +204,13 @@ void _cashAndStatusTests() {
     });
 
     test('a future-dated expense does not shorten it', () {
-      final settled = [_entry(DateTime(2026, 9, 1), TransactionType.openingBalance, 100000)];
-      final planned = [...settled, _entry(DateTime(2026, 10, 5), TransactionType.expense, 40000)];
+      final settled = [
+        _entry(DateTime(2026, 9, 1), TransactionType.openingBalance, 100000),
+      ];
+      final planned = [
+        ...settled,
+        _entry(DateTime(2026, 10, 5), TransactionType.expense, 40000),
+      ];
 
       expect(currentCashAsOf(transactions: planned, now: now), 100000);
     });
@@ -248,7 +282,10 @@ void _cashAndStatusTests() {
       );
 
       expect(cut.effectiveBurnRate, burn.total - 30000);
-      expect(cut.runwayMonths, greaterThan(computeModel(currentCash: 999790, burn: burn).runwayMonths));
+      expect(
+        cut.runwayMonths,
+        greaterThan(computeModel(currentCash: 999790, burn: burn).runwayMonths),
+      );
     });
   });
 }

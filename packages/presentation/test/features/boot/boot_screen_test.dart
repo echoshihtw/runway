@@ -15,9 +15,9 @@ Future<GoRouter> _pump(WidgetTester tester, {required bool onboardingDone}) asyn
   final router = GoRouter(
     initialLocation: '/boot',
     routes: [
-      GoRoute(path: '/boot', builder: (_, __) => const BootScreen()),
-      GoRoute(path: '/dashboard', builder: (_, __) => const Text('DASHBOARD')),
-      GoRoute(path: '/onboarding', builder: (_, __) => const Text('ONBOARDING')),
+      GoRoute(path: '/boot', builder: (_, _) => const BootScreen()),
+      GoRoute(path: '/dashboard', builder: (_, _) => const Text('DASHBOARD')),
+      GoRoute(path: '/onboarding', builder: (_, _) => const Text('ONBOARDING')),
     ],
   );
   addTearDown(router.dispose);

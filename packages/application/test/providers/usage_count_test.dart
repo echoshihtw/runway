@@ -48,7 +48,7 @@ Transaction _entry(TransactionType type) {
 ProviderContainer _container(UsageCountStore store, {TransactionRepository? ledger}) {
   final container = ProviderContainer(
     // A throwing store would otherwise be retried for ~38 s.
-    retry: (_, __) => null,
+    retry: (_, _) => null,
     overrides: [
       usageCountStoreProvider.overrideWithValue(store),
       transactionRepositoryProvider.overrideWithValue(ledger ?? _Ledger()),
@@ -107,7 +107,7 @@ void main() {
     test('running one adds one to the count', () async {
       final device = _MemoryStore();
       final container = _container(device);
-      final keepAlive = container.listen(simulationCountProvider, (_, __) {});
+      final keepAlive = container.listen(simulationCountProvider, (_, _) {});
       addTearDown(keepAlive.close);
       await container.read(simulationCountProvider.future);
 
@@ -138,7 +138,7 @@ void main() {
       final device = _MemoryStore();
       final ledger = _Ledger();
       final container = _container(device, ledger: ledger);
-      final keepAlive = container.listen(entryCountProvider, (_, __) {});
+      final keepAlive = container.listen(entryCountProvider, (_, _) {});
       addTearDown(keepAlive.close);
       await container.read(entryCountProvider.future);
 
@@ -158,7 +158,7 @@ void main() {
       final device = _MemoryStore();
       final ledger = _Ledger();
       final container = _container(device, ledger: ledger);
-      final keepAlive = container.listen(entryCountProvider, (_, __) {});
+      final keepAlive = container.listen(entryCountProvider, (_, _) {});
       addTearDown(keepAlive.close);
       await container.read(entryCountProvider.future);
 
@@ -173,7 +173,7 @@ void main() {
       final device = _MemoryStore()..counts[UsageKind.entries.key] = 5;
       final ledger = _Ledger();
       final container = _container(device, ledger: ledger);
-      final keepAlive = container.listen(entryCountProvider, (_, __) {});
+      final keepAlive = container.listen(entryCountProvider, (_, _) {});
       addTearDown(keepAlive.close);
       await container.read(entryCountProvider.future);
 
@@ -188,7 +188,7 @@ void main() {
     test('the opening balance is not an entry, so onboarding never dead-ends', () async {
       final device = _MemoryStore()..counts[UsageKind.entries.key] = 5;
       final container = _container(device);
-      final keepAlive = container.listen(entryCountProvider, (_, __) {});
+      final keepAlive = container.listen(entryCountProvider, (_, _) {});
       addTearDown(keepAlive.close);
       await container.read(entryCountProvider.future);
 

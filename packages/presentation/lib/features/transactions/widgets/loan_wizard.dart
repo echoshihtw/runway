@@ -541,8 +541,9 @@ class _LoanWizardState extends State<LoanWizard>
         GestureDetector(
           onTap: () => setState(() {
             _overridePayment = !_overridePayment;
-            if (!_overridePayment && _computedPayment != null)
+            if (!_overridePayment && _computedPayment != null) {
               _paymentCtrl.text = moneyField(_computedPayment);
+            }
           }),
           child: Row(
             children: [

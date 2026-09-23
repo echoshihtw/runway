@@ -117,9 +117,9 @@ Future<ProviderContainer> _open({
   );
   addTearDown(container.dispose);
   final listeners = [
-    container.listen(transactionsProvider, (_, __) {}),
-    container.listen(loansProvider, (_, __) {}),
-    container.listen(subscriptionsProvider, (_, __) {}),
+    container.listen(transactionsProvider, (_, _) {}),
+    container.listen(loansProvider, (_, _) {}),
+    container.listen(subscriptionsProvider, (_, _) {}),
   ];
   addTearDown(() {
     for (final l in listeners) {
