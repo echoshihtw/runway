@@ -18,7 +18,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sysOnline => '已就緒';
 
   @override
-  String get lifeForce => '跑道狀態';
+  String get lifeForce => 'Runway 狀態';
 
   @override
   String get statusLabel => '目前狀況';
@@ -47,7 +47,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get loanPerMonth => '月債務';
 
   @override
-  String get runway => '可撐多久';
+  String get runway => 'RUNWAY';
 
   @override
   String get runOut => '用完時間';
@@ -128,7 +128,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get simResults => '預估結果';
 
   @override
-  String get simRunway => '預估跑道';
+  String get simRunway => '預估 Runway';
 
   @override
   String get simRunOut => '預估用完時間';
@@ -137,7 +137,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deltaVsActual => '和現在相比';
 
   @override
-  String get deltaRunway => '跑道變化';
+  String get deltaRunway => 'Runway 變化';
 
   @override
   String get resetSim => '重置模擬';
@@ -590,7 +590,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get simulate => '規劃';
 
   @override
-  String get simHint => '調整每月支出或收入，看看跑道會怎麼變';
+  String get simHint => '調整每月支出或收入，看看 Runway 會怎麼變';
 
   @override
   String get simulation => '情境結果';
@@ -718,10 +718,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get forecastDoesNotMoveRunway =>
-      '收入不會改變可用月數。可用月數是沒收入時現金能撐多久，這裡只顯示這個月是增加還是減少。';
+      '收入不會改變 Runway。Runway 是沒收入時現金能撐多久，這裡只顯示這個月是增加還是減少。';
 
   @override
-  String get runwayGoal => '跑道目標';
+  String get runwayGoal => 'Runway 目標';
 
   @override
   String get goal => '目標';
@@ -741,7 +741,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get goalsContextHint => '目標只是拿來對照你的跑道，不是在替你打分數。';
+  String get goalsContextHint => '目標只是拿來對照你的 Runway，不是在替你打分數。';
 
   @override
   String get setGoal => '設定目標';
@@ -770,7 +770,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get runwayNeedsCosts => '設定每月支出後即可看到可用月數';
+  String get runwayNeedsCosts => '設定每月支出後即可看到 Runway';
 
   @override
   String get monthSingular => '個月';
@@ -819,7 +819,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get daysUpper => '天';
 
   @override
-  String get yourRunway => '你的跑道';
+  String get yourRunway => '你的 Runway';
 
   @override
   String get higherExpenses => '支出增加';
@@ -833,7 +833,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get shareSafe => '安全分享';
 
   @override
-  String get shareSafeHint => '不顯示存款和支出，只分享你的跑道。';
+  String get shareSafeHint => '不顯示存款和支出，只分享你的 Runway。';
 
   @override
   String get preparing => '準備中...';
@@ -1008,7 +1008,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get simNeedsBalance => '先新增你的期初餘額';
 
   @override
-  String get simNeedsBalanceWhy => '可用月數要從一個起始餘額開始算。';
+  String get simNeedsBalanceWhy => 'Runway 要從一個起始餘額開始算。';
 
   @override
   String get addOpeningBalance => '新增我的餘額';
