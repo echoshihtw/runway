@@ -19,7 +19,6 @@ body.landing {
   --gold: #cb9a3e; /* what you still owe */
   --accent: var(--mint);
   --link: #7fb6ef;
-
   /* The poster's own: a second surface, and the four cut-paper grounds the
      sections are blocked out in. The app has no use for any of them. */
   --surface-2: #0b1930;
@@ -28,12 +27,10 @@ body.landing {
   --ink: #08142b;
   --violet-field: #6327d4;
   --yellow-field: #f4d84b;
-
   /* Three of the app's values the poster overrides, each a step lighter. */
   --text: #edf3fa;
   --muted: #9aa9bc;
   --border: #17304e;
-
   color-scheme: dark;
   background: var(--bg);
 }
@@ -46,21 +43,6 @@ body.landing {
 .hero h1 {
   text-wrap: balance;
 }
-
-/* ── What the screen is saying, in the colours it says it in ────────────── */
-/* These sit in the hero's copy column, beside the screen that proves them:
-   the claim on the left, the figure it is making on the right, in the colour
-   the app gives it. */
-
-/* A bold word in the prose is emphasis, not a figure. */
-
-/* The two facts with no figure to show. Quieter, and out of the hero. */
-
-/* ── The other three screens ────────────────────────────────────────────── */
-
-/* ── The three things it refuses to do ──────────────────────────────────── */
-
-/* ── Who built it, and why ──────────────────────────────────────────────── */
 
 @media (max-width: 54rem) {
   .hero {
@@ -162,7 +144,6 @@ html {
 }
 .hero .lede {
   margin: 1.6rem 0 0;
-
   font-size: clamp(1.08rem, 2vw, 1.28rem);
   line-height: 1.6;
 }
@@ -255,7 +236,6 @@ html {
 
 .solution-section {
   display: grid;
-
   margin-inline: calc(clamp(1.5rem, 5vw, 5rem) * -1);
   border-block: 1px solid var(--border);
 }
@@ -388,7 +368,6 @@ html {
 .plans article {
   padding: 1.6rem;
   border: 1px solid var(--border);
-
   background: rgba(4, 13, 26, 0.55);
 }
 .plans article.pro {
@@ -457,7 +436,6 @@ html {
   grid-template-columns: auto 1fr auto;
   gap: 1.5rem 2rem;
   align-items: center;
-
   margin-bottom: 2rem;
 }
 .final-cta .eyebrow {
@@ -493,15 +471,10 @@ html {
   .landing header.site nav {
     order: 3;
     width: 100%;
-
     gap: 1rem;
   }
-  /* The header wraps here, and margin-left:auto sent the badge to the far
-     right of its own row, under a brand sitting at the far left. Once it has
-     wrapped it is a second line, so it starts where the first line starts. */
   .hero {
     min-height: auto;
-
     padding: 4rem 0 5rem;
     gap: 4rem;
   }
@@ -1268,33 +1241,42 @@ body.landing .wrap {
   height: 1px;
   background: var(--border);
 }
+/* Revealing a step must not change this box's height. .story-point-stack is
+   sticky, so it still takes its normal-flow space, and .story-triggers sits
+   after it: a step that opened pushed every trigger down, and the script
+   decides which step is current by testing those same triggers. So showing a
+   step moved the trigger that had just qualified back out of range, the next
+   scroll event un-showed it, and that moved it back in. The two states
+   alternated for as long as scroll events kept arriving, which on a phone is
+   about a second after a flick and on a trackpad is as long as the momentum
+   runs. The thing being measured was moved by the outcome of the measurement.
+
+   So the steps hold their space and only fade. The space costs nothing to
+   look at: .story-point-stack is the same colour as .stories behind it, and
+   on a phone it is transparent. */
 .story-point {
   position: relative;
   width: 100%;
-  max-height: 0;
   overflow: hidden;
-  padding: 0 0.5rem 0 3.4rem;
-  border-top: 0 solid var(--border);
+  padding: 1.35rem 0.5rem 1.35rem 3.4rem;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid transparent;
   color: var(--muted);
   opacity: 0;
   translate: 0 1rem;
   transition:
-    max-height 0.42s ease,
     opacity 0.28s ease,
     translate 0.35s ease,
-    padding 0.35s ease,
     color 0.2s ease;
 }
 .story-point.is-shown {
-  max-height: 10rem;
-  padding-top: 1.35rem;
-  padding-bottom: 1.35rem;
-  border-top-width: 1px;
   opacity: 1;
   translate: 0 0;
 }
+/* Only the closing step draws its lower rule, and it is held in the box from
+   the start so that drawing it does not add a pixel. */
 .story-point.is-shown:last-child {
-  border-bottom: 1px solid var(--border);
+  border-bottom-color: var(--border);
 }
 .story-point::before {
   content: attr(data-index);
@@ -1555,12 +1537,11 @@ body.landing .wrap {
   overflow: hidden;
   background: #2b62ff;
 }
-/* A stroke cannot survive a clip-path: the border is drawn and then cut, which
-   left a blue square with a sliver of roof. Every other shape on this page is
-   a solid fill, so this one is too. */
-/* Centred and sized against its own box, not placed with fixed offsets: the
-   box is a different size on a phone, and the offsets left the bank low and
-   left with dead blue around it. */
+/* A solid fill, and centred against its own box. A stroke cannot survive the
+   clip-path: the border is drawn and then cut, which left a blue square with a
+   sliver of roof, and every other shape on this page is a fill anyway. Fixed
+   offsets did not survive either, because the box is a different size on a
+   phone and they left the bank low and left with dead blue around it. */
 .bank-visual span {
   position: absolute;
   left: 50%;
@@ -1676,6 +1657,9 @@ body.landing .wrap {
   .landing header.site nav {
     display: none;
   }
+  /* The header wraps here, and margin-left:auto sent the badge to the far
+     right of its own row, under a brand sitting at the far left. Once it has
+     wrapped it is a second line, so it starts where the first line starts. */
   .review-badge {
     margin-left: 0;
   }
@@ -1871,8 +1855,24 @@ body.landing .wrap {
     min-height: 0;
     padding: 1.5rem 1.25rem 24vh;
   }
+  /* Three discrete steps, so the scroll comes to rest on one of them rather
+     than halfway between two. Only the triggers carry a snap point, so the
+     rest of the page scrolls normally, and proximity rather than mandatory
+     because a mandatory container pulls the reader back toward a step every
+     time they try to leave the section.
+
+     scroll-margin-top decides where a step settles: the snap area starts
+     40vh above the trigger, so at rest the trigger's top sits 40vh down the
+     screen. The script makes a trigger current at 62vh, so a resting step is
+     22vh clear of the line it is being tested against, and the position the
+     scroll settles on is never the boundary itself. */
+  html {
+    scroll-snap-type: y proximity;
+  }
   .story-trigger {
     min-height: 52vh;
+    scroll-snap-align: start;
+    scroll-margin-top: 40vh;
   }
   /* The closing block collapsed to one column, which gave the mark a whole
      row to itself with the width beside it empty. It sits next to the words
@@ -1994,5 +1994,10 @@ body.landing .wrap {
 @media (prefers-reduced-motion: reduce) {
   .hero-actions .button.primary::before {
     transition: none;
+  }
+  /* Snapping moves the page the reader did not ask to move. Last in the file
+     so it wins over the phone rule that turns it on. */
+  html {
+    scroll-snap-type: none;
   }
 }

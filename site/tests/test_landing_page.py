@@ -139,6 +139,53 @@ class LandingPageTest(unittest.TestCase):
         self.assertNotIn("innerHeight", marker)
         self.assertIn("viewportProbe", marker)
 
+    def test_revealing_a_step_cannot_change_its_height(self):
+        # .story-point-stack is sticky, so it still takes its normal-flow
+        # space, and .story-triggers sits after it. A step that opened pushed
+        # every trigger down, and the script decides which step is current by
+        # testing those same triggers: showing a step moved the trigger that
+        # had just qualified back out of range, the next scroll event un-showed
+        # it, and that moved it back in. The two states alternated for as long
+        # as scroll events kept arriving, which after a flick on a phone is
+        # about a second. Measured at 120px per step before the fix, 0 after.
+        #
+        # Assert the property rather than the spelling: whatever .is-shown
+        # changes, none of it may affect the box's height, at any width.
+        affects_height = (
+            "height", "max-height", "min-height", "padding", "padding-top",
+            "padding-bottom", "border-top-width", "border-bottom-width",
+            "border-top", "border-bottom", "border", "margin", "margin-top",
+            "margin-bottom", "display", "line-height", "font-size",
+        )
+        rules = re.findall(r"([^{}]*\.story-point\.is-shown[^{}]*)\{([^}]*)\}", CSS)
+        self.assertTrue(rules, "no .story-point.is-shown rule found")
+        for selector, body in rules:
+            for declaration in body.split(";"):
+                if ":" not in declaration:
+                    continue
+                prop = declaration.split(":", 1)[0].strip()
+                self.assertNotIn(
+                    prop,
+                    affects_height,
+                    f"{selector.strip()} sets {prop}, which resizes the step it "
+                    f"reveals and so un-reveals it",
+                )
+
+    def test_phone_scroll_rests_on_a_step_and_never_on_the_boundary(self):
+        # proximity, never mandatory: snap points sit only on the triggers, so
+        # the rest of the page scrolls normally instead of being pulled back
+        # toward the section. scroll-margin-top puts a resting trigger at 40vh
+        # while the script makes one current at 62vh, so the position the
+        # scroll settles on is never the line it is being tested against.
+        self.assertIn("html{scroll-snap-type:yproximity;}", CSS_TIGHT)
+        self.assertIn("scroll-snap-align:start;scroll-margin-top:40vh;", CSS_TIGHT)
+        # Snapping moves the page unasked, so it comes off with reduced motion,
+        # and that rule has to come after the one that turns it on.
+        self.assertLess(
+            CSS_TIGHT.index("html{scroll-snap-type:yproximity;}"),
+            CSS_TIGHT.index("html{scroll-snap-type:none;}"),
+        )
+
     def test_mobile_layout_has_a_deliberate_breakpoint(self):
         self.assertRegex(CSS, r"@media\s*\(max-width:\s*48rem\)")
 
