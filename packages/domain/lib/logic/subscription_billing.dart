@@ -37,6 +37,25 @@ DateTime _addMonths(DateTime from, int months) {
   );
 }
 
+/// [days] after [from], with the time of day taken from [from].
+///
+/// Calendar days, not a Duration. Duration is absolute time, so adding seven
+/// days across a daylight saving change moves the wall clock by an hour: a
+/// plan starting at midnight in Paris billed 31 October at 23:00 instead of
+/// 1 November at 00:00. The charge id is built from the day, so the bill
+/// changed identity and the countdown was a day out. Taiwan and Japan have no
+/// daylight saving; the four European and American locales do.
+DateTime _addDays(DateTime from, int days) => DateTime(
+  from.year,
+  from.month,
+  from.day + days,
+  from.hour,
+  from.minute,
+  from.second,
+  from.millisecond,
+  from.microsecond,
+);
+
 /// The [periods]th billing date of a plan that starts on [start] and bills on
 /// [cycle]. Period 0 is the start date itself.
 ///
@@ -50,7 +69,7 @@ DateTime _addMonths(DateTime from, int months) {
 /// a caller that has only a date and a cycle does not have to invent one.
 DateTime billingDateAt(DateTime start, BillingCycle cycle, int periods) =>
     switch (cycle) {
-      BillingCycle.weekly => start.add(Duration(days: 7 * periods)),
+      BillingCycle.weekly => _addDays(start, 7 * periods),
       BillingCycle.monthly => _addMonths(start, periods),
       BillingCycle.quarterly => _addMonths(start, 3 * periods),
       BillingCycle.yearly => _addMonths(start, 12 * periods),

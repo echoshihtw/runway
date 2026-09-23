@@ -114,9 +114,13 @@ Splits out `openingBalance` transactions into a starting balance, buckets the re
 
 `computeLoanSummaries` matches `repayment` transactions to loans via `loanId`; `remainingBalance = originalAmount - totalRepaid` clamped at 0. `totalMonthlyPayment` / `totalMonthlyPaymentFromSummaries` sum only active, not-fully-paid loans. `LoanSummary.monthsRemaining` prefers `originalTermMonths - elapsed` over `balance / payment` (CONTRACTS §3.6).
 
+### `subscription_billing.dart`
+
+One schedule for every cycle: `billingDateAt(start, cycle, periods)` counts periods from the start date, so a day clamped into a short month comes back in the next long one. `billingDatesUpTo` / `billingDatesInRange` / `nextBillingDateAfter` / `daysUntilNextBilling` all read from it. `subscriptionChargeId` derives a charge's id from its subscription and date, which is how a confirmed charge is recognised without a column linking the two.
+
 ### `subscription_engine.dart`
 
-Total/by-category/yearly cost over active subscriptions, `sortedByNextBilling`, and `computeNextBillingDate` which rolls a start date forward by cycle until it is in the future.
+Total/by-category/yearly cost over active subscriptions, and `sortedByNextBilling`, which orders by the derived date rather than the stored `nextBillingDate`.
 
 ### `runway_goal_progress.dart`
 

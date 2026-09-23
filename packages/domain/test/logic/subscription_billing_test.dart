@@ -214,6 +214,42 @@ void main() {
     });
   });
 
+  group('weekly across a daylight saving change', () {
+    // Duration is absolute time; a billing date is a calendar day. Under
+    // TZ=Europe/Paris the old `start.add(Duration(days: 7))` returned
+    // 31 October 23:00 for a plan starting midnight on the 25th, which is the
+    // wrong day and so the wrong charge id. This holds whatever zone the suite
+    // runs in: the assertion is on the shape of the answer, not on one zone.
+    test('every period keeps the time of day it started at', () {
+      final start = DateTime(2026, 10, 25);
+      for (var period = 0; period <= 12; period++) {
+        final date = billingDateAt(start, BillingCycle.weekly, period);
+        expect(
+          [date.hour, date.minute, date.second],
+          [start.hour, start.minute, start.second],
+          reason: 'period $period slipped off midnight, so its id changed',
+        );
+      }
+    });
+
+    test('every period is a whole number of weeks after the start', () {
+      final start = DateTime(2026, 10, 25);
+      for (var period = 0; period <= 12; period++) {
+        final date = billingDateAt(start, BillingCycle.weekly, period);
+        final calendarDays = DateTime(
+          date.year,
+          date.month,
+          date.day,
+        ).difference(DateTime(start.year, start.month, start.day)).inDays;
+        expect(
+          calendarDays,
+          7 * period,
+          reason: 'period $period is $calendarDays days out, not ${7 * period}',
+        );
+      }
+    });
+  });
+
   group('nextBillingDateAfter', () {
     // now is a parameter, so these say what day it is instead of asking. They
     // used to read DateTime.now() four times in one test and compare results

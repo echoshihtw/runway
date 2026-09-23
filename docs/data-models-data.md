@@ -54,7 +54,7 @@ Source: `packages/data/lib/tables/subscriptions_table.dart`
 | `amount` | REAL | no | — | In the billing cycle's own units, not monthly |
 | `cycle` | TEXT | no | — | `BillingCycle.name`: `weekly` \| `monthly` \| `quarterly` \| `yearly` |
 | `startDate` | DATETIME | no | — | |
-| `nextBillingDate` | DATETIME | no | — | Rolled forward by `computeNextBillingDate` |
+| `nextBillingDate` | DATETIME | no | — | Written once at creation and never advanced; nothing reads it. Every date shown or counted is derived from `startDate` + `cycle` |
 | `note` | TEXT | yes | — | |
 | `isActive` | BOOLEAN | no | `true` | |
 | `createdAt` | DATETIME | no | — | |
