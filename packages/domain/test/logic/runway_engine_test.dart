@@ -106,6 +106,21 @@ void main() {
       expect(m.runOutDate!.year, greaterThan(2026));
     });
 
+    test('an unreadably small burn cannot crash the run-out date', () {
+      // floor() throws UnsupportedError on infinity, and a burn small enough
+      // makes cash / burn infinite. expectedMonthlyBurnOverride carries a
+      // typed cost straight through, so this reaches the arithmetic without
+      // going near a budget.
+      final m = _model(
+        cash: 1000000,
+        now: DateTime(2026, 9, 1),
+        expectedMonthlyBurnOverride: 5e-324,
+      );
+
+      expect(m.runOutDate!.year, lessThan(3000));
+      expect(m.runwayMonths, 9999);
+    });
+
     test('runway has no cap', () {
       final m = _model(
         cash: 300000,

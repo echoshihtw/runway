@@ -8,7 +8,13 @@ const _unlimitedMonths = 9999;
 /// [months] as a whole number of months no larger than the ceiling the runway
 /// figure itself uses, so the date and the number it belongs to cannot
 /// disagree about how far away the end is.
+///
+/// Non-finite input is the ceiling too. floor() throws on infinity and on NaN,
+/// so without this the guard against a nonsense figure would itself crash on
+/// the most nonsense figure of all. The callers rule both out today; a guard
+/// that depends on its callers staying careful is not a guard.
 int _cappedMonths(double months) {
+  if (!months.isFinite) return _unlimitedMonths;
   final whole = months.floor();
   return whole < _unlimitedMonths ? whole : _unlimitedMonths;
 }
