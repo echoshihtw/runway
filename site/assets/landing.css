@@ -169,6 +169,20 @@ html {
   background: var(--mint);
   box-shadow: 0 14px 40px rgba(61, 169, 100, 0.2);
 }
+/* Sits on the cream hero and on the dark sections, so it takes its colour from
+   whichever it is on rather than naming a token that is right in only one. */
+.button.ghost {
+  /* site.css gives every .button the accent fill; ghost has to undo it. */
+  background: transparent;
+  color: inherit;
+  border: 1px solid currentColor;
+  opacity: 0.68;
+}
+.button.ghost:hover,
+.button.ghost:focus-visible {
+  opacity: 1;
+}
+
 .button.primary:hover {
   color: #06110c;
   transform: translateY(-2px);
