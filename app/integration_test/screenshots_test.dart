@@ -19,6 +19,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:presentation/features/loans/liabilities_panel.dart';
 import 'package:presentation/features/subscriptions/subscriptions_panel.dart';
 import 'package:presentation/router/page_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,6 +40,9 @@ const _plannedMonthlyCost = '2300';
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  // A tap that lands on nothing otherwise only prints a warning, and the run
+  // still captures a stale frame.
+  WidgetController.hitTestWarningShouldBeFatal = true;
 
   testWidgets('captures the store screenshots', (tester) async {
     SharedPreferences.setMockInitialValues({
@@ -84,6 +88,19 @@ void main() {
       400,
       scrollable: find.byType(Scrollable).first,
     );
+    await pumpRealTime(tester, seconds: 1);
+    // Both cards open, so the loan and the subscriptions are named rather than
+    // just counted. Subscriptions first: opening the loan above them pushes
+    // them off the frame, where a tap has nothing to hit.
+    await _expand(tester, find.byType(SubscriptionsPanel));
+    await _expand(tester, find.byType(LiabilitiesPanel));
+    await tester.scrollUntilVisible(
+      find.byType(SubscriptionsPanel),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    // Come back up so the loan keeps its own heading in the frame.
+    await tester.ensureVisible(find.byType(LiabilitiesPanel));
     await pumpRealTime(tester, seconds: 1);
     await capture(
       '05-commitments',
@@ -147,6 +164,20 @@ void main() {
       ),
     );
   });
+}
+
+/// Opens a panel that starts collapsed, so the frame names what is inside it
+/// rather than only counting it.
+Future<void> _expand(WidgetTester tester, Finder panel) async {
+  // Only the header toggles the card, so aim at its chevron. Tapping the card
+  // itself lands on the summary and silently does nothing.
+  await tester.tap(
+    find.descendant(
+      of: panel,
+      matching: find.byIcon(Icons.keyboard_arrow_down_rounded),
+    ),
+  );
+  await pumpRealTime(tester, seconds: 1);
 }
 
 Future<void> _dismissSheet(WidgetTester tester) async {
