@@ -73,6 +73,14 @@ void main() {
       await binding.takeScreenshot(name);
     }
 
+    // No caption band, so the app fills the frame at its own size. This is the
+    // frame that has to be a plain screenshot, not a store slide.
+    Future<void> captureBare(String name) async {
+      caption.value = null;
+      await pumpRealTime(tester, seconds: 1);
+      await binding.takeScreenshot(name);
+    }
+
     await capture(
       '01-runway',
       const _Caption(
@@ -144,6 +152,8 @@ void main() {
     );
     await _dismissSheet(tester);
     await pumpRealTime(tester, seconds: 2);
+    // The log itself, both sides of the month in one list.
+    await captureBare('06-log-full');
 
     await _tapNav(tester, 'PLAN');
     await tester.enterText(
