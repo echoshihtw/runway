@@ -272,13 +272,17 @@ Future<void> _seed(AppDatabase database) async {
   // Generic names on purpose. A real service name on a store screenshot or in
   // the demo video is a third-party trademark, which both Apple and the
   // Shipaton rules forbid.
-  final subs = <(String, double, BillingCycle)>[
-    ('Cloud storage', 2.99, BillingCycle.monthly),
-    ('Music', 10.99, BillingCycle.monthly),
-    ('Gym', 29.00, BillingCycle.monthly),
+  // The last field is the day of the month each one bills on. They differ
+  // because real subscriptions do, and a column of identical countdowns reads
+  // as a bug.
+  final subs = <(String, double, BillingCycle, int)>[
+    ('Cloud storage', 2.99, BillingCycle.monthly, 20),
+    ('Music', 10.99, BillingCycle.monthly, 28),
+    ('Gym', 29.00, BillingCycle.monthly, 1),
   ];
   for (final (index, sub) in subs.indexed) {
-    final (name, amount, cycle) = sub;
+    final (name, amount, cycle, billingDay) = sub;
+    final startDate = DateTime(now.year - 1, now.month, billingDay);
     await subscriptions.add(
       Subscription(
         id: 'demo-sub-$index',
@@ -286,8 +290,8 @@ Future<void> _seed(AppDatabase database) async {
         category: SubscriptionCategory.personal,
         amount: amount,
         cycle: cycle,
-        startDate: DateTime(now.year - 1, now.month),
-        nextBillingDate: DateTime(now.year, now.month + 1, 3),
+        startDate: startDate,
+        nextBillingDate: nextBillingDateAfter(startDate, cycle, now),
         createdAt: now,
         updatedAt: now,
       ),
