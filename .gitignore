@@ -77,3 +77,9 @@ _bmad/render/
 .claude/settings.local.json
 .claude/skills/
 .claude/settings.json
+
+# Marketing art is generated and iterated on locally, and a single thumbnail is
+# ~2 MB. The fourteen already committed here stay tracked; this stops new ones
+# being swept in by `git add -A`, which is how 7.9 MB reached a pull request
+# about link previews.
+assets/marketing/

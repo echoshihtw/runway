@@ -27,13 +27,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pressureLabel => 'Monthly costs';
 
   @override
+  String get costsIncludeCommitments =>
+      'Includes subscriptions and loan payments';
+
+  @override
   String get metrics => 'Signals';
 
   @override
   String get cash => 'CASH';
 
   @override
-  String get burnPerMonth => 'BURN/MO';
+  String get owed => 'Owed';
+
+  @override
+  String runsOut(String date) {
+    return 'Runs out $date';
+  }
 
   @override
   String get loanPerMonth => 'DEBT/MO';
@@ -66,10 +75,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get clear => 'CLEAR';
 
   @override
-  String get loanAffectsInfo =>
-      'Loan payments add to your fixed costs and reduce runway.';
-
-  @override
   String get transactionLog => 'TRANSACTION LOG';
 
   @override
@@ -79,10 +84,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noEntries => 'No entries yet\nTap + ADD to log your first entry';
 
   @override
-  String get newLogEntry => '> NEW LOG ENTRY';
+  String get newLogEntry => 'New log entry';
 
   @override
-  String get modifyEntry => '> MODIFY ENTRY';
+  String get modifyEntry => 'MODIFY ENTRY';
 
   @override
   String get type => 'TYPE';
@@ -106,7 +111,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get abort => 'ABORT';
 
   @override
-  String get purgeEntry => '> PURGE ENTRY?';
+  String get purgeEntry => 'Delete entry?';
 
   @override
   String get scenarioSimulator => 'Scenario planning';
@@ -115,7 +120,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get overrideInputs => 'Planning inputs';
 
   @override
-  String get burnRateOverride => 'Monthly burn';
+  String get burnRateOverride => 'Rent + living / month';
 
   @override
   String get simulatedIncome => 'Income change / month';
@@ -160,14 +165,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get highLoad => 'HIGH LOAD';
 
   @override
-  String get language => 'LANGUAGE';
+  String get language => 'Language';
 
   @override
-  String get currency => 'CURRENCY';
+  String get currency => 'Currency';
 
   @override
   String get currencySymbolOnly =>
-      'Changes the display symbol only — your amounts are not converted.';
+      'Changes the display symbol only. Your amounts are not converted.';
 
   @override
   String get daysShort => 'd';
@@ -208,10 +213,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loading => 'LOADING...';
 
   @override
-  String get navHud => 'Home';
+  String get navHud => 'Overview';
 
   @override
-  String get navLog => 'LOG';
+  String get navLog => 'Log';
 
   @override
   String get navSim => 'Plan';
@@ -226,16 +231,126 @@ class AppLocalizationsEn extends AppLocalizations {
   String get typeLoan => 'LOAN';
 
   @override
-  String get typeRepay => 'REPAY';
+  String get typeRepay => 'LOAN PAYMENT';
 
   @override
   String get typeOpening => 'OPENING';
 
   @override
-  String get liabilities => 'LIABILITIES';
+  String get typeSubscription => 'SUBSCRIPTION';
 
   @override
-  String get noActiveLoans => '> NO ACTIVE LOANS';
+  String subscriptionPaidQuestion(String amount, String name, String date) {
+    return 'Did you pay $amount for $name on $date?';
+  }
+
+  @override
+  String subscriptionChargesDue(int count, String amount) {
+    return '$count subscription charges due: $amount';
+  }
+
+  @override
+  String get subscriptionConfirmAll => 'Confirm all';
+
+  @override
+  String get subscriptionReviewEach => 'Review each';
+
+  @override
+  String get subscriptionPaidYes => 'Yes, log it';
+
+  @override
+  String get subscriptionChargeFailed =>
+      'Couldn\'t record that. Check the amount on the subscription.';
+
+  @override
+  String get subscriptionSaveFailed =>
+      'Couldn\'t save that subscription. Nothing was added.';
+
+  @override
+  String get loanSaveFailed => 'Couldn\'t save that loan. Nothing was added.';
+
+  @override
+  String get subscriptionPaidNo => 'No';
+
+  @override
+  String get subscriptionWhatHappened => 'What happened?';
+
+  @override
+  String get subscriptionReasonCancelled => 'I cancelled it';
+
+  @override
+  String get subscriptionReasonPriceChanged => 'The price changed';
+
+  @override
+  String get subscriptionReasonNotPaid => 'I didn\'t pay it';
+
+  @override
+  String get deleteSubscription => 'Delete subscription';
+
+  @override
+  String get deleteSubscriptionKeepsEntries =>
+      'Stops future entries. The payments already logged are kept.';
+
+  @override
+  String get liabilities => 'Liabilities';
+
+  @override
+  String get noActiveLoans => 'NO ACTIVE LOANS';
+
+  @override
+  String get newLoan => '+ LOAN';
+
+  @override
+  String get spendOnWhat => 'What was it for?';
+
+  @override
+  String get moneyCameInInstead => 'Money came in instead?';
+
+  @override
+  String get logIncome => 'Log income';
+
+  @override
+  String get presetCoffee => 'COFFEE';
+
+  @override
+  String get presetCoffeeNote => 'Coffee';
+
+  @override
+  String get presetLunch => 'LUNCH';
+
+  @override
+  String get presetLunchNote => 'Lunch';
+
+  @override
+  String get presetDinner => 'DINNER';
+
+  @override
+  String get presetDinnerNote => 'Dinner';
+
+  @override
+  String get presetTransport => 'TRANSPORT';
+
+  @override
+  String get presetTransportNote => 'Transport';
+
+  @override
+  String get presetGroceries => 'GROCERIES';
+
+  @override
+  String get presetGroceriesNote => 'Groceries';
+
+  @override
+  String get presetSomethingElse => 'SOMETHING ELSE';
+
+  @override
+  String freeEntriesUsed(int used, int free) {
+    return '$used of $free free entries used';
+  }
+
+  @override
+  String freeSimulationsUsed(int used, int free) {
+    return '$used of $free free simulations used';
+  }
 
   @override
   String get settled => 'SETTLED';
@@ -259,10 +374,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get repaid => '% REPAID';
 
   @override
+  String get stillPaying =>
+      'You have repaid what you borrowed. Payments run to the end of the term.';
+
+  @override
+  String get markSettled => 'Mark as settled';
+
+  @override
+  String get markSettledExplain =>
+      'The monthly payment stops counting and the loan leaves this list for good. Entries are kept.';
+
+  @override
   String get repay => 'REPAY';
 
   @override
-  String get repayTitle => '> REPAY';
+  String get repayTitle => 'REPAY';
 
   @override
   String get extra => 'EXTRA';
@@ -271,7 +397,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get configButton => 'CFG';
 
   @override
-  String get loanWizardTitle => 'LOAN WIZARD';
+  String get loanWizardTitle => 'Loan wizard';
 
   @override
   String get whoAndHowMuch => 'WHO & HOW MUCH';
@@ -322,10 +448,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get change => 'CHANGE';
 
   @override
-  String get subscriptions => 'SUBSCRIPTIONS';
+  String get subscriptions => 'Subscriptions';
 
   @override
-  String get noSubscriptions => '> NO ACTIVE SUBSCRIPTIONS';
+  String get noSubscriptions => 'NO ACTIVE SUBSCRIPTIONS';
 
   @override
   String get subscriptionName => 'NAME';
@@ -364,10 +490,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newSubscription => '+ SUBSCRIPTION';
 
   @override
-  String get editSubscription => '> EDIT SUBSCRIPTION';
+  String get editSubscription => 'Edit subscription';
 
   @override
-  String get addSubscription => '> NEW SUBSCRIPTION';
+  String get addSubscription => 'New subscription';
 
   @override
   String get personal => 'PERSONAL';
@@ -394,12 +520,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loans => 'LOANS';
 
   @override
-  String activeCount(int count) {
-    return '$count ACTIVE';
-  }
-
-  @override
-  String get repayLoan => 'REPAY LOAN';
+  String get repayLoan => 'Repay loan';
 
   @override
   String get repaymentAmount => 'REPAYMENT AMOUNT';
@@ -412,9 +533,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get subscrPerYear => '/ year';
-
-  @override
-  String get removeConfirm => 'REMOVE?';
 
   @override
   String get remove => 'REMOVE';
@@ -437,10 +555,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get safety => 'SAFETY';
 
   @override
-  String get deployableCapital =>
-      'Optional capital after protecting your runway';
-
-  @override
   String get historyEntries => 'HISTORY & ENTRIES';
 
   @override
@@ -453,20 +567,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String get delete => 'DELETE';
 
   @override
+  String get dataSection => 'Your data';
+
+  @override
+  String get deleteAllDataBody =>
+      'Erase every entry, loan, subscription and setting from this device. Runway Pro stays unlocked.';
+
+  @override
+  String get deleteAllDataButton => 'DELETE ALL DATA';
+
+  @override
+  String get deleteAllDataConfirmTitle => 'Delete everything?';
+
+  @override
+  String get deleteAllDataConfirmBody =>
+      'Your data is erased from this device and cannot be recovered. Runway starts again from the beginning.';
+
+  @override
+  String get deleteAllDataConfirmAction => 'DELETE EVERYTHING';
+
+  @override
   String get planned => 'PLANNED';
 
   @override
   String get whatIfAnalysis => 'WHAT-IF ANALYSIS';
 
   @override
-  String get current => 'CURRENT';
+  String get current => 'Current';
 
   @override
   String get simulate => 'Plan';
 
   @override
   String get simHint =>
-      'OVERRIDE BURN RATE OR ADD INCOME TO SEE IMPACT ON RUNWAY';
+      'Change rent + living or add income to see the impact on runway';
 
   @override
   String get simulation => 'Scenario';
@@ -484,16 +618,55 @@ class AppLocalizationsEn extends AppLocalizations {
   String get close => 'CLOSE';
 
   @override
-  String get monthlyBudget => 'MONTHLY BUDGET';
+  String get monthlyBudget => 'Monthly budget';
 
   @override
   String get rentFixed => 'RENT / FIXED';
 
   @override
-  String get livingExpenses => 'LIVING EXPENSES';
+  String get livingExpenses => 'Living expenses';
+
+  @override
+  String get budgetRuleHint =>
+      'Spending uses up its budget. Only going over adds cost.';
 
   @override
   String get subtotal => 'SUBTOTAL';
+
+  @override
+  String budgetLeft(String amount) {
+    return '$amount left';
+  }
+
+  @override
+  String budgetPaid(String amount) {
+    return '$amount paid';
+  }
+
+  @override
+  String spentOfBudget(String spent, String budget) {
+    return '$spent of $budget';
+  }
+
+  @override
+  String budgetOver(String amount) {
+    return '$amount over budget';
+  }
+
+  @override
+  String dailyAllowance(String amount, int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$amount a day for $days days',
+      one: '$amount left for today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noLivingExpensesThisMonth =>
+      'No living expenses logged this month';
 
   @override
   String get totalBudgetPerMonth => 'TOTAL BUDGET/MO';
@@ -511,16 +684,32 @@ class AppLocalizationsEn extends AppLocalizations {
   String get futureAssumptions => 'Forecast';
 
   @override
-  String get expectedInflow => 'Expected inflow';
+  String get expectedInflow => 'Expected income';
 
   @override
-  String get expectedBurn => 'Expected burn';
+  String get everyMonth => 'Every month';
+
+  @override
+  String get monthlySurplus => 'Surplus';
+
+  @override
+  String get monthlyDeficit => 'Deficit';
+
+  @override
+  String get setExpectedIncome => 'Set expected income';
+
+  @override
+  String get expectedBurn => 'Expected costs';
 
   @override
   String get notSet => 'Not set';
 
   @override
-  String get usingCurrentBurn => 'Using current burn';
+  String get settingsFailedToLoad =>
+      'Couldn\'t load these settings. Editing is off so nothing overwrites them.';
+
+  @override
+  String get usingCurrentBurn => 'Using current costs';
 
   @override
   String get assumptionsProjectionOnly =>
@@ -530,17 +719,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setAssumptions => 'SET FORECAST';
 
   @override
-  String get expectedMonthlyInflow => 'Expected monthly inflow';
+  String get expectedMonthlyInflow => 'Expected monthly income';
 
   @override
-  String get expectedMonthlyBurn => 'Expected monthly burn';
+  String get expectedMonthlyBurn => 'Expected monthly costs';
 
   @override
-  String get useCurrentBurn => 'Use current burn';
+  String get useCurrentBurn => 'Use current costs';
 
   @override
   String get futureInflowHint =>
-      'Any recurring or expected inflow — retainers, contracts, creator income, dividends.';
+      'Any recurring or expected income, such as retainers, contracts, creator income or dividends.';
+
+  @override
+  String get forecastDoesNotMoveRunway =>
+      'Income does not move the runway. The runway is what your cash covers if income stopped; this says whether the month adds to it.';
 
   @override
   String get runwayGoal => 'Runway goal';
@@ -576,37 +769,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get targetMonths => 'Target months';
 
   @override
-  String get display => 'DISPLAY';
-
-  @override
-  String get glassEffect => 'GLASS EFFECT';
-
-  @override
-  String get glassEffectHint => 'GPU INTENSIVE — DISABLE ON OLDER DEVICES';
-
-  @override
   String get runwayBrand => 'RUNWAY';
 
   @override
-  String get bootRunwayCheck => 'Checking your runway...';
+  String get runwayBasisBudget => 'On your budget, if income paused today';
 
   @override
-  String get bootIncomeStopped => 'Looking at what changes if income pauses...';
+  String get runwayBasisSpending => 'On your spending, if income paused today';
 
   @override
-  String get bootCountingCashDays => 'Estimating your breathing room...';
+  String get runwayBasisAssumption =>
+      'On your cost assumption, if income paused today';
 
   @override
-  String get bootRemovingComfortFilter => 'Separating essentials from noise...';
+  String computedCost(String amount) {
+    return 'Computed from your budget and log: $amount';
+  }
 
   @override
-  String get bootRealityCheckReady => 'Your financial picture is ready.';
-
-  @override
-  String get ifIncomeStoppedToday => 'If inflow stopped today';
-
-  @override
-  String get ifIncomePausedToday => 'If income paused today';
+  String get runwayNeedsCosts => 'Set your monthly costs to see your runway';
 
   @override
   String get monthSingular => 'month';
@@ -616,7 +797,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sustainableWithExpectedInflow =>
-      'Sustainable with your expected inflow';
+      'Sustainable with your expected income';
 
   @override
   String shortByPerMonth(String amount) {
@@ -629,13 +810,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get monthlyBurn => 'Monthly burn';
-
-  @override
   String get availableCash => 'Available cash';
-
-  @override
-  String get historicalBurn => 'Avg burn';
 
   @override
   String get notEnoughHistory => 'Not enough history';
@@ -648,12 +823,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fixedPressure => 'Fixed costs';
-
-  @override
-  String get actualBurn => 'Actual burn';
-
-  @override
-  String get actualBurnHigh => 'Actual burn ▲';
 
   @override
   String get plannedEssentials => 'Planned essentials';
@@ -671,13 +840,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yourRunway => 'Your runway';
 
   @override
-  String get loseIncome => 'Inflow stops';
-
-  @override
   String get higherExpenses => 'Higher expenses';
-
-  @override
-  String get incomeSetToZero => 'Inflow set to 0';
 
   @override
   String deltaDays(int days) {
@@ -700,15 +863,38 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shareAsText => 'SHARE AS TEXT';
 
   @override
-  String get goalReached => 'Goal reached!';
+  String get goalReached => 'Goal reached';
 
   @override
   String monthsToGoal(int count) {
-    return '$count months to go';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count months of cover to build',
+      one: '1 month of cover to build',
+    );
+    return '$_temp0';
   }
 
   @override
-  String get thisMonth => 'THIS MONTH';
+  String get goalCashTarget => 'Target cash';
+
+  @override
+  String goalCashTargetFrom(int count, String cost) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count months × $cost a month',
+      one: '1 month × $cost a month',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get goalCashToGo => 'Still to go';
+
+  @override
+  String get thisMonth => 'This month';
 
   @override
   String get cashIn => 'IN';
@@ -721,4 +907,203 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noActivityThisMonth => 'No activity yet this month';
+
+  @override
+  String get onboardingSkip => 'SKIP';
+
+  @override
+  String get onboardingWelcomeTitle =>
+      'Stop guessing how long\nyour money lasts.';
+
+  @override
+  String get onboardingWelcomeBody => 'No account. No bank connection.';
+
+  @override
+  String get onboardingGetStarted => 'GET STARTED';
+
+  @override
+  String get onboardingPrivacyTitle => 'Your data,\nyour device.';
+
+  @override
+  String get onboardingPrivacyBody =>
+      'There is no server, so there is nothing to leak.';
+
+  @override
+  String get onboardingPrivacyEncrypted => 'Encrypted on device';
+
+  @override
+  String get onboardingPrivacyOnDevice => 'Numbers stay on your device';
+
+  @override
+  String get onboardingPrivacyHidden => 'Hidden when you switch apps';
+
+  @override
+  String get onboardingPrivacyDelete => 'Delete anytime';
+
+  @override
+  String get onboardingIUnderstand => 'I UNDERSTAND';
+
+  @override
+  String get onboardingFirstActionTitle => 'One number and\nyou are set up.';
+
+  @override
+  String get onboardingFirstActionBody =>
+      'Just your cash balance. Nothing else.';
+
+  @override
+  String get onboardingAddMyBalance => 'ADD MY BALANCE';
+
+  @override
+  String get paywallUnlock => 'UNLOCK RUNWAY PRO';
+
+  @override
+  String get paywallLoadingPrice => 'Loading price...';
+
+  @override
+  String get paywallStoreUnreachable =>
+      'Couldn\'t reach the store. Check your connection and try again.';
+
+  @override
+  String paywallOneTimePurchase(String price) {
+    return '$price once. This app counts your subscriptions; it will not be one.';
+  }
+
+  @override
+  String get paywallUnavailable =>
+      'Pro isn\'t available right now. Please try again later.';
+
+  @override
+  String get paywallRestore => 'Restore purchase';
+
+  @override
+  String get proUnlocked => 'Unlocked. Entries and simulations are unlimited.';
+
+  @override
+  String get paywallMaybeLater => 'Maybe later';
+
+  @override
+  String get paywallPurchaseFailed => 'Purchase failed. Please try again.';
+
+  @override
+  String get paywallSomethingWrong => 'Something went wrong. Please try again.';
+
+  @override
+  String get paywallNoPreviousPurchase => 'No previous purchase found.';
+
+  @override
+  String get paywallRestoreFailed => 'Restore failed. Please try again.';
+
+  @override
+  String paywallTitleEntries(int count) {
+    return 'You\'ve used your $count free entries.\nPro is what keeps the number true.';
+  }
+
+  @override
+  String paywallTitleSimulations(int count) {
+    return 'You\'ve run your $count free simulations.\nPro is how you keep asking what if.';
+  }
+
+  @override
+  String get paywallTitleDefault => 'Unlock Runway Pro.';
+
+  @override
+  String get paywallFeatureEntries =>
+      'Log everything, so the number never drifts';
+
+  @override
+  String get paywallFeatureSimulations => 'Ask what if as often as you like';
+
+  @override
+  String get stepBalanceShort => 'Cash balance';
+
+  @override
+  String get stepBudgetShort => 'Budget';
+
+  @override
+  String get stepExpenseShort => 'First expense';
+
+  @override
+  String get stepSimShort => 'Simulator';
+
+  @override
+  String stepsDone(String steps) {
+    return 'Done: $steps';
+  }
+
+  @override
+  String get optionalBadge => 'OPTIONAL';
+
+  @override
+  String fixedCostsUnchanged(String amount) {
+    return 'Fixed costs unchanged: $amount';
+  }
+
+  @override
+  String get simNeedsBalance => 'Add your opening balance first';
+
+  @override
+  String get simNeedsBalanceWhy =>
+      'A runway needs a starting balance to count down from.';
+
+  @override
+  String get addOpeningBalance => 'ADD MY BALANCE';
+
+  @override
+  String get runSimulation => 'RUN SIMULATION';
+
+  @override
+  String get runwayUnlimitedHere => 'Income covers costs in this plan';
+
+  @override
+  String get runwayNoChange => 'No change';
+
+  @override
+  String deltaDaysLonger(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days longer',
+      one: '1 day longer',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String deltaDaysShorter(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days shorter',
+      one: '1 day shorter',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String deltaMonthsLonger(int months) {
+    String _temp0 = intl.Intl.pluralLogic(
+      months,
+      locale: localeName,
+      other: '$months months longer',
+      one: '1 month longer',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String deltaMonthsShorter(int months) {
+    String _temp0 = intl.Intl.pluralLogic(
+      months,
+      locale: localeName,
+      other: '$months months shorter',
+      one: '1 month shorter',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get paywallTermsOfUse => 'Terms of Use';
+
+  @override
+  String get paywallPrivacyPolicy => 'Privacy Policy';
 }

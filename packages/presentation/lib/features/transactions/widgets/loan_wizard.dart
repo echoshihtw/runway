@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:design_system/design_system.dart';
+import '../../../shared/money_field.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
 
 class LoanWizard extends StatefulWidget {
-  final void Function(
+  /// Returns false when the write was refused, so the wizard can stay open
+  /// with the typing intact instead of closing as though the loan existed.
+  final Future<bool> Function(
     double loanAmount,
     double monthlyPayment,
     int termMonths,
     DateTime date,
+    String source,
+    String name,
     String? note,
   )
   onSubmit;
@@ -22,6 +27,8 @@ class LoanWizard extends StatefulWidget {
 class _LoanWizardState extends State<LoanWizard>
     with SingleTickerProviderStateMixin {
   int _step = 0;
+  String? _error;
+  bool _saving = false;
   late AnimationController _slideCtrl;
   late Animation<Offset> _slideAnim;
 
@@ -38,7 +45,10 @@ class _LoanWizardState extends State<LoanWizard>
   String _source = 'BANK';
 
   static const _totalSteps = 3;
-  static const _sources = ['BANK', 'FRIEND', 'FAMILY', 'OTHER'];
+  // FRIEND and FAMILY were separate chips. Nothing in the app treats a loan
+  // from a friend differently from one from a bank, and the lender's name
+  // below already says who it is, so the taxonomy only added a choice to make.
+  static const _sources = ['BANK', 'OTHER'];
 
   @override
   void initState() {
@@ -66,12 +76,25 @@ class _LoanWizardState extends State<LoanWizard>
     super.dispose();
   }
 
+  /// Four steps means four slides while someone is typing numbers they had
+  /// to go and look up. Nothing about a form step needs to arrive from
+  /// somewhere, so under Reduce Motion it is simply there.
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (AppMotion.isReduced(context)) _slideCtrl.value = 1;
+  }
+
   void _next() {
-    if (_step < _totalSteps - 1) {
-      _slideCtrl.reset();
-      setState(() => _step++);
-      _slideCtrl.forward();
+    if (_step >= _totalSteps - 1) return;
+    setState(() => _step++);
+    if (AppMotion.isReduced(context)) {
+      _slideCtrl.value = 1;
+      return;
     }
+    _slideCtrl
+      ..reset()
+      ..forward();
   }
 
   void _prev() {
@@ -95,7 +118,7 @@ class _LoanWizardState extends State<LoanWizard>
     }
     setState(() {
       _computedPayment = payment;
-      if (!_overridePayment) _paymentCtrl.text = payment.toStringAsFixed(0);
+      if (!_overridePayment) _paymentCtrl.text = moneyField(payment);
     });
   }
 
@@ -118,33 +141,69 @@ class _LoanWizardState extends State<LoanWizard>
     if (picked != null) setState(() => _date = picked);
   }
 
+  // Above zero, not merely parsable. The write rejects a loan of zero on
+  // either figure, so a wizard that let you reach CONFIRM with one could only
+  // ever fail there. The term is left alone: zero months is a loan with no
+  // term, which the engine reads as open-ended and is a real thing to enter.
   bool get _step0Valid =>
       _nameCtrl.text.trim().isNotEmpty &&
-      double.tryParse(_amountCtrl.text.trim()) != null;
+      (double.tryParse(_amountCtrl.text.trim()) ?? 0) > 0;
   bool get _step1Valid => int.tryParse(_monthsCtrl.text.trim()) != null;
-  bool get _step2Valid => double.tryParse(_paymentCtrl.text.trim()) != null;
+  bool get _step2Valid => (double.tryParse(_paymentCtrl.text.trim()) ?? 0) > 0;
   bool get _valid => switch (_step) {
     0 => _step0Valid,
     1 => _step1Valid,
     _ => _step2Valid,
   };
 
-  void _submit() {
+  Future<void> _submit() async {
     final amount = double.tryParse(_amountCtrl.text.trim());
     final payment = double.tryParse(_paymentCtrl.text.trim());
     final termMo = int.tryParse(_monthsCtrl.text.trim()) ?? 0;
     if (amount == null || payment == null) return;
-    final note =
-        '$_source — ${_nameCtrl.text.trim()}'
-        '${_noteCtrl.text.trim().isNotEmpty ? " | ${_noteCtrl.text.trim()}" : ""}';
-    widget.onSubmit(amount, payment, termMo, _date, note);
-    Navigator.of(context).pop();
+    // The source, the lender's name and the note used to be packed into one
+    // string here and split apart again by the caller, which only split on the
+    // first separator: a loan from John noted "bought a car" was stored with
+    // the name "John | bought a car" and no note at all. They are three fields
+    // on the loan already, so they travel as three.
+    final typed = _noteCtrl.text.trim();
+    setState(() {
+      _saving = true;
+      _error = null;
+    });
+    // The pop used to happen here, before the awaits inside onSubmit had run,
+    // so the wizard closed whether the write landed or not (#133).
+    final saved = await widget.onSubmit(
+      amount,
+      payment,
+      termMo,
+      _date,
+      _source,
+      _nameCtrl.text.trim(),
+      typed.isEmpty ? null : typed,
+    );
+    if (!mounted) return;
+    if (saved) {
+      Navigator.of(context).pop();
+      return;
+    }
+    setState(() {
+      _saving = false;
+      _error = context.l10n.loanSaveFailed;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Container(
+      // The same cap the subscription sheet took in #168: unbounded, the
+      // column below grows instead of scrolling, and at 320pt with large text
+      // CONFIRM sat 247px past the bottom of the screen with no way to reach
+      // it.
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.9,
+      ),
       decoration: const BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.vertical(
@@ -157,102 +216,139 @@ class _LoanWizardState extends State<LoanWizard>
         top: AppSpacing.md,
         bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.lg,
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Container(
-              width: 36,
-              height: 4,
-              decoration: BoxDecoration(
-                color: AppColors.cardBorder,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.md),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                l10n.loanWizardTitle.toUpperCase(),
-                style: AppTextStyles.title.copyWith(color: AppColors.gold),
-              ),
-              Text('${_step + 1} / $_totalSteps', style: AppTextStyles.caption),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Row(
-            children: List.generate(
-              _totalSteps,
-              (i) => Expanded(
-                child: Container(
-                  height: 2,
-                  margin: EdgeInsets.only(
-                    right: i < _totalSteps - 1 ? AppSpacing.xs : 0,
-                  ),
-                  decoration: BoxDecoration(
-                    color: i <= _step ? AppColors.gold : AppColors.cardBorder,
-                    borderRadius: BorderRadius.circular(1),
-                  ),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 36,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: AppColors.cardBorder,
+                  borderRadius: BorderRadius.circular(2),
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          SlideTransition(position: _slideAnim, child: _buildStep(context, l10n)),
-          const SizedBox(height: AppSpacing.lg),
-          Row(
-            children: [
-              if (_step > 0) ...[
-                NeoButton(
-                  label: l10n.back,
-                  variant: NeoButtonVariant.ghost,
-                  onPressed: _prev,
+            const SizedBox(height: AppSpacing.md),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // The title yields at large text sizes; the step counter is two
+                // characters and never needs to.
+                Flexible(
+                  child: Text(
+                    l10n.loanWizardTitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.title.copyWith(color: AppColors.gold),
+                  ),
                 ),
                 const SizedBox(width: AppSpacing.sm),
+                Text(
+                  '${_step + 1} / $_totalSteps',
+                  style: AppTextStyles.caption,
+                ),
               ],
-              Expanded(
-                child: _step < _totalSteps - 1
-                    ? NeoButton(
-                        label: '${l10n.next} →',
-                        variant: NeoButtonVariant.primary,
-                        color: AppColors.gold,
-                        fullWidth: true,
-                        onPressed: _valid ? _next : null,
-                      )
-                    : NeoButton(
-                        label: l10n.confirm,
-                        variant: NeoButtonVariant.primary,
-                        color: AppColors.gold,
-                        fullWidth: true,
-                        onPressed: _step2Valid ? _submit : null,
-                      ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Row(
+              children: List.generate(
+                _totalSteps,
+                (i) => Expanded(
+                  child: Container(
+                    height: 2,
+                    margin: EdgeInsets.only(
+                      right: i < _totalSteps - 1 ? AppSpacing.xs : 0,
+                    ),
+                    decoration: BoxDecoration(
+                      color: i <= _step ? AppColors.gold : AppColors.cardBorder,
+                      borderRadius: BorderRadius.circular(1),
+                    ),
+                  ),
+                ),
               ),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            SlideTransition(
+              position: _slideAnim,
+              child: _buildStep(context, l10n),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            if (_error != null) ...[
+              Text(
+                _error!,
+                style: AppTextStyles.caption.copyWith(color: AppColors.red),
+              ),
+              const SizedBox(height: AppSpacing.sm),
             ],
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          NeoButton(
-            label: l10n.abort,
-            variant: NeoButtonVariant.danger,
-            fullWidth: true,
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ],
+            Row(
+              children: [
+                if (_step > 0) ...[
+                  // A bare Flexible defaults to flex 1 and so claims half the
+                  // row from the Expanded beside it, whatever BACK actually
+                  // needs: at iPhone width that left CONFIRM at 191 of 390
+                  // points with a dead strip beside it. A quarter share is
+                  // more than BACK's own width at normal text and still small
+                  // enough to make it ellipsise rather than overflow when the
+                  // text is doubled.
+                  Flexible(
+                    flex: 1,
+                    child: NeoButton(
+                      label: l10n.back,
+                      variant: NeoButtonVariant.ghost,
+                      onPressed: _prev,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                ],
+                Expanded(
+                  flex: 3,
+                  child: _step < _totalSteps - 1
+                      ? NeoButton(
+                          label: '${l10n.next} →',
+                          variant: NeoButtonVariant.primary,
+                          color: AppColors.gold,
+                          fullWidth: true,
+                          onPressed: _valid ? _next : null,
+                        )
+                      : NeoButton(
+                          label: l10n.confirm,
+                          variant: NeoButtonVariant.primary,
+                          color: AppColors.gold,
+                          fullWidth: true,
+                          onPressed: _step2Valid && !_saving ? _submit : null,
+                        ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            NeoButton(
+              label: l10n.abort,
+              variant: NeoButtonVariant.danger,
+              fullWidth: true,
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildStep(BuildContext context, AppLocalizations l10n) => switch (_step) {
-    0 => _step0(context, l10n),
-    1 => _step1(l10n),
-    _ => _step2(l10n),
-  };
+  Widget _buildStep(BuildContext context, AppLocalizations l10n) =>
+      switch (_step) {
+        0 => _step0(context, l10n),
+        1 => _step1(l10n),
+        _ => _step2(l10n),
+      };
 
   Widget _step0(BuildContext context, AppLocalizations l10n) {
     final locale = Localizations.localeOf(context).toString();
-    final dateStr = DateFormat('dd MMM yyyy', locale).format(_date).toUpperCase();
+    final dateStr = DateFormat(
+      'dd MMM yyyy',
+      locale,
+    ).format(_date).toUpperCase();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -308,7 +404,7 @@ class _LoanWizardState extends State<LoanWizard>
         NeoInput(
           label: l10n.loanAmount,
           controller: _amountCtrl,
-          inputType: NeoInputType.numeric,
+          inputType: NeoInputType.decimal,
           hint: "1880000",
           onChanged: (_) {
             setState(() {});
@@ -333,7 +429,16 @@ class _LoanWizardState extends State<LoanWizard>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(dateStr, style: AppTextStyles.body),
+                // The date yields at large text sizes; the icon does not.
+                Flexible(
+                  child: Text(
+                    dateStr,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.body,
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.xs),
                 const Icon(
                   Icons.calendar_today_rounded,
                   color: AppColors.textSecondary,
@@ -394,7 +499,7 @@ class _LoanWizardState extends State<LoanWizard>
                   ],
                 ),
                 Text(
-                  _computedPayment!.toStringAsFixed(0),
+                  moneyField(_computedPayment),
                   style: AppTextStyles.metric.copyWith(color: AppColors.gold),
                 ),
               ],
@@ -436,8 +541,9 @@ class _LoanWizardState extends State<LoanWizard>
         GestureDetector(
           onTap: () => setState(() {
             _overridePayment = !_overridePayment;
-            if (!_overridePayment && _computedPayment != null)
-              _paymentCtrl.text = _computedPayment!.toStringAsFixed(0);
+            if (!_overridePayment && _computedPayment != null) {
+              _paymentCtrl.text = moneyField(_computedPayment);
+            }
           }),
           child: Row(
             children: [
@@ -472,8 +578,8 @@ class _LoanWizardState extends State<LoanWizard>
         NeoInput(
           label: l10n.monthlyInstallment,
           controller: _paymentCtrl,
-          inputType: NeoInputType.numeric,
-          hint: _computedPayment?.toStringAsFixed(0) ?? "0",
+          inputType: NeoInputType.decimal,
+          hint: _computedPayment == null ? "0" : moneyField(_computedPayment),
           onChanged: (_) => setState(() {}),
         ),
         const SizedBox(height: AppSpacing.md),

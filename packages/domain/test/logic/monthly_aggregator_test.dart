@@ -3,6 +3,8 @@ import 'package:domain/domain.dart';
 import '../helpers/transaction_helper.dart';
 
 void main() {
+  _openingBalanceTests();
+
   group('aggregateMonths', () {
     test('returns empty for no transactions', () {
       expect(aggregateMonths([]), isEmpty);
@@ -219,6 +221,39 @@ void main() {
       ];
       final months = aggregateMonths(txs);
       expect(months.first.netFlow, 30000); // 80000 - 20000 - 30000
+    });
+  });
+}
+
+void _openingBalanceTests() {
+  Transaction opening(double amount, DateTime date) => Transaction(
+    id: 'ob-${date.toIso8601String()}-$amount',
+    date: date,
+    type: TransactionType.openingBalance,
+    amount: Money(amount),
+    createdAt: date,
+    updatedAt: date,
+  );
+
+  group('opening balance is a starting point, not a running total', () {
+    test('a single opening balance sets the balance', () {
+      final months = aggregateMonths([opening(100000, DateTime(2026, 9, 1))]);
+
+      expect(months.single.balance, 100000);
+    });
+
+    test('a later opening balance replaces an earlier one', () {
+      // Correcting a balance must never double it.
+      final months = aggregateMonths([
+        opening(100000, DateTime(2026, 9, 1)),
+        opening(90000, DateTime(2026, 9, 10)),
+      ]);
+
+      expect(months.single.balance, 90000);
+    });
+
+    test('no opening balance leaves nothing to report', () {
+      expect(aggregateMonths(const []), isEmpty);
     });
   });
 }

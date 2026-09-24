@@ -5,6 +5,8 @@ import 'package:domain/domain.dart';
 import 'package:application/application.dart';
 import 'package:intl/intl.dart';
 
+import '../../../shared/ledger_glyphs.dart';
+
 class TransactionRow extends ConsumerWidget {
   final Transaction transaction;
   final VoidCallback onEdit;
@@ -19,20 +21,24 @@ class TransactionRow extends ConsumerWidget {
 
   Color get _typeColor => switch (transaction.type) {
     TransactionType.income => SC.txIncome,
-    TransactionType.openingBalance => SC.txOpeningBalance,
+    // A starting line, not a category of money: it takes no category colour.
+    TransactionType.openingBalance => AppColors.textSecondary,
     TransactionType.loan => SC.txLoan,
     TransactionType.expense => SC.txExpense,
     TransactionType.repayment => SC.txRepayment,
-    _ => SC.txInvestment,
+    TransactionType.subscriptionCharge => SC.subscr,
   };
 
   IconData get _typeIcon => switch (transaction.type) {
-    TransactionType.income => Icons.arrow_downward_rounded,
-    TransactionType.openingBalance => Icons.account_balance_rounded,
-    TransactionType.loan => Icons.credit_score_rounded,
-    TransactionType.expense => Icons.arrow_upward_rounded,
-    TransactionType.repayment => Icons.replay_rounded,
-    _ => Icons.trending_up_rounded,
+    TransactionType.income => LedgerGlyphs.inflow,
+    TransactionType.openingBalance => LedgerGlyphs.start,
+    // The loan and each payment on it are the same concept, so they wear the
+    // same mark as the liabilities card — and colour, not shape, says which
+    // commitment a scheduled payment belongs to.
+    TransactionType.loan => LedgerGlyphs.lender,
+    TransactionType.repayment => LedgerGlyphs.lender,
+    TransactionType.expense => LedgerGlyphs.spent,
+    TransactionType.subscriptionCharge => LedgerGlyphs.recurring,
   };
 
   String _typeLabel(AppLocalizations l10n) => switch (transaction.type) {
@@ -41,14 +47,24 @@ class TransactionRow extends ConsumerWidget {
     TransactionType.loan => l10n.typeLoan,
     TransactionType.repayment => l10n.typeRepay,
     TransactionType.openingBalance => l10n.typeOpening,
-    _ => transaction.type.label,
+    TransactionType.subscriptionCharge => l10n.typeSubscription,
   };
 
-  bool get _isPlanned => transaction.date.isAfter(DateTime.now());
+  bool _isPlannedAt(DateTime now) => transaction.date.isAfter(now);
+
+  /// The note, when there is one, is what the user wrote to recognise the
+  /// entry, so it leads. The type is the fallback title.
+  bool get _isExpense => transaction.type == TransactionType.expense;
+
+  String? get _note {
+    final note = transaction.note?.trim();
+    return note == null || note.isEmpty ? null : note;
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    final isPlanned = _isPlannedAt(ref.watch(clockProvider)());
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
     final amount = NumberFormat(
       '#,##0',
@@ -95,7 +111,7 @@ class TransactionRow extends ConsumerWidget {
                     children: [
                       Flexible(
                         child: Text(
-                          _typeLabel(l10n).toUpperCase(),
+                          _note ?? _typeLabel(l10n).toUpperCase(),
                           style: AppTextStyles.body.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
@@ -103,29 +119,30 @@ class TransactionRow extends ConsumerWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      if (_isPlanned) ...[
+                      if (isPlanned) ...[
                         const SizedBox(width: AppSpacing.xs),
                         PixelBadge(
                           label: l10n.planned,
-                          color: AppColors.textDim,
+                          color: AppColors.textSecondary,
                         ),
                       ],
                     ],
                   ),
-                  if (transaction.category != null) ...[
-                    const SizedBox(height: 2),
-                    Text(
-                      '${transaction.category!.group} · ${transaction.category!.label}',
-                      style: AppTextStyles.caption.copyWith(
-                        color: AppColors.textDim,
-                        fontSize: 10,
-                      ),
-                    ),
-                  ],
-                  if (transaction.note != null) ...[
+                  if (_note != null || _isExpense) ...[
                     const SizedBox(height: AppSpacing.xxs),
                     Text(
-                      transaction.note!,
+                      [
+                        if (_note != null) _typeLabel(l10n).toUpperCase(),
+                        // Every expense uses up the rent or the living budget,
+                        // so name that, not the category picker's old group.
+                        if (_isExpense)
+                          if (countsAsRent(transaction)) 'RENT' else 'LIVING',
+                        // Older entries carry a finer category. Newer ones
+                        // don't, and the bucket above already says enough.
+                        if (transaction.category != null &&
+                            transaction.category != ExpenseCategory.rent)
+                          transaction.category!.label,
+                      ].join(' · '),
                       style: AppTextStyles.caption,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -146,9 +163,15 @@ class TransactionRow extends ConsumerWidget {
                     alignment: Alignment.centerRight,
                     child: Text(
                       '$sign$symbol $amount',
-                      style: AppTextStyles.metricSmall.copyWith(
-                        color: AppColors.textPrimary,
-                      ),
+                      // The figure takes its category's colour, like every
+                      // other number in the app: pink is an outflow, mint is
+                      // money in, gold is a loan, purple is a subscription.
+                      // The log was the one place a number stayed neutral.
+                      //
+                      // The opening balance falls out for free: [_typeColor]
+                      // already gives it no category colour, because it is
+                      // where counting starts rather than money that moved.
+                      style: AppTextStyles.metricSmall.copyWith(color: color),
                       maxLines: 1,
                     ),
                   ),

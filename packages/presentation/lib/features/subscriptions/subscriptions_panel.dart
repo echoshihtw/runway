@@ -4,6 +4,9 @@ import 'package:design_system/design_system.dart';
 import 'package:application/application.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
+import '../../shared/add_strip.dart';
+import '../../shared/ledger_glyphs.dart';
+import 'add_subscription_sheet.dart';
 import 'subscription_form.dart';
 
 class SubscriptionsPanel extends ConsumerWidget {
@@ -16,7 +19,8 @@ class SubscriptionsPanel extends ConsumerWidget {
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
     final nf = NumberFormat('#,##0', 'en_US');
     final active = subs.where((s) => s.isActive).toList();
-    final sorted = sortedByNextBilling(active);
+    final now = ref.watch(clockProvider)();
+    final sorted = sortedByNextBilling(active, now: now);
     final monthly = totalSubscriptionMonthlyCost(active);
     final yearly = totalSubscriptionYearlyCost(active);
     final next = sorted.isEmpty ? null : sorted.first;
@@ -31,7 +35,10 @@ class SubscriptionsPanel extends ConsumerWidget {
     final showCatLabel = hasPersonal && hasBusiness;
 
     final summary = active.isEmpty
-        ? _EmptySummary(l10n: l10n)
+        ? _EmptySummary(
+            l10n: l10n,
+            onAdd: () => showAddSubscriptionSheet(context, ref),
+          )
         : Column(
             children: [
               Row(
@@ -54,13 +61,7 @@ class SubscriptionsPanel extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: AppSpacing.md),
-              Row(
-                children: [
-                  Expanded(child: _NextBillingStrip(sub: next!)),
-                  const SizedBox(width: AppSpacing.sm),
-                  _CountBadge(count: active.length),
-                ],
-              ),
+              _NextBillingStrip(sub: next!, now: now),
             ],
           );
 
@@ -76,7 +77,13 @@ class SubscriptionsPanel extends ConsumerWidget {
                   showCategoryLabel: showCatLabel,
                   showDivider: i < sorted.length - 1,
                   onEdit: () => _showEditSubscription(context, ref, sorted[i]),
+                  now: now,
                 ),
+              AddStrip(
+                label: l10n.newSubscription,
+                color: SC.subscr,
+                onTap: () => showAddSubscriptionSheet(context, ref),
+              ),
             ],
           );
 
@@ -86,13 +93,56 @@ class SubscriptionsPanel extends ConsumerWidget {
       initiallyExpanded: false,
       summary: summary,
       details: details,
+      // How many things are in the card is metadata about the card, so it
+      // sits with the title. The summary is for money.
+      //
+      // This was a chip in the summary reading "3 ACTIVE", where ACTIVE was
+      // a word that can never be false: the panel only ever lists active
+      // ones, so it described an invariant rather than the count.
       trailing: active.isEmpty
           ? null
           : Text(
               '${active.length}',
-              style: AppTextStyles.caption.copyWith(color: SC.subscr),
+              style: AppTextStyles.metricSmall.copyWith(color: SC.subscr),
             ),
     );
+  }
+
+  /// A reminder has to be stoppable. Deleting it ends future entries; the
+  /// payments already written stay in the log, because they happened.
+  Future<void> _confirmDelete(
+    BuildContext context,
+    WidgetRef ref,
+    Subscription subscription,
+  ) async {
+    final l10n = context.l10n;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      useRootNavigator: true,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        title: Text(l10n.deleteSubscription, style: AppTextStyles.label),
+        content: Text(
+          l10n.deleteSubscriptionKeepsEntries,
+          style: AppTextStyles.bodySmall,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l10n.abort, style: AppTextStyles.label),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(
+              l10n.deleteSubscription,
+              style: AppTextStyles.label.copyWith(color: SC.cost),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    await ref.read(deleteSubscriptionUseCaseProvider).execute(subscription.id);
   }
 
   void _showEditSubscription(
@@ -102,6 +152,7 @@ class SubscriptionsPanel extends ConsumerWidget {
   ) {
     showModalBottomSheet(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(
@@ -112,6 +163,9 @@ class SubscriptionsPanel extends ConsumerWidget {
       builder: (_) => SubscriptionForm(
         existing: subscription,
         onSubmit: (name, category, amount, cycle, startDate, note) async {
+          // One clock for the whole record, read at submit rather than build,
+          // so a sheet left open overnight still stamps today.
+          final now = ref.read(clockProvider)();
           final updated = Subscription(
             id: subscription.id,
             name: name,
@@ -119,15 +173,16 @@ class SubscriptionsPanel extends ConsumerWidget {
             amount: amount,
             cycle: cycle,
             startDate: startDate,
-            nextBillingDate: computeNextBillingDate(startDate, cycle),
+            nextBillingDate: nextBillingDateAfter(startDate, cycle, now),
             note: note,
             isActive: subscription.isActive,
             createdAt: subscription.createdAt,
-            updatedAt: DateTime.now(),
+            updatedAt: now,
           );
           await ref.read(editSubscriptionUseCaseProvider).execute(updated);
           return true;
         },
+        onDelete: () => _confirmDelete(context, ref, subscription),
       ),
     );
   }
@@ -135,32 +190,57 @@ class SubscriptionsPanel extends ConsumerWidget {
 
 class _EmptySummary extends StatelessWidget {
   final AppLocalizations l10n;
+  final VoidCallback onAdd;
 
-  const _EmptySummary({required this.l10n});
+  const _EmptySummary({required this.l10n, required this.onAdd});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 34,
-          height: 34,
-          decoration: BoxDecoration(
-            color: SC.subscr.withAlpha(16),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: SC.subscr.withAlpha(45)),
+    // With nothing subscribed the card has no expanded section, so this row is
+    // the only way in. It was inert text, which meant the only door was the
+    // add menu — and the one place someone learns the feature exists could not
+    // act on it.
+    return GestureDetector(
+      onTap: onAdd,
+      behavior: HitTestBehavior.opaque,
+      child: Row(
+        children: [
+          Container(
+            width: 34,
+            height: 34,
+            decoration: BoxDecoration(
+              color: SC.subscr.withAlpha(16),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: SC.subscr.withAlpha(45)),
+            ),
+            // One glyph per concept: the rows and the logged charge both use
+            // autorenew, so the card uses it too.
+            child: const Icon(
+              LedgerGlyphs.recurring,
+              color: SC.subscr,
+              size: 18,
+            ),
           ),
-          child: const Icon(
-            Icons.subscriptions_rounded,
-            color: SC.subscr,
-            size: 18,
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            flex: 3,
+            child: Text(l10n.noSubscriptions, style: AppTextStyles.bodySmall),
           ),
-        ),
-        const SizedBox(width: AppSpacing.sm),
-        Expanded(
-          child: Text(l10n.noSubscriptions, style: AppTextStyles.bodySmall),
-        ),
-      ],
+          // The label is the only thing in this row that can be shortened
+          // without losing meaning, so it takes the smaller share and
+          // ellipsises instead of pushing the row past the screen edge.
+          Expanded(
+            flex: 2,
+            child: Text(
+              l10n.newSubscription,
+              textAlign: TextAlign.right,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.label.copyWith(color: SC.subscr),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -197,11 +277,15 @@ class _MetricCell extends StatelessWidget {
 class _NextBillingStrip extends StatelessWidget {
   final Subscription sub;
 
-  const _NextBillingStrip({required this.sub});
+  /// Handed down rather than read here, so one frame cannot count from a
+  /// different instant than the row beside it, and a test can pin both.
+  final DateTime now;
+
+  const _NextBillingStrip({required this.sub, required this.now});
 
   @override
   Widget build(BuildContext context) {
-    final days = sub.daysUntilNextBilling;
+    final days = daysUntilNextBilling(sub, now);
     final color = days <= 7
         ? AppColors.hotPink
         : days <= 14
@@ -236,31 +320,6 @@ class _NextBillingStrip extends StatelessWidget {
   }
 }
 
-class _CountBadge extends StatelessWidget {
-  final int count;
-
-  const _CountBadge({required this.count});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
-        vertical: AppSpacing.xs + 2,
-      ),
-      decoration: BoxDecoration(
-        color: SC.subscr.withAlpha(16),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: SC.subscr.withAlpha(55)),
-      ),
-      child: Text(
-        '$count ACTIVE',
-        style: AppTextStyles.caption.copyWith(color: SC.subscr),
-      ),
-    );
-  }
-}
-
 class _SubRow extends StatelessWidget {
   final Subscription sub;
   final String symbol;
@@ -268,6 +327,7 @@ class _SubRow extends StatelessWidget {
   final bool showCategoryLabel;
   final bool showDivider;
   final VoidCallback onEdit;
+  final DateTime now;
 
   const _SubRow({
     required this.sub,
@@ -276,12 +336,13 @@ class _SubRow extends StatelessWidget {
     this.showCategoryLabel = false,
     required this.showDivider,
     required this.onEdit,
+    required this.now,
   });
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final days = sub.daysUntilNextBilling;
+    final days = daysUntilNextBilling(sub, now);
     final daysColor = days <= 7
         ? AppColors.hotPink
         : days <= 14
@@ -309,7 +370,7 @@ class _SubRow extends StatelessWidget {
                 border: Border.all(color: daysColor.withAlpha(55)),
               ),
               margin: const EdgeInsets.only(right: AppSpacing.sm),
-              child: Icon(Icons.autorenew_rounded, color: daysColor, size: 15),
+              child: Icon(LedgerGlyphs.recurring, color: daysColor, size: 15),
             ),
             Expanded(
               child: Column(
@@ -335,9 +396,7 @@ class _SubRow extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: SC.subscr.withAlpha(20),
                             borderRadius: BorderRadius.circular(3),
-                            border: Border.all(
-                              color: SC.subscr.withAlpha(60),
-                            ),
+                            border: Border.all(color: SC.subscr.withAlpha(60)),
                           ),
                           child: Text(
                             sub.category == SubscriptionCategory.personal

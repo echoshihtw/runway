@@ -1,11 +1,27 @@
 name: CD
 
+# Deploys an existing release tag. release.yml calls it after cutting a tag;
+# run it by hand from the Actions tab to redeploy one.
+#
+# No "push: tags" trigger: tags cut by release.yml use GITHUB_TOKEN, which never
+# starts another workflow. The build number is the commit count, so it only
+# grows along main.
+
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  workflow_call:
+    inputs:
+      tag:
+        type: string
+        required: true
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to deploy, such as v1.0.0
+        type: string
+        required: true
 
 env:
+  TAG: ${{ inputs.tag }}
   FLUTTER_VERSION: '3.41.7'
   JAVA_VERSION: '17'
 
@@ -20,6 +36,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+          fetch-depth: 0 # the build number counts commits
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -69,13 +88,18 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
 
+      # The release tag is the version. release.yml passes the tag that
+      # semantic-release cut from the merge to main, so merging the release PR
+      # is what decides what ships and no version can appear without one.
+      # pubspec's value is the default for local builds only, so an archive
+      # built by hand for submission must pass BUILD_NAME to match (#99).
       - name: Build iOS IPA
         run: |
           cd app && flutter build ipa \
             --release \
             --export-options-plist=ios/ExportOptions.plist \
-            --build-name="${GITHUB_REF_NAME#v}" \
-            --build-number=${{ github.run_number }}
+            --build-name="${TAG#v}" \
+            --build-number="$(git rev-list --count HEAD)"
 
       - name: Upload to TestFlight
         env:
@@ -83,7 +107,13 @@ jobs:
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
         run: |
-          echo "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 --decode > $RUNNER_TEMP/api_key.p8
+          # altool takes no path for the key: it searches ./private_keys,
+          # ~/private_keys, ~/.private_keys and ~/.appstoreconnect/private_keys,
+          # and the file must be named AuthKey_<KEYID>.p8. Writing it anywhere
+          # else decodes a valid secret that altool then cannot find.
+          mkdir -p ~/private_keys
+          echo "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 --decode \
+            > ~/private_keys/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8
           xcrun altool --upload-app \
             --type ios \
             --file app/build/ios/ipa/*.ipa \
@@ -93,20 +123,27 @@ jobs:
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ios-ipa-${{ github.ref_name }}
+          name: ios-ipa-${{ inputs.tag }}
           path: app/build/ios/ipa/*.ipa
           retention-days: 30
 
   # ============================================================
   # RELEASE Android → Play Store
   # ============================================================
+  # Turned off until the Google Play release (#56). None of the Android
+  # secrets are set, so the job would fail on every iOS release. CI still
+  # builds Android on pushes to staging. Remove this `if` to turn it back on.
   release-android:
     name: Release Android → Play Store
+    if: ${{ false }}
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+          fetch-depth: 0 # the build number counts commits
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -151,8 +188,8 @@ jobs:
         run: |
           cd app && flutter build appbundle \
             --release \
-            --build-name="${GITHUB_REF_NAME#v}" \
-            --build-number=${{ github.run_number }}
+            --build-name="${TAG#v}" \
+            --build-number="$(git rev-list --count HEAD)"
 
       - name: Upload to Play Store
         uses: r0adkll/upload-google-play@v1
@@ -166,6 +203,6 @@ jobs:
       - name: Upload AAB artifact
         uses: actions/upload-artifact@v4
         with:
-          name: android-aab-${{ github.ref_name }}
+          name: android-aab-${{ inputs.tag }}
           path: app/build/app/outputs/bundle/release/app-release.aab
           retention-days: 30

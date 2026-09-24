@@ -27,13 +27,21 @@ class AppLocalizationsJa extends AppLocalizations {
   String get pressureLabel => 'プレッシャー';
 
   @override
+  String get costsIncludeCommitments => 'サブスクとローン返済を含みます';
+
+  @override
   String get metrics => 'メトリクス';
 
   @override
   String get cash => '現金';
 
   @override
-  String get burnPerMonth => '月間支出';
+  String get owed => '残債';
+
+  @override
+  String runsOut(String date) {
+    return '$date に枯渇';
+  }
 
   @override
   String get loanPerMonth => '月間債務';
@@ -66,9 +74,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get clear => 'クリア';
 
   @override
-  String get loanAffectsInfo => '> 月間返済はプレッシャー比率と投資可能額に影響します';
-
-  @override
   String get transactionLog => '取引ログ';
 
   @override
@@ -78,10 +83,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get noEntries => 'No entries yet\nTap + ADD to log your first entry';
 
   @override
-  String get newLogEntry => '> 新規エントリー';
+  String get newLogEntry => '新規エントリー';
 
   @override
-  String get modifyEntry => '> エントリー修正';
+  String get modifyEntry => 'エントリー修正';
 
   @override
   String get type => 'タイプ';
@@ -105,7 +110,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get abort => '中止';
 
   @override
-  String get purgeEntry => '> このエントリーを削除？';
+  String get purgeEntry => 'この記録を削除しますか？';
 
   @override
   String get scenarioSimulator => 'シナリオシミュレーター';
@@ -114,7 +119,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get overrideInputs => 'オーバーライド入力';
 
   @override
-  String get burnRateOverride => '支出オーバーライド';
+  String get burnRateOverride => '家賃＋生活費 / 月';
 
   @override
   String get simulatedIncome => 'シミュレート収入/月';
@@ -206,13 +211,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get loading => '読み込み中...';
 
   @override
-  String get navHud => 'HUD';
+  String get navHud => '概要';
 
   @override
-  String get navLog => 'LOG';
+  String get navLog => '記録';
 
   @override
-  String get navSim => 'SIM';
+  String get navSim => '計画';
 
   @override
   String get typeExpense => '支出';
@@ -224,16 +229,123 @@ class AppLocalizationsJa extends AppLocalizations {
   String get typeLoan => 'ローン';
 
   @override
-  String get typeRepay => '返済';
+  String get typeRepay => 'ローン返済';
 
   @override
   String get typeOpening => '開始残高';
 
   @override
+  String get typeSubscription => 'サブスク';
+
+  @override
+  String subscriptionPaidQuestion(String amount, String name, String date) {
+    return '$dateに$nameの$amountを支払いましたか？';
+  }
+
+  @override
+  String subscriptionChargesDue(int count, String amount) {
+    return '未確認のサブスク請求 $count 件：$amount';
+  }
+
+  @override
+  String get subscriptionConfirmAll => 'すべて記録する';
+
+  @override
+  String get subscriptionReviewEach => '1件ずつ確認';
+
+  @override
+  String get subscriptionPaidYes => 'はい、記録する';
+
+  @override
+  String get subscriptionChargeFailed => '記録できませんでした。サブスクの金額を確認してください。';
+
+  @override
+  String get subscriptionSaveFailed => 'サブスクを保存できませんでした。追加されていません。';
+
+  @override
+  String get loanSaveFailed => 'ローンを保存できませんでした。追加されていません。';
+
+  @override
+  String get subscriptionPaidNo => 'いいえ';
+
+  @override
+  String get subscriptionWhatHappened => '理由は？';
+
+  @override
+  String get subscriptionReasonCancelled => '解約した';
+
+  @override
+  String get subscriptionReasonPriceChanged => '料金が変わった';
+
+  @override
+  String get subscriptionReasonNotPaid => '支払っていない';
+
+  @override
+  String get deleteSubscription => 'サブスクを削除';
+
+  @override
+  String get deleteSubscriptionKeepsEntries => '今後の記録を停止します。すでに記録された支払いは残ります。';
+
+  @override
   String get liabilities => '負債';
 
   @override
-  String get noActiveLoans => '> アクティブなローンなし';
+  String get noActiveLoans => 'アクティブなローンなし';
+
+  @override
+  String get newLoan => '+ ローン';
+
+  @override
+  String get spendOnWhat => '何に使いましたか？';
+
+  @override
+  String get moneyCameInInstead => '入ってきたお金ですか？';
+
+  @override
+  String get logIncome => '収入を記録';
+
+  @override
+  String get presetCoffee => 'コーヒー';
+
+  @override
+  String get presetCoffeeNote => 'コーヒー';
+
+  @override
+  String get presetLunch => 'ランチ';
+
+  @override
+  String get presetLunchNote => 'ランチ';
+
+  @override
+  String get presetDinner => 'ディナー';
+
+  @override
+  String get presetDinnerNote => 'ディナー';
+
+  @override
+  String get presetTransport => '交通費';
+
+  @override
+  String get presetTransportNote => '交通費';
+
+  @override
+  String get presetGroceries => '食料品';
+
+  @override
+  String get presetGroceriesNote => '食料品';
+
+  @override
+  String get presetSomethingElse => 'その他';
+
+  @override
+  String freeEntriesUsed(int used, int free) {
+    return '無料の記録 $free 件のうち $used 件を使用';
+  }
+
+  @override
+  String freeSimulationsUsed(int used, int free) {
+    return '無料のシミュレーション $free 回のうち $used 回を使用';
+  }
 
   @override
   String get settled => '完済';
@@ -257,10 +369,20 @@ class AppLocalizationsJa extends AppLocalizations {
   String get repaid => '% 返済済み';
 
   @override
+  String get stillPaying => '借りた分は返し終わりました。支払いは期間の終わりまで続きます。';
+
+  @override
+  String get markSettled => '完済にする';
+
+  @override
+  String get markSettledExplain =>
+      '毎月の支払いは計算に入らなくなり、一覧からも消えます。元には戻せません。記録は残ります。';
+
+  @override
   String get repay => '返済';
 
   @override
-  String get repayTitle => '> 返済';
+  String get repayTitle => '返済';
 
   @override
   String get extra => '追加';
@@ -323,7 +445,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get subscriptions => 'サブスクリプション';
 
   @override
-  String get noSubscriptions => '> アクティブなサブスクなし';
+  String get noSubscriptions => 'アクティブなサブスクなし';
 
   @override
   String get subscriptionName => '名前';
@@ -362,10 +484,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get newSubscription => '+ サブスク';
 
   @override
-  String get editSubscription => '> サブスク編集';
+  String get editSubscription => 'サブスク編集';
 
   @override
-  String get addSubscription => '> 新規サブスク';
+  String get addSubscription => '新規サブスク';
 
   @override
   String get personal => '個人';
@@ -392,11 +514,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get loans => 'ローン';
 
   @override
-  String activeCount(int count) {
-    return '$count 件有効';
-  }
-
-  @override
   String get repayLoan => 'ローン返済';
 
   @override
@@ -410,9 +527,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get subscrPerYear => '/ 年';
-
-  @override
-  String get removeConfirm => '削除？';
 
   @override
   String get remove => '削除';
@@ -435,9 +549,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get safety => '安全';
 
   @override
-  String get deployableCapital => '運用可能資金 — 生存バッファとは別';
-
-  @override
   String get historyEntries => '履歴 & 入力';
 
   @override
@@ -448,6 +559,26 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get delete => '削除';
+
+  @override
+  String get dataSection => 'データ';
+
+  @override
+  String get deleteAllDataBody =>
+      'この端末から、すべての記録、ローン、サブスクリプション、設定を消去します。Runway Pro のロック解除はそのままです。';
+
+  @override
+  String get deleteAllDataButton => 'すべてのデータを削除';
+
+  @override
+  String get deleteAllDataConfirmTitle => 'すべて削除しますか？';
+
+  @override
+  String get deleteAllDataConfirmBody =>
+      'データはこの端末から消去され、復元できません。Runway は最初から始まります。';
+
+  @override
+  String get deleteAllDataConfirmAction => 'すべて削除';
 
   @override
   String get planned => '予定';
@@ -489,7 +620,44 @@ class AppLocalizationsJa extends AppLocalizations {
   String get livingExpenses => '生活費';
 
   @override
+  String get budgetRuleHint => '支出は予算を使うだけ。超えた分だけ費用が増える。';
+
+  @override
   String get subtotal => '小計';
+
+  @override
+  String budgetLeft(String amount) {
+    return '残り $amount';
+  }
+
+  @override
+  String budgetPaid(String amount) {
+    return '$amount 支払済み';
+  }
+
+  @override
+  String spentOfBudget(String spent, String budget) {
+    return '$budget 中 $spent';
+  }
+
+  @override
+  String budgetOver(String amount) {
+    return '予算超過 $amount';
+  }
+
+  @override
+  String dailyAllowance(String amount, int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '1日 $amount、残り $days 日',
+      one: '今日は $amount',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noLivingExpensesThisMonth => '今月の生活費はまだありません';
 
   @override
   String get totalBudgetPerMonth => '予算合計/月';
@@ -510,10 +678,25 @@ class AppLocalizationsJa extends AppLocalizations {
   String get expectedInflow => '想定流入';
 
   @override
+  String get everyMonth => '毎月';
+
+  @override
+  String get monthlySurplus => '余剰';
+
+  @override
+  String get monthlyDeficit => '不足';
+
+  @override
+  String get setExpectedIncome => '想定収入を入力';
+
+  @override
   String get expectedBurn => '想定支出';
 
   @override
   String get notSet => '未設定';
+
+  @override
+  String get settingsFailedToLoad => 'この設定を読み込めませんでした。上書きを防ぐため編集はできません。';
 
   @override
   String get usingCurrentBurn => '現在の支出を使用';
@@ -535,6 +718,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get futureInflowHint => 'フリーランス、契約収入、クリエイター収入、配当など、想定される将来の流入を入力します。';
+
+  @override
+  String get forecastDoesNotMoveRunway =>
+      '収入で残り月数は変わりません。残り月数は収入が止まった場合に現金でもつ期間で、これはその月に増えるかどうかを示します。';
 
   @override
   String get runwayGoal => 'ランウェイ目標';
@@ -569,37 +756,24 @@ class AppLocalizationsJa extends AppLocalizations {
   String get targetMonths => '目標月数';
 
   @override
-  String get display => '表示';
-
-  @override
-  String get glassEffect => 'グラスエフェクト';
-
-  @override
-  String get glassEffectHint => 'GPU負荷大 — 旧デバイスは無効化推奨';
-
-  @override
   String get runwayBrand => 'RUNWAY';
 
   @override
-  String get bootRunwayCheck => '> RUNWAYチェック...';
+  String get runwayBasisBudget => '予算ベース。今日収入が止まった場合';
 
   @override
-  String get bootIncomeStopped => '> 今日、収入が止まったら...';
+  String get runwayBasisSpending => '支出実績ベース。今日収入が止まった場合';
 
   @override
-  String get bootCountingCashDays => '> 現金で生きられる日数を計算中...';
+  String get runwayBasisAssumption => 'コスト想定ベース。今日収入が止まった場合';
 
   @override
-  String get bootRemovingComfortFilter => '> 安心フィルターを解除中...';
+  String computedCost(String amount) {
+    return '予算と記録からの計算値: $amount';
+  }
 
   @override
-  String get bootRealityCheckReady => '> 現実チェック準備完了。';
-
-  @override
-  String get ifIncomeStoppedToday => 'If inflow stopped today';
-
-  @override
-  String get ifIncomePausedToday => '今日、収入が止まったら';
+  String get runwayNeedsCosts => '毎月のコストを設定すると残り月数がわかります';
 
   @override
   String get monthSingular => 'か月';
@@ -621,13 +795,7 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get monthlyBurn => '月間支出';
-
-  @override
   String get availableCash => '利用可能な現金';
-
-  @override
-  String get historicalBurn => '平均支出';
 
   @override
   String get notEnoughHistory => '履歴が不足しています';
@@ -640,12 +808,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get fixedPressure => '固定費';
-
-  @override
-  String get actualBurn => '実際の支出';
-
-  @override
-  String get actualBurnHigh => '実際の支出 ▲';
 
   @override
   String get plannedEssentials => '計画上の必需支出';
@@ -663,13 +825,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get yourRunway => 'あなたのランウェイ';
 
   @override
-  String get loseIncome => 'Inflow stops';
-
-  @override
   String get higherExpenses => '支出増加';
-
-  @override
-  String get incomeSetToZero => 'Inflow set to 0';
 
   @override
   String deltaDays(int days) {
@@ -692,12 +848,28 @@ class AppLocalizationsJa extends AppLocalizations {
   String get shareAsText => 'テキストで共有';
 
   @override
-  String get goalReached => '目標達成！';
+  String get goalReached => '目標達成';
 
   @override
   String monthsToGoal(int count) {
-    return 'あと$countヶ月';
+    return 'あと$countか月分を貯める';
   }
+
+  @override
+  String get goalCashTarget => '目標額';
+
+  @override
+  String goalCashTargetFrom(int count, String cost) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countか月 × 月$cost',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get goalCashToGo => '残り';
 
   @override
   String get thisMonth => '今月';
@@ -713,4 +885,172 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get noActivityThisMonth => '今月はまだ活動がありません';
+
+  @override
+  String get onboardingSkip => 'スキップ';
+
+  @override
+  String get onboardingWelcomeTitle => 'あと何か月もつか、\nもう推測しない。';
+
+  @override
+  String get onboardingWelcomeBody => 'アカウント不要。銀行連携なし。';
+
+  @override
+  String get onboardingGetStarted => 'はじめる';
+
+  @override
+  String get onboardingPrivacyTitle => 'あなたのデータは、\nあなたの端末に。';
+
+  @override
+  String get onboardingPrivacyBody => 'サーバーがないので、漏れるものがありません。';
+
+  @override
+  String get onboardingPrivacyEncrypted => '端末内で暗号化';
+
+  @override
+  String get onboardingPrivacyOnDevice => '数字は端末の外に出ません';
+
+  @override
+  String get onboardingPrivacyHidden => 'アプリ切替時は非表示';
+
+  @override
+  String get onboardingPrivacyDelete => 'いつでも削除';
+
+  @override
+  String get onboardingIUnderstand => 'わかりました';
+
+  @override
+  String get onboardingFirstActionTitle => '数字ひとつで\n設定は完了。';
+
+  @override
+  String get onboardingFirstActionBody => '現金残高だけ。ほかは不要です。';
+
+  @override
+  String get onboardingAddMyBalance => '残高を入力';
+
+  @override
+  String get paywallUnlock => 'RUNWAY PROをアンロック';
+
+  @override
+  String get paywallLoadingPrice => '価格を読み込み中...';
+
+  @override
+  String get paywallStoreUnreachable => 'ストアに接続できませんでした。通信状態を確認してもう一度お試しください。';
+
+  @override
+  String paywallOneTimePurchase(String price) {
+    return '$price 一回きり。サブスクを数えるアプリが、サブスクになるわけにはいきません。';
+  }
+
+  @override
+  String get paywallUnavailable => 'Proは現在ご利用いただけません。しばらくしてからお試しください。';
+
+  @override
+  String get paywallRestore => '購入を復元';
+
+  @override
+  String get proUnlocked => '解除済み。記録もシミュレーションも無制限です。';
+
+  @override
+  String get paywallMaybeLater => 'あとで';
+
+  @override
+  String get paywallPurchaseFailed => '購入に失敗しました。もう一度お試しください。';
+
+  @override
+  String get paywallSomethingWrong => '問題が発生しました。もう一度お試しください。';
+
+  @override
+  String get paywallNoPreviousPurchase => '以前の購入は見つかりませんでした。';
+
+  @override
+  String get paywallRestoreFailed => '復元に失敗しました。もう一度お試しください。';
+
+  @override
+  String paywallTitleEntries(int count) {
+    return '無料の記録$count件を使い切りました。\n数字を正しく保つのが Pro です。';
+  }
+
+  @override
+  String paywallTitleSimulations(int count) {
+    return '無料のシミュレーション$count回を使い切りました。\nPro なら「もし」を何度でも。';
+  }
+
+  @override
+  String get paywallTitleDefault => 'Runway Proをアンロック。';
+
+  @override
+  String get paywallFeatureEntries => 'すべて記録できるから、数字がずれない';
+
+  @override
+  String get paywallFeatureSimulations => '「もし」を何度でも試せる';
+
+  @override
+  String get stepBalanceShort => '残高';
+
+  @override
+  String get stepBudgetShort => '予算';
+
+  @override
+  String get stepExpenseShort => '最初の支出';
+
+  @override
+  String get stepSimShort => 'シミュレーター';
+
+  @override
+  String stepsDone(String steps) {
+    return '完了: $steps';
+  }
+
+  @override
+  String get optionalBadge => '任意';
+
+  @override
+  String fixedCostsUnchanged(String amount) {
+    return '固定費は変わりません: $amount';
+  }
+
+  @override
+  String get simNeedsBalance => 'まず期初残高を入力してください';
+
+  @override
+  String get simNeedsBalanceWhy => '残り月数は、この残高から数え始めます。';
+
+  @override
+  String get addOpeningBalance => '残高を入力';
+
+  @override
+  String get runSimulation => 'シミュレーション';
+
+  @override
+  String get runwayUnlimitedHere => 'この計画では収入が支出をまかないます';
+
+  @override
+  String get runwayNoChange => '変化なし';
+
+  @override
+  String deltaDaysLonger(int days) {
+    return '$days日長い';
+  }
+
+  @override
+  String deltaDaysShorter(int days) {
+    return '$days日短い';
+  }
+
+  @override
+  String deltaMonthsLonger(int months) {
+    return '$monthsか月長い';
+  }
+
+  @override
+  String deltaMonthsShorter(int months) {
+    return '$monthsか月短い';
+  }
+
+  @override
+  String get paywallTermsOfUse => '利用規約';
+
+  @override
+  String get paywallPrivacyPolicy => 'プライバシーポリシー';
 }

@@ -5,6 +5,10 @@ import 'package:application/application.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
 
+import 'widgets/delete_all_data_card.dart';
+import 'widgets/pro_status_card.dart';
+import '../../shared/money_field.dart';
+
 class ConfigScreen extends ConsumerStatefulWidget {
   const ConfigScreen({super.key});
 
@@ -25,7 +29,7 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
 
   static const _languages = [
     (label: 'ENGLISH', locale: Locale('en')),
-    (label: '繁中', locale: Locale('zh', 'TW')),
+    (label: '繁中', locale: Locale('zh')),
     (label: 'FRANÇAIS', locale: Locale('fr')),
     (label: '日本語', locale: Locale('ja')),
     (label: 'ESPAÑOL', locale: Locale('es')),
@@ -44,24 +48,28 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
   }
 
   void _startEditing(Budget budget) {
-    _rentCtrl.text = budget.rent > 0 ? budget.rent.toStringAsFixed(0) : '';
-    _livingCtrl.text = budget.living > 0
-        ? budget.living.toStringAsFixed(0)
-        : '';
+    _rentCtrl.text = budget.rent > 0 ? moneyField(budget.rent) : '';
+    _livingCtrl.text = budget.living > 0 ? moneyField(budget.living) : '';
     setState(() => _editingBudget = true);
   }
 
+  // Every save and clear awaits a write, and the sheet can be swiped away
+  // while it is in flight. The continuation must not touch a disposed State.
   Future<void> _saveBudget() async {
     final rent = double.tryParse(_rentCtrl.text.trim()) ?? 0;
     final living = double.tryParse(_livingCtrl.text.trim()) ?? 0;
     await ref.read(budgetProvider.notifier).setRent(rent);
     await ref.read(budgetProvider.notifier).setLiving(living);
+    if (!mounted) return;
     setState(() => _editingBudget = false);
     FocusScope.of(context).unfocus();
   }
 
   Future<void> _clearBudget() async {
     await ref.read(budgetProvider.notifier).clear();
+    // Above the controllers, not below: dispose() has already disposed them
+    // if the sheet is gone, and clear() would notify a disposed notifier.
+    if (!mounted) return;
     _rentCtrl.clear();
     _livingCtrl.clear();
     setState(() => _editingBudget = false);
@@ -80,12 +88,14 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
     await ref
         .read(runwayGoalProvider.notifier)
         .saveGoal(name: _goalNameCtrl.text, targetMonths: targetMonths);
+    if (!mounted) return;
     setState(() => _editingGoal = false);
     FocusScope.of(context).unfocus();
   }
 
   Future<void> _clearGoal() async {
     await ref.read(runwayGoalProvider.notifier).clearGoal();
+    if (!mounted) return;
     _goalNameCtrl.clear();
     _goalMonthsCtrl.clear();
     setState(() => _editingGoal = false);
@@ -95,10 +105,10 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
   void _startEditingAssumptions(FinancialAssumptions assumptions) {
     _expectedInflowCtrl.text = assumptions.expectedMonthlyInflow == null
         ? ''
-        : assumptions.expectedMonthlyInflow!.toStringAsFixed(0);
+        : moneyField(assumptions.expectedMonthlyInflow);
     _expectedBurnCtrl.text = assumptions.expectedMonthlyBurnOverride == null
         ? ''
-        : assumptions.expectedMonthlyBurnOverride!.toStringAsFixed(0);
+        : moneyField(assumptions.expectedMonthlyBurnOverride);
     setState(() => _editingAssumptions = true);
   }
 
@@ -111,12 +121,14 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
           expectedMonthlyInflow: expectedInflow,
           expectedMonthlyBurnOverride: expectedBurn,
         );
+    if (!mounted) return;
     setState(() => _editingAssumptions = false);
     FocusScope.of(context).unfocus();
   }
 
   Future<void> _clearAssumptions() async {
     await ref.read(financialAssumptionsProvider.notifier).clear();
+    if (!mounted) return;
     _expectedInflowCtrl.clear();
     _expectedBurnCtrl.clear();
     setState(() => _editingAssumptions = false);
@@ -131,14 +143,18 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
     final budgetAsync = ref.watch(budgetProvider);
     final subCost = ref.watch(subscriptionMonthlyTotalProvider);
     final debtCost = ref.watch(totalMonthlyLoanPaymentProvider);
-    final runwayGoal = ref.watch(runwayGoalProvider).value;
-    final assumptions =
-        ref.watch(financialAssumptionsProvider).value ??
-        const FinancialAssumptions();
+    final goalAsync = ref.watch(runwayGoalProvider);
+    final assumptionsAsync = ref.watch(financialAssumptionsProvider);
 
+    // Null means the read has not succeeded: still running, or failed. These
+    // used to fall back to the defaults, which rendered as "Not set" beside an
+    // EDIT button — and saving that form wrote the defaults over the real
+    // values. Unknown is not the same as unset.
+    final runwayGoal = goalAsync.value;
+    final assumptions = assumptionsAsync.value;
     final currentLocale = localeAsync.value;
     final currentCurr = currAsync.value;
-    final budget = budgetAsync.value ?? const Budget();
+    final budget = budgetAsync.value;
     final symbol = currentCurr?.symbol ?? '¥';
     final nf = NumberFormat('#,##0', 'en_US');
 
@@ -193,7 +209,9 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (!_editingAssumptions) ...[
+                          if (assumptions == null) ...[
+                            _Unavailable(assumptionsAsync),
+                          ] else if (!_editingAssumptions) ...[
                             _budgetRow(
                               l10n.expectedInflow,
                               assumptions.expectedMonthlyInflow == null
@@ -208,20 +226,48 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                                   : '$symbol ${nf.format(assumptions.expectedMonthlyBurnOverride)}',
                               AppColors.red,
                             ),
+                            if (assumptions.expectedMonthlyBurnOverride != null)
+                              Text(
+                                l10n.computedCost(
+                                  '$symbol ${nf.format(ref.watch(monthlyBurnProvider).total)}',
+                                ),
+                                style: AppTextStyles.caption,
+                              ),
+                            // Income is deliberately outside the runway
+                            // (CONTRACTS.md §3.2), and nothing said so.
+                            // Someone enters 3,200 here, watches the runway
+                            // not move, and has to guess whether the app is
+                            // broken or the number means something else. The
+                            // edit hint above explains what counts as income;
+                            // this explains what it does, in the state where
+                            // the figures are actually read.
+                            if (assumptions.hasExpectedMonthlyInflow) ...[
+                              const SizedBox(height: AppSpacing.xs),
+                              Text(
+                                l10n.forecastDoesNotMoveRunway,
+                                style: AppTextStyles.caption,
+                              ),
+                            ],
                             const SizedBox(height: AppSpacing.md),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                            // Wrap, not Row: these buttons are laid out at
+                            // their own width, so at large text sizes they ran
+                            // past the edge of the screen. Wrap puts them on a
+                            // second line instead, and still aligns them right
+                            // when they fit on one. A Flexible would not do —
+                            // it hands each button an equal share of the row,
+                            // so they would sit left of where they belong.
+                            Wrap(
+                              alignment: WrapAlignment.end,
+                              spacing: AppSpacing.sm,
+                              runSpacing: AppSpacing.sm,
                               children: [
                                 if (assumptions.hasExpectedMonthlyInflow ||
-                                    assumptions
-                                        .hasExpectedMonthlyBurnOverride) ...[
+                                    assumptions.hasExpectedMonthlyBurnOverride)
                                   NeoButton(
                                     label: l10n.clear,
                                     variant: NeoButtonVariant.danger,
                                     onPressed: _clearAssumptions,
                                   ),
-                                  const SizedBox(width: AppSpacing.sm),
-                                ],
                                 NeoButton(
                                   label:
                                       assumptions.hasExpectedMonthlyInflow ||
@@ -239,6 +285,7 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                             NeoInput(
                               label: l10n.expectedMonthlyInflow,
                               controller: _expectedInflowCtrl,
+                              inputType: NeoInputType.decimal,
                               keyboardType: TextInputType.number,
                               hint: '0',
                             ),
@@ -246,6 +293,7 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                             NeoInput(
                               label: l10n.expectedMonthlyBurn,
                               controller: _expectedBurnCtrl,
+                              inputType: NeoInputType.decimal,
                               keyboardType: TextInputType.number,
                               hint: l10n.useCurrentBurn,
                             ),
@@ -291,7 +339,9 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (!_editingBudget) ...[
+                          if (budget == null) ...[
+                            _Unavailable(budgetAsync),
+                          ] else if (!_editingBudget) ...[
                             if (budget.isSet) ...[
                               _budgetRow(
                                 l10n.rentFixed,
@@ -299,7 +349,7 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                                 AppColors.textPrimary,
                               ),
                               _budgetRow(
-                                l10n.livingExpenses,
+                                l10n.livingExpenses.toUpperCase(),
                                 '$symbol ${nf.format(budget.living)}',
                                 AppColors.textPrimary,
                               ),
@@ -307,10 +357,17 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                                 color: AppColors.cardBorder,
                                 height: AppSpacing.lg,
                               ),
+                              // Mint is life: cash and runway. A budget
+                              // subtotal is the opposite of both, and it sat
+                              // in mint on a card about money leaving. It
+                              // sums the two neutral rows above it and is
+                              // scaffolding for the total below, so it takes
+                              // the neutral colour and leaves exactly one
+                              // cost-coloured figure on the card.
                               _budgetRow(
                                 l10n.subtotal,
                                 '$symbol ${nf.format(budget.subtotal)}',
-                                AppColors.green,
+                                SC.numberPrimary,
                               ),
                             ] else ...[
                               Text(l10n.notSet, style: AppTextStyles.caption),
@@ -336,8 +393,17 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                               AppColors.red,
                             ),
                             const SizedBox(height: AppSpacing.md),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                            // Wrap, not Row: these buttons are laid out at
+                            // their own width, so at large text sizes they ran
+                            // past the edge of the screen. Wrap puts them on a
+                            // second line instead, and still aligns them right
+                            // when they fit on one. A Flexible would not do —
+                            // it hands each button an equal share of the row,
+                            // so they would sit left of where they belong.
+                            Wrap(
+                              alignment: WrapAlignment.end,
+                              spacing: AppSpacing.sm,
+                              runSpacing: AppSpacing.sm,
                               children: [
                                 NeoButton(
                                   label: budget.isSet
@@ -352,12 +418,14 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                             NeoInput(
                               label: l10n.rentFixedCosts,
                               controller: _rentCtrl,
+                              inputType: NeoInputType.decimal,
                               keyboardType: TextInputType.number,
                             ),
                             const SizedBox(height: AppSpacing.md),
                             NeoInput(
-                              label: l10n.livingExpenses,
+                              label: l10n.livingExpenses.toUpperCase(),
                               controller: _livingCtrl,
+                              inputType: NeoInputType.decimal,
                               keyboardType: TextInputType.number,
                             ),
                             const SizedBox(height: AppSpacing.xs),
@@ -399,7 +467,9 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (!_editingGoal) ...[
+                          if (!goalAsync.hasValue) ...[
+                            _Unavailable(goalAsync),
+                          ] else if (!_editingGoal) ...[
                             if (runwayGoal != null) ...[
                               _budgetRow(
                                 l10n.goal,
@@ -418,17 +488,24 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                               style: AppTextStyles.caption,
                             ),
                             const SizedBox(height: AppSpacing.md),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                            // Wrap, not Row: these buttons are laid out at
+                            // their own width, so at large text sizes they ran
+                            // past the edge of the screen. Wrap puts them on a
+                            // second line instead, and still aligns them right
+                            // when they fit on one. A Flexible would not do —
+                            // it hands each button an equal share of the row,
+                            // so they would sit left of where they belong.
+                            Wrap(
+                              alignment: WrapAlignment.end,
+                              spacing: AppSpacing.sm,
+                              runSpacing: AppSpacing.sm,
                               children: [
-                                if (runwayGoal != null) ...[
+                                if (runwayGoal != null)
                                   NeoButton(
                                     label: l10n.clear,
                                     variant: NeoButtonVariant.danger,
                                     onPressed: _clearGoal,
                                   ),
-                                  const SizedBox(width: AppSpacing.sm),
-                                ],
                                 NeoButton(
                                   label: runwayGoal == null
                                       ? l10n.setGoal
@@ -540,43 +617,43 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Wrap(
-                        spacing: AppSpacing.xs,
-                        runSpacing: AppSpacing.xs,
-                        children: supportedCurrencies.map((curr) {
-                          final active = currentCurr?.code == curr.code;
-                          return GestureDetector(
-                            onTap: () => ref
-                                .read(currencyProvider.notifier)
-                                .setCurrency(curr),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: AppSpacing.md,
-                                vertical: AppSpacing.sm,
-                              ),
-                              decoration: BoxDecoration(
-                                color: active
-                                    ? AppColors.gold.withAlpha(20)
-                                    : AppColors.surfaceHigh,
-                                borderRadius: BorderRadius.circular(50),
-                                border: Border.all(
-                                  color: active
-                                      ? AppColors.gold
-                                      : AppColors.cardBorder,
-                                  width: active ? 1.5 : 1,
+                            spacing: AppSpacing.xs,
+                            runSpacing: AppSpacing.xs,
+                            children: supportedCurrencies.map((curr) {
+                              final active = currentCurr?.code == curr.code;
+                              return GestureDetector(
+                                onTap: () => ref
+                                    .read(currencyProvider.notifier)
+                                    .setCurrency(curr),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: AppSpacing.md,
+                                    vertical: AppSpacing.sm,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: active
+                                        ? AppColors.gold.withAlpha(20)
+                                        : AppColors.surfaceHigh,
+                                    borderRadius: BorderRadius.circular(50),
+                                    border: Border.all(
+                                      color: active
+                                          ? AppColors.gold
+                                          : AppColors.cardBorder,
+                                      width: active ? 1.5 : 1,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    '${curr.symbol}  ${curr.code}',
+                                    style: AppTextStyles.button.copyWith(
+                                      color: active
+                                          ? AppColors.gold
+                                          : AppColors.textSecondary,
+                                      fontSize: 13,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              child: Text(
-                                '${curr.symbol}  ${curr.code}',
-                                style: AppTextStyles.button.copyWith(
-                                  color: active
-                                      ? AppColors.gold
-                                      : AppColors.textSecondary,
-                                  fontSize: 13,
-                                ),
-                              ),
-                            ),
-                          );
-                        }).toList(),
+                              );
+                            }).toList(),
                           ),
                           const SizedBox(height: AppSpacing.sm),
                           Text(
@@ -586,6 +663,14 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                         ],
                       ),
                     ),
+                    const SizedBox(height: AppSpacing.cardGap),
+
+                    // ── RUNWAY PRO ────────────────────
+                    const ProStatusCard(),
+                    const SizedBox(height: AppSpacing.cardGap),
+
+                    // ── YOUR DATA ─────────────────────
+                    const DeleteAllDataCard(),
                     const SizedBox(height: AppSpacing.xxxl),
                   ],
                 ),
@@ -622,6 +707,29 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// What a card shows in place of its settings while their read has not
+/// succeeded. Editing is withheld in both states: a form seeded from nothing
+/// saves nothing over whatever is really stored, and Riverpod retries a
+/// failing read for about 38 seconds before it errors, so "loading" is the
+/// state for the whole first half-minute on a database that will not open.
+class _Unavailable extends StatelessWidget {
+  final AsyncValue<Object?> value;
+
+  const _Unavailable(this.value);
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+      child: Text(
+        value.isLoading ? l10n.loading : l10n.settingsFailedToLoad,
+        style: AppTextStyles.caption,
       ),
     );
   }

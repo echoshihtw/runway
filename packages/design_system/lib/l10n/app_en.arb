@@ -6,9 +6,25 @@
   "lifeForce": "RUNWAY READINESS",
   "statusLabel": "Position",
   "pressureLabel": "Monthly costs",
+  "costsIncludeCommitments": "Includes subscriptions and loan payments",
+  "@costsIncludeCommitments": {
+    "description": "Under Monthly costs: the budget is only part of it"
+  },
   "metrics": "Signals",
   "cash": "CASH",
-  "burnPerMonth": "BURN/MO",
+  "owed": "Owed",
+  "runsOut": "Runs out {date}",
+  "@runsOut": {
+    "description": "The run-out date, under the runway number it restates",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@owed": {
+    "description": "Total outstanding loan principal, beside CASH on the runway card"
+  },
   "loanPerMonth": "DEBT/MO",
   "runway": "RUNWAY",
   "runOut": "RUN OUT",
@@ -19,12 +35,11 @@
   "edit": "EDIT",
   "save": "SAVE",
   "clear": "CLEAR",
-  "loanAffectsInfo": "Loan payments add to your fixed costs and reduce runway.",
   "transactionLog": "TRANSACTION LOG",
   "newEntry": "+ NEW",
   "noEntries": "No entries yet\nTap + ADD to log your first entry",
-  "newLogEntry": "> NEW LOG ENTRY",
-  "modifyEntry": "> MODIFY ENTRY",
+  "newLogEntry": "New log entry",
+  "modifyEntry": "MODIFY ENTRY",
   "type": "TYPE",
   "date": "DATE",
   "calcMonth": "CALC",
@@ -32,10 +47,10 @@
   "noteOptional": "NOTE (OPTIONAL)",
   "confirm": "CONFIRM",
   "abort": "ABORT",
-  "purgeEntry": "> PURGE ENTRY?",
+  "purgeEntry": "Delete entry?",
   "scenarioSimulator": "Scenario planning",
   "overrideInputs": "Planning inputs",
-  "burnRateOverride": "Monthly burn",
+  "burnRateOverride": "Rent + living / month",
   "simulatedIncome": "Income change / month",
   "simResults": "Projected impact",
   "simRunway": "Projected runway",
@@ -50,16 +65,20 @@
   "low": "LOW",
   "moderate": "MODERATE",
   "highLoad": "HIGH LOAD",
-  "language": "LANGUAGE",
-  "currency": "CURRENCY",
-  "currencySymbolOnly": "Changes the display symbol only — your amounts are not converted.",
+  "language": "Language",
+  "currency": "Currency",
+  "currencySymbolOnly": "Changes the display symbol only. Your amounts are not converted.",
   "daysShort": "d",
   "gettingStarted": "GETTING STARTED",
   "stepsComplete": "{completed} of {total} complete",
   "@stepsComplete": {
     "placeholders": {
-      "completed": { "type": "int" },
-      "total": { "type": "int" }
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "stepBalanceLabel": "Add your cash balance",
@@ -71,16 +90,100 @@
   "stepSimLabel": "Try the simulator",
   "stepSimHint": "What if you cut expenses?",
   "loading": "LOADING...",
-  "navHud": "Home",
-  "navLog": "LOG",
+  "navHud": "Overview",
+  "navLog": "Log",
   "navSim": "Plan",
   "typeExpense": "EXPENSE",
   "typeIncome": "INCOME",
   "typeLoan": "LOAN",
-  "typeRepay": "REPAY",
+  "typeRepay": "LOAN PAYMENT",
   "typeOpening": "OPENING",
-  "liabilities": "LIABILITIES",
-  "noActiveLoans": "> NO ACTIVE LOANS",
+  "typeSubscription": "SUBSCRIPTION",
+  "subscriptionPaidQuestion": "Did you pay {amount} for {name} on {date}?",
+  "subscriptionChargesDue": "{count} subscription charges due: {amount}",
+  "subscriptionConfirmAll": "Confirm all",
+  "subscriptionReviewEach": "Review each",
+  "@subscriptionChargesDue": {
+    "description": "How many subscription charges are waiting to be confirmed, and their total",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionPaidYes": "Yes, log it",
+  "subscriptionChargeFailed": "Couldn't record that. Check the amount on the subscription.",
+  "subscriptionSaveFailed": "Couldn't save that subscription. Nothing was added.",
+  "loanSaveFailed": "Couldn't save that loan. Nothing was added.",
+  "subscriptionPaidNo": "No",
+  "subscriptionWhatHappened": "What happened?",
+  "subscriptionReasonCancelled": "I cancelled it",
+  "subscriptionReasonPriceChanged": "The price changed",
+  "subscriptionReasonNotPaid": "I didn't pay it",
+  "@subscriptionPaidQuestion": {
+    "description": "Asks whether a subscription charge was actually paid",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteSubscription": "Delete subscription",
+  "deleteSubscriptionKeepsEntries": "Stops future entries. The payments already logged are kept.",
+  "liabilities": "Liabilities",
+  "noActiveLoans": "NO ACTIVE LOANS",
+  "newLoan": "+ LOAN",
+  "spendOnWhat": "What was it for?",
+  "moneyCameInInstead": "Money came in instead?",
+  "logIncome": "Log income",
+  "@moneyCameInInstead": {
+    "description": "Under the spend tiles: the other direction has a door too"
+  },
+  "@logIncome": {
+    "description": "The action beside it; opens the form on income"
+  },
+  "presetCoffee": "COFFEE",
+  "presetCoffeeNote": "Coffee",
+  "presetLunch": "LUNCH",
+  "presetLunchNote": "Lunch",
+  "presetDinner": "DINNER",
+  "presetDinnerNote": "Dinner",
+  "presetTransport": "TRANSPORT",
+  "presetTransportNote": "Transport",
+  "presetGroceries": "GROCERIES",
+  "presetGroceriesNote": "Groceries",
+  "presetSomethingElse": "SOMETHING ELSE",
+  "freeEntriesUsed": "{used} of {free} free entries used",
+  "@freeEntriesUsed": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "free": {
+        "type": "int"
+      }
+    }
+  },
+  "freeSimulationsUsed": "{used} of {free} free simulations used",
+  "@freeSimulationsUsed": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "free": {
+        "type": "int"
+      }
+    }
+  },
   "settled": "SETTLED",
   "totalDebtPerMonth": "TOTAL DEBT/MO",
   "remaining": "REMAINING",
@@ -88,11 +191,14 @@
   "paidThisMo": "PAID THIS MO",
   "monthsLeft": "MONTHS LEFT",
   "repaid": "% REPAID",
+  "stillPaying": "You have repaid what you borrowed. Payments run to the end of the term.",
+  "markSettled": "Mark as settled",
+  "markSettledExplain": "The monthly payment stops counting and the loan leaves this list for good. Entries are kept.",
   "repay": "REPAY",
-  "repayTitle": "> REPAY",
+  "repayTitle": "REPAY",
   "extra": "EXTRA",
   "configButton": "CFG",
-  "loanWizardTitle": "LOAN WIZARD",
+  "loanWizardTitle": "Loan wizard",
   "whoAndHowMuch": "WHO & HOW MUCH",
   "loanTerms": "LOAN TERMS",
   "confirmPayment": "CONFIRM PAYMENT",
@@ -109,8 +215,8 @@
   "lender": "LENDER",
   "rate": "RATE",
   "change": "CHANGE",
-  "subscriptions": "SUBSCRIPTIONS",
-  "noSubscriptions": "> NO ACTIVE SUBSCRIPTIONS",
+  "subscriptions": "Subscriptions",
+  "noSubscriptions": "NO ACTIVE SUBSCRIPTIONS",
   "subscriptionName": "NAME",
   "subscriptionAmount": "AMOUNT",
   "subscriptionPaymentAmount": "PAYMENT AMOUNT",
@@ -123,8 +229,8 @@
   "totalPerMonth": "TOTAL/MO",
   "totalPerYear": "TOTAL/YR",
   "newSubscription": "+ SUBSCRIPTION",
-  "editSubscription": "> EDIT SUBSCRIPTION",
-  "addSubscription": "> NEW SUBSCRIPTION",
+  "editSubscription": "Edit subscription",
+  "addSubscription": "New subscription",
   "personal": "PERSONAL",
   "business": "BUSINESS",
   "weekly": "WEEKLY",
@@ -133,20 +239,11 @@
   "yearly": "YEARLY",
   "subscrPerMonth": "/ month",
   "loans": "LOANS",
-  "activeCount": "{count} ACTIVE",
-  "@activeCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "repayLoan": "REPAY LOAN",
+  "repayLoan": "Repay loan",
   "repaymentAmount": "REPAYMENT AMOUNT",
   "cancel": "CANCEL",
   "paid": "✓ PAID",
   "subscrPerYear": "/ year",
-  "removeConfirm": "REMOVE?",
   "remove": "REMOVE",
   "monthsProjected": "{count} months ahead",
   "@monthsProjected": {
@@ -160,40 +257,125 @@
   "breakdown": "BREAKDOWN",
   "safetyFund": "SAFETY FUND",
   "safety": "SAFETY",
-  "deployableCapital": "Optional capital after protecting your runway",
   "historyEntries": "HISTORY & ENTRIES",
   "addEntry": "+ ADD",
   "willRemoveLoan": "WILL ALSO REMOVE FROM LIABILITIES",
   "delete": "DELETE",
+  "dataSection": "Your data",
+  "@dataSection": {
+    "description": "Settings card title for erasing all local data"
+  },
+  "deleteAllDataBody": "Erase every entry, loan, subscription and setting from this device. Runway Pro stays unlocked.",
+  "@deleteAllDataBody": {
+    "description": "Explains what Delete all data erases"
+  },
+  "deleteAllDataButton": "DELETE ALL DATA",
+  "@deleteAllDataButton": {
+    "description": "Button that opens the delete-all-data confirmation"
+  },
+  "deleteAllDataConfirmTitle": "Delete everything?",
+  "@deleteAllDataConfirmTitle": {
+    "description": "Title of the delete-all-data confirmation dialog"
+  },
+  "deleteAllDataConfirmBody": "Your data is erased from this device and cannot be recovered. Runway starts again from the beginning.",
+  "@deleteAllDataConfirmBody": {
+    "description": "Warning that deletion is permanent"
+  },
+  "deleteAllDataConfirmAction": "DELETE EVERYTHING",
+  "@deleteAllDataConfirmAction": {
+    "description": "Confirms permanent deletion of all data"
+  },
   "planned": "PLANNED",
   "whatIfAnalysis": "WHAT-IF ANALYSIS",
-  "current": "CURRENT",
+  "current": "Current",
   "simulate": "Plan",
-  "simHint": "OVERRIDE BURN RATE OR ADD INCOME TO SEE IMPACT ON RUNWAY",
+  "simHint": "Change rent + living or add income to see the impact on runway",
   "simulation": "Scenario",
   "enterValuesToSim": "Enter values above to see the impact",
   "perMonth": "/ MONTH",
   "prefsBudget": "PREFERENCES & BUDGET",
   "close": "CLOSE",
-  "monthlyBudget": "MONTHLY BUDGET",
+  "monthlyBudget": "Monthly budget",
   "rentFixed": "RENT / FIXED",
-  "livingExpenses": "LIVING EXPENSES",
+  "livingExpenses": "Living expenses",
+  "budgetRuleHint": "Spending uses up its budget. Only going over adds cost.",
   "subtotal": "SUBTOTAL",
+  "budgetLeft": "{amount} left",
+  "budgetPaid": "{amount} paid",
+  "@budgetPaid": {
+    "description": "A fixed cost logged in full this month",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "spentOfBudget": "{spent} of {budget}",
+  "@spentOfBudget": {
+    "description": "Under the remainder: the working behind it",
+    "placeholders": {
+      "spent": {
+        "type": "String"
+      },
+      "budget": {
+        "type": "String"
+      }
+    }
+  },
+  "@budgetLeft": {
+    "description": "Unused part of a monthly budget, e.g. $ 29,790 left",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "budgetOver": "{amount} over budget",
+  "@budgetOver": {
+    "description": "Spending above a monthly budget, e.g. $ 1,500 over budget",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "dailyAllowance": "{days, plural, =1{{amount} left for today} other{{amount} a day for {days} days}}",
+  "@dailyAllowance": {
+    "description": "What is left of the living budget per remaining day of the month",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "noLivingExpensesThisMonth": "No living expenses logged this month",
   "totalBudgetPerMonth": "TOTAL BUDGET/MO",
   "setBudget": "SET BUDGET",
   "rentFixedCosts": "RENT / FIXED COSTS",
   "subscrDebtAuto": "SUBSCRIPTIONS + DEBT ADDED AUTOMATICALLY",
   "futureAssumptions": "Forecast",
-  "expectedInflow": "Expected inflow",
-  "expectedBurn": "Expected burn",
+  "expectedInflow": "Expected income",
+  "everyMonth": "Every month",
+  "monthlySurplus": "Surplus",
+  "monthlyDeficit": "Deficit",
+  "setExpectedIncome": "Set expected income",
+  "expectedBurn": "Expected costs",
   "notSet": "Not set",
-  "usingCurrentBurn": "Using current burn",
+  "settingsFailedToLoad": "Couldn't load these settings. Editing is off so nothing overwrites them.",
+  "usingCurrentBurn": "Using current costs",
   "assumptionsProjectionOnly": "Assumptions affect future projections only. They do not create transactions.",
   "setAssumptions": "SET FORECAST",
-  "expectedMonthlyInflow": "Expected monthly inflow",
-  "expectedMonthlyBurn": "Expected monthly burn",
-  "useCurrentBurn": "Use current burn",
-  "futureInflowHint": "Any recurring or expected inflow — retainers, contracts, creator income, dividends.",
+  "expectedMonthlyInflow": "Expected monthly income",
+  "expectedMonthlyBurn": "Expected monthly costs",
+  "useCurrentBurn": "Use current costs",
+  "futureInflowHint": "Any recurring or expected income, such as retainers, contracts, creator income or dividends.",
+  "forecastDoesNotMoveRunway": "Income does not move the runway. The runway is what your cash covers if income stopped; this says whether the month adds to it.",
+  "@forecastDoesNotMoveRunway": {
+    "description": "In the Forecast card: income is deliberately outside the runway"
+  },
   "runwayGoal": "Runway goal",
   "goal": "Goal",
   "none": "None",
@@ -211,20 +393,22 @@
   "setGoal": "SET GOAL",
   "goalName": "Goal name",
   "targetMonths": "Target months",
-  "display": "DISPLAY",
-  "glassEffect": "GLASS EFFECT",
-  "glassEffectHint": "GPU INTENSIVE — DISABLE ON OLDER DEVICES",
   "runwayBrand": "RUNWAY",
-  "bootRunwayCheck": "Checking your runway...",
-  "bootIncomeStopped": "Looking at what changes if income pauses...",
-  "bootCountingCashDays": "Estimating your breathing room...",
-  "bootRemovingComfortFilter": "Separating essentials from noise...",
-  "bootRealityCheckReady": "Your financial picture is ready.",
-  "ifIncomeStoppedToday": "If inflow stopped today",
-  "ifIncomePausedToday": "If income paused today",
+  "runwayBasisBudget": "On your budget, if income paused today",
+  "runwayBasisSpending": "On your spending, if income paused today",
+  "runwayBasisAssumption": "On your cost assumption, if income paused today",
+  "computedCost": "Computed from your budget and log: {amount}",
+  "@computedCost": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "runwayNeedsCosts": "Set your monthly costs to see your runway",
   "monthSingular": "month",
   "monthPlural": "months",
-  "sustainableWithExpectedInflow": "Sustainable with your expected inflow",
+  "sustainableWithExpectedInflow": "Sustainable with your expected income",
   "shortByPerMonth": "Short by {amount} / month",
   "@shortByPerMonth": {
     "placeholders": {
@@ -241,23 +425,17 @@
       }
     }
   },
-  "monthlyBurn": "Monthly burn",
   "availableCash": "Available cash",
-  "historicalBurn": "Avg burn",
   "notEnoughHistory": "Not enough history",
   "projectionSource": "Projection source",
   "usingAssumptions": "Using assumptions",
   "fixedPressure": "Fixed costs",
-  "actualBurn": "Actual burn",
-  "actualBurnHigh": "Actual burn ▲",
   "plannedEssentials": "Planned essentials",
   "recurringCosts": "Recurring costs",
   "debtCommitments": "Loan payments",
   "daysUpper": "DAYS",
   "yourRunway": "Your runway",
-  "loseIncome": "Inflow stops",
   "higherExpenses": "Higher expenses",
-  "incomeSetToZero": "Inflow set to 0",
   "deltaDays": "{days} days",
   "@deltaDays": {
     "placeholders": {
@@ -271,16 +449,154 @@
   "preparing": "PREPARING...",
   "shareImage": "SHARE IMAGE",
   "shareAsText": "SHARE AS TEXT",
-  "goalReached": "Goal reached!",
-  "monthsToGoal": "{count} months to go",
-  "@monthsToGoal": {
+  "goalReached": "Goal reached",
+  "monthsToGoal": "{count, plural, =1{1 month of cover to build} other{{count} months of cover to build}}",
+  "goalCashTarget": "Target cash",
+  "goalCashTargetFrom": "{count, plural, =1{1 month × {cost} a month} other{{count} months × {cost} a month}}",
+  "@goalCashTargetFrom": {
+    "description": "Under Target cash: the arithmetic behind a figure nobody typed",
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      },
+      "cost": {
+        "type": "String"
+      }
     }
   },
-  "thisMonth": "THIS MONTH",
+  "goalCashToGo": "Still to go",
+  "@monthsToGoal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "thisMonth": "This month",
   "cashIn": "IN",
   "cashOut": "OUT",
   "netLabel": "NET",
-  "noActivityThisMonth": "No activity yet this month"
+  "noActivityThisMonth": "No activity yet this month",
+  "onboardingSkip": "SKIP",
+  "onboardingWelcomeTitle": "Stop guessing how long\nyour money lasts.",
+  "onboardingWelcomeBody": "No account. No bank connection.",
+  "onboardingGetStarted": "GET STARTED",
+  "onboardingPrivacyTitle": "Your data,\nyour device.",
+  "onboardingPrivacyBody": "There is no server, so there is nothing to leak.",
+  "onboardingPrivacyEncrypted": "Encrypted on device",
+  "onboardingPrivacyOnDevice": "Numbers stay on your device",
+  "onboardingPrivacyHidden": "Hidden when you switch apps",
+  "onboardingPrivacyDelete": "Delete anytime",
+  "onboardingIUnderstand": "I UNDERSTAND",
+  "onboardingFirstActionTitle": "One number and\nyou are set up.",
+  "onboardingFirstActionBody": "Just your cash balance. Nothing else.",
+  "onboardingAddMyBalance": "ADD MY BALANCE",
+  "paywallUnlock": "UNLOCK RUNWAY PRO",
+  "paywallLoadingPrice": "Loading price...",
+  "paywallStoreUnreachable": "Couldn't reach the store. Check your connection and try again.",
+  "paywallOneTimePurchase": "{price} once. This app counts your subscriptions; it will not be one.",
+  "@paywallOneTimePurchase": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "paywallUnavailable": "Pro isn't available right now. Please try again later.",
+  "paywallRestore": "Restore purchase",
+  "proUnlocked": "Unlocked. Entries and simulations are unlimited.",
+  "@proUnlocked": {
+    "description": "Shown in settings when the owner has Runway Pro"
+  },
+  "paywallMaybeLater": "Maybe later",
+  "paywallPurchaseFailed": "Purchase failed. Please try again.",
+  "paywallSomethingWrong": "Something went wrong. Please try again.",
+  "paywallNoPreviousPurchase": "No previous purchase found.",
+  "paywallRestoreFailed": "Restore failed. Please try again.",
+  "paywallTitleEntries": "You've used your {count} free entries.\nPro is what keeps the number true.",
+  "@paywallTitleEntries": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paywallTitleSimulations": "You've run your {count} free simulations.\nPro is how you keep asking what if.",
+  "@paywallTitleSimulations": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paywallTitleDefault": "Unlock Runway Pro.",
+  "paywallFeatureEntries": "Log everything, so the number never drifts",
+  "paywallFeatureSimulations": "Ask what if as often as you like",
+  "stepBalanceShort": "Cash balance",
+  "stepBudgetShort": "Budget",
+  "stepExpenseShort": "First expense",
+  "stepSimShort": "Simulator",
+  "stepsDone": "Done: {steps}",
+  "@stepsDone": {
+    "placeholders": {
+      "steps": {
+        "type": "String"
+      }
+    }
+  },
+  "optionalBadge": "OPTIONAL",
+  "fixedCostsUnchanged": "Fixed costs unchanged: {amount}",
+  "@fixedCostsUnchanged": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "simNeedsBalance": "Add your opening balance first",
+  "simNeedsBalanceWhy": "A runway needs a starting balance to count down from.",
+  "addOpeningBalance": "ADD MY BALANCE",
+  "runSimulation": "RUN SIMULATION",
+  "runwayUnlimitedHere": "Income covers costs in this plan",
+  "runwayNoChange": "No change",
+  "deltaDaysLonger": "{days, plural, =1{1 day longer} other{{days} days longer}}",
+  "@deltaDaysLonger": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "deltaDaysShorter": "{days, plural, =1{1 day shorter} other{{days} days shorter}}",
+  "@deltaDaysShorter": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "deltaMonthsLonger": "{months, plural, =1{1 month longer} other{{months} months longer}}",
+  "@deltaMonthsLonger": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "deltaMonthsShorter": "{months, plural, =1{1 month shorter} other{{months} months shorter}}",
+  "@deltaMonthsShorter": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "paywallTermsOfUse": "Terms of Use",
+  "paywallPrivacyPolicy": "Privacy Policy",
+  "@paywallTermsOfUse": {
+    "description": "Link on the paywall to Apple's standard end user license agreement"
+  },
+  "@paywallPrivacyPolicy": {
+    "description": "Link on the paywall to the Runway privacy policy"
+  }
 }

@@ -4,12 +4,16 @@ import 'package:design_system/design_system.dart';
 import 'package:application/application.dart';
 import 'package:domain/domain.dart';
 import 'widgets/this_month_card.dart';
+import 'widgets/every_month_card.dart';
 import 'widgets/goal_card.dart';
 import 'widgets/runway_card.dart';
 import 'widgets/getting_started_card.dart';
+import 'widgets/review_prompt_trigger.dart';
+import '../../shared/status_color.dart';
 import '../config/config_screen.dart';
 import '../loans/liabilities_panel.dart';
 import '../subscriptions/subscriptions_panel.dart';
+import '../subscriptions/widgets/subscription_prompt_card.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -17,6 +21,7 @@ class DashboardScreen extends ConsumerWidget {
   void _showConfig(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       useSafeArea: true,
       backgroundColor: Colors.transparent,
@@ -59,10 +64,24 @@ class DashboardScreen extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
               child: Column(
                 children: [
-                  const GettingStartedCard(),
+                  // Asks for an App Store rating at the right moment. Renders nothing.
+                  const ReviewPromptTrigger(),
+                  // Runway is always the hero, center-top (CONTRACTS.md §4.3).
                   RunwayCard(model: model),
                   const SizedBox(height: AppSpacing.cardGap),
+                  // Adds its own bottom gap, and none once dismissed.
+                  const GettingStartedCard(),
+                  // Asks before any subscription charge is recorded.
+                  const SubscriptionPromptCard(),
                   GoalCard(model: model),
+                  const SizedBox(height: AppSpacing.cardGap),
+                  // The income side, directly above the spending side, so the
+                  // pair reads as what you expect each month and then what
+                  // actually happened this one.
+                  EveryMonthCard(
+                    model: model,
+                    onSetUp: () => _showConfig(context),
+                  ),
                   const SizedBox(height: AppSpacing.cardGap),
                   const ThisMonthCard(),
                   const SizedBox(height: AppSpacing.cardGap),
@@ -95,7 +114,7 @@ class _DashboardHeader extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const _RunwayBadge(),
+          const RunwayBadge(),
           const SizedBox(width: AppSpacing.sm),
           const Spacer(),
           GestureDetector(
@@ -112,61 +131,111 @@ class _DashboardHeader extends StatelessWidget {
   }
 }
 
-class _RunwayBadge extends ConsumerStatefulWidget {
-  const _RunwayBadge();
+/// The app mark, glowing with the runway's status.
+///
+/// Public only so the pulse can be tested on its own: the rate is the whole
+/// point of it and nothing checked the rate, which is how it shipped inert.
+class RunwayBadge extends ConsumerStatefulWidget {
+  const RunwayBadge({super.key});
 
   @override
-  ConsumerState<_RunwayBadge> createState() => _RunwayBadgeState();
+  ConsumerState<RunwayBadge> createState() => RunwayBadgeState();
 }
 
-class _RunwayBadgeState extends ConsumerState<_RunwayBadge>
+class RunwayBadgeState extends ConsumerState<RunwayBadge>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
-  late final Animation<double> _glow;
+  late final CurvedAnimation _curve;
 
-  static Duration _durationFor(SurvivalStatus s) => switch (s) {
-    SurvivalStatus.stable   => const Duration(milliseconds: 2800),
-    SurvivalStatus.caution  => const Duration(milliseconds: 1400),
-    SurvivalStatus.critical => const Duration(milliseconds: 650),
-  };
+  /// The band the ticker is currently running for, so a change can restart it.
+  RunwayStatus? _band;
 
-  static Color _colorFor(SurvivalStatus s) => switch (s) {
-    SurvivalStatus.stable   => AppColors.neonGreen,
-    SurvivalStatus.caution  => AppColors.gold,
-    SurvivalStatus.critical => AppColors.red,
+  /// How fast and how deep the badge breathes. Rate and depth carry the same
+  /// meaning, so the state reads without being explained.
+  ///
+  /// Critical is 1100 ms, about a resting heart rate. The first draft used
+  /// 650 ms, nearer ninety beats a minute, which is uncomfortable to sit with
+  /// on a screen somebody opens when they are already worried. It is the same
+  /// restraint that removed the rank labels: the owner of a one-month runway
+  /// knows, and the app's job is to be honest rather than to press on it.
+  static ({Duration period, double low, double high}) _pulseFor(
+    RunwayStatus s,
+  ) => switch (s) {
+    RunwayStatus.stable => (
+      period: const Duration(milliseconds: 2800),
+      low: 0.10,
+      high: 0.32,
+    ),
+    RunwayStatus.caution => (
+      period: const Duration(milliseconds: 1700),
+      low: 0.10,
+      high: 0.42,
+    ),
+    RunwayStatus.critical => (
+      period: const Duration(milliseconds: 1100),
+      low: 0.10,
+      high: 0.55,
+    ),
   };
 
   @override
   void initState() {
     super.initState();
+    // Not started here. build decides whether there is anything to say, and
+    // at what rate, and starting at a guessed period is what hid the bug.
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2800),
-    )..repeat(reverse: true);
-    _glow = Tween<double>(begin: 0.10, end: 0.45).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
+    _curve = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
   }
 
   @override
   void dispose() {
+    _curve.dispose();
     _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final status = ref.watch(modelProvider).survivalStatus;
-    final targetDuration = _durationFor(status);
-    if (_controller.duration != targetDuration) {
-      _controller.duration = targetDuration;
+    final model = ref.watch(modelProvider);
+    final known = model.runwayIsKnown;
+    final status = model.runwayStatus;
+
+    // An empty ledger has runwayMonths 0, which the status switch reads as
+    // critical. Taking that colour meant a fresh install glowed pink before
+    // the owner had typed anything, beside a card correctly showing an em
+    // dash. The card's rule applies here too: with no runway to state, the
+    // badge must not borrow the confidence of a status colour.
+    final color = known ? statusColor(status) : SC.unknown;
+
+    // Nothing to signal, or the owner asked for less motion. Hold still, and
+    // stop the ticker rather than leave it advancing a value nobody draws —
+    // that cost fell on exactly the people who asked for less motion.
+    if (!known || MediaQuery.disableAnimationsOf(context)) {
+      if (_controller.isAnimating) _controller.stop();
+      _band = null;
+      return _BadgeFrame(glow: 0.18, color: color);
     }
-    final color = _colorFor(status);
-    final disableAnimations = MediaQuery.disableAnimationsOf(context);
-    if (disableAnimations) return _BadgeFrame(glow: 0.18, color: color);
+
+    final pulse = _pulseFor(status);
+    // repeat() bakes its period into the simulation when it starts, so the
+    // later write to `duration` was inert and every band pulsed at the calm
+    // rate. Restarting is the only thing that changes it.
+    if (_band != status || !_controller.isAnimating) {
+      _band = status;
+      _controller
+        ..stop()
+        ..repeat(reverse: true, period: pulse.period);
+    }
+
     return AnimatedBuilder(
-      animation: _glow,
-      builder: (_, __) => _BadgeFrame(glow: _glow.value, color: color),
+      animation: _curve,
+      builder: (_, _) => _BadgeFrame(
+        glow: pulse.low + (pulse.high - pulse.low) * _curve.value,
+        color: color,
+      ),
     );
   }
 }

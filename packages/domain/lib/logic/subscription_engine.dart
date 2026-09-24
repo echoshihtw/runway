@@ -1,5 +1,5 @@
-import '../enums/billing_cycle.dart';
 import '../entities/subscription.dart';
+import 'subscription_billing.dart';
 import '../enums/subscription_category.dart';
 
 /// Total monthly cost across all active subscriptions
@@ -24,24 +24,23 @@ double totalSubscriptionYearlyCost(List<Subscription> subscriptions) {
   return totalSubscriptionMonthlyCost(subscriptions) * 12;
 }
 
-/// Subscriptions sorted by next billing date
-List<Subscription> sortedByNextBilling(List<Subscription> subscriptions) {
+/// Subscriptions sorted by the bill that comes next.
+///
+/// Ordered by the derived date, not the stored one. Nothing advances
+/// `nextBillingDate` after a subscription is created, so sorting by it put the
+/// list in the order the plans were first saved and left it there.
+List<Subscription> sortedByNextBilling(
+  List<Subscription> subscriptions, {
+  required DateTime now,
+}) {
   final active = subscriptions.where((s) => s.isActive).toList();
-  active.sort((a, b) => a.nextBillingDate.compareTo(b.nextBillingDate));
+  // Keyed once per plan. Deriving a next bill walks the schedule, so doing it
+  // inside the comparator walked it O(n log n) times: ten milliseconds for
+  // twenty-four plans, on every rebuild of the panel.
+  final nextBill = {
+    for (final s in active)
+      s.id: nextBillingDateAfter(s.startDate, s.cycle, now),
+  };
+  active.sort((a, b) => nextBill[a.id]!.compareTo(nextBill[b.id]!));
   return active;
-}
-
-/// Compute next billing date from start date and cycle
-DateTime computeNextBillingDate(DateTime from, BillingCycle cycle) {
-  final now = DateTime.now();
-  DateTime next = from;
-  while (next.isBefore(now)) {
-    next = switch (cycle) {
-      BillingCycle.weekly => next.add(const Duration(days: 7)),
-      BillingCycle.monthly => DateTime(next.year, next.month + 1, next.day),
-      BillingCycle.quarterly => DateTime(next.year, next.month + 3, next.day),
-      BillingCycle.yearly => DateTime(next.year + 1, next.month, next.day),
-    };
-  }
-  return next;
 }

@@ -55,9 +55,9 @@ Private widgets (`_Foo`) are implementation details of their file and are listed
 
 | Widget | File | Notes |
 |---|---|---|
-| `showPaywall(context, {trigger})` | `paywall/paywall_screen.dart` | Top-level function — the single paywall entry point; `trigger` is one of `loan_limit`, `subscriptions`, `simulation` |
+| `showPaywall(context, {trigger})` | `paywall/paywall_screen.dart` | Top-level function — the single paywall entry point; `trigger` is one of `entry_limit`, `simulation` |
 | `ProLockedCard` | `paywall/pro_locked_card.dart` | Locked-feature affordance; taps through to `showPaywall` |
-| `SpeedDialFab` | `shared/speed_dial_fab.dart` | Floating action menu |
+| `allowsNewEntry` / `allowsSimulation` | `shared/pro_gate.dart` | The two doors of one gate; each shows the paywall and returns false when a free owner has used their `ProductConfig` allowance |
 | `_ActionRow` | `router/app_router.dart` | Rows of the swipe-up blurred action sheet |
 
 ## Conventions

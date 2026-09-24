@@ -15,721 +15,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get hudTitle => 'Runway';
 
   @override
-  String get sysOnline => '系統：上線';
-
-  @override
-  String get lifeForce => '跑道准备度';
-
-  @override
-  String get statusLabel => '狀態';
-
-  @override
-  String get pressureLabel => '壓力';
-
-  @override
-  String get metrics => '數據';
-
-  @override
-  String get cash => '現金';
-
-  @override
-  String get burnPerMonth => '月支出';
-
-  @override
-  String get loanPerMonth => '月債務';
-
-  @override
-  String get runway => '存活期';
-
-  @override
-  String get runOut => '耗盡日';
-
-  @override
-  String get cashTimeline => '現金時間軸';
-
-  @override
-  String get config => '設定';
-
-  @override
-  String get monthlyLoanPayment => '每月貸款還款';
-
-  @override
-  String get tapToSet => '點擊設定';
-
-  @override
-  String get edit => '編輯';
-
-  @override
-  String get save => '儲存';
-
-  @override
-  String get clear => '清除';
-
-  @override
-  String get loanAffectsInfo => '> 月還款影響壓力比例和可投資金額';
-
-  @override
-  String get transactionLog => '交易記錄';
-
-  @override
-  String get newEntry => '+ 新增';
-
-  @override
-  String get noEntries => 'No entries yet\nTap + ADD to log your first entry';
-
-  @override
-  String get newLogEntry => '> 新增記錄';
-
-  @override
-  String get modifyEntry => '> 修改記錄';
-
-  @override
-  String get type => '類型';
-
-  @override
-  String get date => '日期';
-
-  @override
-  String get calcMonth => '計算月份';
-
-  @override
-  String get amount => '金額';
-
-  @override
-  String get noteOptional => '備註（選填）';
-
-  @override
-  String get confirm => '確認';
-
-  @override
-  String get abort => '取消';
-
-  @override
-  String get purgeEntry => '> 刪除此記錄？';
-
-  @override
-  String get scenarioSimulator => '情境模擬器';
-
-  @override
-  String get overrideInputs => '覆蓋輸入';
-
-  @override
-  String get burnRateOverride => '支出覆蓋';
-
-  @override
-  String get simulatedIncome => '模擬月收入';
-
-  @override
-  String get simResults => '模擬結果';
-
-  @override
-  String get simRunway => '模擬存活期';
-
-  @override
-  String get simRunOut => '模擬耗盡日';
-
-  @override
-  String get deltaVsActual => '與實際差異';
-
-  @override
-  String get deltaRunway => '存活期差異';
-
-  @override
-  String get resetSim => '重置模擬';
-
-  @override
-  String get months => '個月';
-
-  @override
-  String get stable => '穩定';
-
-  @override
-  String get caution => '警告';
-
-  @override
-  String get critical => '危急';
-
-  @override
-  String get low => '低';
-
-  @override
-  String get moderate => '中等';
-
-  @override
-  String get highLoad => '高負荷';
-
-  @override
-  String get language => '語言';
-
-  @override
-  String get currency => '貨幣';
-
-  @override
-  String get currencySymbolOnly => '仅更改显示符号，金额不会转换。';
-
-  @override
-  String get daysShort => '天';
-
-  @override
-  String get gettingStarted => '入门指南';
-
-  @override
-  String stepsComplete(int completed, int total) {
-    return '已完成 $completed/$total';
-  }
-
-  @override
-  String get stepBalanceLabel => '添加现金余额';
-
-  @override
-  String get stepBalanceHint => '你现在有多少钱？';
-
-  @override
-  String get stepBudgetLabel => '设置月度预算';
-
-  @override
-  String get stepBudgetHint => '房租 + 生活费';
-
-  @override
-  String get stepExpenseLabel => '记录第一笔支出';
-
-  @override
-  String get stepExpenseHint => '追踪你的花销';
-
-  @override
-  String get stepSimLabel => '试试模拟器';
-
-  @override
-  String get stepSimHint => '削减支出会怎样？';
-
-  @override
-  String get loading => '載入中...';
-
-  @override
-  String get navHud => 'HUD';
-
-  @override
-  String get navLog => 'LOG';
-
-  @override
-  String get navSim => 'SIM';
-
-  @override
-  String get typeExpense => '支出';
-
-  @override
-  String get typeIncome => '收入';
-
-  @override
-  String get typeLoan => '貸款';
-
-  @override
-  String get typeRepay => '還款';
-
-  @override
-  String get typeOpening => '初始';
-
-  @override
-  String get liabilities => '負債';
-
-  @override
-  String get noActiveLoans => '> 無有效貸款';
-
-  @override
-  String get settled => '已結清';
-
-  @override
-  String get totalDebtPerMonth => '月債務合計';
-
-  @override
-  String get remaining => '剩餘';
-
-  @override
-  String get installment => '每期還款';
-
-  @override
-  String get paidThisMo => '本月已還';
-
-  @override
-  String get monthsLeft => '剩餘月數';
-
-  @override
-  String get repaid => '% 已還';
-
-  @override
-  String get repay => '還款';
-
-  @override
-  String get repayTitle => '> 還款';
-
-  @override
-  String get extra => '額外';
-
-  @override
-  String get configButton => '設定';
-
-  @override
-  String get loanWizardTitle => '貸款精靈';
-
-  @override
-  String get whoAndHowMuch => '對象與金額';
-
-  @override
-  String get loanTerms => '貸款條件';
-
-  @override
-  String get confirmPayment => '確認還款';
-
-  @override
-  String get source => '來源';
-
-  @override
-  String get nameLender => '名稱 / 借款方';
-
-  @override
-  String get loanAmount => '貸款金額';
-
-  @override
-  String get annualRate => '年利率 % (0 = 無利息)';
-
-  @override
-  String get repaymentMonths => '還款月數';
-
-  @override
-  String get computedInstallment => '計算每期還款';
-
-  @override
-  String get overrideInstallment => '自訂每月還款';
-
-  @override
-  String get monthlyInstallment => '每月還款';
-
-  @override
-  String get next => '下一步';
-
-  @override
-  String get back => '返回';
-
-  @override
-  String get lender => '借款方';
-
-  @override
-  String get rate => '利率';
-
-  @override
-  String get change => '更改';
-
-  @override
-  String get subscriptions => '訂閱';
-
-  @override
-  String get noSubscriptions => '> 無有效訂閱';
-
-  @override
-  String get subscriptionName => '名稱';
-
-  @override
-  String get subscriptionAmount => '金額';
-
-  @override
-  String get subscriptionPaymentAmount => '付款金額';
-
-  @override
-  String get subscriptionCycle => '計費週期';
-
-  @override
-  String get subscriptionCoveragePeriod => '涵蓋期間';
-
-  @override
-  String get subscriptionCategory => '類別';
-
-  @override
-  String get subscriptionPaymentDate => '付款日期';
-
-  @override
-  String get subscriptionNextBilling => '下次扣款';
-
-  @override
-  String get subscriptionDaysLeft => '天';
-
-  @override
-  String get totalPerMonth => '月合計';
-
-  @override
-  String get totalPerYear => '年合計';
-
-  @override
-  String get newSubscription => '+ 訂閱';
-
-  @override
-  String get editSubscription => '> 編輯訂閱';
-
-  @override
-  String get addSubscription => '> 新增訂閱';
-
-  @override
-  String get personal => '個人';
-
-  @override
-  String get business => '商業';
-
-  @override
-  String get weekly => '每週';
-
-  @override
-  String get monthly => '每月';
-
-  @override
-  String get quarterly => '每季';
-
-  @override
-  String get yearly => '每年';
-
-  @override
-  String get subscrPerMonth => '/ 月';
-
-  @override
-  String get loans => '貸款';
-
-  @override
-  String activeCount(int count) {
-    return '$count 筆有效';
-  }
-
-  @override
-  String get repayLoan => '還款';
-
-  @override
-  String get repaymentAmount => '還款金額';
-
-  @override
-  String get cancel => '取消';
-
-  @override
-  String get paid => '✓ 已還清';
-
-  @override
-  String get subscrPerYear => '/ 年';
-
-  @override
-  String get removeConfirm => '刪除？';
-
-  @override
-  String get remove => '刪除';
-
-  @override
-  String monthsProjected(int count) {
-    return '$count 個月預測';
-  }
-
-  @override
-  String get budgetPerMonth => '預算/月';
-
-  @override
-  String get breakdown => '明細';
-
-  @override
-  String get safetyFund => '安全基金';
-
-  @override
-  String get safety => '安全';
-
-  @override
-  String get deployableCapital => '可部署資金 — 獨立於生存緩衝金';
-
-  @override
-  String get historyEntries => '歷史記錄';
-
-  @override
-  String get addEntry => '+ 新增';
-
-  @override
-  String get willRemoveLoan => '同時將從負債中移除';
-
-  @override
-  String get delete => '刪除';
-
-  @override
-  String get planned => '計劃中';
-
-  @override
-  String get whatIfAnalysis => '情境分析';
-
-  @override
-  String get current => '當前';
-
-  @override
-  String get simulate => '模擬';
-
-  @override
-  String get simHint => '覆蓋支出或新增收入，查看對存活期的影響';
-
-  @override
-  String get simulation => '模擬結果';
-
-  @override
-  String get enterValuesToSim => '輸入數值以開始模擬';
-
-  @override
-  String get perMonth => '/ 月';
-
-  @override
-  String get prefsBudget => '偏好設定 & 預算';
-
-  @override
-  String get close => '關閉';
-
-  @override
-  String get monthlyBudget => '每月預算';
-
-  @override
-  String get rentFixed => '租金 / 固定';
-
-  @override
-  String get livingExpenses => '生活費';
-
-  @override
-  String get subtotal => '小計';
-
-  @override
-  String get totalBudgetPerMonth => '總預算/月';
-
-  @override
-  String get setBudget => '設定預算';
-
-  @override
-  String get rentFixedCosts => '租金 / 固定費用';
-
-  @override
-  String get subscrDebtAuto => '訂閱 + 債務已自動加入';
-
-  @override
-  String get futureAssumptions => '预测';
-
-  @override
-  String get expectedInflow => '预期流入';
-
-  @override
-  String get expectedBurn => '预期支出';
-
-  @override
-  String get notSet => '未设置';
-
-  @override
-  String get usingCurrentBurn => '使用当前支出';
-
-  @override
-  String get assumptionsProjectionOnly => '假设只影响未来预测，不会新增交易记录。';
-
-  @override
-  String get setAssumptions => '设置预测';
-
-  @override
-  String get expectedMonthlyInflow => '预期每月流入';
-
-  @override
-  String get expectedMonthlyBurn => '预期每月支出';
-
-  @override
-  String get useCurrentBurn => '使用当前支出';
-
-  @override
-  String get futureInflowHint => '在这里输入中性的未来流入：自由接案、合约收入、创作者收入、股息，或任何预期流入。';
-
-  @override
-  String get runwayGoal => '跑道目标';
-
-  @override
-  String get goal => '目标';
-
-  @override
-  String get none => '无';
-
-  @override
-  String get target => '目标';
-
-  @override
-  String get optional => '选填';
-
-  @override
-  String monthsValue(int count) {
-    return '$count 个月';
-  }
-
-  @override
-  String get goalsContextHint => '目标只是为你的跑道加入情境，不是分数。';
-
-  @override
-  String get setGoal => '设置目标';
-
-  @override
-  String get goalName => '目标名称';
-
-  @override
-  String get targetMonths => '目标月数';
-
-  @override
-  String get display => '顯示';
-
-  @override
-  String get glassEffect => '玻璃效果';
-
-  @override
-  String get glassEffectHint => 'GPU 密集 — 舊裝置建議關閉';
-
-  @override
-  String get runwayBrand => 'RUNWAY';
-
-  @override
-  String get bootRunwayCheck => '> RUNWAY 检查...';
-
-  @override
-  String get bootIncomeStopped => '> 如果你的收入今天停止...';
-
-  @override
-  String get bootCountingCashDays => '> 正在计算现金天数...';
-
-  @override
-  String get bootRemovingComfortFilter => '> 正在移除舒适滤镜...';
-
-  @override
-  String get bootRealityCheckReady => '> 现实检查就绪。';
-
-  @override
-  String get ifIncomeStoppedToday => 'If inflow stopped today';
-
-  @override
-  String get ifIncomePausedToday => '如果收入今天暂停';
-
-  @override
-  String get monthSingular => '个月';
-
-  @override
-  String get monthPlural => '个月';
-
-  @override
-  String get sustainableWithExpectedInflow => '在预期流入下可持续';
-
-  @override
-  String shortByPerMonth(String amount) {
-    return '每月短缺 $amount';
-  }
-
-  @override
-  String goalTargetProgress(int months) {
-    return '$months 个月目标。这是目标进度，不是分数。';
-  }
-
-  @override
-  String get monthlyBurn => '每月支出';
-
-  @override
-  String get availableCash => '可用现金';
-
-  @override
-  String get historicalBurn => '平均支出';
-
-  @override
-  String get notEnoughHistory => '历史资料不足';
-
-  @override
-  String get projectionSource => '预测来源';
-
-  @override
-  String get usingAssumptions => '使用假设';
-
-  @override
-  String get fixedPressure => '固定支出';
-
-  @override
-  String get actualBurn => '实际支出';
-
-  @override
-  String get actualBurnHigh => '实际支出 ▲';
-
-  @override
-  String get plannedEssentials => '计划必要支出';
-
-  @override
-  String get recurringCosts => '周期成本';
-
-  @override
-  String get debtCommitments => '贷款还款';
-
-  @override
-  String get daysUpper => '天';
-
-  @override
-  String get yourRunway => '你的生存跑道';
-
-  @override
-  String get loseIncome => 'Inflow stops';
-
-  @override
-  String get higherExpenses => '支出增加';
-
-  @override
-  String get incomeSetToZero => 'Inflow set to 0';
-
-  @override
-  String deltaDays(int days) {
-    return '$days 天';
-  }
-
-  @override
-  String get shareSafe => '安全分享';
-
-  @override
-  String get shareSafeHint => '不显示存款。不显示支出。只显示你的生存跑道。';
-
-  @override
-  String get preparing => '准备中...';
-
-  @override
-  String get shareImage => '分享图片';
-
-  @override
-  String get shareAsText => '以文字分享';
-
-  @override
-  String get goalReached => '目标达成！';
-
-  @override
-  String monthsToGoal(int count) {
-    return '还差$count个月';
-  }
-
-  @override
-  String get thisMonth => '本月';
-
-  @override
-  String get cashIn => '收入';
-
-  @override
-  String get cashOut => '支出';
-
-  @override
-  String get netLabel => '净额';
-
-  @override
-  String get noActivityThisMonth => '本月暂无活动';
-}
-
-/// The translations for Chinese, as used in Taiwan (`zh_TW`).
-class AppLocalizationsZhTw extends AppLocalizationsZh {
-  AppLocalizationsZhTw() : super('zh_TW');
-
-  @override
-  String get appTitle => 'Runway';
-
-  @override
-  String get hudTitle => 'Runway';
-
-  @override
   String get sysOnline => '已就緒';
 
   @override
-  String get lifeForce => '跑道狀態';
+  String get lifeForce => 'Runway 狀態';
 
   @override
   String get statusLabel => '目前狀況';
@@ -738,19 +27,27 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get pressureLabel => '每月支出';
 
   @override
+  String get costsIncludeCommitments => '包含訂閱和貸款還款';
+
+  @override
   String get metrics => '重點';
 
   @override
   String get cash => '現金';
 
   @override
-  String get burnPerMonth => '月支出';
+  String get owed => '欠款';
+
+  @override
+  String runsOut(String date) {
+    return '$date 會用完';
+  }
 
   @override
   String get loanPerMonth => '月債務';
 
   @override
-  String get runway => '可撐多久';
+  String get runway => 'RUNWAY';
 
   @override
   String get runOut => '用完時間';
@@ -777,10 +74,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get clear => '清除';
 
   @override
-  String get loanAffectsInfo => '每月還款會影響你的現金壓力和跑道長度。';
-
-  @override
-  String get transactionLog => '交易記錄';
+  String get transactionLog => '交易紀錄';
 
   @override
   String get newEntry => '+ 新增';
@@ -789,10 +83,10 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get noEntries => '還沒有任何紀錄\n點 + 新增你的第一筆資料';
 
   @override
-  String get newLogEntry => '> 新增一筆';
+  String get newLogEntry => '新增一筆';
 
   @override
-  String get modifyEntry => '> 編輯紀錄';
+  String get modifyEntry => '編輯紀錄';
 
   @override
   String get type => '類型';
@@ -816,7 +110,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get abort => '取消';
 
   @override
-  String get purgeEntry => '> 要刪除這筆嗎？';
+  String get purgeEntry => '刪除這筆紀錄？';
 
   @override
   String get scenarioSimulator => '情境規劃';
@@ -825,7 +119,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get overrideInputs => '規劃用數字';
 
   @override
-  String get burnRateOverride => '每月支出';
+  String get burnRateOverride => '房租 + 生活費 / 月';
 
   @override
   String get simulatedIncome => '每月收入變化';
@@ -834,7 +128,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get simResults => '預估結果';
 
   @override
-  String get simRunway => '預估跑道';
+  String get simRunway => '預估 Runway';
 
   @override
   String get simRunOut => '預估用完時間';
@@ -843,7 +137,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get deltaVsActual => '和現在相比';
 
   @override
-  String get deltaRunway => '跑道變化';
+  String get deltaRunway => 'Runway 變化';
 
   @override
   String get resetSim => '重置模擬';
@@ -917,10 +211,10 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get loading => '載入中...';
 
   @override
-  String get navHud => '首頁';
+  String get navHud => '總覽';
 
   @override
-  String get navLog => 'LOG';
+  String get navLog => '紀錄';
 
   @override
   String get navSim => '規劃';
@@ -935,16 +229,123 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get typeLoan => '貸款';
 
   @override
-  String get typeRepay => '還款';
+  String get typeRepay => '貸款還款';
 
   @override
   String get typeOpening => '初始';
 
   @override
+  String get typeSubscription => '訂閱';
+
+  @override
+  String subscriptionPaidQuestion(String amount, String name, String date) {
+    return '$date有扣 $name 的 $amount 嗎？';
+  }
+
+  @override
+  String subscriptionChargesDue(int count, String amount) {
+    return '有 $count 筆訂閱還沒確認，共 $amount';
+  }
+
+  @override
+  String get subscriptionConfirmAll => '全部確認';
+
+  @override
+  String get subscriptionReviewEach => '一筆一筆看';
+
+  @override
+  String get subscriptionPaidYes => '有，記一筆';
+
+  @override
+  String get subscriptionChargeFailed => '沒記成功，看一下訂閱的金額。';
+
+  @override
+  String get subscriptionSaveFailed => '訂閱沒存成功，還沒加進去。';
+
+  @override
+  String get loanSaveFailed => '貸款沒存成功，還沒加進去。';
+
+  @override
+  String get subscriptionPaidNo => '沒有';
+
+  @override
+  String get subscriptionWhatHappened => '怎麼了？';
+
+  @override
+  String get subscriptionReasonCancelled => '我取消了';
+
+  @override
+  String get subscriptionReasonPriceChanged => '價錢變了';
+
+  @override
+  String get subscriptionReasonNotPaid => '我沒付';
+
+  @override
+  String get deleteSubscription => '刪除訂閱';
+
+  @override
+  String get deleteSubscriptionKeepsEntries => '停止未來的紀錄。已記錄的付款會保留。';
+
+  @override
   String get liabilities => '負債';
 
   @override
-  String get noActiveLoans => '> 目前沒有貸款';
+  String get noActiveLoans => '目前沒有貸款';
+
+  @override
+  String get newLoan => '+ 貸款';
+
+  @override
+  String get spendOnWhat => '剛剛買了什麼？';
+
+  @override
+  String get moneyCameInInstead => '剛剛收到錢？';
+
+  @override
+  String get logIncome => '新增收入';
+
+  @override
+  String get presetCoffee => '咖啡';
+
+  @override
+  String get presetCoffeeNote => '咖啡';
+
+  @override
+  String get presetLunch => '午餐';
+
+  @override
+  String get presetLunchNote => '午餐';
+
+  @override
+  String get presetDinner => '晚餐';
+
+  @override
+  String get presetDinnerNote => '晚餐';
+
+  @override
+  String get presetTransport => '交通';
+
+  @override
+  String get presetTransportNote => '交通';
+
+  @override
+  String get presetGroceries => '採買';
+
+  @override
+  String get presetGroceriesNote => '採買';
+
+  @override
+  String get presetSomethingElse => '其他';
+
+  @override
+  String freeEntriesUsed(int used, int free) {
+    return '免費紀錄 $free 筆已用 $used 筆';
+  }
+
+  @override
+  String freeSimulationsUsed(int used, int free) {
+    return '免費模擬 $free 次已用 $used 次';
+  }
 
   @override
   String get settled => '已結清';
@@ -968,10 +369,19 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get repaid => '% 已還';
 
   @override
+  String get stillPaying => '借的錢已經還完了，但還要付到期滿。';
+
+  @override
+  String get markSettled => '標記為已結清';
+
+  @override
+  String get markSettledExplain => '每月還款不再計入，這筆貸款也會永久從清單上移除。紀錄會留著。';
+
+  @override
   String get repay => '還款';
 
   @override
-  String get repayTitle => '> 還款';
+  String get repayTitle => '還款';
 
   @override
   String get extra => '額外';
@@ -1034,7 +444,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get subscriptions => '訂閱';
 
   @override
-  String get noSubscriptions => '> 目前沒有訂閱';
+  String get noSubscriptions => '目前沒有訂閱';
 
   @override
   String get subscriptionName => '名稱';
@@ -1073,10 +483,10 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get newSubscription => '+ 訂閱';
 
   @override
-  String get editSubscription => '> 編輯訂閱';
+  String get editSubscription => '編輯訂閱';
 
   @override
-  String get addSubscription => '> 新增訂閱';
+  String get addSubscription => '新增訂閱';
 
   @override
   String get personal => '個人';
@@ -1103,11 +513,6 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get loans => '貸款';
 
   @override
-  String activeCount(int count) {
-    return '$count 筆有效';
-  }
-
-  @override
   String get repayLoan => '還款';
 
   @override
@@ -1121,9 +526,6 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get subscrPerYear => '/ 年';
-
-  @override
-  String get removeConfirm => '刪除？';
 
   @override
   String get remove => '刪除';
@@ -1146,10 +548,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get safety => '安全';
 
   @override
-  String get deployableCapital => '保留安全緩衝後，還能運用的資金';
-
-  @override
-  String get historyEntries => '歷史記錄';
+  String get historyEntries => '歷史紀錄';
 
   @override
   String get addEntry => '+ 新增';
@@ -1159,6 +558,24 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get delete => '刪除';
+
+  @override
+  String get dataSection => '你的資料';
+
+  @override
+  String get deleteAllDataBody => '從這台裝置清除所有紀錄、貸款、訂閱與設定。Runway Pro 仍保持解鎖。';
+
+  @override
+  String get deleteAllDataButton => '刪除所有資料';
+
+  @override
+  String get deleteAllDataConfirmTitle => '要刪除全部嗎？';
+
+  @override
+  String get deleteAllDataConfirmBody => '資料會從這台裝置清除，且無法復原。Runway 將從頭開始。';
+
+  @override
+  String get deleteAllDataConfirmAction => '全部刪除';
 
   @override
   String get planned => '規劃中';
@@ -1173,7 +590,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get simulate => '規劃';
 
   @override
-  String get simHint => '調整每月支出或收入，看看跑道會怎麼變';
+  String get simHint => '調整每月支出或收入，看看 Runway 會怎麼變';
 
   @override
   String get simulation => '情境結果';
@@ -1200,7 +617,44 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get livingExpenses => '生活費';
 
   @override
+  String get budgetRuleHint => '支出只是把預算用掉，超支才會多花錢。';
+
+  @override
   String get subtotal => '小計';
+
+  @override
+  String budgetLeft(String amount) {
+    return '剩餘 $amount';
+  }
+
+  @override
+  String budgetPaid(String amount) {
+    return '已付 $amount';
+  }
+
+  @override
+  String spentOfBudget(String spent, String budget) {
+    return '已付 $spent / $budget';
+  }
+
+  @override
+  String budgetOver(String amount) {
+    return '超出預算 $amount';
+  }
+
+  @override
+  String dailyAllowance(String amount, int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '每天 $amount，還有 $days 天',
+      one: '今天可用 $amount',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noLivingExpensesThisMonth => '本月還沒有生活費紀錄';
 
   @override
   String get totalBudgetPerMonth => '每月總預算';
@@ -1221,10 +675,25 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get expectedInflow => '預計每月收入';
 
   @override
+  String get everyMonth => '每個月';
+
+  @override
+  String get monthlySurplus => '結餘';
+
+  @override
+  String get monthlyDeficit => '不足';
+
+  @override
+  String get setExpectedIncome => '設定預期收入';
+
+  @override
   String get expectedBurn => '預計每月支出';
 
   @override
   String get notSet => '未設定';
+
+  @override
+  String get settingsFailedToLoad => '無法載入這些設定。為避免覆寫，暫時無法編輯。';
 
   @override
   String get usingCurrentBurn => '先用目前支出估算';
@@ -1248,7 +717,11 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get futureInflowHint => '可以填接案、合約收入、創作者收入、股息，或任何你預期會進來的錢。';
 
   @override
-  String get runwayGoal => '跑道目標';
+  String get forecastDoesNotMoveRunway =>
+      '收入不會改變 Runway。Runway 是沒收入時現金能撐多久，這裡只顯示這個月是增加還是減少。';
+
+  @override
+  String get runwayGoal => 'Runway 目標';
 
   @override
   String get goal => '目標';
@@ -1268,7 +741,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   }
 
   @override
-  String get goalsContextHint => '目標只是拿來對照你的跑道，不是在替你打分數。';
+  String get goalsContextHint => '目標只是拿來對照你的 Runway，不是在替你打分數。';
 
   @override
   String get setGoal => '設定目標';
@@ -1280,37 +753,24 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get targetMonths => '目標月數';
 
   @override
-  String get display => '顯示';
-
-  @override
-  String get glassEffect => '玻璃效果';
-
-  @override
-  String get glassEffectHint => '比較吃效能，舊裝置可以關掉';
-
-  @override
   String get runwayBrand => 'RUNWAY';
 
   @override
-  String get bootRunwayCheck => '正在檢查你的跑道...';
+  String get runwayBasisBudget => '照你的預算算，假設今天起沒收入';
 
   @override
-  String get bootIncomeStopped => '看看如果收入暫停會怎樣...';
+  String get runwayBasisSpending => '照你實際花的算，假設今天起沒收入';
 
   @override
-  String get bootCountingCashDays => '正在估算你還有多少緩衝...';
+  String get runwayBasisAssumption => '照你設定的成本算，假設今天起沒收入';
 
   @override
-  String get bootRemovingComfortFilter => '把必要支出和雜訊分開...';
+  String computedCost(String amount) {
+    return '照預算和紀錄算出來是：$amount';
+  }
 
   @override
-  String get bootRealityCheckReady => '你的財務狀況整理好了。';
-
-  @override
-  String get ifIncomeStoppedToday => 'If inflow stopped today';
-
-  @override
-  String get ifIncomePausedToday => '如果今天收入暫停';
+  String get runwayNeedsCosts => '設定每月支出後即可看到 Runway';
 
   @override
   String get monthSingular => '個月';
@@ -1332,13 +792,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   }
 
   @override
-  String get monthlyBurn => '每月支出';
-
-  @override
   String get availableCash => '目前現金';
-
-  @override
-  String get historicalBurn => '平均支出';
 
   @override
   String get notEnoughHistory => '資料還不夠';
@@ -1353,12 +807,6 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get fixedPressure => '固定支出';
 
   @override
-  String get actualBurn => '實際支出';
-
-  @override
-  String get actualBurnHigh => '實際支出 ▲';
-
-  @override
   String get plannedEssentials => '預計必要支出';
 
   @override
@@ -1371,16 +819,10 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get daysUpper => '天';
 
   @override
-  String get yourRunway => '你的跑道';
-
-  @override
-  String get loseIncome => 'Inflow stops';
+  String get yourRunway => '你的 Runway';
 
   @override
   String get higherExpenses => '支出增加';
-
-  @override
-  String get incomeSetToZero => 'Inflow set to 0';
 
   @override
   String deltaDays(int days) {
@@ -1391,7 +833,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get shareSafe => '安全分享';
 
   @override
-  String get shareSafeHint => '不顯示存款和支出，只分享你的跑道。';
+  String get shareSafeHint => '不顯示存款和支出，只分享你的 Runway。';
 
   @override
   String get preparing => '準備中...';
@@ -1403,12 +845,28 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get shareAsText => '以文字分享';
 
   @override
-  String get goalReached => '目標達成！';
+  String get goalReached => '目標達成';
 
   @override
   String monthsToGoal(int count) {
-    return '還差$count個月';
+    return '還要再存 $count 個月';
   }
+
+  @override
+  String get goalCashTarget => '目標金額';
+
+  @override
+  String goalCashTargetFrom(int count, String cost) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 個月 × 每月 $cost',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get goalCashToGo => '還差';
 
   @override
   String get thisMonth => '本月';
@@ -1424,4 +882,172 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get noActivityThisMonth => '本月暫無活動';
+
+  @override
+  String get onboardingSkip => '跳過';
+
+  @override
+  String get onboardingWelcomeTitle => '別再猜\n你的錢能撐多久。';
+
+  @override
+  String get onboardingWelcomeBody => '不用註冊，也不連銀行。';
+
+  @override
+  String get onboardingGetStarted => '開始吧';
+
+  @override
+  String get onboardingPrivacyTitle => '你的資料，\n只在你手機裡。';
+
+  @override
+  String get onboardingPrivacyBody => '沒有伺服器，就沒有外洩的問題。';
+
+  @override
+  String get onboardingPrivacyEncrypted => '在手機上加密';
+
+  @override
+  String get onboardingPrivacyOnDevice => '數字不會離開你的手機';
+
+  @override
+  String get onboardingPrivacyHidden => '切到別的 App 就自動遮起來';
+
+  @override
+  String get onboardingPrivacyDelete => '想刪就刪';
+
+  @override
+  String get onboardingIUnderstand => '了解';
+
+  @override
+  String get onboardingFirstActionTitle => '一個數字\n就設定完成。';
+
+  @override
+  String get onboardingFirstActionBody => '只要現金餘額，其他都不用。';
+
+  @override
+  String get onboardingAddMyBalance => '輸入我的餘額';
+
+  @override
+  String get paywallUnlock => '解鎖 RUNWAY PRO';
+
+  @override
+  String get paywallLoadingPrice => '價格載入中...';
+
+  @override
+  String get paywallStoreUnreachable => '連不上商店，看看網路再試一次。';
+
+  @override
+  String paywallOneTimePurchase(String price) {
+    return '$price 買斷。這個 App 幫你算訂閱，自己當然不會變成訂閱。';
+  }
+
+  @override
+  String get paywallUnavailable => 'Pro 現在暫時買不到，晚點再試試。';
+
+  @override
+  String get paywallRestore => '恢復購買';
+
+  @override
+  String get proUnlocked => '已解鎖。紀錄和模擬都沒有上限。';
+
+  @override
+  String get paywallMaybeLater => '下次再說';
+
+  @override
+  String get paywallPurchaseFailed => '購買沒成功，再試一次吧。';
+
+  @override
+  String get paywallSomethingWrong => '出了點問題，再試一次吧。';
+
+  @override
+  String get paywallNoPreviousPurchase => '找不到之前的購買紀錄。';
+
+  @override
+  String get paywallRestoreFailed => '恢復沒成功，再試一次吧。';
+
+  @override
+  String paywallTitleEntries(int count) {
+    return '$count 筆免費紀錄用完了。\nPro 就是讓這個數字一直準。';
+  }
+
+  @override
+  String paywallTitleSimulations(int count) {
+    return '$count 次免費模擬用完了。\nPro 讓你想試幾次就試幾次。';
+  }
+
+  @override
+  String get paywallTitleDefault => '解鎖 Runway Pro。';
+
+  @override
+  String get paywallFeatureEntries => '全部都記，數字才不會跑掉';
+
+  @override
+  String get paywallFeatureSimulations => '想模擬幾次就幾次';
+
+  @override
+  String get stepBalanceShort => '現金餘額';
+
+  @override
+  String get stepBudgetShort => '預算';
+
+  @override
+  String get stepExpenseShort => '第一筆支出';
+
+  @override
+  String get stepSimShort => '模擬器';
+
+  @override
+  String stepsDone(String steps) {
+    return '搞定：$steps';
+  }
+
+  @override
+  String get optionalBadge => '可選';
+
+  @override
+  String fixedCostsUnchanged(String amount) {
+    return '固定支出照舊：$amount';
+  }
+
+  @override
+  String get simNeedsBalance => '先新增你的期初餘額';
+
+  @override
+  String get simNeedsBalanceWhy => 'Runway 要從一個起始餘額開始算。';
+
+  @override
+  String get addOpeningBalance => '新增我的餘額';
+
+  @override
+  String get runSimulation => '開始模擬';
+
+  @override
+  String get runwayUnlimitedHere => '在這個計畫裡，收入蓋得過支出';
+
+  @override
+  String get runwayNoChange => '沒有變化';
+
+  @override
+  String deltaDaysLonger(int days) {
+    return '多 $days 天';
+  }
+
+  @override
+  String deltaDaysShorter(int days) {
+    return '少 $days 天';
+  }
+
+  @override
+  String deltaMonthsLonger(int months) {
+    return '多 $months 個月';
+  }
+
+  @override
+  String deltaMonthsShorter(int months) {
+    return '少 $months 個月';
+  }
+
+  @override
+  String get paywallTermsOfUse => '使用條款';
+
+  @override
+  String get paywallPrivacyPolicy => '隱私權政策';
 }

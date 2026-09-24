@@ -37,8 +37,9 @@ CurrencyConfig _defaultForLocale(Locale? locale) {
   if (lang == 'zh') return supportedCurrencies[5]; // CNY
   if (lang == 'en' && country == 'US') return supportedCurrencies[2]; // USD
   if (lang == 'en') return supportedCurrencies[2]; // USD
-  if (lang == 'fr' || lang == 'it' || lang == 'es')
+  if (lang == 'fr' || lang == 'it' || lang == 'es') {
     return supportedCurrencies[3]; // EUR
+  }
   return supportedCurrencies[2]; // default USD
 }
 

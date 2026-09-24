@@ -21,8 +21,7 @@ class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
 
   @override
-  ConsumerState<OnboardingScreen> createState() =>
-      _OnboardingScreenState();
+  ConsumerState<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
@@ -32,16 +31,26 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
   late AnimationController _fadeCtrl;
   late Animation<double> _fadeAnim;
 
-  static const _totalPages = 5;
+  static const _totalPages = 3;
 
   @override
   void initState() {
     super.initState();
     _fadeCtrl = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 400));
-    _fadeAnim =
-        CurvedAnimation(parent: _fadeCtrl, curve: Curves.easeOut);
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+    _fadeAnim = CurvedAnimation(parent: _fadeCtrl, curve: Curves.easeOut);
     _fadeCtrl.forward();
+  }
+
+  /// The screen fading itself in is motion nobody asked for, so under Reduce
+  /// Motion it arrives already here. MediaQuery is not safe in initState,
+  /// which is why this is not decided there.
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (AppMotion.isReduced(context)) _fadeCtrl.value = 1;
   }
 
   @override
@@ -52,11 +61,18 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
   }
 
   void _next() {
-    if (_page < _totalPages - 1) {
-      _controller.nextPage(
-          duration: const Duration(milliseconds: 350),
-          curve: Curves.easeInOut);
+    if (_page >= _totalPages - 1) return;
+    // A whole screen of content travelling sideways is the textbook
+    // vestibular trigger, and this is the first thing a new user sees. The
+    // page still changes; it arrives instead of travelling.
+    if (AppMotion.isReduced(context)) {
+      _controller.jumpToPage(_page + 1);
+      return;
     }
+    _controller.nextPage(
+      duration: const Duration(milliseconds: 350),
+      curve: Curves.easeInOut,
+    );
   }
 
   void _skip() => _finish();
@@ -90,40 +106,41 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
               children: [
                 _PageWelcome(onNext: _next),
                 _PagePrivacy(onNext: _next),
-                _PageHowItWorks(onNext: _next),
-                _PageProtect(onNext: _next),
                 _PageFirstAction(onFinish: _finish),
               ],
             ),
 
             // Progress dots + skip
             Positioned(
-              top: 0, left: 0, right: 0,
+              top: 0,
+              left: 0,
+              right: 0,
               child: SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.lg,
-                      vertical: AppSpacing.md),
+                    horizontal: AppSpacing.lg,
+                    vertical: AppSpacing.md,
+                  ),
                   child: Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       // Dots
                       Row(
-                        children: List.generate(_totalPages, (i) =>
-                          AnimatedContainer(
-                            duration:
-                                const Duration(milliseconds: 250),
+                        children: List.generate(
+                          _totalPages,
+                          (i) => AnimatedContainer(
+                            duration: AppMotion.unprompted(
+                              context,
+                              const Duration(milliseconds: 250),
+                            ),
                             width: i == _page ? 20 : 6,
                             height: 6,
-                            margin: const EdgeInsets.only(
-                                right: AppSpacing.xs),
+                            margin: const EdgeInsets.only(right: AppSpacing.xs),
                             decoration: BoxDecoration(
                               color: i == _page
                                   ? AppColors.neonGreen
                                   : AppColors.cardBorder,
-                              borderRadius:
-                                  BorderRadius.circular(3),
+                              borderRadius: BorderRadius.circular(3),
                             ),
                           ),
                         ),
@@ -132,11 +149,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
                       if (_page < _totalPages - 1)
                         GestureDetector(
                           onTap: _skip,
-                          child: Text('SKIP',
-                              style: AppTextStyles.caption
-                                  .copyWith(
-                                      color: AppColors
-                                          .textSecondary)),
+                          child: Text(
+                            context.l10n.onboardingSkip,
+                            style: AppTextStyles.caption.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
                         ),
                     ],
                   ),
@@ -157,14 +175,14 @@ class _PageWelcome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return _PageLayout(
       icon: '◈',
       iconData: Icons.radio_button_checked_rounded,
       iconColor: AppColors.neonGreen,
-      title: 'Know your\nrunway.',
-      subtitle:
-          'One number tells you everything.\nHow long can you survive financially?',
-      cta: 'GET STARTED',
+      title: l10n.onboardingWelcomeTitle,
+      subtitle: l10n.onboardingWelcomeBody,
+      cta: l10n.onboardingGetStarted,
       onNext: onNext,
     );
   }
@@ -177,15 +195,15 @@ class _PagePrivacy extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return _PageLayout(
       icon: '🔒',
       iconData: Icons.lock_rounded,
       iconColor: AppColors.neonGreen,
-      title: 'Your data,\nyour device.',
-      subtitle:
-          'Everything is encrypted on your device.\nWe cannot read your financial data.\nEven we don\'t know your numbers.',
+      title: l10n.onboardingPrivacyTitle,
+      subtitle: l10n.onboardingPrivacyBody,
       extras: const _PrivacyPoints(),
-      cta: 'I UNDERSTAND',
+      cta: l10n.onboardingIUnderstand,
       onNext: onNext,
     );
   }
@@ -196,164 +214,55 @@ class _PrivacyPoints extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final points = [
-      ('🔐', 'Encrypted on device'),
-      ('☁️', 'Never sent to servers'),
-      ('👁️', 'No one can read your data'),
-      ('🗑️', 'Delete anytime, instantly'),
+      ('🔐', l10n.onboardingPrivacyEncrypted),
+      ('📱', l10n.onboardingPrivacyOnDevice),
+      ('🙈', l10n.onboardingPrivacyHidden),
+      ('🗑️', l10n.onboardingPrivacyDelete),
     ];
 
     return Column(
-      children: points.map((p) => Padding(
-        padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-        child: Row(children: [
-          Text(p.$1,
-              style: const TextStyle(fontSize: 16)),
-          const SizedBox(width: AppSpacing.sm),
-          Text(p.$2,
-              style: AppTextStyles.body
-                  .copyWith(color: AppColors.textSecondary)),
-        ]),
-      )).toList(),
-    );
-  }
-}
-
-// ── Page 3: How it works ──────────────────────────────────────
-class _PageHowItWorks extends StatelessWidget {
-  final VoidCallback onNext;
-  const _PageHowItWorks({required this.onNext});
-
-  @override
-  Widget build(BuildContext context) {
-    return _PageLayout(
-      icon: '📊',
-      iconData: Icons.bar_chart_rounded,
-      iconColor: AppColors.turkishBlue,
-      title: 'Three steps\nto clarity.',
-      subtitle: 'No complexity. Just your runway.',
-      extras: const _HowItWorksSteps(),
-      cta: 'GOT IT',
-      onNext: onNext,
-    );
-  }
-}
-
-class _HowItWorksSteps extends StatelessWidget {
-  const _HowItWorksSteps();
-
-  @override
-  Widget build(BuildContext context) {
-    final steps = [
-      ('1', 'Add your cash balance',
-          'How much money do you have right now?'),
-      ('2', 'Log your expenses',
-          'Track what goes out each month.'),
-      ('3', 'Know your runway',
-          'See exactly how long you can survive.'),
-    ];
-
-    return Column(
-      children: steps.map((s) => Padding(
-        padding: const EdgeInsets.only(bottom: AppSpacing.md),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 28, height: 28,
-              decoration: BoxDecoration(
-                color: AppColors.neonGreen.withAlpha(15),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                    color: AppColors.neonGreen.withAlpha(50)),
-              ),
-              child: Center(
-                child: Text(s.$1,
-                    style: TextStyle(
-                        color: AppColors.neonGreen,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700)),
-              ),
-            ),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      children: points
+          .map(
+            (p) => Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+              child: Row(
                 children: [
-                  Text(s.$2,
+                  Text(p.$1, style: const TextStyle(fontSize: 16)),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      p.$2,
                       style: AppTextStyles.body.copyWith(
-                          fontWeight: FontWeight.w600)),
-                  Text(s.$3,
-                      style: AppTextStyles.caption),
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
-          ],
-        ),
-      )).toList(),
+          )
+          .toList(),
     );
   }
 }
 
-// ── Page 4: Protect ───────────────────────────────────────────
-class _PageProtect extends StatelessWidget {
-  final VoidCallback onNext;
-  const _PageProtect({required this.onNext});
-
-  @override
-  Widget build(BuildContext context) {
-    return _PageLayout(
-      icon: '🛡️',
-      iconData: Icons.shield_rounded,
-      iconColor: AppColors.hotPink,
-      title: 'Lock it\ndown.',
-      subtitle:
-          'Your financial data is sensitive.\nWe blur the app when you switch away,\nso no one else can see your numbers.',
-      extras: Padding(
-        padding: const EdgeInsets.only(top: AppSpacing.sm),
-        child: Container(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          decoration: BoxDecoration(
-            color: AppColors.hotPink.withAlpha(10),
-            borderRadius:
-                BorderRadius.circular(AppSpacing.cardRadius),
-            border: Border.all(
-                color: AppColors.hotPink.withAlpha(40)),
-          ),
-          child: Row(children: [
-            const Text('👁️', style: TextStyle(fontSize: 20)),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: Text(
-                'App automatically blurs when you leave, '
-                'like a banking app.',
-                style: AppTextStyles.caption,
-              ),
-            ),
-          ]),
-        ),
-      ),
-      cta: 'UNDERSTOOD',
-      onNext: onNext,
-    );
-  }
-}
-
-// ── Page 5: First Action ──────────────────────────────────────
+// ── Page 3: First Action ──────────────────────────────────────
 class _PageFirstAction extends StatelessWidget {
   final VoidCallback onFinish;
   const _PageFirstAction({required this.onFinish});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return _PageLayout(
       icon: '🚀',
       iconData: Icons.rocket_launch_rounded,
       iconColor: AppColors.neonGreen,
-      title: 'Ready to find\nyour runway?',
-      subtitle:
-          'Start by adding your current cash balance.\nThat\'s all you need to see your number.',
-      cta: 'ADD MY BALANCE',
+      title: l10n.onboardingFirstActionTitle,
+      subtitle: l10n.onboardingFirstActionBody,
+      cta: l10n.onboardingAddMyBalance,
       ctaColor: AppColors.neonGreen,
       onNext: onFinish,
     );
@@ -386,57 +295,83 @@ class _PageLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // The content scrolls and the button is pinned below it. A fixed Column
+    // with a Spacer had nowhere to put a longer headline, a longer language or
+    // a larger text setting: the first screen anyone sees overflowed on a
+    // small phone at the default text size, and by nearly four hundred pixels
+    // with the text turned up. LayoutBuilder so the content still fills the
+    // screen and the Spacer still pushes the button to the bottom when there
+    // is room, which is what the design wants when it fits.
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-            AppSpacing.xl, 80, AppSpacing.xl, AppSpacing.xl),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Icon
-            Text(icon,
-                style: TextStyle(
-                    fontSize: icon.length == 1 &&
-                            icon.codeUnitAt(0) < 256
-                        ? 48
-                        : 48)),
-            const SizedBox(height: AppSpacing.xl),
+      child: LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: IntrinsicHeight(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.xl,
+                  80,
+                  AppSpacing.xl,
+                  AppSpacing.xl,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Icon
+                    Text(
+                      icon,
+                      style: TextStyle(
+                        fontSize: icon.length == 1 && icon.codeUnitAt(0) < 256
+                            ? 48
+                            : 48,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.xl),
 
-            // Title
-            Text(title,
-                style: AppTextStyles.heroLarge.copyWith(
-                    fontSize: 36,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
-                    height: 1.15)),
-            const SizedBox(height: AppSpacing.md),
+                    // Title
+                    Text(
+                      title,
+                      style: AppTextStyles.heroLarge.copyWith(
+                        fontSize: 36,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textPrimary,
+                        height: 1.15,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
 
-            // Subtitle
-            Text(subtitle,
-                style: AppTextStyles.body.copyWith(
-                    color: AppColors.textSecondary,
-                    height: 1.6)),
+                    // Subtitle
+                    Text(
+                      subtitle,
+                      style: AppTextStyles.body.copyWith(
+                        color: AppColors.textSecondary,
+                        height: 1.6,
+                      ),
+                    ),
 
-            if (extras != null) ...[
-              const SizedBox(height: AppSpacing.xl),
-              extras!,
-            ],
+                    if (extras != null) ...[
+                      const SizedBox(height: AppSpacing.xl),
+                      extras!,
+                    ],
 
-            const Spacer(),
+                    const Spacer(),
 
-            // CTA
-            NeoButton(
-              label: cta,
-              variant: NeoButtonVariant.primary,
-              fullWidth: true,
-              color: ctaColor,
-              onPressed: onNext,
+                    // CTA
+                    NeoButton(
+                      label: cta,
+                      variant: NeoButtonVariant.primary,
+                      fullWidth: true,
+                      color: ctaColor,
+                      onPressed: onNext,
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ],
+          ),
         ),
       ),
     );
   }
 }
-
-

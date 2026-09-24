@@ -1,0 +1,274 @@
+import 'package:application/application.dart';
+import 'package:domain/domain.dart';
+import 'package:design_system/design_system.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../product_config.dart';
+import '../../shared/pro_gate.dart';
+import 'show_entry_sheet.dart';
+
+/// What the add button asks now: not which kind of record this is, but what
+/// was bought.
+///
+/// The presets partition by occasion rather than by item. If two could ever
+/// answer the same tap, one of them is redundant — coffee and drinks compete,
+/// lunch and dinner never do, because one is reached for at noon and the
+/// other at seven, and the notes stay worth reading back.
+///
+/// A preset fills the note and nothing else. Carrying an amount as well would
+/// log money in a single tap, and one tap that writes money needs an undo,
+/// which does not exist yet.
+Future<void> showDailySpendSheet(BuildContext context, WidgetRef ref) {
+  if (!allowsNewEntry(context, ref)) return Future<void>.value();
+  return showModalBottomSheet<void>(
+    context: context,
+    useRootNavigator: true,
+    // Without this the sheet is capped near half the screen, and at a doubled
+    // text size the title and two rows of tiles do not fit in that.
+    isScrollControlled: true,
+    backgroundColor: AppColors.surface,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(
+        top: Radius.circular(AppSpacing.cardRadius),
+      ),
+    ),
+    builder: (sheetContext) {
+      final l10n = sheetContext.l10n;
+
+      final presets = ProductConfig.presets;
+      // Shown once the first is spent: the paywall must never arrive
+      // unannounced, and a count nobody can see reads as arbitrary.
+      final used = ref.read(entryCountProvider).value ?? 0;
+      final showUsage = used > 0 && !isProOwner(ref);
+
+      void choose(DailySpendPreset preset) {
+        Navigator.of(sheetContext).pop();
+        // Let the sheet finish closing before the form's own sheet opens, or
+        // the two routes animate over each other.
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) => showEntrySheet(
+            context,
+            ref,
+            prefillNote: preset.note?.call(l10n),
+          ),
+        );
+      }
+
+      return SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.spendOnWhat,
+                style: AppTextStyles.title.copyWith(color: AppColors.neonGreen),
+              ),
+              if (showUsage) ...[
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  l10n.freeEntriesUsed(used, ProductConfig.freeEntries),
+                  style: AppTextStyles.caption,
+                ),
+              ],
+              const SizedBox(height: AppSpacing.lg),
+              for (var row = 0; row < 2; row++) ...[
+                if (row > 0) const SizedBox(height: AppSpacing.sm),
+                // A row of three, each tile taking a third of the width and
+                // the row's height coming from its tallest label. Nothing is
+                // fixed, so a doubled text size makes tiles taller instead of
+                // pushing them off the screen.
+                IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      for (var col = 0; col < 3; col++) ...[
+                        if (col > 0) const SizedBox(width: AppSpacing.sm),
+                        Expanded(
+                          child: _Tile(
+                            preset: presets[row * 3 + col],
+                            onTap: () => choose(presets[row * 3 + col]),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+              // Income has no door of its own on the one screen people open
+              // every day (#118). It arrives through a tile called
+              // "Something else", on a sheet that asks what the money was
+              // for — four steps, and a framing that says it does not belong.
+              //
+              // Not a seventh tile: the grid is exactly two rows of three,
+              // and "money in" is not an answer to "what was it for". A line
+              // underneath instead, which lets the sheet keep asking one
+              // thing quickly while admitting the other direction exists.
+              const SizedBox(height: AppSpacing.lg),
+              _IncomeLine(
+                onTap: () {
+                  Navigator.of(sheetContext).pop();
+                  WidgetsBinding.instance.addPostFrameCallback(
+                    (_) => showEntrySheet(
+                      context,
+                      ref,
+                      preselectedType: TransactionType.income,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+/// The other direction, stated once and quietly.
+///
+/// Dim rather than mint: this sheet is for spending, and six of its six tiles
+/// say so. The line admits income exists without competing with the thing
+/// that is tapped fifty times more often.
+class _IncomeLine extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _IncomeLine({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Semantics(
+      button: true,
+      label: l10n.logIncome,
+      onTap: onTap,
+      excludeSemantics: true,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Container(
+          width: double.infinity,
+          // The same 44pt minimum the preset tiles and the add strip take.
+          constraints: const BoxConstraints(minHeight: 44),
+          padding: const EdgeInsets.only(top: AppSpacing.md),
+          decoration: const BoxDecoration(
+            border: Border(top: BorderSide(color: SC.dividerColor)),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Flexible(
+                child: Text(
+                  l10n.moneyCameInInstead,
+                  style: AppTextStyles.bodySmall,
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Text(
+                l10n.logIncome,
+                style: AppTextStyles.label.copyWith(color: SC.numberLife),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Stateful only to hold [_pressed].
+///
+/// The tile logged an entry and never acknowledged the finger, so the only
+/// confirmation was the sheet closing — and a tap that missed looked exactly
+/// like a tap that worked.
+class _Tile extends StatefulWidget {
+  final DailySpendPreset preset;
+  final VoidCallback onTap;
+
+  const _Tile({required this.preset, required this.onTap});
+
+  @override
+  State<_Tile> createState() => _TileState();
+}
+
+class _TileState extends State<_Tile> {
+  bool _pressed = false;
+
+  /// Press feedback is not ambient motion: it lasts as long as the finger is
+  /// down and is bounded by it, so it stays on under Reduce Motion, unlike
+  /// the runway badge's pulse.
+  static const _press = Duration(milliseconds: 90);
+
+  void _set(bool down) {
+    if (_pressed != down) setState(() => _pressed = down);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final preset = widget.preset;
+    final color = preset.dim ? AppColors.textSecondary : AppColors.neonGreen;
+    final lift = _pressed ? 2 : 0;
+
+    // One node, read as "Coffee, button". Without this the tile is a Text
+    // and an Icon side by side, announced as static content that gives no
+    // sign it can be activated. `excludeSemantics` drops the children's own
+    // nodes, so the category is said once and the icon is not described at
+    // all — it is a picture of the label, not a second fact.
+    return Semantics(
+      button: true,
+      label: preset.label(context.l10n),
+      onTap: widget.onTap,
+      excludeSemantics: true,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        onTapDown: (_) => _set(true),
+        onTapUp: (_) => _set(false),
+        onTapCancel: () => _set(false),
+        behavior: HitTestBehavior.opaque,
+        child: AnimatedScale(
+          scale: _pressed ? 0.94 : 1,
+          duration: _press,
+          curve: Curves.easeOut,
+          child: AnimatedContainer(
+            duration: _press,
+            curve: Curves.easeOut,
+            constraints: const BoxConstraints(minHeight: 44),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.xs,
+              vertical: AppSpacing.md,
+            ),
+            decoration: BoxDecoration(
+              color: color.withAlpha((preset.dim ? 10 : 22) + lift * 8),
+              borderRadius: BorderRadius.circular(AppSpacing.sm),
+              border: Border.all(
+                color: color.withAlpha((preset.dim ? 45 : 80) + lift * 30),
+              ),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Takes the tile's colour, which the emoji it replaced could
+                // not do: the dim tile's icon dims with it.
+                Icon(preset.glyph, size: 24, color: color),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  preset.label(context.l10n),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.caption.copyWith(
+                    color: color,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

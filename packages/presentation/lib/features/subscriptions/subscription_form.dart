@@ -3,6 +3,8 @@ import 'package:design_system/design_system.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
 
+import '../../shared/money_field.dart';
+
 class SubscriptionForm extends StatefulWidget {
   final Subscription? existing;
   final Future<bool> Function(
@@ -15,7 +17,16 @@ class SubscriptionForm extends StatefulWidget {
   )
   onSubmit;
 
-  const SubscriptionForm({super.key, this.existing, required this.onSubmit});
+  /// Stopping the reminder. Null while creating one, since there is nothing
+  /// to delete yet.
+  final VoidCallback? onDelete;
+
+  const SubscriptionForm({
+    super.key,
+    this.existing,
+    required this.onSubmit,
+    this.onDelete,
+  });
 
   @override
   State<SubscriptionForm> createState() => _SubscriptionFormState();
@@ -30,6 +41,19 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
   late BillingCycle _cycle;
   late DateTime _startDate;
 
+  /// Set when a write is refused, so the reason appears inside the sheet, next
+  /// to the typing it refers to. The SnackBar it replaces needed a Scaffold,
+  /// and the Scaffold filled the sheet to the whole height of the screen.
+  String? _error;
+  bool _saving = false;
+
+  /// CONFIRM stays disabled until there is something to save. It used to be
+  /// always enabled while `_submit` returned early, so tapping it on an empty
+  /// form did nothing at all and the sheet just sat there.
+  bool get _valid =>
+      _nameCtrl.text.trim().isNotEmpty &&
+      (double.tryParse(_amountCtrl.text.trim()) ?? 0) > 0;
+
   @override
   void initState() {
     super.initState();
@@ -37,7 +61,7 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
     _cycle = widget.existing?.cycle ?? BillingCycle.monthly;
     _startDate = widget.existing?.startDate ?? DateTime.now();
     _nameCtrl.text = widget.existing?.name ?? '';
-    _amountCtrl.text = widget.existing?.amount.toStringAsFixed(0) ?? '';
+    _amountCtrl.text = moneyField(widget.existing?.amount);
     _noteCtrl.text = widget.existing?.note ?? '';
   }
 
@@ -72,6 +96,10 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
     final name = _nameCtrl.text.trim();
     final amount = double.tryParse(_amountCtrl.text.trim());
     if (name.isEmpty || amount == null || amount <= 0) return;
+    setState(() {
+      _saving = true;
+      _error = null;
+    });
     final saved = await widget.onSubmit(
       name,
       _category,
@@ -80,7 +108,15 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
       _startDate,
       _noteCtrl.text.trim().isEmpty ? null : _noteCtrl.text.trim(),
     );
-    if (saved && mounted) Navigator.of(context).pop();
+    if (!mounted) return;
+    if (saved) {
+      Navigator.of(context).pop();
+      return;
+    }
+    setState(() {
+      _saving = false;
+      _error = context.l10n.subscriptionSaveFailed;
+    });
   }
 
   @override
@@ -89,6 +125,13 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
     final dateStr = DateFormat('dd MMM yyyy').format(_startDate).toUpperCase();
 
     return Container(
+      // The sheet is as tall as this form and no taller. Unbounded, the
+      // SingleChildScrollView below grows instead of scrolling, so CONFIRM
+      // ends up past the bottom of the screen with no way to reach it.
+      // Capped here rather than at each of the three call sites.
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.9,
+      ),
       decoration: const BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.vertical(
@@ -121,8 +164,8 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
 
             Text(
               widget.existing == null
-                  ? l10n.addSubscription.toUpperCase()
-                  : l10n.editSubscription.toUpperCase(),
+                  ? l10n.addSubscription
+                  : l10n.editSubscription,
               style: AppTextStyles.title.copyWith(color: AppColors.purple),
             ),
             const SizedBox(height: AppSpacing.lg),
@@ -184,7 +227,7 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
               controller: _nameCtrl,
               inputType: NeoInputType.name,
               hint: 'Netflix',
-              onChanged: (_) {},
+              onChanged: (_) => setState(() {}),
             ),
             const SizedBox(height: AppSpacing.md),
 
@@ -192,9 +235,12 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
             NeoInput(
               label: l10n.subscriptionPaymentAmount,
               controller: _amountCtrl,
-              inputType: NeoInputType.numeric,
-              hint: '1990',
-              onChanged: (_) {},
+              // Decimal, not numeric: numeric is digitsOnly, so 9.99 could
+              // not be typed at all and every price with cents was
+              // unenterable. The 1990 hint dated from yen.
+              inputType: NeoInputType.decimal,
+              hint: '9.99',
+              onChanged: (_) => setState(() {}),
             ),
             const SizedBox(height: AppSpacing.md),
 
@@ -278,6 +324,14 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
             ),
             const SizedBox(height: AppSpacing.lg),
 
+            if (_error != null) ...[
+              Text(
+                _error!,
+                style: AppTextStyles.caption.copyWith(color: AppColors.red),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+            ],
+
             // Actions
             Row(
               children: [
@@ -286,7 +340,7 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
                     label: l10n.confirm,
                     variant: NeoButtonVariant.primary,
                     fullWidth: true,
-                    onPressed: _submit,
+                    onPressed: _valid && !_saving ? _submit : null,
                   ),
                 ),
                 const SizedBox(width: AppSpacing.sm),
@@ -300,6 +354,21 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
                 ),
               ],
             ),
+
+            // A reminder has to be stoppable. Only offered while editing one,
+            // because there is nothing to delete while creating it.
+            if (widget.onDelete != null) ...[
+              const SizedBox(height: AppSpacing.sm),
+              NeoButton(
+                label: l10n.deleteSubscription,
+                variant: NeoButtonVariant.danger,
+                fullWidth: true,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  widget.onDelete!();
+                },
+              ),
+            ],
           ],
         ),
       ),

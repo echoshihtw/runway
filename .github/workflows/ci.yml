@@ -1,10 +1,15 @@
 name: CI
 
+# Runs on pull requests, on every push to staging, and from release.yml for the
+# merge commit on main. The staging push is also what gives the release PR its
+# checks: GitHub skips pull_request runs on PRs opened by GITHUB_TOKEN.
+
 on:
   push:
-    branches: [main, develop]
+    branches: [staging]
   pull_request:
-    branches: [main, develop]
+    branches: [staging, main]
+  workflow_call:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -16,7 +21,7 @@ env:
 
 jobs:
   # ============================================================
-  # QUALITY — runs on every push/PR
+  # QUALITY — every run
   # ============================================================
   quality:
     name: Analyze & Test
@@ -68,7 +73,26 @@ jobs:
         run: cd app && flutter analyze --fatal-infos
 
       - name: Test — domain
+        # A zone with daylight saving. Date arithmetic that is wrong by an hour
+        # is invisible in UTC, and four of the six shipped locales observe it.
+        env:
+          TZ: Europe/Paris
         run: cd packages/domain && dart test --reporter=github
+
+      - name: Test — data
+        run: cd packages/data && flutter test --reporter=github
+
+      - name: Test — application
+        run: cd packages/application && flutter test --reporter=github
+
+      - name: Test — design_system
+        run: cd packages/design_system && flutter test --reporter=github
+
+      - name: Test — presentation
+        run: cd packages/presentation && flutter test --reporter=github
+
+      - name: Test — app
+        run: cd app && flutter test --reporter=github
 
       - name: Upload test results
         if: always()
@@ -78,7 +102,7 @@ jobs:
           path: packages/domain/test-results/
 
   # ============================================================
-  # BUILD iOS — runs on main/develop push only
+  # BUILD iOS — push to staging, and the release on main
   # ============================================================
   build-ios:
     name: Build iOS
@@ -127,7 +151,7 @@ jobs:
           retention-days: 7
 
   # ============================================================
-  # BUILD Android — runs on main/develop push only
+  # BUILD Android — push to staging, and the release on main
   # ============================================================
   build-android:
     name: Build Android

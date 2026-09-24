@@ -1,4 +1,17 @@
-import '../enums/survival_status.dart';
+import '../enums/runway_status.dart';
+
+/// What the monthly cost behind the runway is made of, so the card can say
+/// which of the user's inputs is doing the work.
+enum RunwayBasis {
+  /// Budgets, plus any loan and subscription commitments.
+  budget,
+
+  /// Logged spending has overtaken the budget and now sets the cost.
+  spending,
+
+  /// An expected-cost assumption replaces the computed figure.
+  assumption,
+}
 
 class ModelState {
   final double currentCash;
@@ -11,7 +24,27 @@ class ModelState {
   final int runwayMonths;
   final int runwayDays;
   final DateTime? runOutDate;
-  final double pressureRatio;
+
+  /// Whether a monthly cost is known at all.
+  ///
+  /// A cost of zero is not a free life: it means nothing has been budgeted,
+  /// logged, or committed yet. Dividing cash by it produced an unlimited
+  /// runway, so a user who had only entered their cash — exactly what
+  /// onboarding asks for — was told their money lasts for ever. Defaults to
+  /// true so only the engines decide it.
+  final bool hasCostBasis;
+
+  /// Defaults to budget so only the engines decide it.
+  final RunwayBasis basis;
+
+  /// Whether the cash figure is real.
+  ///
+  /// An unloaded or failed ledger has no cash total, which is different from
+  /// a balance of zero. Substituting an empty list printed a confident
+  /// `$ 0` beside a runway that correctly read `—`, so the card stated a
+  /// balance nobody had entered. Defaults to true so only the providers,
+  /// which can see the load state, decide otherwise.
+  final bool cashIsKnown;
 
   const ModelState({
     required this.currentCash,
@@ -24,11 +57,12 @@ class ModelState {
     required this.runwayMonths,
     required this.runwayDays,
     this.runOutDate,
-    required this.pressureRatio,
+    this.hasCostBasis = true,
+    this.basis = RunwayBasis.budget,
+    this.cashIsKnown = true,
   });
 
   double get totalMonthlyOutflow => effectiveBurnRate;
-  double get historicalMonthlyBurn => burnRate;
   double get emergencyMonthlyBurn => effectiveBurnRate;
   double get sustainableNetMonthlyFlow =>
       (expectedMonthlyInflow ?? 0) - emergencyMonthlyBurn;
@@ -37,30 +71,18 @@ class ModelState {
       hasSustainableProjection && sustainableNetMonthlyFlow >= 0;
   double get sustainableMonthlyShortfall =>
       sustainableNetMonthlyFlow < 0 ? sustainableNetMonthlyFlow.abs() : 0.0;
-  int get sustainableRunwayMonths {
-    if (!hasSustainableProjection) return runwayMonths;
-    if (isSustainableIndefinitely) return 9999;
-    if (sustainableMonthlyShortfall <= 0) return 9999;
-    return (currentCash / sustainableMonthlyShortfall).floor();
-  }
+  /// Whether the runway can be stated at all. When no cost is known the
+  /// number is unknown, which is different from unlimited: a scenario whose
+  /// simulated income covers its costs is genuinely unlimited and keeps a
+  /// cost basis.
+  bool get runwayIsKnown => hasCostBasis;
 
-  int get sustainableRunwayDays {
-    if (!hasSustainableProjection) return runwayDays;
-    if (isSustainableIndefinitely) return 99999;
-    if (sustainableMonthlyShortfall <= 0) return 99999;
-    return (currentCash / sustainableMonthlyShortfall * 30).floor();
-  }
-
-  double get fixedObligations => monthlyPayment + subscriptionMonthlyCost;
-  double get fixedPressureRatio => totalMonthlyOutflow > 0
-      ? (fixedObligations / totalMonthlyOutflow).clamp(0.0, 1.0)
-      : 0.0;
-  double get flexibilityRatio => 1.0 - fixedPressureRatio;
-  bool get isOverBudget => burnRate > effectiveBurnRate && burnRate > 0;
-  SurvivalStatus get survivalStatus => switch (runwayMonths) {
-    >= 24 => SurvivalStatus.stable,
-    >= 12 => SurvivalStatus.caution,
-    _ => SurvivalStatus.critical,
+  /// Three to six months of cover is the widely used adequacy range, so
+  /// caution sits there and anything above six reads as stable.
+  RunwayStatus get runwayStatus => switch (runwayMonths) {
+    >= 6 => RunwayStatus.stable,
+    >= 3 => RunwayStatus.caution,
+    _ => RunwayStatus.critical,
   };
 
   static ModelState empty() => ModelState(
@@ -74,6 +96,5 @@ class ModelState {
     runwayMonths: 0,
     runwayDays: 0,
     runOutDate: null,
-    pressureRatio: 0,
   );
 }
