@@ -319,11 +319,27 @@ class LinkPreviewTest(unittest.TestCase):
         self.assertAlmostEqual(width / height, 1.91, delta=0.02)
 
     def test_the_image_is_small_enough_to_scrape(self):
-        # X caps at 5 MB, LinkedIn 5 MB, Facebook 8 MB. Staying well under
-        # keeps the first scrape fast.
+        # X caps at 5 MB, LinkedIn 5 MB, Facebook 8 MB. Staying far under keeps
+        # the first scrape fast; a well-encoded 1200x630 card is under 100 KB.
         url = self._meta(self.PAGES[""].read_text(encoding="utf-8"), "og:image")
         size = (ROOT / url[len(self.BASE):]).stat().st_size
-        self.assertLess(size, 1_000_000, f"{size} bytes is larger than it needs to be")
+        self.assertLess(size, 300_000, f"{size} bytes: re-encode rather than ship this")
+
+    def test_the_image_is_at_least_the_size_every_platform_wants(self):
+        # 1200x630 is the documented minimum for a large card. Below 600x315
+        # platforms fall back to a small square thumbnail.
+        html = self.PAGES[""].read_text(encoding="utf-8")
+        width = int(self._meta(html, "og:image:width"))
+        height = int(self._meta(html, "og:image:height"))
+        self.assertGreaterEqual(width, 1200)
+        self.assertGreaterEqual(height, 630)
+
+    def test_the_declared_type_matches_the_file(self):
+        html = self.PAGES[""].read_text(encoding="utf-8")
+        declared = self._meta(html, "og:image:type")
+        url = self._meta(html, "og:image")
+        expected = "image/jpeg" if url.endswith((".jpg", ".jpeg")) else "image/png"
+        self.assertEqual(declared, expected)
 
 
 def _png_size(data):
