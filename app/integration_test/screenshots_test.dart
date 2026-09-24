@@ -86,7 +86,7 @@ void main() {
       ),
     );
     // Dismiss the sheet by tapping outside it.
-    await tester.tap(find.byType(ModalBarrier).last, warnIfMissed: false);
+    await _dismissSheet(tester);
     await pumpRealTime(tester, seconds: 2);
 
     await _tapNav(tester, 'LOG');
@@ -102,7 +102,7 @@ void main() {
         'Pick the occasion, type the amount.',
       ),
     );
-    await tester.tap(find.byType(ModalBarrier).last, warnIfMissed: false);
+    await _dismissSheet(tester);
     await pumpRealTime(tester, seconds: 2);
 
     await _tapNav(tester, 'PLAN');
@@ -124,6 +124,11 @@ void main() {
       ),
     );
   });
+}
+
+Future<void> _dismissSheet(WidgetTester tester) async {
+  tester.state<NavigatorState>(find.byType(Navigator).first).pop();
+  await pumpRealTime(tester, seconds: 1);
 }
 
 Future<void> _tapNav(WidgetTester tester, String label) async {
