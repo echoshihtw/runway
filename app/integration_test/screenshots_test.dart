@@ -19,6 +19,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:presentation/features/subscriptions/subscriptions_panel.dart';
 import 'package:presentation/router/page_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -76,6 +77,28 @@ void main() {
       ),
     );
 
+    // Loans and subscriptions sit next to each other below the fold, so one
+    // frame carries both.
+    await tester.scrollUntilVisible(
+      find.byType(SubscriptionsPanel),
+      400,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await pumpRealTime(tester, seconds: 1);
+    await capture(
+      '05-commitments',
+      const _Caption(
+        'What is already decided',
+        'Loan payments and subscriptions, counted every month.',
+      ),
+    );
+
+    await tester.scrollUntilVisible(
+      find.text('LIVING EXPENSES'),
+      -400,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await pumpRealTime(tester, seconds: 1);
     await tester.tap(find.text('LIVING EXPENSES'));
     await pumpRealTime(tester, seconds: 2);
     await capture(
@@ -215,9 +238,12 @@ Future<void> _seed(AppDatabase database) async {
     await transactions.add(entry);
   }
 
+  // Generic names on purpose. A real service name on a store screenshot or in
+  // the demo video is a third-party trademark, which both Apple and the
+  // Shipaton rules forbid.
   final subs = <(String, double, BillingCycle)>[
-    ('iCloud', 2.99, BillingCycle.monthly),
-    ('Spotify', 10.99, BillingCycle.monthly),
+    ('Cloud storage', 2.99, BillingCycle.monthly),
+    ('Music', 10.99, BillingCycle.monthly),
     ('Gym', 29.00, BillingCycle.monthly),
   ];
   for (final (index, sub) in subs.indexed) {
