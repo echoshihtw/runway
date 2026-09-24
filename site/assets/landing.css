@@ -1896,8 +1896,12 @@ body.landing .wrap {
     gap: 1rem 1.1rem;
     align-items: center;
   }
-  .final-cta .store-status {
+  /* The button replaced the store line here, and inherits its full-width row:
+     without this it lands in the mark's column and leaves the text's empty. */
+  .final-cta .store-status,
+  .final-cta .button {
     grid-column: 1 / -1;
+    justify-self: stretch;
   }
   .app-mark-large {
     width: 58px;
