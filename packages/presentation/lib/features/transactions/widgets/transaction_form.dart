@@ -280,7 +280,6 @@ class _TransactionFormState extends State<TransactionForm> {
               controller: _amountCtrl,
               focusNode: _amountFocus,
               inputType: NeoInputType.decimal,
-              hint: '50,000',
               onChanged: (_) => setState(() => _amountIsOffered = false),
             ),
             const SizedBox(height: AppSpacing.md),
@@ -290,7 +289,6 @@ class _TransactionFormState extends State<TransactionForm> {
               label: l10n.noteOptional,
               controller: _noteCtrl,
               inputType: NeoInputType.note,
-              hint: 'rent, groceries...',
             ),
             const SizedBox(height: AppSpacing.md),
 

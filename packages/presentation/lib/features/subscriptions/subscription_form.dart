@@ -226,7 +226,6 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
               label: l10n.subscriptionName,
               controller: _nameCtrl,
               inputType: NeoInputType.name,
-              hint: 'Netflix',
               onChanged: (_) => setState(() {}),
             ),
             const SizedBox(height: AppSpacing.md),
@@ -239,7 +238,6 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
               // not be typed at all and every price with cents was
               // unenterable. The 1990 hint dated from yen.
               inputType: NeoInputType.decimal,
-              hint: '9.99',
               onChanged: (_) => setState(() {}),
             ),
             const SizedBox(height: AppSpacing.md),
@@ -319,7 +317,6 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
             NeoInput(
               label: l10n.noteOptional,
               controller: _noteCtrl,
-              hint: 'streaming service',
               onChanged: (_) {},
             ),
             const SizedBox(height: AppSpacing.lg),

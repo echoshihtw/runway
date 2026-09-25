@@ -520,14 +520,12 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                             NeoInput(
                               label: l10n.goalName,
                               controller: _goalNameCtrl,
-                              hint: 'Paris Study',
                             ),
                             const SizedBox(height: AppSpacing.md),
                             NeoInput(
                               label: l10n.targetMonths,
                               controller: _goalMonthsCtrl,
                               keyboardType: TextInputType.number,
-                              hint: '24',
                             ),
                             const SizedBox(height: AppSpacing.md),
                             Row(
