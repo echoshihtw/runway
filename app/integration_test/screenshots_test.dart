@@ -19,6 +19,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:presentation/features/loans/liabilities_panel.dart';
+import 'package:presentation/features/subscriptions/subscriptions_panel.dart';
 import 'package:presentation/router/page_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,6 +40,9 @@ const _plannedMonthlyCost = '2300';
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  // A tap that lands on nothing otherwise only prints a warning, and the run
+  // still captures a stale frame.
+  WidgetController.hitTestWarningShouldBeFatal = true;
 
   testWidgets('captures the store screenshots', (tester) async {
     SharedPreferences.setMockInitialValues({
@@ -68,6 +73,14 @@ void main() {
       await binding.takeScreenshot(name);
     }
 
+    // No caption band, so the app fills the frame at its own size. This is the
+    // frame that has to be a plain screenshot, not a store slide.
+    Future<void> captureBare(String name) async {
+      caption.value = null;
+      await pumpRealTime(tester, seconds: 1);
+      await binding.takeScreenshot(name);
+    }
+
     await capture(
       '01-runway',
       const _Caption(
@@ -76,6 +89,41 @@ void main() {
       ),
     );
 
+    // Loans and subscriptions sit next to each other below the fold, so one
+    // frame carries both.
+    await tester.scrollUntilVisible(
+      find.byType(SubscriptionsPanel),
+      400,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await pumpRealTime(tester, seconds: 1);
+    // Both cards open, so the loan and the subscriptions are named rather than
+    // just counted. Subscriptions first: opening the loan above them pushes
+    // them off the frame, where a tap has nothing to hit.
+    await _expand(tester, find.byType(SubscriptionsPanel));
+    await _expand(tester, find.byType(LiabilitiesPanel));
+    await tester.scrollUntilVisible(
+      find.byType(SubscriptionsPanel),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    // Come back up so the loan keeps its own heading in the frame.
+    await tester.ensureVisible(find.byType(LiabilitiesPanel));
+    await pumpRealTime(tester, seconds: 1);
+    await capture(
+      '05-commitments',
+      const _Caption(
+        'What is already decided',
+        'Loan payments and subscriptions, counted every month.',
+      ),
+    );
+
+    await tester.scrollUntilVisible(
+      find.text('LIVING EXPENSES'),
+      -400,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await pumpRealTime(tester, seconds: 1);
     await tester.tap(find.text('LIVING EXPENSES'));
     await pumpRealTime(tester, seconds: 2);
     await capture(
@@ -86,7 +134,7 @@ void main() {
       ),
     );
     // Dismiss the sheet by tapping outside it.
-    await tester.tap(find.byType(ModalBarrier).last, warnIfMissed: false);
+    await _dismissSheet(tester);
     await pumpRealTime(tester, seconds: 2);
 
     await _tapNav(tester, 'LOG');
@@ -102,8 +150,10 @@ void main() {
         'Pick the occasion, type the amount.',
       ),
     );
-    await tester.tap(find.byType(ModalBarrier).last, warnIfMissed: false);
+    await _dismissSheet(tester);
     await pumpRealTime(tester, seconds: 2);
+    // The log itself, both sides of the month in one list.
+    await captureBare('06-log-full');
 
     await _tapNav(tester, 'PLAN');
     await tester.enterText(
@@ -124,6 +174,25 @@ void main() {
       ),
     );
   });
+}
+
+/// Opens a panel that starts collapsed, so the frame names what is inside it
+/// rather than only counting it.
+Future<void> _expand(WidgetTester tester, Finder panel) async {
+  // Only the header toggles the card, so aim at its chevron. Tapping the card
+  // itself lands on the summary and silently does nothing.
+  await tester.tap(
+    find.descendant(
+      of: panel,
+      matching: find.byIcon(Icons.keyboard_arrow_down_rounded),
+    ),
+  );
+  await pumpRealTime(tester, seconds: 1);
+}
+
+Future<void> _dismissSheet(WidgetTester tester) async {
+  tester.state<NavigatorState>(find.byType(Navigator).first).pop();
+  await pumpRealTime(tester, seconds: 1);
 }
 
 Future<void> _tapNav(WidgetTester tester, String label) async {
@@ -210,13 +279,20 @@ Future<void> _seed(AppDatabase database) async {
     await transactions.add(entry);
   }
 
-  final subs = <(String, double, BillingCycle)>[
-    ('iCloud', 2.99, BillingCycle.monthly),
-    ('Spotify', 10.99, BillingCycle.monthly),
-    ('Gym', 29.00, BillingCycle.monthly),
+  // Generic names on purpose. A real service name on a store screenshot or in
+  // the demo video is a third-party trademark, which both Apple and the
+  // Shipaton rules forbid.
+  // The last field is the day of the month each one bills on. They differ
+  // because real subscriptions do, and a column of identical countdowns reads
+  // as a bug.
+  final subs = <(String, double, BillingCycle, int)>[
+    ('Cloud storage', 2.99, BillingCycle.monthly, 20),
+    ('Music', 10.99, BillingCycle.monthly, 28),
+    ('Gym', 29.00, BillingCycle.monthly, 1),
   ];
   for (final (index, sub) in subs.indexed) {
-    final (name, amount, cycle) = sub;
+    final (name, amount, cycle, billingDay) = sub;
+    final startDate = DateTime(now.year - 1, now.month, billingDay);
     await subscriptions.add(
       Subscription(
         id: 'demo-sub-$index',
@@ -224,8 +300,8 @@ Future<void> _seed(AppDatabase database) async {
         category: SubscriptionCategory.personal,
         amount: amount,
         cycle: cycle,
-        startDate: DateTime(now.year - 1, now.month),
-        nextBillingDate: DateTime(now.year, now.month + 1, 3),
+        startDate: startDate,
+        nextBillingDate: nextBillingDateAfter(startDate, cycle, now),
         createdAt: now,
         updatedAt: now,
       ),

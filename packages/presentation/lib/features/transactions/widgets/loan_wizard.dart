@@ -397,7 +397,6 @@ class _LoanWizardState extends State<LoanWizard>
           label: l10n.nameLender,
           controller: _nameCtrl,
           inputType: NeoInputType.name,
-          hint: _source == "BANK" ? "Fubon" : "John",
           onChanged: (_) => setState(() {}),
         ),
         const SizedBox(height: AppSpacing.md),
@@ -405,7 +404,6 @@ class _LoanWizardState extends State<LoanWizard>
           label: l10n.loanAmount,
           controller: _amountCtrl,
           inputType: NeoInputType.decimal,
-          hint: "1880000",
           onChanged: (_) {
             setState(() {});
             _compute();
@@ -465,7 +463,6 @@ class _LoanWizardState extends State<LoanWizard>
           label: l10n.annualRate,
           controller: _rateCtrl,
           inputType: NeoInputType.decimal,
-          hint: "3.3",
           onChanged: (_) => _compute(),
         ),
         const SizedBox(height: AppSpacing.md),
@@ -473,7 +470,6 @@ class _LoanWizardState extends State<LoanWizard>
           label: l10n.repaymentMonths,
           controller: _monthsCtrl,
           inputType: NeoInputType.numeric,
-          hint: "84",
           onChanged: (_) {
             setState(() {});
             _compute();
@@ -586,7 +582,6 @@ class _LoanWizardState extends State<LoanWizard>
         NeoInput(
           label: l10n.noteOptional,
           controller: _noteCtrl,
-          hint: "study loan",
           onChanged: (_) {},
         ),
       ],
