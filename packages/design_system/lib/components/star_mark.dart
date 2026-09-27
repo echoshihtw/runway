@@ -7,7 +7,9 @@ import '../tokens/app_colors.dart';
 ///
 /// Seven points, and not a regular seven: the tips sit at uneven angles and
 /// reach different distances, which is what makes it this star rather than a
-/// generic one. No Unicode glyph has seven points, so this is a path.
+/// generic one. The icon's centre highlight is left out, because at 48pt it is
+/// under two pixels and reads as a speck. No Unicode glyph has seven points, so
+/// this is a path.
 class StarMark extends StatelessWidget {
   const StarMark({super.key, this.size = 48, this.color});
 
@@ -40,10 +42,6 @@ class _StarPainter extends CustomPainter {
     Offset(87.48, 24.00), Offset(71.59, 48.96),
   ];
 
-  /// The icon's highlight, at the same proportion it has there.
-  static const _dot = Offset(50, 58.89);
-  static const _dotRadius = 3.40;
-
   @override
   void paint(Canvas canvas, Size size) {
     final k = size.shortestSide / 100;
@@ -52,11 +50,6 @@ class _StarPainter extends CustomPainter {
     ], true);
 
     canvas.drawPath(path, Paint()..color = color..isAntiAlias = true);
-    canvas.drawCircle(
-      Offset(_dot.dx * k, _dot.dy * k),
-      _dotRadius * k,
-      Paint()..color = Colors.white.withValues(alpha: 0.82),
-    );
   }
 
   @override
