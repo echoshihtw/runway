@@ -14,6 +14,7 @@ ModelState model({
   required bool hasCostBasis,
   int runwayMonths = 9999,
   bool cashIsKnown = true,
+  bool cashIsStated = true,
 }) => ModelState(
   currentCash: 34000,
   burnRate: 0,
@@ -24,6 +25,7 @@ ModelState model({
   runwayDays: runwayMonths * 30,
   hasCostBasis: hasCostBasis,
   cashIsKnown: cashIsKnown,
+  cashIsStated: cashIsStated,
 );
 
 Future<void> pumpCard(WidgetTester tester, ModelState state) async {
@@ -98,7 +100,10 @@ void main() {
     // while the hero printed a confident 12 with a status badge beside it.
     expect(heroText(tester), '—');
     expect(find.byType(PixelBadge), findsNothing);
-    expect(find.text('Add your balance to see your runway'), findsOneWidget);
+    // This owner may already have a balance that simply has not arrived.
+    // Asking for one invites them to enter it twice.
+    expect(find.text('Add your balance to see your runway'), findsNothing);
+    expect(find.text('Set your monthly costs to see your runway'), findsNothing);
   });
 
   testWidgets('a cost with no stated balance asks for the balance', (
@@ -106,7 +111,7 @@ void main() {
   ) async {
     await pumpCard(
       tester,
-      model(hasCostBasis: true, runwayMonths: 0, cashIsKnown: false),
+      model(hasCostBasis: true, runwayMonths: 0, cashIsStated: false),
     );
 
     expect(heroText(tester), '—');

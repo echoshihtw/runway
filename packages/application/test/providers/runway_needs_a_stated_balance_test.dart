@@ -139,7 +139,8 @@ void main() {
 
     expect(model.subscriptionMonthlyCost, greaterThan(0));
     expect(model.hasCostBasis, isTrue, reason: 'the cost is real');
-    expect(model.cashIsKnown, isFalse, reason: 'no balance was ever stated');
+    expect(model.cashIsKnown, isTrue, reason: 'the ledger loaded, it is empty');
+    expect(model.cashIsStated, isFalse, reason: 'no balance was ever stated');
     expect(
       model.runwayIsKnown,
       isFalse,
@@ -154,7 +155,8 @@ void main() {
     );
 
     expect(model.hasCostBasis, isTrue, reason: 'the payment is real');
-    expect(model.cashIsKnown, isFalse, reason: 'a drawdown is not a balance');
+    expect(model.cashIsKnown, isTrue, reason: 'the ledger loaded');
+    expect(model.cashIsStated, isFalse, reason: 'a drawdown is not a balance');
     expect(
       model.runwayIsKnown,
       isFalse,
@@ -169,6 +171,7 @@ void main() {
     );
 
     expect(model.cashIsKnown, isTrue);
+    expect(model.cashIsStated, isTrue);
     expect(model.runwayIsKnown, isTrue);
     expect(model.runwayMonths, greaterThan(0));
   });

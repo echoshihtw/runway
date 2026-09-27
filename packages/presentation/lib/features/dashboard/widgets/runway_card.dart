@@ -100,9 +100,13 @@ class RunwayCard extends ConsumerWidget {
                     RunwayBasis.spending => l10n.runwayBasisSpending,
                     RunwayBasis.assumption => l10n.runwayBasisAssumption,
                   }
-                // Two reasons it cannot be stated, so two messages. Balance
-                // first, the order the getting-started card asks for them in.
+                // An unloaded ledger may already hold a balance, so there is
+                // nothing to ask for and nothing to advise. Otherwise name the
+                // missing input, balance first, the order the getting-started
+                // card asks for them in.
                 : !model.cashIsKnown
+                ? ''
+                : !model.cashIsStated
                 ? l10n.runwayNeedsBalance
                 : l10n.runwayNeedsCosts,
             textAlign: TextAlign.center,

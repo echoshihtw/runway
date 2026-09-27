@@ -46,6 +46,13 @@ class ModelState {
   /// which can see the load state, decide otherwise.
   final bool cashIsKnown;
 
+  /// Whether the owner has stated a balance.
+  ///
+  /// Separate from [cashIsKnown] because the consequence is shared and the
+  /// remedy is not: an unloaded ledger may already hold a balance, so telling
+  /// that owner to add one invites them to enter it twice.
+  final bool cashIsStated;
+
   const ModelState({
     required this.currentCash,
     required this.burnRate,
@@ -60,6 +67,7 @@ class ModelState {
     this.hasCostBasis = true,
     this.basis = RunwayBasis.budget,
     this.cashIsKnown = true,
+    this.cashIsStated = true,
   });
 
   double get totalMonthlyOutflow => effectiveBurnRate;
@@ -75,7 +83,7 @@ class ModelState {
   /// number is unknown, which is different from unlimited: a scenario whose
   /// simulated income covers its costs is genuinely unlimited and keeps a
   /// cost basis.
-  bool get runwayIsKnown => hasCostBasis && cashIsKnown;
+  bool get runwayIsKnown => hasCostBasis && cashIsKnown && cashIsStated;
 
   /// Three to six months of cover is the widely used adequacy range, so
   /// caution sits there and anything above six reads as stable.
