@@ -181,7 +181,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
                           ),
                         ),
                         confirmDismiss: (_) async {
-                          _confirmDelete(context, ref, tx);
+                          await _confirmDelete(context, ref, tx);
                           return false;
                         },
                         child: TransactionRow(
@@ -205,13 +205,17 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
   String _monthKey(DateTime date) =>
       '${date.year}-${date.month.toString().padLeft(2, '0')}';
 
-  void _confirmDelete(BuildContext context, WidgetRef ref, Transaction tx) {
+  Future<void> _confirmDelete(
+    BuildContext context,
+    WidgetRef ref,
+    Transaction tx,
+  ) async {
     final l10n = context.l10n;
     final symbol = ref.read(currencyProvider).value?.symbol ?? '¥';
     final amount = NumberFormat('#,##0', 'en_US').format(tx.amount.value);
     final sign = tx.type.isInflow ? '+' : '-';
 
-    showDialog(
+    final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.surface,
@@ -244,17 +248,11 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
+            onPressed: () => Navigator.of(ctx).pop(false),
             child: Text(l10n.cancel, style: AppTextStyles.body),
           ),
           TextButton(
-            onPressed: () async {
-              Navigator.of(ctx).pop();
-              await ref.read(deleteTransactionUseCaseProvider).execute(tx.id);
-              if (tx.type == TransactionType.loan && tx.loanId != null) {
-                await ref.read(deleteLoanUseCaseProvider).execute(tx.loanId!);
-              }
-            },
+            onPressed: () => Navigator.of(ctx).pop(true),
             child: Text(
               l10n.delete,
               style: AppTextStyles.body.copyWith(color: AppColors.red),
@@ -263,6 +261,12 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
         ],
       ),
     );
+
+    if (confirmed != true || !context.mounted) return;
+    await ref.read(deleteTransactionUseCaseProvider).execute(tx.id);
+    if (tx.type == TransactionType.loan && tx.loanId != null) {
+      await ref.read(deleteLoanUseCaseProvider).execute(tx.loanId!);
+    }
   }
 }
 
