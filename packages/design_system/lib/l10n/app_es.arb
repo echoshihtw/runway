@@ -305,6 +305,7 @@
     }
   },
   "runwayNeedsCosts": "Indica tus gastos mensuales para ver tu margen",
+  "runwayNeedsBalance": "Indica tu saldo para ver tu margen",
   "monthSingular": "mes",
   "monthPlural": "meses",
   "sustainableWithExpectedInflow": "Sostenible con tu entrada esperada",

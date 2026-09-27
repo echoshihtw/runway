@@ -794,6 +794,9 @@ class AppLocalizationsEs extends AppLocalizations {
       'Indica tus gastos mensuales para ver tu margen';
 
   @override
+  String get runwayNeedsBalance => 'Indica tu saldo para ver tu margen';
+
+  @override
   String get monthSingular => 'mes';
 
   @override

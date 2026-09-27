@@ -406,6 +406,7 @@
     }
   },
   "runwayNeedsCosts": "Set your monthly costs to see your runway",
+  "runwayNeedsBalance": "Add your balance to see your runway",
   "monthSingular": "month",
   "monthPlural": "months",
   "sustainableWithExpectedInflow": "Sustainable with your expected income",

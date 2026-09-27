@@ -305,6 +305,7 @@
     }
   },
   "runwayNeedsCosts": "毎月のコストを設定すると残り月数がわかります",
+  "runwayNeedsBalance": "残高を入力すると残り月数がわかります",
   "monthSingular": "か月",
   "monthPlural": "か月",
   "sustainableWithExpectedInflow": "想定流入で持続可能",

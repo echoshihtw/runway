@@ -1564,6 +1564,12 @@ abstract class AppLocalizations {
   /// **'Set your monthly costs to see your runway'**
   String get runwayNeedsCosts;
 
+  /// No description provided for @runwayNeedsBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your balance to see your runway'**
+  String get runwayNeedsBalance;
+
   /// No description provided for @monthSingular.
   ///
   /// In en, this message translates to:

@@ -790,6 +790,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get runwayNeedsCosts => 'Set your monthly costs to see your runway';
 
   @override
+  String get runwayNeedsBalance => 'Add your balance to see your runway';
+
+  @override
   String get monthSingular => 'month';
 
   @override

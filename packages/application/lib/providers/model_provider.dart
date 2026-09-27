@@ -29,12 +29,18 @@ final modelProvider = Provider<ModelState>((ref) {
   // empty list showed a fabricated balance for most of a minute.
   final transactions = ref.watch(transactionsProvider).value;
 
+  // A balance nobody stated is as unknown as one that failed to load. Summing
+  // an empty ledger gives zero, which is a figure, and the card would print it
+  // as though the owner had said so.
+  final cashIsStated =
+      transactions != null && latestOpeningBalanceDate(transactions) != null;
+
   return computeModel(
     currentCash: _currentCash(
       transactions ?? const [],
       ref.watch(clockProvider)(),
     ),
-    cashIsKnown: transactions != null,
+    cashIsKnown: cashIsStated,
     burn: ref.watch(monthlyBurnProvider),
     expectedMonthlyInflow: assumptions.expectedMonthlyInflow,
     expectedMonthlyBurnOverride: assumptions.expectedMonthlyBurnOverride,

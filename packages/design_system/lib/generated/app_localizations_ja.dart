@@ -776,6 +776,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get runwayNeedsCosts => '毎月のコストを設定すると残り月数がわかります';
 
   @override
+  String get runwayNeedsBalance => '残高を入力すると残り月数がわかります';
+
+  @override
   String get monthSingular => 'か月';
 
   @override

@@ -75,7 +75,7 @@ class ModelState {
   /// number is unknown, which is different from unlimited: a scenario whose
   /// simulated income covers its costs is genuinely unlimited and keeps a
   /// cost basis.
-  bool get runwayIsKnown => hasCostBasis;
+  bool get runwayIsKnown => hasCostBasis && cashIsKnown;
 
   /// Three to six months of cover is the widely used adequacy range, so
   /// caution sits there and anything above six reads as stable.

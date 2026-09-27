@@ -93,7 +93,26 @@ void main() {
 
     expect(find.textContaining('34,000'), findsNothing);
     expect(find.textContaining(r'$ 0'), findsNothing);
-    expect(find.text('—'), findsWidgets);
+    // The comment above claimed the runway read the same mark, and nothing
+    // here checked it: find.text('—') was satisfied by the CASH dash alone,
+    // while the hero printed a confident 12 with a status badge beside it.
+    expect(heroText(tester), '—');
+    expect(find.byType(PixelBadge), findsNothing);
+    expect(find.text('Add your balance to see your runway'), findsOneWidget);
+  });
+
+  testWidgets('a cost with no stated balance asks for the balance', (
+    tester,
+  ) async {
+    await pumpCard(
+      tester,
+      model(hasCostBasis: true, runwayMonths: 0, cashIsKnown: false),
+    );
+
+    expect(heroText(tester), '—');
+    expect(find.text('CRITICAL'), findsNothing);
+    expect(find.text('Add your balance to see your runway'), findsOneWidget);
+    expect(find.text('Set your monthly costs to see your runway'), findsNothing);
   });
 
   testWidgets('a loaded ledger still states the balance', (tester) async {
