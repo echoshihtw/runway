@@ -234,7 +234,9 @@ class ScenariosScreen extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: AppTextStyles.label),
+        // Labels are shouted where they are drawn, as in runway_card and
+        // neo_card, so a sentence-case string still matches its neighbours.
+        Text(label.toUpperCase(), style: AppTextStyles.label),
         const SizedBox(height: AppSpacing.xxs),
         Text(
           value,

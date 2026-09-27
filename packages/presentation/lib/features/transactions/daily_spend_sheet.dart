@@ -168,7 +168,9 @@ class _IncomeLine extends StatelessWidget {
               ),
               const SizedBox(width: AppSpacing.sm),
               Text(
-                l10n.logIncome,
+                // Shouted here; the Semantics label above keeps the natural
+                // case VoiceOver needs.
+                l10n.logIncome.toUpperCase(),
                 style: AppTextStyles.label.copyWith(color: SC.numberLife),
               ),
             ],
