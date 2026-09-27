@@ -17,8 +17,8 @@ class RunwayCard extends ConsumerWidget {
     final nf = NumberFormat('#,##0', 'en_US');
     final status = model.runwayStatus;
 
-    // With no cost known the runway cannot be stated, so it must not borrow
-    // the confidence of a status colour.
+    // Without both a stated balance and a cost the runway cannot be stated, so
+    // it must not borrow the confidence of a status colour.
     final known = model.runwayIsKnown;
     final owed = ref.watch(totalOwedProvider);
     final color = known ? statusColor(status) : SC.unknown;
@@ -100,6 +100,14 @@ class RunwayCard extends ConsumerWidget {
                     RunwayBasis.spending => l10n.runwayBasisSpending,
                     RunwayBasis.assumption => l10n.runwayBasisAssumption,
                   }
+                // An unloaded ledger may already hold a balance, so there is
+                // nothing to ask for and nothing to advise. Otherwise name the
+                // missing input, balance first, the order the getting-started
+                // card asks for them in.
+                : !model.cashIsKnown
+                ? ''
+                : !model.cashIsStated
+                ? l10n.runwayNeedsBalance
                 : l10n.runwayNeedsCosts,
             textAlign: TextAlign.center,
             style: AppTextStyles.bodySmall,

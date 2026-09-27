@@ -305,6 +305,7 @@
     }
   },
   "runwayNeedsCosts": "Imposta i costi mensili per vedere la tua autonomia",
+  "runwayNeedsBalance": "Inserisci il tuo saldo per vedere la tua autonomia",
   "monthSingular": "mese",
   "monthPlural": "mesi",
   "sustainableWithExpectedInflow": "Sostenibile con le entrate previste",

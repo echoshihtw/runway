@@ -793,6 +793,10 @@ class AppLocalizationsIt extends AppLocalizations {
       'Imposta i costi mensili per vedere la tua autonomia';
 
   @override
+  String get runwayNeedsBalance =>
+      'Inserisci il tuo saldo per vedere la tua autonomia';
+
+  @override
   String get monthSingular => 'mese';
 
   @override

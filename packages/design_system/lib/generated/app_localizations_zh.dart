@@ -773,6 +773,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get runwayNeedsCosts => '設定每月支出後即可看到 Runway';
 
   @override
+  String get runwayNeedsBalance => '輸入餘額後即可看到 Runway';
+
+  @override
   String get monthSingular => '個月';
 
   @override

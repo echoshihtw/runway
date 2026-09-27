@@ -305,6 +305,7 @@
     }
   },
   "runwayNeedsCosts": "設定每月支出後即可看到 Runway",
+  "runwayNeedsBalance": "輸入餘額後即可看到 Runway",
   "monthSingular": "個月",
   "monthPlural": "個月",
   "sustainableWithExpectedInflow": "照你的預期收入來看，可以持續下去",

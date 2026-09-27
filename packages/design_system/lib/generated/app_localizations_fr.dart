@@ -793,6 +793,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Renseignez vos coûts mensuels pour voir votre marge';
 
   @override
+  String get runwayNeedsBalance =>
+      'Renseignez votre solde pour voir votre marge';
+
+  @override
   String get monthSingular => 'mois';
 
   @override
