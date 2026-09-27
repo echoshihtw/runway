@@ -100,17 +100,17 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
               ),
             ),
             Positioned(
-              bottom: -60,
-              left: -150,
+              bottom: -170,
+              left: -235,
               child: _CutPaper(
                 points: _CutPaper.field,
-                size: 400,
-                color: SC.decor.withValues(alpha: 0.10),
-                turns: 0.55,
+                size: 430,
+                color: SC.decor.withValues(alpha: 0.09),
+                turns: 0.17,
               ),
             ),
             Positioned(
-              bottom: 210,
+              bottom: 250,
               right: 34,
               child: _CutPaper(
                 points: _CutPaper.spark,
@@ -261,16 +261,20 @@ class _Page extends StatelessWidget {
                     const SizedBox(height: AppSpacing.sm),
                     Text(
                       l10n.onboardingPreviewCaption,
-                      style: AppTextStyles.caption.copyWith(
-                        color: SC.labelColor,
+                      // Brighter than the claims below: this is the thing to
+                      // act on, they are reassurance.
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: SC.textStrong,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     // Two claims, not four. These are the ones that decide
                     // whether it is safe to type a balance; the rest were
                     // answering a worry nobody has before they have typed one.
-                    _Point(l10n.onboardingWelcomeBody),
-                    _Point(l10n.onboardingPrivacyEncrypted),
+                    _Claims([
+                      l10n.onboardingWelcomeBody,
+                      l10n.onboardingPrivacyEncrypted,
+                    ]),
                     const Spacer(flex: 3),
                     NeoButton(
                       label: l10n.onboardingAddMyBalance,
@@ -312,17 +316,17 @@ class _Mechanic extends ConsumerWidget {
             color: SC.unknown,
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-          child: StarMark(size: 13, color: SC.iconDim),
+        // An arrow, not the star. The star is the app's mark, and a mark that
+        // is also punctuation stops being one. An arrow already means becomes.
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+          child: Text(
+            '\u2192',
+            style: AppTextStyles.metric.copyWith(color: SC.unknown),
+          ),
         ),
         Expanded(
-          child: _Box(
-            label: l10n.runway,
-            value: '12',
-            color: SC.btnPrimary,
-            big: true,
-          ),
+          child: _Box(label: l10n.runway, value: '12', color: SC.metricRunway),
         ),
       ],
     );
@@ -334,13 +338,11 @@ class _Box extends StatelessWidget {
     required this.label,
     required this.value,
     required this.color,
-    this.big = false,
   });
 
   final String label;
   final String value;
   final Color color;
-  final bool big;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -359,39 +361,40 @@ class _Box extends StatelessWidget {
         const SizedBox(height: AppSpacing.xxs),
         Text(
           value,
-          style: (big ? AppTextStyles.hero : AppTextStyles.metric).copyWith(
-            color: color,
-          ),
+          // One size for both. At two sizes the empty side read as disabled
+          // rather than as waiting; colour is the category, size is hierarchy,
+          // and these two are peers.
+          style: AppTextStyles.hero.copyWith(color: color),
         ),
       ],
     ),
   );
 }
 
-class _Point extends StatelessWidget {
-  const _Point(this.text);
+/// A rule groups them, where a bullet would be the star's third job on one
+/// screen. The mark is the mark; it is not also punctuation.
+class _Claims extends StatelessWidget {
+  const _Claims(this.lines);
 
-  final String text;
+  final List<String> lines;
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-    child: Row(
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.only(left: AppSpacing.md),
+    decoration: const BoxDecoration(
+      border: Border(left: BorderSide(color: SC.dividerColor)),
+    ),
+    child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 6),
-          child: StarMark(size: 7, color: SC.iconDim),
-        ),
-        const SizedBox(width: AppSpacing.sm),
-        Expanded(
-          child: Text(
-            text,
-            style: AppTextStyles.bodySmall.copyWith(
-              color: SC.labelColor,
+        for (final line in lines)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
+            child: Text(
+              line,
+              style: AppTextStyles.bodySmall.copyWith(color: SC.labelColor),
             ),
           ),
-        ),
       ],
     ),
   );
