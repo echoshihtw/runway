@@ -920,42 +920,17 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get onboardingWelcomeTitle =>
-      'Deja de adivinar\ncuánto te dura el dinero.';
+      'Deja de adivinar cuánto te dura el dinero.';
 
   @override
   String get onboardingWelcomeBody => 'Sin cuenta. Sin conexión bancaria.';
 
   @override
-  String get onboardingGetStarted => 'EMPEZAR';
-
-  @override
-  String get onboardingPrivacyTitle => 'Tus datos,\ntu dispositivo.';
-
-  @override
-  String get onboardingPrivacyBody =>
-      'No hay servidor, así que no hay nada que filtrar.';
+  String get onboardingPreviewCaption =>
+      'Introduce tu efectivo. Esa es toda la configuración.';
 
   @override
   String get onboardingPrivacyEncrypted => 'Cifrado en el dispositivo';
-
-  @override
-  String get onboardingPrivacyOnDevice => 'Tus cifras no salen del dispositivo';
-
-  @override
-  String get onboardingPrivacyHidden => 'Oculto al cambiar de app';
-
-  @override
-  String get onboardingPrivacyDelete => 'Bórralo cuando quieras';
-
-  @override
-  String get onboardingIUnderstand => 'ENTENDIDO';
-
-  @override
-  String get onboardingFirstActionTitle => 'Un número y\nya está listo.';
-
-  @override
-  String get onboardingFirstActionBody =>
-      'Solo tu saldo en efectivo. Nada más.';
 
   @override
   String get onboardingAddMyBalance => 'AÑADIR MI SALDO';

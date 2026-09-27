@@ -893,40 +893,16 @@ class AppLocalizationsJa extends AppLocalizations {
   String get onboardingSkip => 'スキップ';
 
   @override
-  String get onboardingWelcomeTitle => 'あと何か月もつか、\nもう推測しない。';
+  String get onboardingWelcomeTitle => 'あと何か月もつか、もう推測しない。';
 
   @override
   String get onboardingWelcomeBody => 'アカウント不要。銀行連携なし。';
 
   @override
-  String get onboardingGetStarted => 'はじめる';
-
-  @override
-  String get onboardingPrivacyTitle => 'あなたのデータは、\nあなたの端末に。';
-
-  @override
-  String get onboardingPrivacyBody => 'サーバーがないので、漏れるものがありません。';
+  String get onboardingPreviewCaption => '現金残高を入力するだけ。設定はこれで終わりです。';
 
   @override
   String get onboardingPrivacyEncrypted => '端末内で暗号化';
-
-  @override
-  String get onboardingPrivacyOnDevice => '数字は端末の外に出ません';
-
-  @override
-  String get onboardingPrivacyHidden => 'アプリ切替時は非表示';
-
-  @override
-  String get onboardingPrivacyDelete => 'いつでも削除';
-
-  @override
-  String get onboardingIUnderstand => 'わかりました';
-
-  @override
-  String get onboardingFirstActionTitle => '数字ひとつで\n設定は完了。';
-
-  @override
-  String get onboardingFirstActionBody => '現金残高だけ。ほかは不要です。';
 
   @override
   String get onboardingAddMyBalance => '残高を入力';
