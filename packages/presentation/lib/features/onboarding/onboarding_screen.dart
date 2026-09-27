@@ -177,9 +177,7 @@ class _PageWelcome extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return _PageLayout(
-      icon: '◈',
-      iconData: Icons.radio_button_checked_rounded,
-      iconColor: AppColors.neonGreen,
+      icon: const StarMark(),
       title: l10n.onboardingWelcomeTitle,
       subtitle: l10n.onboardingWelcomeBody,
       cta: l10n.onboardingGetStarted,
@@ -197,9 +195,7 @@ class _PagePrivacy extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return _PageLayout(
-      icon: '🔒',
-      iconData: Icons.lock_rounded,
-      iconColor: AppColors.neonGreen,
+      icon: const _Glyph('🔒'),
       title: l10n.onboardingPrivacyTitle,
       subtitle: l10n.onboardingPrivacyBody,
       extras: const _PrivacyPoints(),
@@ -257,9 +253,7 @@ class _PageFirstAction extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return _PageLayout(
-      icon: '🚀',
-      iconData: Icons.rocket_launch_rounded,
-      iconColor: AppColors.neonGreen,
+      icon: const _Glyph('🚀'),
       title: l10n.onboardingFirstActionTitle,
       subtitle: l10n.onboardingFirstActionBody,
       cta: l10n.onboardingAddMyBalance,
@@ -271,9 +265,7 @@ class _PageFirstAction extends StatelessWidget {
 
 // ── Reusable page layout ──────────────────────────────────────
 class _PageLayout extends StatelessWidget {
-  final String icon;
-  final IconData iconData;
-  final Color iconColor;
+  final Widget icon;
   final String title;
   final String subtitle;
   final Widget? extras;
@@ -283,8 +275,6 @@ class _PageLayout extends StatelessWidget {
 
   const _PageLayout({
     required this.icon,
-    required this.iconData,
-    required this.iconColor,
     required this.title,
     required this.subtitle,
     this.extras,
@@ -318,15 +308,7 @@ class _PageLayout extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Icon
-                    Text(
-                      icon,
-                      style: TextStyle(
-                        fontSize: icon.length == 1 && icon.codeUnitAt(0) < 256
-                            ? 48
-                            : 48,
-                      ),
-                    ),
+                    icon,
                     const SizedBox(height: AppSpacing.xl),
 
                     // Title
@@ -374,4 +356,15 @@ class _PageLayout extends StatelessWidget {
       ),
     );
   }
+}
+
+/// The two pages that still use an emoji, at the size the star draws itself.
+class _Glyph extends StatelessWidget {
+  const _Glyph(this.char);
+
+  final String char;
+
+  @override
+  Widget build(BuildContext context) =>
+      Text(char, style: const TextStyle(fontSize: 48));
 }
