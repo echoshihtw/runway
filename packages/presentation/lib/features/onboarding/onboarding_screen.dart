@@ -305,8 +305,11 @@ class _Mechanic extends ConsumerWidget {
         Expanded(
           child: _Box(
             label: l10n.cash,
+            // Not iconDim: that meets 3:1, the bar for icons, and this is
+            // text. SC.unknown is also what the runway card uses for a cash
+            // figure it does not have, which is exactly what this is.
             value: symbol.isEmpty ? '—' : '$symbol —',
-            color: SC.iconDim,
+            color: SC.unknown,
           ),
         ),
         const Padding(
