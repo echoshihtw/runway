@@ -121,7 +121,7 @@ class SubscriptionsPanel extends ConsumerWidget {
       useRootNavigator: true,
       builder: (dialogContext) => AlertDialog(
         backgroundColor: AppColors.surface,
-        title: Text(l10n.deleteSubscription, style: AppTextStyles.label),
+        title: Text(l10n.deleteSubscription, style: AppTextStyles.title),
         content: Text(
           l10n.deleteSubscriptionKeepsEntries,
           style: AppTextStyles.bodySmall,
@@ -134,7 +134,7 @@ class SubscriptionsPanel extends ConsumerWidget {
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
             child: Text(
-              l10n.deleteSubscription,
+              l10n.deleteSubscription.toUpperCase(),
               style: AppTextStyles.label.copyWith(color: SC.cost),
             ),
           ),

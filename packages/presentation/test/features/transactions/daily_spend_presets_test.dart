@@ -386,7 +386,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Money came in instead?'), findsOneWidget);
-    await tester.tap(find.text('Log income'));
+    await tester.tap(find.text('LOG INCOME'));
     await tester.pumpAndSettle();
 
     expect(find.byType(TransactionForm), findsOneWidget);
@@ -403,7 +403,7 @@ void main() {
     final written = await _pump(tester);
     await tester.tap(_addButton);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Log income'));
+    await tester.tap(find.text('LOG INCOME'));
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextField).at(0), '2400');

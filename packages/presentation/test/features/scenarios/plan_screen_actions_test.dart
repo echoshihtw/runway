@@ -179,7 +179,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 900));
       await tester.pumpAndSettle();
 
-      expect(find.text('Projected runway'), findsOneWidget);
+      expect(find.text('PROJECTED RUNWAY'), findsOneWidget);
       expect(
         _runButton(tester).onPressed,
         isNull,

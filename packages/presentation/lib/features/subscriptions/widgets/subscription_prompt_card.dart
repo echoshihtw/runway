@@ -223,7 +223,7 @@ class _SubscriptionPromptCardState
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(l10n.subscriptionWhatHappened, style: AppTextStyles.label),
+              Text(l10n.subscriptionWhatHappened, style: AppTextStyles.title),
               const SizedBox(height: AppSpacing.md),
               NeoButton(
                 label: l10n.subscriptionReasonCancelled,
