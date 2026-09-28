@@ -890,40 +890,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingSkip => '跳過';
 
   @override
-  String get onboardingWelcomeTitle => '別再猜\n你的錢能撐多久。';
+  String get onboardingWelcomeTitle => '別再猜你的錢能撐多久。';
 
   @override
   String get onboardingWelcomeBody => '不用註冊，也不連銀行。';
 
   @override
-  String get onboardingGetStarted => '開始吧';
-
-  @override
-  String get onboardingPrivacyTitle => '你的資料，\n只在你手機裡。';
-
-  @override
-  String get onboardingPrivacyBody => '沒有伺服器，就沒有外洩的問題。';
+  String get onboardingPreviewCaption => '只要輸入現金餘額，設定就完成了。';
 
   @override
   String get onboardingPrivacyEncrypted => '在手機上加密';
-
-  @override
-  String get onboardingPrivacyOnDevice => '數字不會離開你的手機';
-
-  @override
-  String get onboardingPrivacyHidden => '切到別的 App 就自動遮起來';
-
-  @override
-  String get onboardingPrivacyDelete => '想刪就刪';
-
-  @override
-  String get onboardingIUnderstand => '了解';
-
-  @override
-  String get onboardingFirstActionTitle => '一個數字\n就設定完成。';
-
-  @override
-  String get onboardingFirstActionBody => '只要現金餘額，其他都不用。';
 
   @override
   String get onboardingAddMyBalance => '輸入我的餘額';

@@ -21,6 +21,11 @@ abstract final class AppColors {
   static const amber = Color(0xFFFFC978); // light amber — caution status
   static const purple = Color(0xFFBB6DFF); // keep purple for subscriptions
 
+  /// The marketing page's violet, for the cut-paper shapes behind onboarding.
+  /// Deliberately not one of the category hues: nothing in the ledger is this
+  /// colour, so a shape wearing it cannot be mistaken for a figure.
+  static const decorViolet = Color(0xFF6327D4);
+
   // ── Text ─────────────────────────────────────
   // Three tiers with different jobs, and the job sets the contrast each has
   // to meet. `contrast_test.dart` holds them to it.

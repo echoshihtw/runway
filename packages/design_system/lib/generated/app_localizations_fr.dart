@@ -921,42 +921,17 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get onboardingWelcomeTitle =>
-      'Ne devinez plus\ncombien de temps votre argent tient.';
+      'Ne devinez plus combien de temps votre argent tient.';
 
   @override
   String get onboardingWelcomeBody => 'Sans compte. Sans connexion bancaire.';
 
   @override
-  String get onboardingGetStarted => 'COMMENCER';
-
-  @override
-  String get onboardingPrivacyTitle => 'Vos données,\nvotre appareil.';
-
-  @override
-  String get onboardingPrivacyBody =>
-      'Il n\'y a pas de serveur, donc rien à divulguer.';
+  String get onboardingPreviewCaption =>
+      'Saisissez vos liquidités. C’est toute la configuration.';
 
   @override
   String get onboardingPrivacyEncrypted => 'Chiffré sur l\'appareil';
-
-  @override
-  String get onboardingPrivacyOnDevice =>
-      'Vos chiffres restent sur votre appareil';
-
-  @override
-  String get onboardingPrivacyHidden => 'Masqué quand vous changez d\'app';
-
-  @override
-  String get onboardingPrivacyDelete => 'Supprimez tout, à tout moment';
-
-  @override
-  String get onboardingIUnderstand => 'COMPRIS';
-
-  @override
-  String get onboardingFirstActionTitle => 'Un chiffre et\nc\'est configuré.';
-
-  @override
-  String get onboardingFirstActionBody => 'Juste votre solde. Rien d\'autre.';
 
   @override
   String get onboardingAddMyBalance => 'SAISIR MON SOLDE';

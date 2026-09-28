@@ -921,43 +921,18 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get onboardingWelcomeTitle =>
-      'Smetti di indovinare\nquanto dura il tuo denaro.';
+      'Smetti di indovinare quanto dura il tuo denaro.';
 
   @override
   String get onboardingWelcomeBody =>
       'Nessun account. Nessuna connessione bancaria.';
 
   @override
-  String get onboardingGetStarted => 'INIZIA';
-
-  @override
-  String get onboardingPrivacyTitle => 'I tuoi dati,\nil tuo dispositivo.';
-
-  @override
-  String get onboardingPrivacyBody =>
-      'Non c\'è un server, quindi non c\'è nulla da far trapelare.';
+  String get onboardingPreviewCaption =>
+      'Inserisci i tuoi contanti. Questa è tutta la configurazione.';
 
   @override
   String get onboardingPrivacyEncrypted => 'Cifrato sul dispositivo';
-
-  @override
-  String get onboardingPrivacyOnDevice =>
-      'I numeri restano sul tuo dispositivo';
-
-  @override
-  String get onboardingPrivacyHidden => 'Nascosto quando cambi app';
-
-  @override
-  String get onboardingPrivacyDelete => 'Elimina quando vuoi';
-
-  @override
-  String get onboardingIUnderstand => 'HO CAPITO';
-
-  @override
-  String get onboardingFirstActionTitle => 'Un numero e\nhai finito.';
-
-  @override
-  String get onboardingFirstActionBody => 'Solo il tuo saldo. Nient\'altro.';
 
   @override
   String get onboardingAddMyBalance => 'AGGIUNGI IL MIO SALDO';

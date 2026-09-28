@@ -66,4 +66,15 @@ abstract final class SC {
   static const labelColor   = AppColors.textSecondary;
   static const captionColor = AppColors.textSecondary;
   static const dividerColor = AppColors.cardBorder;
+
+  // ── Surfaces and decoration ───────────────────
+  static const cardSurface = AppColors.surface;
+
+  /// Text that has to outrank the secondary tier. numberPrimary is the same
+  /// value, but it is named for figures and this is prose.
+  static const textStrong  = AppColors.textPrimary;
+  static const iconDim     = AppColors.textDim;
+
+  /// Brand shapes only. Not a category, which is the point of it.
+  static const decor       = AppColors.decorViolet;
 }

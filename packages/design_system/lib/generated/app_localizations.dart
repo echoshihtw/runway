@@ -1771,7 +1771,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingWelcomeTitle.
   ///
   /// In en, this message translates to:
-  /// **'Stop guessing how long\nyour money lasts.'**
+  /// **'Stop guessing how long your money lasts.'**
   String get onboardingWelcomeTitle;
 
   /// No description provided for @onboardingWelcomeBody.
@@ -1780,65 +1780,17 @@ abstract class AppLocalizations {
   /// **'No account. No bank connection.'**
   String get onboardingWelcomeBody;
 
-  /// No description provided for @onboardingGetStarted.
+  /// No description provided for @onboardingPreviewCaption.
   ///
   /// In en, this message translates to:
-  /// **'GET STARTED'**
-  String get onboardingGetStarted;
-
-  /// No description provided for @onboardingPrivacyTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Your data,\nyour device.'**
-  String get onboardingPrivacyTitle;
-
-  /// No description provided for @onboardingPrivacyBody.
-  ///
-  /// In en, this message translates to:
-  /// **'There is no server, so there is nothing to leak.'**
-  String get onboardingPrivacyBody;
+  /// **'Enter your cash. That is the whole setup.'**
+  String get onboardingPreviewCaption;
 
   /// No description provided for @onboardingPrivacyEncrypted.
   ///
   /// In en, this message translates to:
   /// **'Encrypted on device'**
   String get onboardingPrivacyEncrypted;
-
-  /// No description provided for @onboardingPrivacyOnDevice.
-  ///
-  /// In en, this message translates to:
-  /// **'Numbers stay on your device'**
-  String get onboardingPrivacyOnDevice;
-
-  /// No description provided for @onboardingPrivacyHidden.
-  ///
-  /// In en, this message translates to:
-  /// **'Hidden when you switch apps'**
-  String get onboardingPrivacyHidden;
-
-  /// No description provided for @onboardingPrivacyDelete.
-  ///
-  /// In en, this message translates to:
-  /// **'Delete anytime'**
-  String get onboardingPrivacyDelete;
-
-  /// No description provided for @onboardingIUnderstand.
-  ///
-  /// In en, this message translates to:
-  /// **'I UNDERSTAND'**
-  String get onboardingIUnderstand;
-
-  /// No description provided for @onboardingFirstActionTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'One number and\nyou are set up.'**
-  String get onboardingFirstActionTitle;
-
-  /// No description provided for @onboardingFirstActionBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Just your cash balance. Nothing else.'**
-  String get onboardingFirstActionBody;
 
   /// No description provided for @onboardingAddMyBalance.
   ///

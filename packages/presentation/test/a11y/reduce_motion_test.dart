@@ -78,9 +78,10 @@ void main() {
     expect(_dotDuration(tester), const Duration(milliseconds: 250));
   });
 
-  testWidgets('onboarding pages arrive rather than travel', (tester) async {
-    // A whole screen of content moving sideways is the textbook vestibular
-    // trigger, and it is the first thing a new user ever sees.
+  testWidgets('onboarding arrives rather than fading in', (tester) async {
+    // The sideways page slide this used to guard is gone with the second and
+    // third pages. The screen still fades itself in, which is still motion
+    // nobody asked for, so that is what is held here.
     tester.view.physicalSize = const Size(1170, 2532);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
@@ -98,23 +99,31 @@ void main() {
       ),
     );
 
+    // The route has a FadeTransition of its own above the Scaffold, and
+    // NeoButton has more below. The screen's own is the first inside.
+    double opacity(WidgetTester t) => t
+        .widget<FadeTransition>(
+          find
+              .descendant(
+                of: find.byType(Scaffold),
+                matching: find.byType(FadeTransition),
+              )
+              .first,
+        )
+        .opacity
+        .value;
+
     await open(reduced: true);
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('GET STARTED'));
-    // One frame. With a 350ms slide the second page would still be in
-    // flight; jumped, it is already here.
     await tester.pump();
-    expect(find.text('Your data,\nyour device.'), findsOneWidget);
+    expect(opacity(tester), 1.0, reason: 'it is already here');
 
     await tester.pumpWidget(const SizedBox.shrink());
     await open(reduced: false);
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('GET STARTED'));
     await tester.pump();
     expect(
-      find.text('Stop guessing how long\nyour money lasts.'),
-      findsOneWidget,
-      reason: 'the setting is off, so the first page is still sliding away',
+      opacity(tester),
+      lessThan(1.0),
+      reason: 'the setting is off, so it is still arriving',
     );
     await tester.pumpAndSettle();
   });

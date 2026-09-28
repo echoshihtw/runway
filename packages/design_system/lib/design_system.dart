@@ -19,6 +19,7 @@ export 'components/gradient_scaffold.dart';
 
 // Legacy components (keep during transition)
 export 'components/scanline_overlay.dart';
+export 'components/star_mark.dart';
 
 // Localizations
 export 'generated/app_localizations.dart';

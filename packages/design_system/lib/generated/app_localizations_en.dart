@@ -916,42 +916,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingWelcomeTitle =>
-      'Stop guessing how long\nyour money lasts.';
+      'Stop guessing how long your money lasts.';
 
   @override
   String get onboardingWelcomeBody => 'No account. No bank connection.';
 
   @override
-  String get onboardingGetStarted => 'GET STARTED';
-
-  @override
-  String get onboardingPrivacyTitle => 'Your data,\nyour device.';
-
-  @override
-  String get onboardingPrivacyBody =>
-      'There is no server, so there is nothing to leak.';
+  String get onboardingPreviewCaption =>
+      'Enter your cash. That is the whole setup.';
 
   @override
   String get onboardingPrivacyEncrypted => 'Encrypted on device';
-
-  @override
-  String get onboardingPrivacyOnDevice => 'Numbers stay on your device';
-
-  @override
-  String get onboardingPrivacyHidden => 'Hidden when you switch apps';
-
-  @override
-  String get onboardingPrivacyDelete => 'Delete anytime';
-
-  @override
-  String get onboardingIUnderstand => 'I UNDERSTAND';
-
-  @override
-  String get onboardingFirstActionTitle => 'One number and\nyou are set up.';
-
-  @override
-  String get onboardingFirstActionBody =>
-      'Just your cash balance. Nothing else.';
 
   @override
   String get onboardingAddMyBalance => 'ADD MY BALANCE';

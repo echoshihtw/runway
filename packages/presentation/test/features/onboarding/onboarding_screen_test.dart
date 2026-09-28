@@ -22,65 +22,67 @@ Future<void> _pumpOnboarding(WidgetTester tester, {Locale? locale}) async {
 }
 
 void main() {
-  testWidgets('onboarding is welcome, privacy, then first action', (
+  testWidgets('onboarding is one screen: the promise, the price, the ask', (
     tester,
   ) async {
     await _pumpOnboarding(tester);
+
+    // No baked line break: at 36pt mono "Stop guessing how long" does not fit,
+    // so the \n after "long" wrapped and then broke, orphaning the word.
     expect(
-      find.text('Stop guessing how long\nyour money lasts.'),
+      find.text('Stop guessing how long your money lasts.'),
       findsOneWidget,
     );
-
-    await tester.tap(find.text('GET STARTED'));
-    await tester.pumpAndSettle();
-    expect(find.text('Your data,\nyour device.'), findsOneWidget);
-
-    await tester.tap(find.text('I UNDERSTAND'));
-    await tester.pumpAndSettle();
-    expect(find.text('One number and\nyou are set up.'), findsOneWidget);
+    expect(
+      find.text('Enter your cash. That is the whole setup.'),
+      findsOneWidget,
+      reason: 'the ask is on the same screen as the promise now',
+    );
+    expect(find.text('CASH'), findsOneWidget);
+    expect(find.text('RUNWAY'), findsOneWidget);
     expect(find.text('ADD MY BALANCE'), findsOneWidget);
-    expect(find.text('SKIP'), findsNothing);
+    expect(find.text('SKIP'), findsOneWidget);
   });
 
-  testWidgets('the privacy page carries every privacy promise', (tester) async {
+  testWidgets('it keeps the two claims that decide whether to type a balance', (
+    tester,
+  ) async {
     await _pumpOnboarding(tester);
-    await tester.tap(find.text('GET STARTED'));
-    await tester.pumpAndSettle();
 
+    expect(find.text('No account. No bank connection.'), findsOneWidget);
     expect(find.text('Encrypted on device'), findsOneWidget);
-    expect(find.text('Numbers stay on your device'), findsOneWidget);
-    expect(find.text('Hidden when you switch apps'), findsOneWidget);
-    expect(find.text('Delete anytime'), findsOneWidget);
-    expect(find.text('Never sent to servers'), findsNothing);
   });
 
-  testWidgets('the removed pages are gone', (tester) async {
+  testWidgets('the pages it replaced are gone, and so are their buttons', (
+    tester,
+  ) async {
     await _pumpOnboarding(tester);
 
-    for (final cta in ['GET STARTED', 'I UNDERSTAND']) {
-      await tester.tap(find.text(cta));
-      await tester.pumpAndSettle();
-      expect(find.text('Three steps\nto clarity.'), findsNothing);
-      expect(find.text('Lock it\ndown.'), findsNothing);
+    for (final gone in const [
+      'Your data,\nyour device.',
+      'One number and\nyou are set up.',
+      'Stop guessing how long\nyour money lasts.',
+      'There is no server, so there is nothing to leak.',
+      'Numbers stay on your device',
+      'Hidden when you switch apps',
+      'Delete anytime',
+      'GET STARTED',
+      'I UNDERSTAND',
+      'Three steps\nto clarity.',
+      'Lock it\ndown.',
+    ]) {
+      expect(find.text(gone), findsNothing, reason: '$gone should be gone');
     }
   });
 
   testWidgets('the first run speaks the device language, not English', (
     tester,
   ) async {
-    // #96: every title, body, bullet and button was a Dart literal, so a
-    // phone set to 日本語 met an English first run. The paywall's legal links
-    // were the only strings on either judged screen that translated.
     await _pumpOnboarding(tester, locale: const Locale('ja'));
 
-    expect(find.text('GET STARTED'), findsNothing);
+    expect(find.text('ADD MY BALANCE'), findsNothing);
     expect(find.text('SKIP'), findsNothing);
-    expect(find.text('はじめる'), findsOneWidget);
     expect(find.text('スキップ'), findsOneWidget);
-
-    await tester.tap(find.text('はじめる'));
-    await tester.pumpAndSettle();
-    expect(find.text('Encrypted on device'), findsNothing);
-    expect(find.text('端末内で暗号化'), findsOneWidget);
+    expect(find.text('残高を入力'), findsOneWidget);
   });
 }
