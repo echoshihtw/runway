@@ -2,7 +2,9 @@ name: app
 description: Runway app entry point
 publish_to: none
 resolution: workspace
-version: 1.0.1+2
+# Local and hand-built archives only. CI passes --build-name from the release
+# tag, so this value never decides what ships (#99).
+version: 1.0.0+2
 
 environment:
   sdk: "^3.11.5"
