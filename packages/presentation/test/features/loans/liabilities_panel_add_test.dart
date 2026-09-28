@@ -2,6 +2,7 @@ import 'package:application/application.dart';
 import 'package:design_system/design_system.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:presentation/features/loans/liabilities_panel.dart';
@@ -304,7 +305,9 @@ void main() {
     );
   });
 
-  testWidgets('the count clears the moment the purchase lands', (tester) async {
+  testWidgets('the count follows the entitlement in both directions', (
+    tester,
+  ) async {
     // The paywall opens as a bottom sheet, so this panel stays mounted behind
     // it. Reading the entitlement instead of watching it left the count on
     // screen for someone who had just paid, and a const widget is not rebuilt
@@ -348,5 +351,49 @@ void main() {
       find.text(l10n.freeEntriesUsed(4, ProductConfig.freeEntries)),
       findsNothing,
     );
+
+    // The direction that matters more. A lapsed entitlement starts blocking at
+    // once, so without this the wall arrives unannounced, which is the fault
+    // this whole branch exists to prevent.
+    await container.read(entitlementProvider.notifier).revokePro();
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text(l10n.freeEntriesUsed(4, ProductConfig.freeEntries)),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('the count is not part of the door it sits under', (
+    tester,
+  ) async {
+    // Inside the GestureDetector, implicit semantics merged the count into the
+    // control's name: the door announced itself as "NO ACTIVE LOANS + LOAN 4 of
+    // 5 free entries used", and the count's own pixels opened the wizard.
+    // Disposed inline, not in a tearDown: the handle check runs before
+    // tearDowns do.
+    final semantics = tester.ensureSemantics();
+
+    await _pump(tester, const [], entriesUsed: 4);
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+    final label = l10n.freeEntriesUsed(4, ProductConfig.freeEntries);
+    final caption = find.text(label);
+
+    final data = tester.getSemantics(caption).getSemanticsData();
+    expect(
+      data.hasAction(SemanticsAction.tap),
+      isFalse,
+      reason: 'a count is not a control',
+    );
+    expect(data.label, label, reason: 'and it is not part of the name of one');
+
+    await tester.tap(caption);
+    await tester.pumpAndSettle();
+    expect(
+      find.byType(LoanWizard),
+      findsNothing,
+      reason: 'tapping the count must not start a loan',
+    );
+    semantics.dispose();
   });
 }

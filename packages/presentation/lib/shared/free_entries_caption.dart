@@ -23,19 +23,20 @@ class FreeEntriesCaption extends ConsumerWidget {
     // Watched, not read: buying Pro from the paywall leaves this screen
     // mounted, and a const widget is not rebuilt by its parent.
     if (used == 0 || watchProOwner(ref)) return const SizedBox.shrink();
-    // Full width and start-aligned, so where it is mounted cannot change
-    // where it sits. In a Column that centres its children it was indenting
-    // 64pt and reading as a second line of the button above it.
+    // Aligned by itself, so where it is mounted cannot change where it sits.
+    // In a Column that centres its children it was indenting 64pt and reading
+    // as a second line of the button above it. Align rather than an infinite
+    // SizedBox: same guarantee, and it shrink-wraps instead of throwing if a
+    // future parent gives it an unbounded width.
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
-      child: SizedBox(
-        width: double.infinity,
+      child: Align(
+        alignment: AlignmentDirectional.centerStart,
         child: Text(
           context.l10n.freeEntriesUsed(
             shownAsUsed(used: used, free: ProductConfig.freeEntries),
             ProductConfig.freeEntries,
           ),
-          textAlign: TextAlign.start,
           style: AppTextStyles.caption,
         ),
       ),

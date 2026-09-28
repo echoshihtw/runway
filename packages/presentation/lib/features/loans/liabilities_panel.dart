@@ -38,52 +38,45 @@ class LiabilitiesPanel extends ConsumerWidget {
               GestureDetector(
                 onTap: () => startLoanCreation(context, ref),
                 behavior: HitTestBehavior.opaque,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
                   children: [
-                    Row(
-                      children: [
-                        Container(
-                          width: 34,
-                          height: 34,
-                          decoration: BoxDecoration(
-                            color: SC.accentCost.withAlpha(16),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: SC.accentCost.withAlpha(45),
-                            ),
-                          ),
-                          // One glyph per concept: loans wear account_balance
-                          // everywhere, card and empty state alike.
-                          child: const Icon(
-                            LedgerGlyphs.lender,
-                            color: SC.accentCost,
-                            size: 18,
-                          ),
+                    Container(
+                      width: 34,
+                      height: 34,
+                      decoration: BoxDecoration(
+                        color: SC.accentCost.withAlpha(16),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: SC.accentCost.withAlpha(45)),
+                      ),
+                      // One glyph per concept: loans wear account_balance
+                      // everywhere, card and empty state alike.
+                      child: const Icon(
+                        LedgerGlyphs.lender,
+                        color: SC.accentCost,
+                        size: 18,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      flex: 3,
+                      child: Text(
+                        l10n.noActiveLoans,
+                        style: AppTextStyles.bodySmall,
+                      ),
+                    ),
+                    // The label is the only thing here that can be shortened
+                    // without losing meaning, so it takes the smaller share.
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        l10n.newLoan,
+                        textAlign: TextAlign.right,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.label.copyWith(
+                          color: SC.accentCost,
                         ),
-                        const SizedBox(width: AppSpacing.sm),
-                        Expanded(
-                          flex: 3,
-                          child: Text(
-                            l10n.noActiveLoans,
-                            style: AppTextStyles.bodySmall,
-                          ),
-                        ),
-                        // The label is the only thing here that can be shortened
-                        // without losing meaning, so it takes the smaller share.
-                        Expanded(
-                          flex: 2,
-                          child: Text(
-                            l10n.newLoan,
-                            textAlign: TextAlign.right,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTextStyles.label.copyWith(
-                              color: SC.accentCost,
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
