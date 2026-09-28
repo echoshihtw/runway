@@ -92,29 +92,24 @@ class LoanCard extends ConsumerWidget {
                     ],
                   ),
                 ),
+                // REPAY never yields. It is kept short in every language
+                // instead, and the bounds suite fails if a translation grows
+                // past what the card can hold (#274).
                 if (!summary.isFullyPaid || isCosting)
-                  // Flexible so the label can wrap inside the button. At
-                  // double text size REMBOURSER is wider than the whole card,
-                  // so keeping it on one line is not available: wrapping keeps
-                  // the word and the tap target, ellipsising would keep
-                  // neither.
-                  Flexible(
-                    child: GestureDetector(
-                      onTap: onRepay,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.sm,
-                          vertical: AppSpacing.xxs,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: AppColors.gold),
-                        ),
-                        child: Text(
-                          l10n.repay,
-                          textAlign: TextAlign.center,
-                          style: AppTextStyles.small.copyWith(
-                            color: AppColors.textPrimary,
-                          ),
+                  GestureDetector(
+                    onTap: onRepay,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.sm,
+                        vertical: AppSpacing.xxs,
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.gold),
+                      ),
+                      child: Text(
+                        l10n.repay,
+                        style: AppTextStyles.small.copyWith(
+                          color: AppColors.textPrimary,
                         ),
                       ),
                     ),

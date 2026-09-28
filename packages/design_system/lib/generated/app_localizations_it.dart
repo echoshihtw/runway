@@ -386,7 +386,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'La rata mensile smette di contare e il prestito lascia questa lista per sempre. Le voci restano.';
 
   @override
-  String get repay => 'RIMBORSA';
+  String get repay => 'PAGA';
 
   @override
   String get repayTitle => 'RIMBORSA';

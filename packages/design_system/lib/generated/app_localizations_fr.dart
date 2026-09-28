@@ -386,7 +386,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'La mensualité cesse de compter et le prêt quitte cette liste définitivement. Les écritures sont conservées.';
 
   @override
-  String get repay => 'REMBOURSER';
+  String get repay => 'PAYER';
 
   @override
   String get repayTitle => 'REMBOURSER';
