@@ -17,6 +17,13 @@ enum UsageKind {
 bool needsPro({required bool isPro, required int used, required int free}) =>
     !isPro && used >= free;
 
+/// How many to show as used. The counters are lifetime totals with no ceiling:
+/// the gates live at the call sites, so a Pro owner's climbs with every run,
+/// and a lapsed owner keeps the total. Past the allowance the overage says
+/// nothing, and "15 of 3" reads as a bug, so the display stops at the limit.
+int shownAsUsed({required int used, required int free}) =>
+    used < free ? used : free;
+
 /// Overridden in main.dart with the Keychain-backed store.
 final usageCountStoreProvider = Provider<UsageCountStore>((ref) {
   throw UnimplementedError(

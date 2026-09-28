@@ -7,6 +7,7 @@ import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
 import '../../shared/add_strip.dart';
 import '../../shared/ledger_glyphs.dart';
+import '../../shared/free_entries_caption.dart';
 import '../../shared/pro_gate.dart';
 import '../../shared/money_field.dart';
 import 'loan_card.dart';
@@ -27,49 +28,61 @@ class LiabilitiesPanel extends ConsumerWidget {
         // With nothing borrowed the card has no expanded section, so this row
         // is the only way in. It was inert text, seen exactly when someone
         // does not yet know loans are tracked here at all.
-        ? GestureDetector(
-            onTap: () => startLoanCreation(context, ref),
-            behavior: HitTestBehavior.opaque,
-            child: Row(
-              children: [
-                Container(
-                  width: 34,
-                  height: 34,
-                  decoration: BoxDecoration(
-                    color: SC.accentCost.withAlpha(16),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: SC.accentCost.withAlpha(45)),
-                  ),
-                  // One glyph per concept: loans wear account_balance
-                  // everywhere, card and empty state alike.
-                  child: const Icon(
-                    LedgerGlyphs.lender,
-                    color: SC.accentCost,
-                    size: 18,
-                  ),
+        // The caption sits outside the GestureDetector. Inside, implicit
+        // semantics merged it into the control's name, so the door announced
+        // itself as "NO ACTIVE LOANS + LOAN 4 of 5 free entries used", and
+        // tapping the count opened the wizard.
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GestureDetector(
+                onTap: () => startLoanCreation(context, ref),
+                behavior: HitTestBehavior.opaque,
+                child: Row(
+                  children: [
+                    Container(
+                      width: 34,
+                      height: 34,
+                      decoration: BoxDecoration(
+                        color: SC.accentCost.withAlpha(16),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: SC.accentCost.withAlpha(45)),
+                      ),
+                      // One glyph per concept: loans wear account_balance
+                      // everywhere, card and empty state alike.
+                      child: const Icon(
+                        LedgerGlyphs.lender,
+                        color: SC.accentCost,
+                        size: 18,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      flex: 3,
+                      child: Text(
+                        l10n.noActiveLoans,
+                        style: AppTextStyles.bodySmall,
+                      ),
+                    ),
+                    // The label is the only thing here that can be shortened
+                    // without losing meaning, so it takes the smaller share.
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        l10n.newLoan,
+                        textAlign: TextAlign.right,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.label.copyWith(
+                          color: SC.accentCost,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: AppSpacing.sm),
-                Expanded(
-                  flex: 3,
-                  child: Text(
-                    l10n.noActiveLoans,
-                    style: AppTextStyles.bodySmall,
-                  ),
-                ),
-                // The label is the only thing here that can be shortened
-                // without losing meaning, so it takes the smaller share.
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    l10n.newLoan,
-                    textAlign: TextAlign.right,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.label.copyWith(color: SC.accentCost),
-                  ),
-                ),
-              ],
-            ),
+              ),
+              const FreeEntriesCaption(),
+            ],
           )
         // One figure, and it is money. The second column held "1 ACTIVE",
         // where ACTIVE can never be false — a settled loan is never rendered,
@@ -100,6 +113,10 @@ class LiabilitiesPanel extends ConsumerWidget {
         ? null
         : Column(
             children: [
+              // Above the list, not below the strip. REPAY is a gated door and
+              // it sits at the top, so a count at the bottom of three loans is
+              // off screen exactly when it is needed.
+              const FreeEntriesCaption(),
               for (var i = 0; i < active.length; i++)
                 Padding(
                   padding: const EdgeInsets.only(bottom: AppSpacing.sm),
@@ -185,6 +202,7 @@ class LiabilitiesPanel extends ConsumerWidget {
   }
 
   void _showRepay(BuildContext context, WidgetRef ref, LoanSummary summary) {
+    // A repayment writes an entry, so it meets the entry wall.
     if (!allowsNewEntry(context, ref)) return;
     showModalBottomSheet(
       context: context,

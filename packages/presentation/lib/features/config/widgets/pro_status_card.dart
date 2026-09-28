@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:application/application.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
@@ -62,15 +60,12 @@ class ProStatusCard extends ConsumerWidget {
     final entries = ref.watch(entryCountProvider).value;
     final simulations = ref.watch(simulationCountProvider).value;
 
-    // Capped, because the counters are not: they are lifetime totals and the
-    // gates live at the call sites, so a Pro owner's climbs with every run.
-    // Past the limit the overage says nothing; the line is about what is left.
     final entriesShown = entries == null
         ? null
-        : math.min(entries, ProductConfig.freeEntries);
+        : shownAsUsed(used: entries, free: ProductConfig.freeEntries);
     final simulationsShown = simulations == null
         ? null
-        : math.min(simulations, ProductConfig.freeSimulations);
+        : shownAsUsed(used: simulations, free: ProductConfig.freeSimulations);
 
     return [
       if (entriesShown != null)
