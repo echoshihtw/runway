@@ -356,11 +356,11 @@
   "paywallSomethingWrong": "Une erreur s'est produite. Veuillez réessayer.",
   "paywallNoPreviousPurchase": "Aucun achat antérieur trouvé.",
   "paywallRestoreFailed": "La restauration a échoué. Veuillez réessayer.",
-  "paywallTitleLoanEntry": "Un prêt enregistre l'arrivée de l'argent, et c'est une entrée. Vous avez utilisé vos {count} sur cet appareil.",
+  "paywallTitleLoanEntry": "Un prêt enregistre l'arrivée de l'argent, et c'est une entrée. Vous avez utilisé vos {count}.",
   "@paywallTitleLoanEntry": {
     "placeholders": { "count": { "type": "int" } }
   },
-  "paywallTitleEntries": "Vous avez utilisé vos {count} entrées gratuites sur cet appareil.\nPro, c'est ce qui garde le chiffre juste.",
+  "paywallTitleEntries": "Vous avez utilisé vos {count} entrées gratuites.\nPro, c'est ce qui garde le chiffre juste.",
   "paywallTitleSimulations": "Vous avez lancé vos {count} simulations gratuites.\nPro, c'est ce qui vous laisse continuer à tester.",
   "paywallTitleDefault": "Débloquez Runway Pro.",
   "paywallFeatureEntries": "Notez tout, et le chiffre ne dérive pas",

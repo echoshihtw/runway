@@ -944,12 +944,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String paywallTitleLoanEntry(int count) {
-    return '貸款會記錄入帳，那就是一筆紀錄。這台裝置上的 $count 筆已用完。';
+    return '貸款會記錄入帳，那就是一筆紀錄。$count 筆已經用完了。';
   }
 
   @override
   String paywallTitleEntries(int count) {
-    return '這台裝置上的 $count 筆免費紀錄用完了。\nPro 就是讓這個數字一直準。';
+    return '$count 筆免費紀錄用完了。\nPro 就是讓這個數字一直準。';
   }
 
   @override

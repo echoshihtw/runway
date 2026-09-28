@@ -947,12 +947,12 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String paywallTitleLoanEntry(int count) {
-    return 'ローンは入金を記録するので、記録を1件使います。この端末では$count件を使い切りました。';
+    return 'ローンは入金を記録するので、記録を1件使います。$count件すべてを使い切りました。';
   }
 
   @override
   String paywallTitleEntries(int count) {
-    return 'この端末で無料の記録$count件を使い切りました。\n数字を正しく保つのが Pro です。';
+    return '無料の記録$count件を使い切りました。\n数字を正しく保つのが Pro です。';
   }
 
   @override

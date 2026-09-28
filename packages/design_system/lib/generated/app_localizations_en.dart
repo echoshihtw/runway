@@ -973,12 +973,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String paywallTitleLoanEntry(int count) {
-    return 'A loan records the money arriving, and that is an entry. You\'ve used your $count on this device.';
+    return 'A loan records the money arriving, and that is an entry. You\'ve used all $count.';
   }
 
   @override
   String paywallTitleEntries(int count) {
-    return 'You\'ve used your $count free entries on this device.\nPro is what keeps the number true.';
+    return 'You\'ve used your $count free entries.\nPro is what keeps the number true.';
   }
 
   @override
