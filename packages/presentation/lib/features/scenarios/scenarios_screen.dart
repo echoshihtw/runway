@@ -203,11 +203,16 @@ class ScenariosScreen extends ConsumerWidget {
                   ),
                   // Shown once the first is spent, so the paywall never
                   // arrives unannounced.
-                  if (simulationsRun > 0 && !isProOwner(ref)) ...[
+                  if (simulationsRun > 0 && !watchProOwner(ref)) ...[
                     const SizedBox(height: AppSpacing.xs),
                     Text(
                       l10n.freeSimulationsUsed(
-                        simulationsRun,
+                        // A lapsed owner has run more than the allowance.
+                        // "40 of 3" reads as a bug.
+                        shownAsUsed(
+                          used: simulationsRun,
+                          free: ProductConfig.freeSimulations,
+                        ),
                         ProductConfig.freeSimulations,
                       ),
                       textAlign: TextAlign.center,

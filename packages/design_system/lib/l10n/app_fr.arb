@@ -142,7 +142,7 @@
   "presetGroceries": "COURSES",
   "presetGroceriesNote": "Courses",
   "presetSomethingElse": "AUTRE CHOSE",
-  "freeEntriesUsed": "{used} entrées gratuites sur {free} utilisées",
+  "freeEntriesUsed": "{used} sur {free} entrées gratuites utilisées",
   "@freeEntriesUsed": {
     "placeholders": {
       "used": {
@@ -153,7 +153,7 @@
       }
     }
   },
-  "freeSimulationsUsed": "{used} simulations gratuites sur {free} utilisées",
+  "freeSimulationsUsed": "{used} sur {free} simulations gratuites utilisées",
   "@freeSimulationsUsed": {
     "placeholders": {
       "used": {

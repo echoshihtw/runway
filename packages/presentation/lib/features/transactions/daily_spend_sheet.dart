@@ -1,10 +1,10 @@
-import 'package:application/application.dart';
 import 'package:domain/domain.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../product_config.dart';
+import '../../shared/free_entries_caption.dart';
 import '../../shared/pro_gate.dart';
 import 'show_entry_sheet.dart';
 
@@ -37,10 +37,6 @@ Future<void> showDailySpendSheet(BuildContext context, WidgetRef ref) {
       final l10n = sheetContext.l10n;
 
       final presets = ProductConfig.presets;
-      // Shown once the first is spent: the paywall must never arrive
-      // unannounced, and a count nobody can see reads as arbitrary.
-      final used = ref.read(entryCountProvider).value ?? 0;
-      final showUsage = used > 0 && !isProOwner(ref);
 
       void choose(DailySpendPreset preset) {
         Navigator.of(sheetContext).pop();
@@ -66,13 +62,7 @@ Future<void> showDailySpendSheet(BuildContext context, WidgetRef ref) {
                 l10n.spendOnWhat,
                 style: AppTextStyles.title.copyWith(color: AppColors.neonGreen),
               ),
-              if (showUsage) ...[
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  l10n.freeEntriesUsed(used, ProductConfig.freeEntries),
-                  style: AppTextStyles.caption,
-                ),
-              ],
+              const FreeEntriesCaption(),
               const SizedBox(height: AppSpacing.lg),
               for (var row = 0; row < 2; row++) ...[
                 if (row > 0) const SizedBox(height: AppSpacing.sm),
