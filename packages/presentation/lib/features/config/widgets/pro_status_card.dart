@@ -62,13 +62,9 @@ class ProStatusCard extends ConsumerWidget {
     final entries = ref.watch(entryCountProvider).value;
     final simulations = ref.watch(simulationCountProvider).value;
 
-    // Capped to the allowance, because the counters are not. They are lifetime
-    // totals and nothing stops them at the free limit: the gates live at the
-    // call sites, so a Pro owner's simulation count climbs for as long as they
-    // keep running them. If the entitlement then reads false, for a moment or
-    // for good, the raw number lands here and says "15 of 3 free simulations
-    // used" over an UNLOCK button. Past the limit the overage means nothing
-    // anyway; what the line is for is how much is left.
+    // Capped, because the counters are not: they are lifetime totals and the
+    // gates live at the call sites, so a Pro owner's climbs with every run.
+    // Past the limit the overage says nothing; the line is about what is left.
     final entriesShown = entries == null
         ? null
         : math.min(entries, ProductConfig.freeEntries);
@@ -90,7 +86,7 @@ class ProStatusCard extends ConsumerWidget {
           ),
           style: AppTextStyles.caption,
         ),
-      if (entries != null || simulations != null)
+      if (entriesShown != null || simulationsShown != null)
         const SizedBox(height: AppSpacing.md),
       NeoButton(
         label: l10n.paywallUnlock,
