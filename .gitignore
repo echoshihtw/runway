@@ -78,8 +78,17 @@ _bmad/render/
 .claude/skills/
 .claude/settings.json
 
-# Marketing art is generated and iterated on locally, and a single thumbnail is
-# ~2 MB. The fourteen already committed here stay tracked; this stops new ones
-# being swept in by `git add -A`, which is how 7.9 MB reached a pull request
-# about link previews.
+# Marketing art and the brand shape set are made and iterated on locally, and a
+# single thumbnail is ~2 MB. They were partly tracked and partly ignored, which
+# meant the rule below read as "ignore marketing" while the repo carried 6 MB of
+# it, and any new final dropped in here went missing from `git status` in
+# silence. Both are out of the repo now and live on disk and in the places they
+# were made for: the App Store screenshots regenerate from
+# `integration_test/screenshots_test.dart`, and the gallery is on Devpost.
+#
+# `assets/brand/runway-icon-1024.png` stays tracked and is the one exception. It
+# is declared in `app/pubspec.yaml`, loaded at runtime by `dashboard_screen`, and
+# every launcher icon is generated from it by `make gen-icons`, which fails
+# outright if it is missing.
 assets/marketing/
+assets/brand/shapes/

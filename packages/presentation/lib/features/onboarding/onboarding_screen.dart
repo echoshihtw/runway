@@ -154,10 +154,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
   }
 }
 
-/// The marketing shape language, as paths. `assets/brand/shapes` holds these
-/// as SVG, and there is no SVG renderer in the app; they are polygons, so they
-/// draw like StarMark does. Rotated and cropped rather than centred, which is
-/// what the shapes README asks for.
+/// The marketing shape language, as paths. The SVG set is kept outside the
+/// repo, and there is no SVG renderer in the app anyway; these are polygons, so
+/// they draw like StarMark does. Rotated and cropped rather than centred, which
+/// is what the shape set asks for.
 class _CutPaper extends StatelessWidget {
   const _CutPaper({
     required this.points,
