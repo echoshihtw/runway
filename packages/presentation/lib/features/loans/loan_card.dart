@@ -61,16 +61,23 @@ class LoanCard extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // The name input allows 50 characters. The name is the one
-                // thing here that can be shortened without losing meaning,
-                // so it yields; the source and the REPAY button never do.
+                // The name input allows 50 characters, so the name yields
+                // first. The source yields next: at double text size it is
+                // unbounded text that squeezed the name out entirely, and then
+                // there was nothing left to give (#274). REPAY never yields,
+                // because a truncated button label is worse than a truncated
+                // lender.
                 Flexible(
                   child: Row(
                     children: [
-                      Text(
-                        loan.source,
-                        style: AppTextStyles.label.copyWith(
-                          color: AppColors.textPrimary,
+                      Flexible(
+                        child: Text(
+                          loan.source,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyles.label.copyWith(
+                            color: AppColors.textPrimary,
+                          ),
                         ),
                       ),
                       const SizedBox(width: AppSpacing.sm),
@@ -85,6 +92,9 @@ class LoanCard extends ConsumerWidget {
                     ],
                   ),
                 ),
+                // REPAY never yields. It is kept short in every language
+                // instead, and the bounds suite fails if a translation grows
+                // past what the card can hold (#274).
                 if (!summary.isFullyPaid || isCosting)
                   GestureDetector(
                     onTap: onRepay,
