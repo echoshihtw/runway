@@ -195,8 +195,7 @@ class LiabilitiesPanel extends ConsumerWidget {
   }
 
   void _showRepay(BuildContext context, WidgetRef ref, LoanSummary summary) {
-    // Not loan_entry: that title explains money arriving, and a repayment is
-    // money leaving. An ordinary entry, so the ordinary wall.
+    // A repayment writes an entry, so it meets the entry wall.
     if (!allowsNewEntry(context, ref)) return;
     showModalBottomSheet(
       context: context,

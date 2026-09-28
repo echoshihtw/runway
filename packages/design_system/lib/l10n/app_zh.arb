@@ -356,10 +356,6 @@
   "paywallSomethingWrong": "出了點問題，再試一次吧。",
   "paywallNoPreviousPurchase": "找不到之前的購買紀錄。",
   "paywallRestoreFailed": "恢復沒成功，再試一次吧。",
-  "paywallTitleLoanEntry": "貸款會記錄入帳，那就是一筆紀錄。{count} 筆已經用完了。",
-  "@paywallTitleLoanEntry": {
-    "placeholders": { "count": { "type": "int" } }
-  },
   "paywallTitleEntries": "{count} 筆免費紀錄用完了。\nPro 就是讓這個數字一直準。",
   "paywallTitleSimulations": "{count} 次免費模擬用完了。\nPro 讓你想試幾次就試幾次。",
   "paywallTitleDefault": "解鎖 Runway Pro。",

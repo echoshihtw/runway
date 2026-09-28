@@ -946,11 +946,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get paywallRestoreFailed => '復元に失敗しました。もう一度お試しください。';
 
   @override
-  String paywallTitleLoanEntry(int count) {
-    return 'ローンは入金を記録するので、記録を1件使います。$count件すべてを使い切りました。';
-  }
-
-  @override
   String paywallTitleEntries(int count) {
     return '無料の記録$count件を使い切りました。\n数字を正しく保つのが Pro です。';
   }

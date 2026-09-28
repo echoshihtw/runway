@@ -262,11 +262,11 @@ void main() {
     );
   });
 
-  testWidgets('the loan wall explains why a loan costs an entry', (
+  testWidgets('creating a loan is gated once the free entries are gone', (
     tester,
   ) async {
-    // Tapping Loan and being answered about entries is a non sequitur:
-    // nothing in the app says a loan records the money arriving.
+    // The second of the three doors pro_gate names. The count is stated on
+    // this panel before the tap, so entries is not a non sequitur here.
     await _pump(tester, const [], entriesUsed: ProductConfig.freeEntries);
     final l10n = await AppLocalizations.delegate.load(const Locale('en'));
 
@@ -274,21 +274,17 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.text(l10n.paywallTitleLoanEntry(ProductConfig.freeEntries)),
-      findsOneWidget,
-    );
-    expect(
       find.text(l10n.paywallTitleEntries(ProductConfig.freeEntries)),
-      findsNothing,
+      findsOneWidget,
     );
   });
 
-  testWidgets('repaying is answered as an entry, not as money arriving', (
+  testWidgets('repaying is gated too, because it writes an entry', (
     tester,
   ) async {
-    // loan_entry explains a loan recording money arriving. A repayment is
-    // money leaving, so that title would be telling the owner the opposite of
-    // what they are doing.
+    // The third door. A repayment writes an entry like any other, so it meets
+    // the same wall. It reached the wrong wall once, when it was given the
+    // loan trigger: a repayment is money leaving, not arriving.
     await _pump(
       tester,
       [_loan()],
@@ -306,10 +302,6 @@ void main() {
     expect(
       find.text(l10n.paywallTitleEntries(ProductConfig.freeEntries)),
       findsOneWidget,
-    );
-    expect(
-      find.text(l10n.paywallTitleLoanEntry(ProductConfig.freeEntries)),
-      findsNothing,
     );
   });
 }

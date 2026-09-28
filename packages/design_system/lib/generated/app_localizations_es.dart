@@ -978,11 +978,6 @@ class AppLocalizationsEs extends AppLocalizations {
       'La restauración falló. Inténtalo de nuevo.';
 
   @override
-  String paywallTitleLoanEntry(int count) {
-    return 'Un préstamo registra la llegada del dinero, y eso es un registro. Has usado tus $count.';
-  }
-
-  @override
   String paywallTitleEntries(int count) {
     return 'Has usado tus $count registros gratis.\nPro es lo que mantiene el número verdadero.';
   }

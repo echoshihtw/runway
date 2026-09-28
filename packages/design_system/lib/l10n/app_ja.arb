@@ -356,10 +356,6 @@
   "paywallSomethingWrong": "問題が発生しました。もう一度お試しください。",
   "paywallNoPreviousPurchase": "以前の購入は見つかりませんでした。",
   "paywallRestoreFailed": "復元に失敗しました。もう一度お試しください。",
-  "paywallTitleLoanEntry": "ローンは入金を記録するので、記録を1件使います。{count}件すべてを使い切りました。",
-  "@paywallTitleLoanEntry": {
-    "placeholders": { "count": { "type": "int" } }
-  },
   "paywallTitleEntries": "無料の記録{count}件を使い切りました。\n数字を正しく保つのが Pro です。",
   "paywallTitleSimulations": "無料のシミュレーション{count}回を使い切りました。\nPro なら「もし」を何度でも。",
   "paywallTitleDefault": "Runway Proをアンロック。",

@@ -13,18 +13,12 @@ import '../product_config.dart';
 /// neither is a new entry. Nor does a confirmed subscription charge, which the
 /// listing promises is free for everyone and which transaction_provider keeps
 /// out of the count for the same reason.
-bool allowsNewEntry(
-  BuildContext context,
-  WidgetRef ref, {
-  /// Which wall this is, so the paywall can explain itself. A loan spends an
-  /// entry for a reason the owner has no way to know.
-  String trigger = 'entry_limit',
-}) => _allows(
+bool allowsNewEntry(BuildContext context, WidgetRef ref) => _allows(
   context,
   ref,
   used: ref.read(entryCountProvider).value,
   free: ProductConfig.freeEntries,
-  trigger: trigger,
+  trigger: 'entry_limit',
 );
 
 /// Whether another simulation may run. Same rule, same shape.

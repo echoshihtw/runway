@@ -506,10 +506,6 @@
   "paywallSomethingWrong": "Something went wrong. Please try again.",
   "paywallNoPreviousPurchase": "No previous purchase found.",
   "paywallRestoreFailed": "Restore failed. Please try again.",
-  "paywallTitleLoanEntry": "A loan records the money arriving, and that is an entry. You've used all {count}.",
-  "@paywallTitleLoanEntry": {
-    "placeholders": { "count": { "type": "int" } }
-  },
   "paywallTitleEntries": "You've used your {count} free entries.\nPro is what keeps the number true.",
   "@paywallTitleEntries": {
     "placeholders": {

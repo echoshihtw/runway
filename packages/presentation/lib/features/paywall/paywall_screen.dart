@@ -232,10 +232,6 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
     // The wall names what was used, so it arrives as the end of something
     // rather than out of nowhere.
     'entry_limit' => l10n.paywallTitleEntries(ProductConfig.freeEntries),
-    // A loan spends an entry because it records the money arriving, and
-    // nothing in the app says so. Tapping Loan and being answered about
-    // entries is a non sequitur without this.
-    'loan_entry' => l10n.paywallTitleLoanEntry(ProductConfig.freeEntries),
     'simulation' => l10n.paywallTitleSimulations(ProductConfig.freeSimulations),
     _ => l10n.paywallTitleDefault,
   };
