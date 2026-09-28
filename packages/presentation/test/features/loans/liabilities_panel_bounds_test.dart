@@ -87,6 +87,8 @@ Future<void> _pump(
   WidgetTester tester,
   List<Loan> loans, {
   double textScale = 1.0,
+  Locale? locale,
+  int entriesUsed = 0,
 }) async {
   SharedPreferences.setMockInitialValues({});
   await tester.pumpWidget(
@@ -95,9 +97,12 @@ Future<void> _pump(
         loanRepositoryProvider.overrideWithValue(_Loans(loans.toList())),
         transactionRepositoryProvider.overrideWithValue(_Transactions([])),
         purchaseServiceProvider.overrideWithValue(_FreeTier()),
-        usageCountStoreProvider.overrideWithValue(_EntryCount()),
+        usageCountStoreProvider.overrideWithValue(
+          _EntryCount()..counts[UsageKind.entries.key] = entriesUsed,
+        ),
       ],
       child: MaterialApp(
+        locale: locale,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         builder: (context, child) => MediaQuery(
@@ -181,4 +186,45 @@ void main() {
     expect(find.text('CONFIRM'), findsNothing);
     expect(tester.takeException(), isNull);
   });
+
+  // English fits at 2.0, so an English-only bounds test cannot find this.
+  // Every locale here is wordier than English in at least one of these
+  // strings, and French is the widest (#274).
+  for (final locale in AppLocalizations.supportedLocales) {
+    // 2.0 is the bar this suite has always held, and the one #274 set. 3.0
+    // still overflows in es by 28pt and it by 96pt, from a different
+    // unbounded site; recorded on #274 rather than silently unchecked.
+    for (final scale in [2.0]) {
+      testWidgets(
+        'the expanded card fits 320pt at ${scale}x in ${locale.languageCode}',
+        (tester) async {
+          tester.view.physicalSize = const Size(320, 640);
+          tester.view.devicePixelRatio = 1.0;
+          addTearDown(tester.view.reset);
+
+          // entriesUsed so the free-entries caption is in the tree too. With the
+          // default 0 it renders SizedBox.shrink and is never measured.
+          await _pump(
+            tester,
+            [_loan()],
+            textScale: scale,
+            locale: locale,
+            entriesUsed: 4,
+          );
+          // The title is localised, and the component shouts it. Tapping the
+          // English literal here found nothing in the other five.
+          final l10n = await AppLocalizations.delegate.load(locale);
+          await tester.tap(find.text(l10n.liabilities.toUpperCase()));
+          await tester.pumpAndSettle();
+
+          expect(
+            tester.takeException(),
+            isNull,
+            reason:
+                'the card must degrade, not overflow, in every language we ship',
+          );
+        },
+      );
+    }
+  }
 }

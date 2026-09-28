@@ -61,16 +61,23 @@ class LoanCard extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // The name input allows 50 characters. The name is the one
-                // thing here that can be shortened without losing meaning,
-                // so it yields; the source and the REPAY button never do.
+                // The name input allows 50 characters, so the name yields
+                // first. The source yields next: at double text size it is
+                // unbounded text that squeezed the name out entirely, and then
+                // there was nothing left to give (#274). REPAY never yields,
+                // because a truncated button label is worse than a truncated
+                // lender.
                 Flexible(
                   child: Row(
                     children: [
-                      Text(
-                        loan.source,
-                        style: AppTextStyles.label.copyWith(
-                          color: AppColors.textPrimary,
+                      Flexible(
+                        child: Text(
+                          loan.source,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyles.label.copyWith(
+                            color: AppColors.textPrimary,
+                          ),
                         ),
                       ),
                       const SizedBox(width: AppSpacing.sm),
@@ -86,20 +93,28 @@ class LoanCard extends ConsumerWidget {
                   ),
                 ),
                 if (!summary.isFullyPaid || isCosting)
-                  GestureDetector(
-                    onTap: onRepay,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.sm,
-                        vertical: AppSpacing.xxs,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.gold),
-                      ),
-                      child: Text(
-                        l10n.repay,
-                        style: AppTextStyles.small.copyWith(
-                          color: AppColors.textPrimary,
+                  // Flexible so the label can wrap inside the button. At
+                  // double text size REMBOURSER is wider than the whole card,
+                  // so keeping it on one line is not available: wrapping keeps
+                  // the word and the tap target, ellipsising would keep
+                  // neither.
+                  Flexible(
+                    child: GestureDetector(
+                      onTap: onRepay,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.sm,
+                          vertical: AppSpacing.xxs,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppColors.gold),
+                        ),
+                        child: Text(
+                          l10n.repay,
+                          textAlign: TextAlign.center,
+                          style: AppTextStyles.small.copyWith(
+                            color: AppColors.textPrimary,
+                          ),
                         ),
                       ),
                     ),
