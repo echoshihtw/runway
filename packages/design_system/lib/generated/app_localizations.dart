@@ -1870,10 +1870,16 @@ abstract class AppLocalizations {
   /// **'Restore failed. Please try again.'**
   String get paywallRestoreFailed;
 
+  /// No description provided for @paywallTitleLoanEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'A loan records the money arriving, and that is an entry. You\'ve used your {count} on this device.'**
+  String paywallTitleLoanEntry(int count);
+
   /// No description provided for @paywallTitleEntries.
   ///
   /// In en, this message translates to:
-  /// **'You\'ve used your {count} free entries.\nPro is what keeps the number true.'**
+  /// **'You\'ve used your {count} free entries on this device.\nPro is what keeps the number true.'**
   String paywallTitleEntries(int count);
 
   /// No description provided for @paywallTitleSimulations.

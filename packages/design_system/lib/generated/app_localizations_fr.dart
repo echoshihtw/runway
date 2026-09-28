@@ -979,8 +979,13 @@ class AppLocalizationsFr extends AppLocalizations {
       'La restauration a échoué. Veuillez réessayer.';
 
   @override
+  String paywallTitleLoanEntry(int count) {
+    return 'Un prêt enregistre l\'arrivée de l\'argent, et c\'est une entrée. Vous avez utilisé vos $count sur cet appareil.';
+  }
+
+  @override
   String paywallTitleEntries(int count) {
-    return 'Vous avez utilisé vos $count entrées gratuites.\nPro, c\'est ce qui garde le chiffre juste.';
+    return 'Vous avez utilisé vos $count entrées gratuites sur cet appareil.\nPro, c\'est ce qui garde le chiffre juste.';
   }
 
   @override

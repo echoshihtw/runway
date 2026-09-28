@@ -15,7 +15,7 @@ import '../transactions/widgets/loan_wizard.dart';
 /// What remains gated is the entry itself — a loan writes the money arriving
 /// as an entry, and that counts like any other.
 Future<void> startLoanCreation(BuildContext context, WidgetRef ref) async {
-  if (!allowsNewEntry(context, ref)) return;
+  if (!allowsNewEntry(context, ref, trigger: 'loan_entry')) return;
 
   showModalBottomSheet(
     context: context,

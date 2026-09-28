@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:presentation/features/loans/liabilities_panel.dart';
+import 'package:presentation/product_config.dart';
 import 'package:presentation/features/paywall/paywall_screen.dart';
 import 'package:presentation/features/transactions/widgets/loan_wizard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -94,6 +95,7 @@ Future<void> _pump(
   WidgetTester tester,
   List<Loan> loans, {
   double textScale = 1.0,
+  int entriesUsed = 0,
 }) async {
   SharedPreferences.setMockInitialValues({});
   await tester.pumpWidget(
@@ -102,7 +104,9 @@ Future<void> _pump(
         loanRepositoryProvider.overrideWithValue(_Loans(loans.toList())),
         transactionRepositoryProvider.overrideWithValue(_Transactions([])),
         purchaseServiceProvider.overrideWithValue(_FreeTier()),
-        usageCountStoreProvider.overrideWithValue(_EntryCount()),
+        usageCountStoreProvider.overrideWithValue(
+          _EntryCount()..counts[UsageKind.entries.key] = entriesUsed,
+        ),
       ],
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -233,5 +237,49 @@ void main() {
     expect(find.text('DEBT/MO'), findsOneWidget);
     expect(find.textContaining('300'), findsOneWidget);
     expect(find.text('LOANS'), findsNothing);
+  });
+
+  testWidgets('the wall is announced before it arrives', (tester) async {
+    // daily_spend_sheet already carries the rule: the paywall must never
+    // arrive unannounced, and a count nobody can see reads as arbitrary. It
+    // was written in that one place, so tapping a loan met the wall cold.
+    await _pump(tester, const [], entriesUsed: 4);
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+
+    expect(
+      find.text(l10n.freeEntriesUsed(4, ProductConfig.freeEntries)),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('nothing is said before the first is spent', (tester) async {
+    await _pump(tester, const [], entriesUsed: 0);
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+
+    expect(
+      find.text(l10n.freeEntriesUsed(0, ProductConfig.freeEntries)),
+      findsNothing,
+    );
+  });
+
+  testWidgets('the loan wall explains why a loan costs an entry', (
+    tester,
+  ) async {
+    // Tapping Loan and being answered about entries is a non sequitur:
+    // nothing in the app says a loan records the money arriving.
+    await _pump(tester, const [], entriesUsed: ProductConfig.freeEntries);
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+
+    await tester.tap(find.text('+ LOAN'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text(l10n.paywallTitleLoanEntry(ProductConfig.freeEntries)),
+      findsOneWidget,
+    );
+    expect(
+      find.text(l10n.paywallTitleEntries(ProductConfig.freeEntries)),
+      findsNothing,
+    );
   });
 }

@@ -11,12 +11,18 @@ import '../product_config.dart';
 /// Every door that writes an entry asks this first: the add button, a loan,
 /// a repayment, a confirmed subscription charge. Editing an existing entry
 /// and the opening balance never ask, because neither is a new entry.
-bool allowsNewEntry(BuildContext context, WidgetRef ref) => _allows(
+bool allowsNewEntry(
+  BuildContext context,
+  WidgetRef ref, {
+  /// Which wall this is, so the paywall can explain itself. A loan spends an
+  /// entry for a reason the owner has no way to know.
+  String trigger = 'entry_limit',
+}) => _allows(
   context,
   ref,
   used: ref.read(entryCountProvider).value,
   free: ProductConfig.freeEntries,
-  trigger: 'entry_limit',
+  trigger: trigger,
 );
 
 /// Whether another simulation may run. Same rule, same shape.

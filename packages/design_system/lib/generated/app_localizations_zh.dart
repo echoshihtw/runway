@@ -943,8 +943,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get paywallRestoreFailed => '恢復沒成功，再試一次吧。';
 
   @override
+  String paywallTitleLoanEntry(int count) {
+    return '貸款會記錄入帳，那就是一筆紀錄。這台裝置上的 $count 筆已用完。';
+  }
+
+  @override
   String paywallTitleEntries(int count) {
-    return '$count 筆免費紀錄用完了。\nPro 就是讓這個數字一直準。';
+    return '這台裝置上的 $count 筆免費紀錄用完了。\nPro 就是讓這個數字一直準。';
   }
 
   @override

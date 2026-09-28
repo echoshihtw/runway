@@ -978,8 +978,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get paywallRestoreFailed => 'Ripristino non riuscito. Riprova.';
 
   @override
+  String paywallTitleLoanEntry(int count) {
+    return 'Un prestito registra l\'arrivo del denaro, e questa è una voce. Hai usato le tue $count su questo dispositivo.';
+  }
+
+  @override
   String paywallTitleEntries(int count) {
-    return 'Hai usato le tue $count voci gratuite.\nPro è ciò che tiene vero il numero.';
+    return 'Hai usato le tue $count voci gratuite su questo dispositivo.\nPro è ciò che tiene vero il numero.';
   }
 
   @override

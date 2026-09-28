@@ -356,7 +356,11 @@
   "paywallSomethingWrong": "Algo salió mal. Inténtalo de nuevo.",
   "paywallNoPreviousPurchase": "No se encontró ninguna compra anterior.",
   "paywallRestoreFailed": "La restauración falló. Inténtalo de nuevo.",
-  "paywallTitleEntries": "Has usado tus {count} registros gratis.\nPro es lo que mantiene el número verdadero.",
+  "paywallTitleLoanEntry": "Un préstamo registra la llegada del dinero, y eso es un registro. Has usado tus {count} en este dispositivo.",
+  "@paywallTitleLoanEntry": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "paywallTitleEntries": "Has usado tus {count} registros gratis en este dispositivo.\nPro es lo que mantiene el número verdadero.",
   "paywallTitleSimulations": "Has hecho tus {count} simulaciones gratis.\nPro es como sigues preguntando qué pasaría si.",
   "paywallTitleDefault": "Desbloquea Runway Pro.",
   "paywallFeatureEntries": "Registra todo, y el número no se desvía",

@@ -972,8 +972,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paywallRestoreFailed => 'Restore failed. Please try again.';
 
   @override
+  String paywallTitleLoanEntry(int count) {
+    return 'A loan records the money arriving, and that is an entry. You\'ve used your $count on this device.';
+  }
+
+  @override
   String paywallTitleEntries(int count) {
-    return 'You\'ve used your $count free entries.\nPro is what keeps the number true.';
+    return 'You\'ve used your $count free entries on this device.\nPro is what keeps the number true.';
   }
 
   @override

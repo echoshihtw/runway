@@ -7,6 +7,7 @@ import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
 import '../../shared/add_strip.dart';
 import '../../shared/ledger_glyphs.dart';
+import '../../shared/free_entries_caption.dart';
 import '../../shared/pro_gate.dart';
 import '../../shared/money_field.dart';
 import 'loan_card.dart';
@@ -30,44 +31,52 @@ class LiabilitiesPanel extends ConsumerWidget {
         ? GestureDetector(
             onTap: () => startLoanCreation(context, ref),
             behavior: HitTestBehavior.opaque,
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 34,
-                  height: 34,
-                  decoration: BoxDecoration(
-                    color: SC.accentCost.withAlpha(16),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: SC.accentCost.withAlpha(45)),
-                  ),
-                  // One glyph per concept: loans wear account_balance
-                  // everywhere, card and empty state alike.
-                  child: const Icon(
-                    LedgerGlyphs.lender,
-                    color: SC.accentCost,
-                    size: 18,
-                  ),
+                Row(
+                  children: [
+                    Container(
+                      width: 34,
+                      height: 34,
+                      decoration: BoxDecoration(
+                        color: SC.accentCost.withAlpha(16),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: SC.accentCost.withAlpha(45)),
+                      ),
+                      // One glyph per concept: loans wear account_balance
+                      // everywhere, card and empty state alike.
+                      child: const Icon(
+                        LedgerGlyphs.lender,
+                        color: SC.accentCost,
+                        size: 18,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      flex: 3,
+                      child: Text(
+                        l10n.noActiveLoans,
+                        style: AppTextStyles.bodySmall,
+                      ),
+                    ),
+                    // The label is the only thing here that can be shortened
+                    // without losing meaning, so it takes the smaller share.
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        l10n.newLoan,
+                        textAlign: TextAlign.right,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.label.copyWith(
+                          color: SC.accentCost,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: AppSpacing.sm),
-                Expanded(
-                  flex: 3,
-                  child: Text(
-                    l10n.noActiveLoans,
-                    style: AppTextStyles.bodySmall,
-                  ),
-                ),
-                // The label is the only thing here that can be shortened
-                // without losing meaning, so it takes the smaller share.
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    l10n.newLoan,
-                    textAlign: TextAlign.right,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.label.copyWith(color: SC.accentCost),
-                  ),
-                ),
+                const FreeEntriesCaption(),
               ],
             ),
           )
@@ -116,6 +125,7 @@ class LiabilitiesPanel extends ConsumerWidget {
                 color: SC.accentCost,
                 onTap: () => startLoanCreation(context, ref),
               ),
+              const FreeEntriesCaption(),
             ],
           );
 
@@ -185,7 +195,7 @@ class LiabilitiesPanel extends ConsumerWidget {
   }
 
   void _showRepay(BuildContext context, WidgetRef ref, LoanSummary summary) {
-    if (!allowsNewEntry(context, ref)) return;
+    if (!allowsNewEntry(context, ref, trigger: 'loan_entry')) return;
     showModalBottomSheet(
       context: context,
       useRootNavigator: true,
