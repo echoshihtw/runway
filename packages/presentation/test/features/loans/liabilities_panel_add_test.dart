@@ -282,4 +282,34 @@ void main() {
       findsNothing,
     );
   });
+
+  testWidgets('repaying is answered as an entry, not as money arriving', (
+    tester,
+  ) async {
+    // loan_entry explains a loan recording money arriving. A repayment is
+    // money leaving, so that title would be telling the owner the opposite of
+    // what they are doing.
+    await _pump(
+      tester,
+      [_loan()],
+      entriesUsed: ProductConfig.freeEntries,
+    );
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+
+    // The card is collapsed, and REPAY lives in the details.
+    await tester.tap(find.text('LIABILITIES'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('REPAY').first);
+    await tester.tap(find.text('REPAY').first);
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text(l10n.paywallTitleEntries(ProductConfig.freeEntries)),
+      findsOneWidget,
+    );
+    expect(
+      find.text(l10n.paywallTitleLoanEntry(ProductConfig.freeEntries)),
+      findsNothing,
+    );
+  });
 }

@@ -8,9 +8,11 @@ import '../product_config.dart';
 /// Whether a new entry may be logged. When a free owner has used their
 /// allowance, shows the paywall and returns false.
 ///
-/// Every door that writes an entry asks this first: the add button, a loan,
-/// a repayment, a confirmed subscription charge. Editing an existing entry
-/// and the opening balance never ask, because neither is a new entry.
+/// Three doors ask this: the add button, creating a loan, and repaying one.
+/// Editing an existing entry and the opening balance never ask, because
+/// neither is a new entry. Nor does a confirmed subscription charge, which the
+/// listing promises is free for everyone and which transaction_provider keeps
+/// out of the count for the same reason.
 bool allowsNewEntry(
   BuildContext context,
   WidgetRef ref, {
