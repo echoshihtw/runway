@@ -104,6 +104,7 @@
   "subscriptionChargeFailed": "No se pudo registrar. Comprueba el importe de la suscripción.",
   "subscriptionSaveFailed": "No se pudo guardar la suscripción. No se añadió nada.",
   "loanSaveFailed": "No se pudo guardar el préstamo. No se añadió nada.",
+  "repaymentSaveFailed": "No se pudo registrar el pago. No se añadió nada.",
   "subscriptionPaidNo": "No",
   "subscriptionWhatHappened": "¿Qué pasó?",
   "subscriptionReasonCancelled": "La cancelé",

@@ -222,6 +222,9 @@ class _RepaySheetState extends ConsumerState<_RepaySheet> {
   /// fault the subscription sheet had before #168.
   bool get _valid => (double.tryParse(_amountCtrl.text.trim()) ?? 0) > 0;
 
+  bool _saving = false;
+  String? _error;
+
   @override
   void dispose() {
     _amountCtrl.dispose();
@@ -270,6 +273,13 @@ class _RepaySheetState extends ConsumerState<_RepaySheet> {
               onChanged: (_) => setState(() {}),
             ),
             const SizedBox(height: AppSpacing.lg),
+            if (_error != null) ...[
+              Text(
+                _error!,
+                style: AppTextStyles.caption.copyWith(color: SC.cost),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+            ],
             Row(
               children: [
                 Expanded(
@@ -278,14 +288,17 @@ class _RepaySheetState extends ConsumerState<_RepaySheet> {
                     variant: NeoButtonVariant.primary,
                     color: SC.accentCost,
                     fullWidth: true,
-                    onPressed: !_valid
+                    onPressed: !_valid || _saving
                         ? null
                         : () async {
                             final amount = double.tryParse(
                               _amountCtrl.text.trim(),
                             );
                             if (amount == null || amount <= 0) return;
-                            Navigator.of(context).pop();
+                            setState(() {
+                              _saving = true;
+                              _error = null;
+                            });
                             final now = DateTime.now();
                             final tx = Transaction(
                               id: const Uuid().v4(),
@@ -297,9 +310,23 @@ class _RepaySheetState extends ConsumerState<_RepaySheet> {
                               createdAt: now,
                               updatedAt: now,
                             );
-                            await ref
-                                .read(addTransactionUseCaseProvider)
-                                .execute(tx);
+                            try {
+                              await ref
+                                  .read(addTransactionUseCaseProvider)
+                                  .execute(tx);
+                            } catch (_) {
+                              // The sheet used to pop before the await, so a
+                              // refused write left the owner believing a
+                              // repayment was recorded that never was.
+                              if (!mounted) return;
+                              setState(() {
+                                _saving = false;
+                                _error = l10n.repaymentSaveFailed;
+                              });
+                              return;
+                            }
+                            if (!context.mounted) return;
+                            Navigator.of(context).pop();
                           },
                   ),
                 ),

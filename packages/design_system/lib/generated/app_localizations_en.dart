@@ -270,6 +270,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loanSaveFailed => 'Couldn\'t save that loan. Nothing was added.';
 
   @override
+  String get repaymentSaveFailed =>
+      'Couldn\'t record that repayment. Nothing was added.';
+
+  @override
   String get subscriptionPaidNo => 'No';
 
   @override

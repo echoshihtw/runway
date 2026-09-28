@@ -118,6 +118,7 @@
   "subscriptionChargeFailed": "Couldn't record that. Check the amount on the subscription.",
   "subscriptionSaveFailed": "Couldn't save that subscription. Nothing was added.",
   "loanSaveFailed": "Couldn't save that loan. Nothing was added.",
+  "repaymentSaveFailed": "Couldn't record that repayment. Nothing was added.",
   "subscriptionPaidNo": "No",
   "subscriptionWhatHappened": "What happened?",
   "subscriptionReasonCancelled": "I cancelled it",
