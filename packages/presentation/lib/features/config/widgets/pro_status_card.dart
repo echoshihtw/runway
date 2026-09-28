@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:application/application.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
@@ -60,15 +62,32 @@ class ProStatusCard extends ConsumerWidget {
     final entries = ref.watch(entryCountProvider).value;
     final simulations = ref.watch(simulationCountProvider).value;
 
+    // Capped to the allowance, because the counters are not. They are lifetime
+    // totals and nothing stops them at the free limit: the gates live at the
+    // call sites, so a Pro owner's simulation count climbs for as long as they
+    // keep running them. If the entitlement then reads false, for a moment or
+    // for good, the raw number lands here and says "15 of 3 free simulations
+    // used" over an UNLOCK button. Past the limit the overage means nothing
+    // anyway; what the line is for is how much is left.
+    final entriesShown = entries == null
+        ? null
+        : math.min(entries, ProductConfig.freeEntries);
+    final simulationsShown = simulations == null
+        ? null
+        : math.min(simulations, ProductConfig.freeSimulations);
+
     return [
-      if (entries != null)
+      if (entriesShown != null)
         Text(
-          l10n.freeEntriesUsed(entries, ProductConfig.freeEntries),
+          l10n.freeEntriesUsed(entriesShown, ProductConfig.freeEntries),
           style: AppTextStyles.caption,
         ),
-      if (simulations != null)
+      if (simulationsShown != null)
         Text(
-          l10n.freeSimulationsUsed(simulations, ProductConfig.freeSimulations),
+          l10n.freeSimulationsUsed(
+            simulationsShown,
+            ProductConfig.freeSimulations,
+          ),
           style: AppTextStyles.caption,
         ),
       if (entries != null || simulations != null)

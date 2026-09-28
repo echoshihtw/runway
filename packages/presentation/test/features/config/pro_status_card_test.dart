@@ -143,4 +143,41 @@ void main() {
       findsOneWidget,
     );
   });
+
+  testWidgets('a count past the allowance never reads as more than it', (
+    tester,
+  ) async {
+    // The counters are lifetime totals and the gates live at the call sites,
+    // so a Pro owner's simulation count climbs with every run. When the
+    // entitlement then reads false, briefly or for good, the raw number
+    // reached this card and said "15 of 3 free simulations used" above an
+    // UNLOCK button.
+    await _pump(
+      tester,
+      isPro: false,
+      counts: {UsageKind.entries.key: 42, UsageKind.simulations.key: 15},
+    );
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+
+    expect(find.textContaining('15 of 3'), findsNothing);
+    expect(find.textContaining('42 of 5'), findsNothing);
+    expect(
+      find.text(
+        l10n.freeSimulationsUsed(
+          ProductConfig.freeSimulations,
+          ProductConfig.freeSimulations,
+        ),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.text(
+        l10n.freeEntriesUsed(
+          ProductConfig.freeEntries,
+          ProductConfig.freeEntries,
+        ),
+      ),
+      findsOneWidget,
+    );
+  });
 }
