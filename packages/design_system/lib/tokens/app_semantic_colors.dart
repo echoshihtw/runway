@@ -2,9 +2,11 @@ import 'app_colors.dart';
 
 /// COLOR SYSTEM
 /// MINT   (#8FDDAA) = LIFE / SURVIVAL — runway, cash, stable, charge bar
-/// PINK   (#E8829E) = COST / BURN — outflow, expense, critical, liabilities  
+/// PINK   (#E8829E) = COST / BURN — outflow, expense, critical status
 /// PURPLE            = SUBSCRIPTIONS ONLY
-/// GOLD   (#CB9A3E) = DEBT — loan obligations, the liabilities accent
+/// GOLD   (#CB9A3E) = DEBT — loan obligations, and the liabilities accent.
+///                     Liabilities are gold, not pink: pink is what money
+///                     leaving costs, gold is what is owed.
 /// BLUE              = UI CHROME — borders, accents, structural
 /// WHITE/SMOKE       = ALL OTHER NUMBERS — neutral facts
 abstract final class SC {
