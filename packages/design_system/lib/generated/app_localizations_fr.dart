@@ -345,12 +345,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String freeEntriesUsed(int used, int free) {
-    return '$used entrées gratuites sur $free utilisées';
+    return '$used sur $free entrées gratuites utilisées';
   }
 
   @override
   String freeSimulationsUsed(int used, int free) {
-    return '$used simulations gratuites sur $free utilisées';
+    return '$used sur $free simulations gratuites utilisées';
   }
 
   @override

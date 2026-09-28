@@ -20,15 +20,24 @@ class FreeEntriesCaption extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final used = ref.watch(entryCountProvider).value ?? 0;
-    if (used == 0 || isProOwner(ref)) return const SizedBox.shrink();
+    // Watched, not read: buying Pro from the paywall leaves this screen
+    // mounted, and a const widget is not rebuilt by its parent.
+    if (used == 0 || watchProOwner(ref)) return const SizedBox.shrink();
+    // Full width and start-aligned, so where it is mounted cannot change
+    // where it sits. In a Column that centres its children it was indenting
+    // 64pt and reading as a second line of the button above it.
     return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.xs),
-      child: Text(
-        context.l10n.freeEntriesUsed(
-          shownAsUsed(used: used, free: ProductConfig.freeEntries),
-          ProductConfig.freeEntries,
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+      child: SizedBox(
+        width: double.infinity,
+        child: Text(
+          context.l10n.freeEntriesUsed(
+            shownAsUsed(used: used, free: ProductConfig.freeEntries),
+            ProductConfig.freeEntries,
+          ),
+          textAlign: TextAlign.start,
+          style: AppTextStyles.caption,
         ),
-        style: AppTextStyles.caption,
       ),
     );
   }

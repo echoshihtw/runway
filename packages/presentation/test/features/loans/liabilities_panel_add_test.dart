@@ -180,7 +180,10 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
 
-    await _pump(tester, const [], textScale: 2.0);
+    // entriesUsed so the caption is actually in the tree being measured. With
+    // the default 0 it renders SizedBox.shrink and this guard checked a layout
+    // without it.
+    await _pump(tester, const [], textScale: 2.0, entriesUsed: 4);
 
     expect(
       tester.takeException(),
@@ -285,11 +288,7 @@ void main() {
     // The third door. A repayment writes an entry like any other, so it meets
     // the same wall. It reached the wrong wall once, when it was given the
     // loan trigger: a repayment is money leaving, not arriving.
-    await _pump(
-      tester,
-      [_loan()],
-      entriesUsed: ProductConfig.freeEntries,
-    );
+    await _pump(tester, [_loan()], entriesUsed: ProductConfig.freeEntries);
     final l10n = await AppLocalizations.delegate.load(const Locale('en'));
 
     // The card is collapsed, and REPAY lives in the details.
@@ -302,6 +301,52 @@ void main() {
     expect(
       find.text(l10n.paywallTitleEntries(ProductConfig.freeEntries)),
       findsOneWidget,
+    );
+  });
+
+  testWidgets('the count clears the moment the purchase lands', (tester) async {
+    // The paywall opens as a bottom sheet, so this panel stays mounted behind
+    // it. Reading the entitlement instead of watching it left the count on
+    // screen for someone who had just paid, and a const widget is not rebuilt
+    // by its parent, so only the entry count could ever have refreshed it.
+    SharedPreferences.setMockInitialValues({'is_pro': false});
+    final container = ProviderContainer(
+      overrides: [
+        loanRepositoryProvider.overrideWithValue(_Loans([])),
+        transactionRepositoryProvider.overrideWithValue(_Transactions([])),
+        purchaseServiceProvider.overrideWithValue(_FreeTier()),
+        usageCountStoreProvider.overrideWithValue(
+          _EntryCount()..counts[UsageKind.entries.key] = 4,
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const Scaffold(
+            body: SingleChildScrollView(child: LiabilitiesPanel()),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+    expect(
+      find.text(l10n.freeEntriesUsed(4, ProductConfig.freeEntries)),
+      findsOneWidget,
+    );
+
+    await container.read(entitlementProvider.notifier).unlockPro();
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text(l10n.freeEntriesUsed(4, ProductConfig.freeEntries)),
+      findsNothing,
     );
   });
 }
