@@ -2,7 +2,13 @@ name: app
 description: Runway app entry point
 publish_to: none
 resolution: workspace
-version: 1.0.1+2
+# Neither half of this is the source of truth, and the build number is the
+# half that bites: every supported path passes its own. cd.yml takes the name
+# from the release tag and the number from the commit count (currently in the
+# hundreds), and the Makefile does the same. A number of 1 here would be
+# rejected by App Store Connect as non-increasing if it ever reached an upload,
+# so nothing should upload an archive built without those flags (#99).
+version: 1.0.0+1
 
 environment:
   sdk: "^3.11.5"

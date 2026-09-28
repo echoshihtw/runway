@@ -247,7 +247,12 @@ test-coverage: ## Run tests with coverage report
 
 .PHONY: build-ios
 build-ios: ## Build iOS app (release)
-	cd $(APP_DIR) && $(FVM) build ios --release
+	# Same version flags as build-testflight. Without them this was the one
+	# make target that took its version from pubspec, which is why the value
+	# there kept mattering (#99).
+	cd $(APP_DIR) && $(FVM) build ios --release \
+		$(if $(BUILD_NAME),--build-name $(BUILD_NAME)) \
+		$(if $(BUILD_NUMBER),--build-number $(BUILD_NUMBER))
 	@echo "✓ iOS build complete"
 
 .PHONY: testflight-check
