@@ -33,7 +33,12 @@ class _Transactions implements TransactionRepository {
   /// 1e12 throws from the use case instead, but that path is unreachable
   /// through the field, so it would not prove the sheet handles a throw.
   final bool refuseWrites;
+
+  /// A real write takes a SQLite round trip. Without the delay the route pops
+  /// inside the first tap's microtask and a second tap cannot land.
+  Duration delay = Duration.zero;
   final List<Transaction> items = [];
+  int attempts = 0;
 
   @override
   Stream<List<Transaction>> watchAll() => Stream.value(items);
@@ -43,6 +48,8 @@ class _Transactions implements TransactionRepository {
 
   @override
   Future<void> add(Transaction transaction) async {
+    attempts++;
+    if (delay != Duration.zero) await Future<void>.delayed(delay);
     if (refuseWrites) throw Exception('disk is full');
     items.add(transaction);
   }
@@ -128,7 +135,7 @@ void main() {
   testWidgets('a refused repayment keeps the sheet open and says so', (
     tester,
   ) async {
-    await _pump(tester, refuseWrites: true);
+    final transactions = await _pump(tester, refuseWrites: true);
     final l10n = await AppLocalizations.delegate.load(const Locale('en'));
 
     await _openRepaySheet(tester);
@@ -143,6 +150,11 @@ void main() {
       reason: 'nothing was written, so the sheet must not close as if it was',
     );
     expect(find.text(l10n.repaymentSaveFailed), findsOneWidget);
+    expect(
+      transactions.items,
+      isEmpty,
+      reason: 'the message must not be the only thing that is true',
+    );
   });
 
   testWidgets('a repayment that lands closes the sheet', (tester) async {
@@ -157,5 +169,23 @@ void main() {
     expect(find.text(l10n.repaymentSaveFailed), findsNothing);
     expect(transactions.items, hasLength(1));
     expect(transactions.items.single.type, TransactionType.repayment);
+  });
+
+  testWidgets('two taps in one frame write one repayment', (tester) async {
+    // Disabling the button is not a guard. setState only schedules a rebuild,
+    // so until a frame is produced the old button is still mounted with a live
+    // onPressed, and NeoButton fires on tap-up.
+    final transactions = await _pump(tester, refuseWrites: false);
+    transactions.delay = const Duration(milliseconds: 20);
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+
+    await _openRepaySheet(tester);
+    final confirm = find.text(l10n.confirm.toUpperCase());
+    await tester.tap(confirm);
+    await tester.tap(confirm, warnIfMissed: false);
+    await tester.pumpAndSettle();
+
+    expect(transactions.attempts, 1, reason: 'one tap-up too many is a write');
+    expect(transactions.items, hasLength(1));
   });
 }
