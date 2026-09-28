@@ -296,7 +296,7 @@
   "runwayBasisBudget": "Según tu presupuesto, si los ingresos se detuvieran hoy",
   "runwayBasisSpending": "Según tu gasto, si los ingresos se detuvieran hoy",
   "runwayBasisAssumption": "Según tu supuesto de costes, si los ingresos se detuvieran hoy",
-  "computedCost": "Calculado con tu presupuesto y registro: {amount}",
+  "computedCost": "Se usa en lugar de {amount}, calculado con tu presupuesto y registro",
   "@computedCost": {
     "placeholders": {
       "amount": {

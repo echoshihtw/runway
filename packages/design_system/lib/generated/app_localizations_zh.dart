@@ -766,7 +766,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String computedCost(String amount) {
-    return '照預算和紀錄算出來是：$amount';
+    return '會蓋掉照預算和紀錄算出來的 $amount';
   }
 
   @override

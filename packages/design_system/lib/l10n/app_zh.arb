@@ -296,7 +296,7 @@
   "runwayBasisBudget": "照你的預算算，假設今天起沒收入",
   "runwayBasisSpending": "照你實際花的算，假設今天起沒收入",
   "runwayBasisAssumption": "照你設定的成本算，假設今天起沒收入",
-  "computedCost": "照預算和紀錄算出來是：{amount}",
+  "computedCost": "會蓋掉照預算和紀錄算出來的 {amount}",
   "@computedCost": {
     "placeholders": {
       "amount": {

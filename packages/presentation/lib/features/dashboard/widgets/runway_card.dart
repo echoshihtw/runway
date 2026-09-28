@@ -168,7 +168,7 @@ class RunwayCard extends ConsumerWidget {
                   child: _stat(
                     l10n.owed,
                     '$symbol ${nf.format(owed)}',
-                    SC.accentCost,
+                    SC.accentDebt,
                   ),
                 ),
               ],

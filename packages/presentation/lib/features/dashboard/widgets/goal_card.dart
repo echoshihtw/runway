@@ -26,7 +26,7 @@ class GoalCard extends ConsumerWidget {
       targetMonths: goal.targetMonths,
     );
     final achieved = progress >= 1.0;
-    final color = achieved ? SC.life : SC.accentCost;
+    final color = achieved ? SC.life : SC.accentDebt;
     final monthsLeft = (goal.targetMonths - runway.floor()).clamp(0, 9999);
 
     // A target in months is also a sum of cash, and the card never said how

@@ -127,10 +127,15 @@ Uses `originalTermMonths - elapsed` — not `remainingBalance / monthlyPayment`.
 | `SC.life` / Mint | `#8FDDAA` | Cash, runway, stable status, survival charge |
 | `SC.cost` / Pink | `#E8829E` | Total outflow, burn, critical status |
 | `SC.subscr` / Purple | `#BB6DFF` | Subscriptions ONLY |
-| `SC.chrome` / Gold | `#CB9A3E` | Debt, loan obligations |
-| Amber | `#FFC978` | Caution runway status only |
-| Turkish Blue | `#5B9DC4` | UI structure, neutral |
-| Smoke | `#CDD5E0` | All other numbers — neutral facts |
+| `SC.accentDebt` / Gold | `#CB9A3E` | Debt, loan obligations |
+| `SC.chrome` / Turkish Blue | `#5B9DC4` | UI structure, neutral |
+| `SC.statusCaution` / Amber | `#FFC978` | Caution runway status only |
+| `SC.numberPrimary` / Smoke | `#CDD5E0` | All other numbers — neutral facts |
+
+`SC.cost` is pink and `SC.accentDebt` is gold, so the accent is not the accent
+form of the cost colour. The gold token was called `accentCost`, which read as
+though it were, and this table named `SC.chrome` as the gold one when `chrome`
+has always been blue (#112).
 
 **Rule:** Color = semantic meaning, not decoration. Color a number only when it represents a distinct mental category.
 

@@ -123,7 +123,10 @@ class ScenariosScreen extends ConsumerWidget {
 
             NeoCard(
               title: l10n.simulate,
-              accentColor: AppColors.purple,
+              // Purple is subscriptions only (app_semantic_colors.dart:6).
+              // Planning is not a subscription, so it takes the neutral
+              // accent the timeline already uses (#106).
+              accentColor: SC.accentNeutral,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -304,7 +307,7 @@ class ScenariosScreen extends ConsumerWidget {
               height: 18,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                color: AppColors.purple,
+                color: SC.accentNeutral,
               ),
             ),
             const SizedBox(width: AppSpacing.sm),

@@ -8,7 +8,7 @@ void main() {
   test('caution is amber, so it is not the gold used for debt', () {
     expect(statusColor(RunwayStatus.caution), const Color(0xFFFFC978));
     expect(statusColor(RunwayStatus.caution), isNot(AppColors.gold));
-    expect(statusColor(RunwayStatus.caution), isNot(SC.accentCost));
+    expect(statusColor(RunwayStatus.caution), isNot(SC.accentDebt));
   });
 
   test('stable is mint and critical is pink', () {

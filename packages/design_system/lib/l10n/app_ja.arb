@@ -296,7 +296,7 @@
   "runwayBasisBudget": "予算ベース。今日収入が止まった場合",
   "runwayBasisSpending": "支出実績ベース。今日収入が止まった場合",
   "runwayBasisAssumption": "コスト想定ベース。今日収入が止まった場合",
-  "computedCost": "予算と記録からの計算値: {amount}",
+  "computedCost": "予算と記録から計算した {amount} の代わりに使われます",
   "@computedCost": {
     "placeholders": {
       "amount": {
