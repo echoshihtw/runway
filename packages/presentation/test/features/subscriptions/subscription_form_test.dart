@@ -138,6 +138,22 @@ void main() {
 
     expect(attempts, 1, reason: 'one tap-up too many is a second subscription');
   });
+  testWidgets('a write that throws is reported, not swallowed', (tester) async {
+    await _pump(tester, onSubmit: () async => throw Exception('disk is full'));
+
+    await tester.enterText(find.byType(TextField).first, 'Netflix');
+    await tester.enterText(_amountField, '9.99');
+    await tester.pump();
+    await tester.tap(_confirm());
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining("Couldn't save"), findsOneWidget);
+    expect(
+      tester.widget<NeoButton>(_confirm()).onPressed,
+      isNotNull,
+      reason: 'CONFIRM has to come back, or the sheet is dead',
+    );
+  });
 }
 
 Finder _confirm() =>

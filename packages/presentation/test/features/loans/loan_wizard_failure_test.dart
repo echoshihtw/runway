@@ -94,4 +94,35 @@ void main() {
 
     expect(attempts, 1, reason: 'one tap-up too many is a second loan');
   });
+
+  testWidgets('a write that throws is reported, not swallowed', (tester) async {
+    // The caller catches its own two writes but not the opening-balance lookup
+    // between them. A throw used to strand _saving, and the button reads
+    // !_saving, so CONFIRM went dead with nothing said.
+    await _pump(tester, () async => throw Exception('disk is full'));
+    await _fillAndReachConfirm(tester);
+
+    await tester.ensureVisible(find.text('CONFIRM'));
+    await tester.tap(find.text('CONFIRM'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byType(LoanWizard),
+      findsOneWidget,
+      reason: 'nothing was written',
+    );
+    expect(find.textContaining("Couldn't save"), findsOneWidget);
+    expect(
+      tester
+          .widget<NeoButton>(
+            find.ancestor(
+              of: find.text('CONFIRM'),
+              matching: find.byType(NeoButton),
+            ),
+          )
+          .onPressed,
+      isNotNull,
+      reason: 'CONFIRM has to come back, or the wizard is dead',
+    );
+  });
 }

@@ -103,14 +103,21 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
       _saving = true;
       _error = null;
     });
-    final saved = await widget.onSubmit(
-      name,
-      _category,
-      amount,
-      _cycle,
-      _startDate,
-      _noteCtrl.text.trim().isEmpty ? null : _noteCtrl.text.trim(),
-    );
+    // A throw is a failed write, not a reason to strand _saving: the button
+    // reads !_saving, so a stuck flag leaves CONFIRM dead with nothing said.
+    bool saved;
+    try {
+      saved = await widget.onSubmit(
+        name,
+        _category,
+        amount,
+        _cycle,
+        _startDate,
+        _noteCtrl.text.trim().isEmpty ? null : _noteCtrl.text.trim(),
+      );
+    } catch (_) {
+      saved = false;
+    }
     if (!mounted) return;
     if (saved) {
       Navigator.of(context).pop();
