@@ -32,6 +32,7 @@ class _NeoButtonState extends State<NeoButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _ctrl;
   late Animation<double> _scale;
+  bool _fired = false;
 
   @override
   void initState() {
@@ -107,6 +108,20 @@ class _NeoButtonState extends State<NeoButton>
             ? null
             : (_) {
                 _ctrl.reverse();
+                // onPressed is captured at build time and setState only
+                // schedules a rebuild, so a caller that disables itself is
+                // still live until a frame renders: two tap-ups in one frame
+                // both landed and wrote twice (#277). A frame is 16ms, below
+                // any gap a person meant as two presses.
+                if (_fired) return;
+                _fired = true;
+                // The callback runs only if a frame is produced, so ask for
+                // one: otherwise a callback that changes nothing leaves the
+                // button dead for good.
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  _fired = false;
+                });
+                WidgetsBinding.instance.ensureVisualUpdate();
                 widget.onPressed?.call();
               },
         onTapCancel: () => _ctrl.reverse(),

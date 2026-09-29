@@ -127,14 +127,40 @@ void main() {
   });
 
   testWidgets('two taps on NEXT advance one step', (tester) async {
-    // Same fault as CONFIRM, two lines away: the button's _valid is computed
-    // at build time, so two tap-ups in one frame both land. Skipping the term
-    // page leaves termMo at 0, an open-ended loan nobody chose (#277).
+    // Same fault as CONFIRM, and the same cause: NeoButton fires on tap-up
+    // against an onPressed captured at build time, so two tap-ups in one frame
+    // both land. Skipping the term page leaves termMo at 0, an open-ended
+    // loan nobody chose (#277).
     await _pump(tester, () async => true);
 
     await tester.enterText(find.byType(TextField).at(0), 'Fubon');
     await tester.enterText(find.byType(TextField).at(1), '120000');
     await tester.pump();
+
+    await tester.ensureVisible(find.textContaining('NEXT'));
+    await tester.tap(find.textContaining('NEXT'));
+    await tester.tap(find.textContaining('NEXT'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('2 / 3'), findsOneWidget, reason: 'one tap, one step');
+  });
+
+  testWidgets('two taps on NEXT advance one step after going back', (
+    tester,
+  ) async {
+    // Re-checking validity in _next looked like a fix and was not: coming back
+    // to a step leaves its field filled, so the check passes on the second
+    // tap-up and the wizard jumps 1/3 to 3/3. The press has to be refused for
+    // being a second press, not for landing somewhere invalid.
+    await _pump(tester, () async => true);
+    await _fillAndReachConfirm(tester);
+
+    await tester.ensureVisible(find.text('BACK'));
+    await tester.tap(find.text('BACK'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('BACK'));
+    await tester.pumpAndSettle();
+    expect(find.text('1 / 3'), findsOneWidget, reason: 'back at the start');
 
     await tester.ensureVisible(find.textContaining('NEXT'));
     await tester.tap(find.textContaining('NEXT'));
