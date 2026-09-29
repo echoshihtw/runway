@@ -1,5 +1,6 @@
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// onPressed is captured at build time and setState only schedules a rebuild,
@@ -44,6 +45,28 @@ void main() {
     });
 
     expect(fired, 2, reason: 'the latch has to let go, or the button is dead');
+  });
+
+  // A screen reader activates the Semantics node, not the GestureDetector, so
+  // a latch on the pointer path alone can be walked straight around.
+  testWidgets('two screen reader taps in one frame press once', (tester) async {
+    final handle = tester.ensureSemantics();
+    var fired = 0;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: NeoButton(label: 'GO', onPressed: () => fired++),
+        ),
+      ),
+    );
+
+    final go = find.semantics.byLabel('GO');
+    tester.semantics.performAction(go, SemanticsAction.tap);
+    tester.semantics.performAction(go, SemanticsAction.tap);
+    await tester.pumpAndSettle();
+
+    expect(fired, 1, reason: 'the reader goes through the same one press');
+    handle.dispose();
   });
 
   // A callback that rebuilds nothing is the case that strands the latch.
