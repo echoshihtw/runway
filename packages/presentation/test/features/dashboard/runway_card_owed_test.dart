@@ -89,7 +89,7 @@ void main() {
     // throughout the app and mint is cash's, so the pair reads as two facts.
     await _pump(tester, 12400);
 
-    expect(_colourOf(tester, '12,400'), SC.accentCost);
+    expect(_colourOf(tester, '12,400'), SC.accentDebt);
     expect(_colourOf(tester, '34,336'), SC.numberLife);
   });
 

@@ -772,7 +772,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String computedCost(String amount) {
-    return '予算と記録からの計算値: $amount';
+    return '予算と記録から計算した $amount の代わりに使われます';
   }
 
   @override

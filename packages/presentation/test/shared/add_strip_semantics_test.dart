@@ -13,7 +13,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: AddStrip(label: 'NEW LOAN', color: SC.accentCost, onTap: () {}),
+          body: AddStrip(label: 'NEW LOAN', color: SC.accentDebt, onTap: () {}),
         ),
       ),
     );

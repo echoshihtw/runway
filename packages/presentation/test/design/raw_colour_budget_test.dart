@@ -20,7 +20,7 @@ const budget = <String, int>{
   'features/transactions/widgets/loan_wizard.dart': 33,
   'features/dashboard/widgets/getting_started_card.dart': 21,
   'features/subscriptions/subscription_form.dart': 21,
-  'features/scenarios/scenarios_screen.dart': 16,
+  'features/scenarios/scenarios_screen.dart': 14,
   'features/transactions/transactions_screen.dart': 16,
   'features/loans/loan_card.dart': 14,
   'features/transactions/widgets/transaction_form.dart': 13,

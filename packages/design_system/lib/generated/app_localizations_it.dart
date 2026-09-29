@@ -789,7 +789,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String computedCost(String amount) {
-    return 'Calcolato da budget e registro: $amount';
+    return 'Usato invece di $amount, calcolato da budget e registro';
   }
 
   @override

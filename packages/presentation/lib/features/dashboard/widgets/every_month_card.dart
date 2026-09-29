@@ -74,7 +74,7 @@ class EveryMonthCard extends ConsumerWidget {
 
     return NeoExpandableCard(
       title: l10n.everyMonth,
-      accentColor: inSurplus ? SC.accentLife : SC.accentCost,
+      accentColor: inSurplus ? SC.accentLife : SC.accentDebt,
       summary: Column(
         children: [
           _Row(

@@ -398,7 +398,7 @@
   "runwayBasisBudget": "On your budget, if income paused today",
   "runwayBasisSpending": "On your spending, if income paused today",
   "runwayBasisAssumption": "On your cost assumption, if income paused today",
-  "computedCost": "Computed from your budget and log: {amount}",
+  "computedCost": "Used instead of {amount}, computed from your budget and log",
   "@computedCost": {
     "placeholders": {
       "amount": {

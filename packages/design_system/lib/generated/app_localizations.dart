@@ -1561,7 +1561,7 @@ abstract class AppLocalizations {
   /// No description provided for @computedCost.
   ///
   /// In en, this message translates to:
-  /// **'Computed from your budget and log: {amount}'**
+  /// **'Used instead of {amount}, computed from your budget and log'**
   String computedCost(String amount);
 
   /// No description provided for @runwayNeedsCosts.

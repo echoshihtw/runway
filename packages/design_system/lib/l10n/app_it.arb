@@ -297,7 +297,7 @@
   "runwayBasisBudget": "Sul tuo budget, se il reddito si fermasse oggi",
   "runwayBasisSpending": "Sulle tue spese, se il reddito si fermasse oggi",
   "runwayBasisAssumption": "Sulla tua ipotesi di costi, se il reddito si fermasse oggi",
-  "computedCost": "Calcolato da budget e registro: {amount}",
+  "computedCost": "Usato invece di {amount}, calcolato da budget e registro",
   "@computedCost": {
     "placeholders": {
       "amount": {

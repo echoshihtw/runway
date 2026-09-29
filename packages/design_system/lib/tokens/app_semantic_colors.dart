@@ -2,8 +2,11 @@ import 'app_colors.dart';
 
 /// COLOR SYSTEM
 /// MINT   (#8FDDAA) = LIFE / SURVIVAL — runway, cash, stable, charge bar
-/// PINK   (#E8829E) = COST / BURN — outflow, expense, critical, liabilities  
+/// PINK   (#E8829E) = COST / BURN — outflow, expense, critical status
 /// PURPLE            = SUBSCRIPTIONS ONLY
+/// GOLD   (#CB9A3E) = DEBT — loan obligations, and the liabilities accent.
+///                     Liabilities are gold, not pink: pink is what money
+///                     leaving costs, gold is what is owed.
 /// BLUE              = UI CHROME — borders, accents, structural
 /// WHITE/SMOKE       = ALL OTHER NUMBERS — neutral facts
 abstract final class SC {
@@ -35,7 +38,9 @@ abstract final class SC {
 
   // ── Section accents (thin left bar) ──────────
   static const accentLife         = AppColors.neonGreen;   // metrics, config
-  static const accentCost         = AppColors.gold;        // liabilities — gold
+  /// Gold, and deliberately not the accent form of [cost], which is pink.
+  /// It was accentCost, a name that read as exactly that (#112).
+  static const accentDebt         = AppColors.gold;        // liabilities — gold
   static const accentSubscription = AppColors.purple;      // subscriptions only
   static const accentNeutral      = AppColors.turkishBlue; // timeline, sim
 

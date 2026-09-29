@@ -53,8 +53,8 @@ Brand trio: **Turkish Blue `#5B9DC4`**, **Mint `#8FDDAA`** (`neonGreen`), **Rose
 |---|---|
 | Primary meanings | `life` (mint), `cost` (pink), `subscr` (purple), `chrome` (blue) |
 | Numbers | `numberPrimary/Life/Cost/Subscr` |
-| Status | `statusStable` (mint), `statusCaution` (gold), `statusCritical` (pink) |
-| Section accents | `accentLife`, `accentCost` (gold), `accentSubscription`, `accentNeutral` |
+| Status | `statusStable` (mint), `statusCaution` (amber), `statusCritical` (pink) |
+| Section accents | `accentLife`, `accentDebt` (gold), `accentSubscription`, `accentNeutral` |
 | Transaction icons | `txExpense/Income/Loan/Repayment/OpeningBalance` |
 | Buttons | `btnPrimary`, `btnDestructive`, `btnLoan` |
 | Metrics | `metricCash/Runway/Total/BurnRate/Budget/Debt/Subscr/Safety/RunOut` |

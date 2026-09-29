@@ -175,8 +175,12 @@ void main() {
     addTearDown(container.dispose);
 
     expect(find.textContaining('2,300'), findsOneWidget, reason: 'the assumption');
+    // Anchored on the caption's own phrase. Matching the leading word broke
+    // when the caption was reworded to say the assumption replaces the figure,
+    // and matching the figure alone is not enough: the budget rows show 1,100
+    // too, so it appears four times on this screen.
     expect(
-      find.textContaining('Computed'),
+      find.textContaining('budget and log'),
       findsOneWidget,
       reason: 'and what the budget and log actually come to',
     );
