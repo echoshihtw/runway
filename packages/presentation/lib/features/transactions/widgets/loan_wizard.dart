@@ -86,6 +86,11 @@ class _LoanWizardState extends State<LoanWizard>
   }
 
   void _next() {
+    // Re-checked here, not left to the disabled button: setState only
+    // schedules a rebuild, so two tap-ups in one frame both land and skip a
+    // step. The term page never renders, termMo parses to 0, and the owner
+    // gets an open-ended loan they never chose (#277).
+    if (!_valid) return;
     if (_step >= _totalSteps - 1) return;
     setState(() => _step++);
     if (AppMotion.isReduced(context)) {

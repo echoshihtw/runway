@@ -89,7 +89,7 @@ void main() {
 
     await tester.ensureVisible(find.text('CONFIRM'));
     await tester.tap(find.text('CONFIRM'));
-    await tester.tap(find.text('CONFIRM'), warnIfMissed: false);
+    await tester.tap(find.text('CONFIRM'));
     await tester.pumpAndSettle();
 
     expect(attempts, 1, reason: 'one tap-up too many is a second loan');
@@ -124,5 +124,23 @@ void main() {
       isNotNull,
       reason: 'CONFIRM has to come back, or the wizard is dead',
     );
+  });
+
+  testWidgets('two taps on NEXT advance one step', (tester) async {
+    // Same fault as CONFIRM, two lines away: the button's _valid is computed
+    // at build time, so two tap-ups in one frame both land. Skipping the term
+    // page leaves termMo at 0, an open-ended loan nobody chose (#277).
+    await _pump(tester, () async => true);
+
+    await tester.enterText(find.byType(TextField).at(0), 'Fubon');
+    await tester.enterText(find.byType(TextField).at(1), '120000');
+    await tester.pump();
+
+    await tester.ensureVisible(find.textContaining('NEXT'));
+    await tester.tap(find.textContaining('NEXT'));
+    await tester.tap(find.textContaining('NEXT'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('2 / 3'), findsOneWidget, reason: 'one tap, one step');
   });
 }

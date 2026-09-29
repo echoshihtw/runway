@@ -133,7 +133,7 @@ void main() {
     await tester.enterText(_amountField, '9.99');
     await tester.pump();
     await tester.tap(_confirm());
-    await tester.tap(_confirm(), warnIfMissed: false);
+    await tester.tap(_confirm());
     await tester.pumpAndSettle();
 
     expect(attempts, 1, reason: 'one tap-up too many is a second subscription');
