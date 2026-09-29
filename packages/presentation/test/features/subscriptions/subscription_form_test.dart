@@ -116,9 +116,29 @@ void main() {
       reason: 'the typing has to survive a refusal',
     );
   });
+  testWidgets('two taps on CONFIRM submit once', (tester) async {
+    // Same shape as the loan wizard and the repay sheet: the disabled button is
+    // not a guard, because setState only schedules the rebuild (#277).
+    var attempts = 0;
+    await _pump(
+      tester,
+      onSubmit: () async {
+        attempts++;
+        await Future<void>.delayed(const Duration(milliseconds: 20));
+        return true;
+      },
+    );
+
+    await tester.enterText(find.byType(TextField).first, 'Netflix');
+    await tester.enterText(_amountField, '9.99');
+    await tester.pump();
+    await tester.tap(_confirm());
+    await tester.tap(_confirm(), warnIfMissed: false);
+    await tester.pumpAndSettle();
+
+    expect(attempts, 1, reason: 'one tap-up too many is a second subscription');
+  });
 }
 
-Finder _confirm() => find.ancestor(
-  of: find.text('CONFIRM'),
-  matching: find.byType(NeoButton),
-);
+Finder _confirm() =>
+    find.ancestor(of: find.text('CONFIRM'), matching: find.byType(NeoButton));

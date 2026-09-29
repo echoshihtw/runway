@@ -20,8 +20,7 @@ Future<void> _pump(
       home: Scaffold(
         body: SingleChildScrollView(
           child: LoanWizard(
-            onSubmit: (_, _, _, _, _, _, _) async =>
-                onSubmit(),
+            onSubmit: (_, _, _, _, _, _, _) async => onSubmit(),
           ),
         ),
       ),
@@ -74,5 +73,25 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(LoanWizard), findsNothing);
+  });
+
+  testWidgets('two taps on CONFIRM submit once', (tester) async {
+    // Disabling the button is not a guard: setState only schedules a rebuild,
+    // so until a frame renders it is still live and NeoButton fires on tap-up.
+    // A loan creation is two writes, so a second entry duplicates both (#277).
+    var attempts = 0;
+    await _pump(tester, () async {
+      attempts++;
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      return true;
+    });
+    await _fillAndReachConfirm(tester);
+
+    await tester.ensureVisible(find.text('CONFIRM'));
+    await tester.tap(find.text('CONFIRM'));
+    await tester.tap(find.text('CONFIRM'), warnIfMissed: false);
+    await tester.pumpAndSettle();
+
+    expect(attempts, 1, reason: 'one tap-up too many is a second loan');
   });
 }

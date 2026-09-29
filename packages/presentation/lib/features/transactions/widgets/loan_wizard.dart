@@ -157,6 +157,9 @@ class _LoanWizardState extends State<LoanWizard>
   };
 
   Future<void> _submit() async {
+    // Not the disabled button: setState only schedules a rebuild, so until a
+    // frame renders it is still live and NeoButton fires on tap-up (#277).
+    if (_saving) return;
     final amount = double.tryParse(_amountCtrl.text.trim());
     final payment = double.tryParse(_paymentCtrl.text.trim());
     final termMo = int.tryParse(_monthsCtrl.text.trim()) ?? 0;

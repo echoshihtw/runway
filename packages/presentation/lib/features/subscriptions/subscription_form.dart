@@ -93,6 +93,9 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
   }
 
   Future<void> _submit() async {
+    // Not the disabled button: setState only schedules a rebuild, so until a
+    // frame renders it is still live and NeoButton fires on tap-up (#277).
+    if (_saving) return;
     final name = _nameCtrl.text.trim();
     final amount = double.tryParse(_amountCtrl.text.trim());
     if (name.isEmpty || amount == null || amount <= 0) return;
