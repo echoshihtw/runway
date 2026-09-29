@@ -178,7 +178,6 @@ class _LoanWizardState extends State<LoanWizard>
     // so the wizard closed whether the write landed or not (#133).
     // A throw is a failed write, not a reason to strand _saving: the button
     // reads !_saving, so a stuck flag leaves CONFIRM dead with nothing said.
-    // The caller catches its two writes but not what sits between them.
     bool saved;
     try {
       saved = await widget.onSubmit(

@@ -96,9 +96,8 @@ void main() {
   });
 
   testWidgets('a write that throws is reported, not swallowed', (tester) async {
-    // The caller catches its own two writes but not the opening-balance lookup
-    // between them. A throw used to strand _saving, and the button reads
-    // !_saving, so CONFIRM went dead with nothing said.
+    // A throw used to strand _saving, and the button reads !_saving, so
+    // CONFIRM went dead with nothing said.
     await _pump(tester, () async => throw Exception('disk is full'));
     await _fillAndReachConfirm(tester);
 
