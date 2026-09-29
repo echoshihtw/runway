@@ -157,6 +157,9 @@ class _LoanWizardState extends State<LoanWizard>
   };
 
   Future<void> _submit() async {
+    // Not the disabled button: setState only schedules a rebuild, so until a
+    // frame renders it is still live and NeoButton fires on tap-up (#277).
+    if (_saving) return;
     final amount = double.tryParse(_amountCtrl.text.trim());
     final payment = double.tryParse(_paymentCtrl.text.trim());
     final termMo = int.tryParse(_monthsCtrl.text.trim()) ?? 0;
@@ -173,15 +176,22 @@ class _LoanWizardState extends State<LoanWizard>
     });
     // The pop used to happen here, before the awaits inside onSubmit had run,
     // so the wizard closed whether the write landed or not (#133).
-    final saved = await widget.onSubmit(
-      amount,
-      payment,
-      termMo,
-      _date,
-      _source,
-      _nameCtrl.text.trim(),
-      typed.isEmpty ? null : typed,
-    );
+    // A throw is a failed write, not a reason to strand _saving: the button
+    // reads !_saving, so a stuck flag leaves CONFIRM dead with nothing said.
+    bool saved;
+    try {
+      saved = await widget.onSubmit(
+        amount,
+        payment,
+        termMo,
+        _date,
+        _source,
+        _nameCtrl.text.trim(),
+        typed.isEmpty ? null : typed,
+      );
+    } catch (_) {
+      saved = false;
+    }
     if (!mounted) return;
     if (saved) {
       Navigator.of(context).pop();

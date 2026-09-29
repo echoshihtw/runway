@@ -32,6 +32,7 @@ class _NeoButtonState extends State<NeoButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _ctrl;
   late Animation<double> _scale;
+  bool _fired = false;
 
   @override
   void initState() {
@@ -53,6 +54,25 @@ class _NeoButtonState extends State<NeoButton>
   }
 
   bool get _disabled => widget.onPressed == null;
+
+  /// One press, whichever way it arrives: a pointer tap-up and a screen
+  /// reader's tap both land here, so neither can walk around the other.
+  ///
+  /// onPressed is captured at build time and setState only schedules a
+  /// rebuild, so a caller that disables itself is still live until a frame
+  /// renders: two presses in one frame both landed and wrote twice (#277).
+  /// A frame is 16ms, below any gap a person meant as two presses.
+  void _press() {
+    if (_fired) return;
+    _fired = true;
+    // The callback runs only if a frame is produced, so ask for one:
+    // otherwise a press that changes nothing leaves the button dead for good.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fired = false;
+    });
+    WidgetsBinding.instance.ensureVisualUpdate();
+    widget.onPressed?.call();
+  }
 
   Color get _bgColor => _disabled
       ? AppColors.surfaceHigh
@@ -94,7 +114,7 @@ class _NeoButtonState extends State<NeoButton>
       button: true,
       enabled: !disabled,
       label: widget.label,
-      onTap: widget.onPressed,
+      onTap: disabled ? null : _press,
       excludeSemantics: true,
       child: GestureDetector(
         onTapDown: disabled
@@ -107,7 +127,7 @@ class _NeoButtonState extends State<NeoButton>
             ? null
             : (_) {
                 _ctrl.reverse();
-                widget.onPressed?.call();
+                _press();
               },
         onTapCancel: () => _ctrl.reverse(),
         child: ScaleTransition(

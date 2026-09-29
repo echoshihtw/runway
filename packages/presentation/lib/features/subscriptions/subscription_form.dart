@@ -93,6 +93,9 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
   }
 
   Future<void> _submit() async {
+    // Not the disabled button: setState only schedules a rebuild, so until a
+    // frame renders it is still live and NeoButton fires on tap-up (#277).
+    if (_saving) return;
     final name = _nameCtrl.text.trim();
     final amount = double.tryParse(_amountCtrl.text.trim());
     if (name.isEmpty || amount == null || amount <= 0) return;
@@ -100,14 +103,21 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
       _saving = true;
       _error = null;
     });
-    final saved = await widget.onSubmit(
-      name,
-      _category,
-      amount,
-      _cycle,
-      _startDate,
-      _noteCtrl.text.trim().isEmpty ? null : _noteCtrl.text.trim(),
-    );
+    // A throw is a failed write, not a reason to strand _saving: the button
+    // reads !_saving, so a stuck flag leaves CONFIRM dead with nothing said.
+    bool saved;
+    try {
+      saved = await widget.onSubmit(
+        name,
+        _category,
+        amount,
+        _cycle,
+        _startDate,
+        _noteCtrl.text.trim().isEmpty ? null : _noteCtrl.text.trim(),
+      );
+    } catch (_) {
+      saved = false;
+    }
     if (!mounted) return;
     if (saved) {
       Navigator.of(context).pop();

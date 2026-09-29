@@ -40,24 +40,32 @@ Future<void> startLoanCreation(BuildContext context, WidgetRef ref) async {
           ) async {
             final now = DateTime.now();
             final loanId = const Uuid().v4();
+            // Everything from ref is read before the first await. The sheet
+            // sits on the root navigator, so the widget that opened it can be
+            // disposed mid-write, and a read after that throws with the loan
+            // kept, its money not written, and the rollback unreachable.
+            final addLoan = ref.read(addLoanUseCaseProvider);
+            final addTransaction = ref.read(addTransactionUseCaseProvider);
+            final deleteLoan = ref.read(deleteLoanUseCaseProvider);
+            final openingBalanceDate = latestOpeningBalanceDate(
+              ref.read(transactionsProvider).value ?? const [],
+            );
 
             try {
-              await ref
-                  .read(addLoanUseCaseProvider)
-                  .execute(
-                    Loan(
-                      id: loanId,
-                      name: name,
-                      source: source,
-                      originalAmount: loanAmount,
-                      monthlyPayment: monthlyPayment,
-                      originalTermMonths: termMonths,
-                      startDate: date,
-                      note: note,
-                      createdAt: now,
-                      updatedAt: now,
-                    ),
-                  );
+              await addLoan.execute(
+                Loan(
+                  id: loanId,
+                  name: name,
+                  source: source,
+                  originalAmount: loanAmount,
+                  monthlyPayment: monthlyPayment,
+                  originalTermMonths: termMonths,
+                  startDate: date,
+                  note: note,
+                  createdAt: now,
+                  updatedAt: now,
+                ),
+              );
             } catch (_) {
               return false;
             }
@@ -68,9 +76,6 @@ Future<void> startLoanCreation(BuildContext context, WidgetRef ref) async {
             // long since received and spent, already in the figure the owner
             // typed. Subscriptions have obeyed this rule since charges were
             // first written; loans now use the same one.
-            final openingBalanceDate = latestOpeningBalanceDate(
-              ref.read(transactionsProvider).value ?? const [],
-            );
             if (isAlreadyInOpeningBalance(
               date,
               openingBalanceDate: openingBalanceDate,
@@ -84,26 +89,24 @@ Future<void> startLoanCreation(BuildContext context, WidgetRef ref) async {
             // a payment for money the owner never received (#133). If it fails,
             // the loan is taken back out, because half a loan is worse than none.
             try {
-              await ref
-                  .read(addTransactionUseCaseProvider)
-                  .execute(
-                    Transaction(
-                      id: const Uuid().v4(),
-                      date: date,
-                      type: TransactionType.loan,
-                      amount: Money(loanAmount),
-                      // The log row falls back to the type label when there is
-                      // no note, so a drawdown with nothing typed would read
-                      // only "LOAN". The lender's name tells them apart.
-                      note: note ?? name,
-                      loanId: loanId,
-                      createdAt: now,
-                      updatedAt: now,
-                    ),
-                  );
+              await addTransaction.execute(
+                Transaction(
+                  id: const Uuid().v4(),
+                  date: date,
+                  type: TransactionType.loan,
+                  amount: Money(loanAmount),
+                  // The log row falls back to the type label when there is
+                  // no note, so a drawdown with nothing typed would read
+                  // only "LOAN". The lender's name tells them apart.
+                  note: note ?? name,
+                  loanId: loanId,
+                  createdAt: now,
+                  updatedAt: now,
+                ),
+              );
             } catch (_) {
               try {
-                await ref.read(deleteLoanUseCaseProvider).execute(loanId);
+                await deleteLoan.execute(loanId);
               } catch (_) {
                 // Nothing more to try. Reporting the failure is still right: the
                 // wizard stays open and the owner is not told it worked.
