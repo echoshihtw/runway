@@ -104,6 +104,7 @@
   "subscriptionChargeFailed": "沒記成功，看一下訂閱的金額。",
   "subscriptionSaveFailed": "訂閱沒存成功，還沒加進去。",
   "loanSaveFailed": "貸款沒存成功，還沒加進去。",
+  "repaymentSaveFailed": "還款沒記成功，還沒加進去。",
   "subscriptionPaidNo": "沒有",
   "subscriptionWhatHappened": "怎麼了？",
   "subscriptionReasonCancelled": "我取消了",

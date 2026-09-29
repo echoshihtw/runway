@@ -271,6 +271,10 @@ class AppLocalizationsIt extends AppLocalizations {
       'Non è stato possibile salvare il prestito. Non è stato aggiunto nulla.';
 
   @override
+  String get repaymentSaveFailed =>
+      'Non è stato possibile registrare il rimborso. Non è stato aggiunto nulla.';
+
+  @override
   String get subscriptionPaidNo => 'No';
 
   @override

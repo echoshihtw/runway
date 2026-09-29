@@ -271,6 +271,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Enregistrement du prêt impossible. Rien n\'a été ajouté.';
 
   @override
+  String get repaymentSaveFailed =>
+      'Enregistrement du remboursement impossible. Rien n\'a été ajouté.';
+
+  @override
   String get subscriptionPaidNo => 'Non';
 
   @override

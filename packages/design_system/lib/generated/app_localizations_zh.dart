@@ -266,6 +266,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get loanSaveFailed => '貸款沒存成功，還沒加進去。';
 
   @override
+  String get repaymentSaveFailed => '還款沒記成功，還沒加進去。';
+
+  @override
   String get subscriptionPaidNo => '沒有';
 
   @override

@@ -240,6 +240,54 @@ class _RepaySheetState extends ConsumerState<_RepaySheet> {
   /// fault the subscription sheet had before #168.
   bool get _valid => (double.tryParse(_amountCtrl.text.trim()) ?? 0) > 0;
 
+  bool _saving = false;
+  String? _error;
+
+  /// Records the repayment, and says so when it cannot.
+  ///
+  /// The re-entry guard is the first line and not the disabled button:
+  /// setState only schedules a rebuild, so until a frame is produced the
+  /// button is still live, and two tap-ups delivered in one frame both got
+  /// here. That wrote the repayment twice and closed as though it were once.
+  Future<void> _submit() async {
+    if (_saving) return;
+    final amount = double.tryParse(_amountCtrl.text.trim());
+    if (amount == null || amount <= 0) return;
+    setState(() {
+      _saving = true;
+      _error = null;
+    });
+
+    final l10n = context.l10n;
+    final loan = widget.summary.loan;
+    final now = DateTime.now();
+    final tx = Transaction(
+      id: const Uuid().v4(),
+      date: now,
+      type: TransactionType.repayment,
+      amount: Money(amount),
+      loanId: loan.id,
+      note: '${l10n.repay} — ${loan.name}',
+      createdAt: now,
+      updatedAt: now,
+    );
+
+    try {
+      await ref.read(addTransactionUseCaseProvider).execute(tx);
+    } catch (_) {
+      // The sheet used to pop before the await, so a refused write left the
+      // owner believing a repayment was recorded that never was.
+      if (!mounted) return;
+      setState(() {
+        _saving = false;
+        _error = l10n.repaymentSaveFailed;
+      });
+      return;
+    }
+    if (!mounted) return;
+    Navigator.of(context).pop();
+  }
+
   @override
   void dispose() {
     _amountCtrl.dispose();
@@ -288,6 +336,13 @@ class _RepaySheetState extends ConsumerState<_RepaySheet> {
               onChanged: (_) => setState(() {}),
             ),
             const SizedBox(height: AppSpacing.lg),
+            if (_error != null) ...[
+              Text(
+                _error!,
+                style: AppTextStyles.caption.copyWith(color: SC.cost),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+            ],
             Row(
               children: [
                 Expanded(
@@ -296,29 +351,7 @@ class _RepaySheetState extends ConsumerState<_RepaySheet> {
                     variant: NeoButtonVariant.primary,
                     color: SC.accentCost,
                     fullWidth: true,
-                    onPressed: !_valid
-                        ? null
-                        : () async {
-                            final amount = double.tryParse(
-                              _amountCtrl.text.trim(),
-                            );
-                            if (amount == null || amount <= 0) return;
-                            Navigator.of(context).pop();
-                            final now = DateTime.now();
-                            final tx = Transaction(
-                              id: const Uuid().v4(),
-                              date: now,
-                              type: TransactionType.repayment,
-                              amount: Money(amount),
-                              loanId: summary.loan.id,
-                              note: '${l10n.repay} — ${summary.loan.name}',
-                              createdAt: now,
-                              updatedAt: now,
-                            );
-                            await ref
-                                .read(addTransactionUseCaseProvider)
-                                .execute(tx);
-                          },
+                    onPressed: !_valid || _saving ? null : _submit,
                   ),
                 ),
                 const SizedBox(width: AppSpacing.sm),
