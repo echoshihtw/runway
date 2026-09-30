@@ -2,6 +2,8 @@
 
 One phone. No account, no bank connection.
 
+[**TestFlight**](https://testflight.apple.com/join/FjpzWmat) · [App Store](https://apps.apple.com/app/id6778675088)
+
 ## How long will your money last?
 
 Most money apps tell you where your money went. This one tells you how long it
@@ -27,9 +29,10 @@ Demo data, computed rather than mocked.
 **Know what you can spend today.** Your monthly living budget becomes one useful
 number for today, and what is left after it.
 
-**Speed dial.** Six occasions and an amount. Logging an expense uses up its
-budget rather than adding to your costs, so the runway only moves when you go
-over.
+**A tap and a number.** The app asks what it was for and offers six occasions
+rather than six categories: coffee, lunch, dinner and the rest. Logging an
+expense uses up its budget rather than adding to your costs, so the runway moves
+only when your spending goes past the budget.
 
 **See what one change buys you.** Try a lower monthly cost or extra income
 against the runway you already have, and read the months it adds. It changes no
@@ -47,11 +50,6 @@ Delete all data erases every entry, loan, subscription, budget and setting.
 The Pro purchase survives it, so clearing your data never costs you what you
 paid for.
 
-## Status
-
-Not yet on the App Store. Runway Pro is a one-time purchase, never a
-subscription.
-
 ---
 
 ## What's next
@@ -59,27 +57,3 @@ subscription.
 **Android.** The same number on whatever phone you carry.
 
 ---
-
-## Building it
-
-```
-packages/
-  domain/          Pure Dart. Entities, logic, repository interfaces.
-  data/            Drift + SQLCipher. Repository implementations.
-  application/     Riverpod providers and use cases.
-  design_system/   Tokens, theme, components, localisations.
-  presentation/    Screens and widgets.
-app/               The Flutter app that wires them together.
-```
-
-A Melos workspace. `domain` has no Flutter dependency, which is what keeps the
-runway calculation testable without a widget tree.
-
-```bash
-make setup        # melos bootstrap
-make gen          # Drift and Riverpod codegen
-make gen-l10n     # regenerate localisations from the .arb files
-make analyze      # every package
-make test         # every package
-make run          # on a connected device
-```
