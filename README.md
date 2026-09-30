@@ -47,8 +47,8 @@ currency symbols: JPY, TWD, USD, EUR, GBP, CNY. The symbol is a display choice;
 amounts are never converted.
 
 Delete all data erases every entry, loan, subscription, budget and setting.
-The Pro purchase survives it, so clearing your data never costs you what you
-paid for.
+Runway Pro is one payment and never a subscription, and it survives the erase,
+so clearing your data never costs you what you paid for.
 
 ---
 
