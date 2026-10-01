@@ -81,8 +81,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get newEntry => '+ NOUVEAU';
 
   @override
-  String get noEntries =>
-      'Aucune entrée pour l\'instant\nCommencez par votre solde';
+  String get noEntries => 'Commencez par votre solde';
 
   @override
   String get newLogEntry => 'Nouvelle entrée';

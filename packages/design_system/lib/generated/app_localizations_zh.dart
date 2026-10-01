@@ -80,7 +80,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get newEntry => '+ 新增';
 
   @override
-  String get noEntries => '還沒有任何紀錄\n先輸入你的餘額';
+  String get noEntries => '先輸入你的餘額';
 
   @override
   String get newLogEntry => '新增一筆';

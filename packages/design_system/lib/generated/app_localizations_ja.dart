@@ -80,7 +80,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get newEntry => '+ 新規';
 
   @override
-  String get noEntries => 'まだ記録がありません\nまずは残高を入力';
+  String get noEntries => 'まずは残高を入力';
 
   @override
   String get newLogEntry => '新規エントリー';

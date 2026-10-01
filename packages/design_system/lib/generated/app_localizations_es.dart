@@ -81,7 +81,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get newEntry => '+ NUEVO';
 
   @override
-  String get noEntries => 'Aún no hay registros\nEmpieza por tu saldo';
+  String get noEntries => 'Empieza por tu saldo';
 
   @override
   String get newLogEntry => 'Nueva entrada';

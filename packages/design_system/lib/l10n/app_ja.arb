@@ -23,7 +23,7 @@
   "clear": "クリア",
   "transactionLog": "取引ログ",
   "newEntry": "+ 新規",
-  "noEntries": "まだ記録がありません\nまずは残高を入力",
+  "noEntries": "まずは残高を入力",
   "newLogEntry": "新規エントリー",
   "modifyEntry": "エントリー修正",
   "type": "タイプ",

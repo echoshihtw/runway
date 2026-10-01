@@ -37,7 +37,7 @@
   "clear": "CLEAR",
   "transactionLog": "TRANSACTION LOG",
   "newEntry": "+ NEW",
-  "noEntries": "No entries yet\nStart with your cash balance",
+  "noEntries": "Start with your cash balance",
   "newLogEntry": "New log entry",
   "modifyEntry": "MODIFY ENTRY",
   "type": "TYPE",
