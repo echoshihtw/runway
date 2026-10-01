@@ -27,8 +27,8 @@ DateTime _startOfDay(DateTime d) => DateTime(d.year, d.month, d.day);
 /// plan would drop its unanswered charges. Confirming each charge is the
 /// safeguard instead.
 ///
-/// Every bound is compared by day, because a billing date is a day while
-/// `createdAt` and `startDate` carry a time.
+/// Every date here is compared by day. A billing date is a day, while
+/// `createdAt` and `startDate` also carry a time.
 DateTime _earliestWritableDate(Subscription s, DateTime? openingBalanceDate) {
   final startDate = _startOfDay(s.startDate);
   final createdAt = _startOfDay(s.createdAt);

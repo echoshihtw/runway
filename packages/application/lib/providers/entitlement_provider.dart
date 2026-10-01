@@ -128,7 +128,8 @@ class EntitlementState {
   final bool isPro;
   const EntitlementState({required this.isPro});
 
-  // The gate is needsPro in usage_count_provider, not restated here.
+  // What is free and what is Pro is decided by needsPro, in
+  // usage_count_provider. Do not restate it here.
 }
 
 final entitlementProvider =

@@ -49,8 +49,8 @@ class NeoInput extends StatelessWidget {
           FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
           LengthLimitingTextInputFormatter(maxLength ?? 15),
         ];
-      // No allow-list on the fields that hold words: six of the seven locales
-      // are not ASCII. Nothing downstream needs the restriction.
+      // No allow-list on the fields that hold words: six of the seven
+      // languages are not ASCII, and nothing else needs them restricted.
       case NeoInputType.name:
         return [LengthLimitingTextInputFormatter(maxLength ?? 50)];
       case NeoInputType.note:

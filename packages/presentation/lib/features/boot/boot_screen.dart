@@ -10,7 +10,7 @@ const kFirstLaunchBrandMoment = Duration(milliseconds: 1000);
 
 /// The first screen. It decides where to go and gets out of the way.
 ///
-/// A returning user waits for nothing: the route is one preference read.
+/// A returning user waits for nothing. The route comes from one saved setting.
 class BootScreen extends StatefulWidget {
   const BootScreen({super.key});
 

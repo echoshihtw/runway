@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Wired but unread: nothing calls these yet.
+/// Nothing calls any of these yet.
 abstract class AnalyticsService {
   Future<void> logScreen(String name);
   Future<void> logAddTransaction(String type);
