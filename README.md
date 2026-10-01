@@ -55,4 +55,6 @@ so clearing your data never costs you what you paid for.
 
 ---
 
-Building it: [DEVELOPMENT.md](DEVELOPMENT.md) · Decisions: [CONTRACTS.md](CONTRACTS.md)
+Building it: [DEVELOPMENT.md](DEVELOPMENT.md) · Decisions: [CONTRACTS.md](CONTRACTS.md) · [Licence](LICENSE)
+
+Public so it can be read and checked, not open source. All rights reserved.
