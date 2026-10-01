@@ -1,0 +1,399 @@
+import 'package:application/application.dart';
+import 'package:design_system/design_system.dart';
+import 'package:domain/domain.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:presentation/features/loans/liabilities_panel.dart';
+import 'package:presentation/product_config.dart';
+import 'package:presentation/features/paywall/paywall_screen.dart';
+import 'package:presentation/features/transactions/widgets/loan_wizard.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+/// "NO ACTIVE LOANS" was inert text, and it is seen exactly when someone
+/// does not yet know the feature exists. Creating a loan lived only in the add
+/// menu — a tap and a decision away from the card that owns loans.
+class _Loans implements LoanRepository {
+  _Loans(this.items);
+  final List<Loan> items;
+
+  @override
+  Stream<List<Loan>> watchAll() => Stream.value(items);
+
+  @override
+  Future<List<Loan>> getAll() async => items;
+
+  @override
+  Future<void> add(Loan loan) async => items.add(loan);
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+class _Transactions implements TransactionRepository {
+  _Transactions(this.items);
+  final List<Transaction> items;
+
+  @override
+  Stream<List<Transaction>> watchAll() => Stream.value(items);
+
+  @override
+  Future<List<Transaction>> getAll() async => items;
+
+  @override
+  Future<void> add(Transaction transaction) async => items.add(transaction);
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+/// Free tier: the store says no, and nothing is cached.
+/// The Keychain counter, in memory. Fresh per pump, so every test starts free.
+class _EntryCount implements UsageCountStore {
+  final counts = <String, int>{};
+
+  @override
+  Future<int> read(String key) async => counts[key] ?? 0;
+
+  @override
+  Future<void> write(String key, int count) async => counts[key] = count;
+}
+
+class _FreeTier implements PurchaseService {
+  @override
+  Stream<bool> get proEntitlementUpdates => const Stream<bool>.empty();
+
+  @override
+  Future<bool> checkProEntitlement() async => false;
+
+  @override
+  Future<ProOffering?> fetchOffering() async => null;
+
+  @override
+  Future<bool> purchasePackage(ProPackage package) async => false;
+
+  @override
+  Future<bool> restorePurchases() async => false;
+}
+
+Loan _loan({
+  String id = 'loan-1',
+  String name = 'Bank',
+  double payment = 10000,
+}) => Loan(
+  id: id,
+  name: name,
+  source: 'BANK',
+  originalAmount: 120000,
+  monthlyPayment: payment,
+  startDate: DateTime(2026, 3, 1),
+  createdAt: DateTime(2026, 3, 1),
+  updatedAt: DateTime(2026, 3, 1),
+);
+
+Future<void> _pump(
+  WidgetTester tester,
+  List<Loan> loans, {
+  double textScale = 1.0,
+  int entriesUsed = 0,
+}) async {
+  SharedPreferences.setMockInitialValues({});
+  await tester.pumpWidget(
+    ProviderScope(
+      overrides: [
+        loanRepositoryProvider.overrideWithValue(_Loans(loans.toList())),
+        transactionRepositoryProvider.overrideWithValue(_Transactions([])),
+        purchaseServiceProvider.overrideWithValue(_FreeTier()),
+        usageCountStoreProvider.overrideWithValue(
+          _EntryCount()..counts[UsageKind.entries.key] = entriesUsed,
+        ),
+      ],
+      child: MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(
+            context,
+          ).copyWith(textScaler: TextScaler.linear(textScale)),
+          child: child!,
+        ),
+        home: const Scaffold(
+          body: SingleChildScrollView(child: LiabilitiesPanel()),
+        ),
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+}
+
+void main() {
+  testWidgets('the empty state offers to create one, and opens the wizard', (
+    tester,
+  ) async {
+    await _pump(tester, const []);
+
+    expect(find.text('NO ACTIVE LOANS'), findsOneWidget);
+    expect(find.text('+ LOAN'), findsOneWidget);
+
+    await tester.tap(find.text('+ LOAN'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byType(LoanWizard),
+      findsOneWidget,
+      reason: 'the first loan is free, so nothing should stand in the way',
+    );
+  });
+
+  testWidgets('with a loan listed, the way to add one is still there', (
+    tester,
+  ) async {
+    await _pump(tester, [_loan()]);
+
+    // The card collapses by default. SizeTransition keeps its child in the
+    // tree at zero height, so expanding is what makes the strip reachable.
+    await tester.tap(find.text('LIABILITIES'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('+ LOAN'), findsOneWidget);
+  });
+
+  testWidgets('a second loan is free, so the wizard opens', (tester) async {
+    // The Pro gate is simulations and entries, not loans (#80, decided
+    // 2026-09-16). The one-active-loan limit that used to live here is gone;
+    // a free owner with an active loan reaches the wizard like anyone else.
+    await _pump(tester, [_loan()]);
+    await tester.tap(find.text('LIABILITIES'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('+ LOAN'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(LoanWizard), findsOneWidget);
+    expect(find.byType(PaywallScreen), findsNothing);
+  });
+
+  testWidgets('the empty state fits a narrow screen at double text size', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(320, 640);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    // entriesUsed so the caption is actually in the tree being measured. With
+    // the default 0 it renders SizedBox.shrink and this guard checked a layout
+    // without it.
+    await _pump(tester, const [], textScale: 2.0, entriesUsed: 4);
+
+    expect(
+      tester.takeException(),
+      isNull,
+      reason:
+          'the empty state must lay out on the smallest screen we support '
+          'at the largest text size, not overflow',
+    );
+    expect(find.text('+ LOAN'), findsOneWidget);
+  });
+
+  testWidgets('the add strip is big enough to hit', (tester) async {
+    await _pump(tester, [_loan()]);
+    await tester.tap(find.text('LIABILITIES'));
+    await tester.pumpAndSettle();
+
+    final strip = find
+        .ancestor(
+          of: find.text('+ LOAN'),
+          matching: find.byType(GestureDetector),
+        )
+        .first;
+
+    expect(
+      tester.getSize(strip).height,
+      greaterThanOrEqualTo(44),
+      reason:
+          "Apple's minimum; a control that looks tappable must be "
+          'reachable',
+    );
+  });
+
+  testWidgets('the summary holds money and the header holds the count', (
+    tester,
+  ) async {
+    // The second column read "1 ACTIVE", where ACTIVE can never be false: a
+    // settled loan is never rendered, so everything listed is active by
+    // construction and the word described an invariant rather than the
+    // count. What was left of it belongs with the title, as the
+    // subscriptions panel has it.
+    await _pump(tester, [
+      _loan(id: 'a', name: 'Fubon', payment: 210),
+      _loan(id: 'b', name: 'Study', payment: 90),
+    ]);
+
+    expect(find.textContaining('ACTIVE'), findsNothing);
+    expect(
+      find.text('2'),
+      findsOneWidget,
+      reason: 'the count sits beside the chevron, as a plain number',
+    );
+
+    // And the summary keeps the one figure that is money.
+    expect(find.text('DEBT/MO'), findsOneWidget);
+    expect(find.textContaining('300'), findsOneWidget);
+    expect(find.text('LOANS'), findsNothing);
+  });
+
+  testWidgets('the wall is announced before it arrives', (tester) async {
+    // daily_spend_sheet already carries the rule: the paywall must never
+    // arrive unannounced, and a count nobody can see reads as arbitrary. It
+    // was written in that one place, so tapping a loan met the wall cold.
+    await _pump(tester, const [], entriesUsed: 4);
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+
+    expect(
+      find.text(l10n.freeEntriesUsed(4, ProductConfig.freeEntries)),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('nothing is said before the first is spent', (tester) async {
+    await _pump(tester, const [], entriesUsed: 0);
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+
+    expect(
+      find.text(l10n.freeEntriesUsed(0, ProductConfig.freeEntries)),
+      findsNothing,
+    );
+  });
+
+  testWidgets('creating a loan is gated once the free entries are gone', (
+    tester,
+  ) async {
+    // The second of the three doors pro_gate names. The count is stated on
+    // this panel before the tap, so entries is not a non sequitur here.
+    await _pump(tester, const [], entriesUsed: ProductConfig.freeEntries);
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+
+    await tester.tap(find.text('+ LOAN'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text(l10n.paywallTitleEntries(ProductConfig.freeEntries)),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('repaying is gated too, because it writes an entry', (
+    tester,
+  ) async {
+    // The third door. A repayment writes an entry like any other, so it meets
+    // the same wall. It reached the wrong wall once, when it was given the
+    // loan trigger: a repayment is money leaving, not arriving.
+    await _pump(tester, [_loan()], entriesUsed: ProductConfig.freeEntries);
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+
+    // The card is collapsed, and REPAY lives in the details.
+    await tester.tap(find.text('LIABILITIES'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('REPAY').first);
+    await tester.tap(find.text('REPAY').first);
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text(l10n.paywallTitleEntries(ProductConfig.freeEntries)),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('the count follows the entitlement in both directions', (
+    tester,
+  ) async {
+    // The paywall opens as a bottom sheet, so this panel stays mounted behind
+    // it. Reading the entitlement instead of watching it left the count on
+    // screen for someone who had just paid, and a const widget is not rebuilt
+    // by its parent, so only the entry count could ever have refreshed it.
+    SharedPreferences.setMockInitialValues({'is_pro': false});
+    final container = ProviderContainer(
+      overrides: [
+        loanRepositoryProvider.overrideWithValue(_Loans([])),
+        transactionRepositoryProvider.overrideWithValue(_Transactions([])),
+        purchaseServiceProvider.overrideWithValue(_FreeTier()),
+        usageCountStoreProvider.overrideWithValue(
+          _EntryCount()..counts[UsageKind.entries.key] = 4,
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const Scaffold(
+            body: SingleChildScrollView(child: LiabilitiesPanel()),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+    expect(
+      find.text(l10n.freeEntriesUsed(4, ProductConfig.freeEntries)),
+      findsOneWidget,
+    );
+
+    await container.read(entitlementProvider.notifier).unlockPro();
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text(l10n.freeEntriesUsed(4, ProductConfig.freeEntries)),
+      findsNothing,
+    );
+
+    // The direction that matters more. A lapsed entitlement starts blocking at
+    // once, so without this the wall arrives unannounced, which is the fault
+    // this whole branch exists to prevent.
+    await container.read(entitlementProvider.notifier).revokePro();
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text(l10n.freeEntriesUsed(4, ProductConfig.freeEntries)),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('the count is not part of the door it sits under', (
+    tester,
+  ) async {
+    // Inside the GestureDetector, implicit semantics merged the count into the
+    // control's name: the door announced itself as "NO ACTIVE LOANS + LOAN 4 of
+    // 5 free entries used", and the count's own pixels opened the wizard.
+    // Disposed inline, not in a tearDown: the handle check runs before
+    // tearDowns do.
+    final semantics = tester.ensureSemantics();
+
+    await _pump(tester, const [], entriesUsed: 4);
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+    final label = l10n.freeEntriesUsed(4, ProductConfig.freeEntries);
+    final caption = find.text(label);
+
+    final data = tester.getSemantics(caption).getSemanticsData();
+    expect(
+      data.hasAction(SemanticsAction.tap),
+      isFalse,
+      reason: 'a count is not a control',
+    );
+    expect(data.label, label, reason: 'and it is not part of the name of one');
+
+    await tester.tap(caption);
+    await tester.pumpAndSettle();
+    expect(
+      find.byType(LoanWizard),
+      findsNothing,
+      reason: 'tapping the count must not start a loan',
+    );
+    semantics.dispose();
+  });
+}

@@ -1,0 +1,29 @@
+#!/bin/sh
+# Format the marketing site before it is committed, so the source in the repo
+# is the source prettier would produce and a reformat never shows up as a diff
+# in somebody else's change.
+#
+# Enable in a clone:  git config core.hooksPath .githooks
+# Deliberate bypass:  git commit --no-verify
+#
+# Only site/ is covered. Dart has its own formatter and its own opinions.
+
+staged=$(git diff --cached --name-only --diff-filter=ACM \
+  | grep -E '^site/.*\.(html|css)$' || true)
+
+[ -z "$staged" ] && exit 0
+
+if ! command -v npx >/dev/null 2>&1; then
+  echo "pre-commit: npx not found, skipping the site format." >&2
+  exit 0
+fi
+
+# shellcheck disable=SC2086
+npx --yes prettier@3 --write $staged >/dev/null 2>&1 || {
+  echo "pre-commit: prettier failed; committing the files as they are." >&2
+  exit 0
+}
+
+# shellcheck disable=SC2086
+git add $staged
+exit 0

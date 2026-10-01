@@ -12,6 +12,9 @@
 | `APP_STORE_CONNECT_API_KEY_BASE64` | Base64 encoded .p8 API key file |
 
 ## Android (Play Store)
+
+Not used yet. The Android deploy job in `cd.yml` is turned off until the Google Play release (#56).
+
 | Secret | Description |
 |--------|-------------|
 | `ANDROID_KEYSTORE_BASE64` | Base64 encoded .jks keystore file |
@@ -26,12 +29,10 @@ base64 -i your_file.p12 | pbcopy   # copies to clipboard
 ```
 
 ## Pipeline triggers
-- `push` to `main` or `develop` → runs quality + builds
-- `pull_request` to `main` or `develop` → runs quality only
-- `tag` matching `v*.*.*` → runs full release to stores
+- `pull_request` to `staging` or `main` → runs quality only
+- `push` to `staging` → runs quality + builds, and opens or updates the release PR
+- merge into `main` → quality + builds, then tag and release to stores
 
-## Creating a release tag
-```bash
-git tag v1.0.0
-git push origin v1.0.0
-```
+## Releasing
+Merge the open `chore(release): …` PR from `staging` into `main` with a merge
+commit. To redeploy an existing tag, run the CD workflow from the Actions tab.

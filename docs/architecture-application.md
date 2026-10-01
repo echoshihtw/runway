@@ -75,7 +75,6 @@ Watches transactions, loan payments, subscription cost, budget, and assumptions,
 
 It handles `loading` and `error` states by falling back to a budget-only model rather than an empty one, so the hero number never flickers to zero while the DB stream warms up.
 
-> **Note:** `_computeBurnRate` is duplicated here and in `domain/lib/logic/survival_engine.dart`. The two implementations are currently identical; they can drift.
 
 ### `projectedMonthsProvider`
 

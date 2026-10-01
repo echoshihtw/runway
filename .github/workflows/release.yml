@@ -1,0 +1,92 @@
+name: Release
+
+# guard -> verify -> release -> deploy, on every merge into main.
+#
+# The merge commit is verified on its own terms before being tagged: the pull
+# request tested GitHub's merge preview, and what ships is the commit that lands.
+#
+# semantic-release cuts the tag and GitHub Release. Nothing is committed or
+# pushed to main. It runs with npx, so the repo needs no package.json.
+#
+# deploy calls cd.yml directly. A tag pushed with GITHUB_TOKEN never starts
+# another workflow, so a "push: tags" trigger on cd.yml would never fire here.
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  guard:
+    name: Guard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2 # enough to see HEAD's parents
+
+      # A squash collapses the release into one commit whose message is the PR
+      # title, so semantic-release would never see the feat and fix commits.
+      - name: Refuse a squashed release
+        run: |
+          parents=$(git rev-list --parents -n 1 HEAD | wc -w)
+          if [ "$parents" -lt 3 ]; then
+            echo "::error::main received a non-merge commit. staging -> main must be merged with a MERGE COMMIT, never squashed."
+            exit 1
+          fi
+          echo "OK: merge commit, semantic-release can see the real history."
+
+  verify:
+    needs: guard
+    uses: ./.github/workflows/ci.yml
+    secrets: inherit
+
+  release:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # semantic-release needs full git history
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # pipefail: without an explicit shell, a failure before tee is ignored.
+        run: |
+          set -o pipefail
+          npx --yes semantic-release@25.0.9 | tee release.log
+
+      # Empty when there was nothing to release, which skips deploy. Fails if a
+      # release was published but no tag is visible, so deploy never skips
+      # silently.
+      - name: Read the new tag
+        id: tag
+        run: |
+          tag=$(git tag --points-at HEAD --list 'v*' | head -n 1)
+          if [ -z "$tag" ] && grep -q 'Published release' release.log; then
+            echo "::error::semantic-release published a release, but no tag points at HEAD. Deploy would be skipped."
+            exit 1
+          fi
+          echo "New tag: ${tag:-none}"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+  deploy:
+    needs: release
+    if: needs.release.outputs.tag != ''
+    uses: ./.github/workflows/cd.yml
+    with:
+      tag: ${{ needs.release.outputs.tag }}
+    secrets: inherit

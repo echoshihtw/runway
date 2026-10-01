@@ -5,7 +5,13 @@ import 'package:design_system/design_system.dart';
 import 'package:application/application.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
+import '../../shared/add_strip.dart';
+import '../../shared/ledger_glyphs.dart';
+import '../../shared/free_entries_caption.dart';
+import '../../shared/pro_gate.dart';
+import '../../shared/money_field.dart';
 import 'loan_card.dart';
+import 'start_loan_creation.dart';
 
 class LiabilitiesPanel extends ConsumerWidget {
   const LiabilitiesPanel({super.key});
@@ -19,58 +25,85 @@ class LiabilitiesPanel extends ConsumerWidget {
     final active = ref.watch(activeLoanSummariesProvider);
 
     final summary = active.isEmpty
-        ? Row(
+        // With nothing borrowed the card has no expanded section, so this row
+        // is the only way in. It was inert text, seen exactly when someone
+        // does not yet know loans are tracked here at all.
+        // The caption sits outside the GestureDetector. Inside, implicit
+        // semantics merged it into the control's name, so the door announced
+        // itself as "NO ACTIVE LOANS + LOAN 4 of 5 free entries used", and
+        // tapping the count opened the wizard.
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: 34,
-                height: 34,
-                decoration: BoxDecoration(
-                  color: AppColors.gold.withAlpha(16),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColors.gold.withAlpha(45)),
-                ),
-                child: const Icon(
-                  Icons.account_balance_rounded,
-                  color: AppColors.gold,
-                  size: 18,
+              GestureDetector(
+                onTap: () => startLoanCreation(context, ref),
+                behavior: HitTestBehavior.opaque,
+                child: Row(
+                  children: [
+                    Container(
+                      width: 34,
+                      height: 34,
+                      decoration: BoxDecoration(
+                        color: SC.accentDebt.withAlpha(16),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: SC.accentDebt.withAlpha(45)),
+                      ),
+                      // One glyph per concept: loans wear account_balance
+                      // everywhere, card and empty state alike.
+                      child: const Icon(
+                        LedgerGlyphs.lender,
+                        color: SC.accentDebt,
+                        size: 18,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      flex: 3,
+                      child: Text(
+                        l10n.noActiveLoans,
+                        style: AppTextStyles.bodySmall,
+                      ),
+                    ),
+                    // The label is the only thing here that can be shortened
+                    // without losing meaning, so it takes the smaller share.
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        l10n.newLoan,
+                        textAlign: TextAlign.right,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.label.copyWith(
+                          color: SC.accentDebt,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: Text(l10n.noActiveLoans, style: AppTextStyles.bodySmall),
-              ),
+              const FreeEntriesCaption(),
             ],
           )
+        // One figure, and it is money. The second column held "1 ACTIVE",
+        // where ACTIVE can never be false — a settled loan is never rendered,
+        // so everything listed here is active by construction and the word
+        // described an invariant. What is left of it, the count, is metadata
+        // about the card and now sits with the title, as the subscriptions
+        // panel does.
         : Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
             children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(l10n.loanPerMonth, style: AppTextStyles.label),
-                    const SizedBox(height: AppSpacing.xxs),
-                    Text(
-                      '$symbol ${nf.format(total)}',
-                      style: AppTextStyles.metric.copyWith(
-                        color: AppColors.gold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(l10n.loans, style: AppTextStyles.label),
-                    const SizedBox(height: AppSpacing.xxs),
-                    Text(
-                      l10n.activeCount(active.length),
-                      style: AppTextStyles.metric.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                  ],
+              Text(l10n.loanPerMonth, style: AppTextStyles.label),
+              const SizedBox(width: AppSpacing.sm),
+              Flexible(
+                child: Text(
+                  '$symbol ${nf.format(total)}',
+                  textAlign: TextAlign.right,
+                  style: AppTextStyles.metric.copyWith(color: SC.accentDebt),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -79,37 +112,101 @@ class LiabilitiesPanel extends ConsumerWidget {
     final details = active.isEmpty
         ? null
         : Column(
-            children: active
-                .map(
-                  (s) => Padding(
-                    padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                    child: LoanCard(
-                      summary: s,
-                      onTap: () {},
-                      onRepay: () => _showRepay(context, ref, s),
-                    ),
+            children: [
+              // Above the list, not below the strip. REPAY is a gated door and
+              // it sits at the top, so a count at the bottom of three loans is
+              // off screen exactly when it is needed.
+              const FreeEntriesCaption(),
+              for (var i = 0; i < active.length; i++)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                  child: LoanCard(
+                    summary: active[i],
+                    // The strip below draws the last rule.
+                    showDivider: i < active.length - 1,
+                    onTap: () => _confirmSettled(context, ref, active[i]),
+                    onRepay: () => _showRepay(context, ref, active[i]),
                   ),
-                )
-                .toList(),
+                ),
+              AddStrip(
+                label: l10n.newLoan,
+                color: SC.accentDebt,
+                onTap: () => startLoanCreation(context, ref),
+              ),
+            ],
           );
 
     return NeoExpandableCard(
       title: l10n.liabilities,
-      accentColor: SC.accentCost,
+      accentColor: SC.accentDebt,
       initiallyExpanded: false,
       summary: summary,
       details: details,
+      trailing: active.isEmpty
+          ? null
+          : Text(
+              '${active.length}',
+              style: AppTextStyles.metricSmall.copyWith(color: SC.accentDebt),
+            ),
     );
   }
 
-  void _showRepay(BuildContext context, WidgetRef ref, LoanSummary summary) {
+  /// The only way to say a loan is over.
+  ///
+  /// Nothing else in the app ever sets a loan inactive, so a loan settled
+  /// early sat on this list charging the runway until its term ran out, and a
+  /// loan whose entry lost its id could not be reached by the delete path at
+  /// all. The card's tap did nothing until now.
+  ///
+  /// Settling leaves every entry alone. It is the commitment that ends, not
+  /// the history of what was paid.
+  Future<void> _confirmSettled(
+    BuildContext context,
+    WidgetRef ref,
+    LoanSummary summary,
+  ) async {
     final l10n = context.l10n;
-    final amountCtrl = TextEditingController(
-      text: summary.loan.monthlyPayment.toStringAsFixed(0),
+    final confirmed = await showDialog<bool>(
+      context: context,
+      useRootNavigator: true,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        // A title, at title size. This dialog ends a financial commitment
+        // for good and its heading was set at the 11pt the app uses for row
+        // labels, which is also why it read as shouting: caps at label size
+        // is correct, caps at heading size is not.
+        title: Text(l10n.markSettled, style: AppTextStyles.title),
+        content: Text(l10n.markSettledExplain, style: AppTextStyles.bodySmall),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l10n.abort, style: AppTextStyles.label),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            // The action keeps its caps: a button is a label.
+            child: Text(
+              l10n.markSettled.toUpperCase(),
+              style: AppTextStyles.label.copyWith(color: SC.cost),
+            ),
+          ),
+        ],
+      ),
     );
+    if (confirmed != true) return;
+    await ref
+        .read(editLoanUseCaseProvider)
+        .execute(
+          summary.loan.copyWith(isActive: false, updatedAt: DateTime.now()),
+        );
+  }
 
+  void _showRepay(BuildContext context, WidgetRef ref, LoanSummary summary) {
+    // A repayment writes an entry, so it meets the entry wall.
+    if (!allowsNewEntry(context, ref)) return;
     showModalBottomSheet(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(
@@ -117,13 +214,103 @@ class LiabilitiesPanel extends ConsumerWidget {
           top: Radius.circular(AppSpacing.cardRadius),
         ),
       ),
-      builder: (ctx) => Padding(
-        padding: EdgeInsets.only(
-          left: AppSpacing.lg,
-          right: AppSpacing.lg,
-          top: AppSpacing.lg,
-          bottom: MediaQuery.of(ctx).viewInsets.bottom + AppSpacing.lg,
-        ),
+      builder: (_) => _RepaySheet(summary: summary),
+    );
+  }
+}
+
+/// Owns the amount controller, so it is disposed with the sheet. It used to
+/// be created in [_showRepay] and handed to a StatelessWidget that could not
+/// dispose it: one leaked controller per REPAY (#95).
+class _RepaySheet extends ConsumerStatefulWidget {
+  final LoanSummary summary;
+  const _RepaySheet({required this.summary});
+
+  @override
+  ConsumerState<_RepaySheet> createState() => _RepaySheetState();
+}
+
+class _RepaySheetState extends ConsumerState<_RepaySheet> {
+  late final _amountCtrl = TextEditingController(
+    text: moneyField(widget.summary.loan.monthlyPayment),
+  );
+
+  /// CONFIRM used to be live on an empty field while the handler returned
+  /// early, so tapping it did nothing and the sheet sat there — the same
+  /// fault the subscription sheet had before #168.
+  bool get _valid => (double.tryParse(_amountCtrl.text.trim()) ?? 0) > 0;
+
+  bool _saving = false;
+  String? _error;
+
+  /// Records the repayment, and says so when it cannot.
+  ///
+  /// The re-entry guard is the first line and not the disabled button:
+  /// setState only schedules a rebuild, so until a frame is produced the
+  /// button is still live, and two tap-ups delivered in one frame both got
+  /// here. That wrote the repayment twice and closed as though it were once.
+  Future<void> _submit() async {
+    if (_saving) return;
+    final amount = double.tryParse(_amountCtrl.text.trim());
+    if (amount == null || amount <= 0) return;
+    setState(() {
+      _saving = true;
+      _error = null;
+    });
+
+    final l10n = context.l10n;
+    final loan = widget.summary.loan;
+    final now = DateTime.now();
+    final tx = Transaction(
+      id: const Uuid().v4(),
+      date: now,
+      type: TransactionType.repayment,
+      amount: Money(amount),
+      loanId: loan.id,
+      note: '${l10n.repay} — ${loan.name}',
+      createdAt: now,
+      updatedAt: now,
+    );
+
+    try {
+      await ref.read(addTransactionUseCaseProvider).execute(tx);
+    } catch (_) {
+      // The sheet used to pop before the await, so a refused write left the
+      // owner believing a repayment was recorded that never was.
+      if (!mounted) return;
+      setState(() {
+        _saving = false;
+        _error = l10n.repaymentSaveFailed;
+      });
+      return;
+    }
+    if (!mounted) return;
+    Navigator.of(context).pop();
+  }
+
+  @override
+  void dispose() {
+    _amountCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final summary = widget.summary;
+    return Container(
+      // Capped and scrollable, as the subscription sheet is since #168: the
+      // button row overflowed at 320pt with large text.
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.9,
+      ),
+      padding: EdgeInsets.only(
+        left: AppSpacing.lg,
+        right: AppSpacing.lg,
+        top: AppSpacing.lg,
+        bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.lg,
+      ),
+      child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,36 +327,31 @@ class LiabilitiesPanel extends ConsumerWidget {
             const SizedBox(height: AppSpacing.lg),
             NeoInput(
               label: l10n.repaymentAmount,
-              controller: amountCtrl,
+              controller: _amountCtrl,
+              // Without this the field takes letters, and CONFIRM then parses
+              // null and silently does nothing.
+              inputType: NeoInputType.decimal,
               keyboardType: TextInputType.number,
-              hint: summary.loan.monthlyPayment.toStringAsFixed(0),
+              hint: moneyField(summary.loan.monthlyPayment),
+              onChanged: (_) => setState(() {}),
             ),
             const SizedBox(height: AppSpacing.lg),
+            if (_error != null) ...[
+              Text(
+                _error!,
+                style: AppTextStyles.caption.copyWith(color: SC.cost),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+            ],
             Row(
               children: [
                 Expanded(
                   child: NeoButton(
                     label: l10n.confirm,
                     variant: NeoButtonVariant.primary,
-                    color: AppColors.gold,
+                    color: SC.accentDebt,
                     fullWidth: true,
-                    onPressed: () async {
-                      final amount = double.tryParse(amountCtrl.text.trim());
-                      if (amount == null || amount <= 0) return;
-                      Navigator.of(ctx).pop();
-                      final now = DateTime.now();
-                      final tx = Transaction(
-                        id: const Uuid().v4(),
-                        date: now,
-                        type: TransactionType.repayment,
-                        amount: Money(amount),
-                        loanId: summary.loan.id,
-                        note: '${l10n.repay} — ${summary.loan.name}',
-                        createdAt: now,
-                        updatedAt: now,
-                      );
-                      await ref.read(addTransactionUseCaseProvider).execute(tx);
-                    },
+                    onPressed: !_valid || _saving ? null : _submit,
                   ),
                 ),
                 const SizedBox(width: AppSpacing.sm),
@@ -178,7 +360,7 @@ class LiabilitiesPanel extends ConsumerWidget {
                     label: l10n.cancel,
                     variant: NeoButtonVariant.ghost,
                     fullWidth: true,
-                    onPressed: () => Navigator.of(ctx).pop(),
+                    onPressed: () => Navigator.of(context).pop(),
                   ),
                 ),
               ],

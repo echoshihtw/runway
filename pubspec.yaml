@@ -24,5 +24,11 @@ melos:
       run: melos exec -- flutter analyze
       description: Analyze all packages
     gen:
+      run: melos run gen:build && melos run gen:l10n
+      description: Run all code generation (build_runner, then localizations)
+    gen:build:
       run: melos exec -- dart run build_runner build --delete-conflicting-outputs
-      description: Run code generation
+      description: Run build_runner code generation (Drift, Riverpod)
+    gen:l10n:
+      run: melos exec --scope="design_system" -- flutter gen-l10n
+      description: Generate localizations from the ARB files

@@ -80,7 +80,7 @@ cd app && flutter test integration_test/ -d <DEVICE_ID>
 
 Note `make test` runs **domain only** — it does not cover the data integration tests, the application use-case tests, or the app widget test.
 
-**CONTRACTS §7** requires: every domain logic change ships with a test in `packages/domain/test/`; `MonthlyAggregator`, `SurvivalEngine`, and `LoanEngine` edge cases are always covered; and "all 39+ tests must pass before any commit" (`cd packages/domain && dart test`).
+**CONTRACTS §7** requires: every domain logic change ships with a test in `packages/domain/test/`; the aggregator, runway math and loan edge cases are always covered; and all tests must pass before any commit (`cd packages/domain && dart test`).
 
 ## Quality
 

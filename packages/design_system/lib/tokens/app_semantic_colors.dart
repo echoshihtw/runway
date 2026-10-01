@@ -2,16 +2,28 @@ import 'app_colors.dart';
 
 /// COLOR SYSTEM
 /// MINT   (#8FDDAA) = LIFE / SURVIVAL — runway, cash, stable, charge bar
-/// PINK   (#E8829E) = COST / BURN — outflow, expense, critical, liabilities  
+/// PINK   (#E8829E) = COST / BURN — outflow, expense, critical status
 /// PURPLE            = SUBSCRIPTIONS ONLY
+/// GOLD   (#CB9A3E) = DEBT — loan obligations, and the liabilities accent.
+///                     Liabilities are gold, not pink: pink is what money
+///                     leaving costs, gold is what is owed.
 /// BLUE              = UI CHROME — borders, accents, structural
 /// WHITE/SMOKE       = ALL OTHER NUMBERS — neutral facts
 abstract final class SC {
+  // ── Surfaces ──────────────────────────────────
+  /// The ground the page sits on. Named here so presentation can scrim or
+  /// fade content into it without reaching past the semantic layer.
+  static const pageGround = AppColors.background;
+
   // ── Primary meanings ──────────────────────────
   static const life    = AppColors.neonGreen;   // mint — survival
   static const cost    = AppColors.hotPink;     // pink — burn/outflow
   static const subscr  = AppColors.purple;      // purple — subscriptions only
   static const chrome  = AppColors.turkishBlue; // blue — UI structure
+
+  /// A fact the app cannot state. Never a status colour: an unknown runway
+  /// must not borrow the confidence of one.
+  static const unknown = AppColors.textSecondary;
 
   // ── Numbers ───────────────────────────────────
   static const numberPrimary  = AppColors.textPrimary; // smoke white — neutral facts
@@ -21,20 +33,21 @@ abstract final class SC {
 
   // ── Status ────────────────────────────────────
   static const statusStable   = AppColors.neonGreen;
-  static const statusCaution  = AppColors.gold;
+  static const statusCaution  = AppColors.amber;
   static const statusCritical = AppColors.hotPink;
 
   // ── Section accents (thin left bar) ──────────
   static const accentLife         = AppColors.neonGreen;   // metrics, config
-  static const accentCost         = AppColors.gold;        // liabilities — gold
+  /// Gold, and deliberately not the accent form of [cost], which is pink.
+  /// It was accentCost, a name that read as exactly that (#112).
+  static const accentDebt         = AppColors.gold;        // liabilities — gold
   static const accentSubscription = AppColors.purple;      // subscriptions only
-  static const accentNeutral      = AppColors.turkishBlue; // investable, timeline, sim
+  static const accentNeutral      = AppColors.turkishBlue; // timeline, sim
 
   // ── Transaction icons ─────────────────────────
   static const txExpense        = AppColors.hotPink;
   static const txIncome         = AppColors.neonGreen;
   static const txLoan           = AppColors.turkishBlue;
-  static const txInvestment     = AppColors.purple;
   static const txRepayment      = AppColors.gold;
   static const txOpeningBalance = AppColors.turkishBlue;
 
@@ -51,12 +64,22 @@ abstract final class SC {
   static const metricBudget     = numberCost;     // pink — budget outflow
   static const metricDebt       = AppColors.gold;  // gold — obligation/weight
   static const metricSubscr     = numberSubscr;   // purple — subscriptions
-  static const metricInvestable = numberPrimary;  // white — neutral fact
   static const metricSafety     = numberPrimary;  // white — neutral fact
   static const metricRunOut     = AppColors.textSecondary;
 
   // ── UI ────────────────────────────────────────
   static const labelColor   = AppColors.textSecondary;
-  static const captionColor = AppColors.textDim;
+  static const captionColor = AppColors.textSecondary;
   static const dividerColor = AppColors.cardBorder;
+
+  // ── Surfaces and decoration ───────────────────
+  static const cardSurface = AppColors.surface;
+
+  /// Text that has to outrank the secondary tier. numberPrimary is the same
+  /// value, but it is named for figures and this is prose.
+  static const textStrong  = AppColors.textPrimary;
+  static const iconDim     = AppColors.textDim;
+
+  /// Brand shapes only. Not a category, which is the point of it.
+  static const decor       = AppColors.decorViolet;
 }

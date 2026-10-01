@@ -28,6 +28,15 @@ class NeoInput extends StatelessWidget {
     this.maxLength,
   });
 
+  /// Numbers are set in the mono face, words in the label face, so a typed
+  /// figure matches the ones printed beside it.
+  TextStyle get _fieldStyle => switch (inputType) {
+    NeoInputType.numeric || NeoInputType.decimal => AppTextStyles.metricSmall,
+    NeoInputType.name ||
+    NeoInputType.note ||
+    NeoInputType.text => AppTextStyles.body,
+  };
+
   List<TextInputFormatter> get _formatters {
     switch (inputType) {
       case NeoInputType.numeric:
@@ -40,25 +49,14 @@ class NeoInput extends StatelessWidget {
           FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
           LengthLimitingTextInputFormatter(maxLength ?? 15),
         ];
+      // No allow-list on the fields that hold words: six of the seven
+      // languages are not ASCII, and nothing else needs them restricted.
       case NeoInputType.name:
-        return [
-          FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z0-9\s\-_'\+/]")),
-          LengthLimitingTextInputFormatter(maxLength ?? 50),
-        ];
+        return [LengthLimitingTextInputFormatter(maxLength ?? 50)];
       case NeoInputType.note:
-        return [
-          FilteringTextInputFormatter.allow(
-            RegExp(r'[a-zA-Z0-9\s\.,\-_!?@#%&\(\)\+=/]'),
-          ),
-          LengthLimitingTextInputFormatter(maxLength ?? 200),
-        ];
+        return [LengthLimitingTextInputFormatter(maxLength ?? 200)];
       case NeoInputType.text:
-        return [
-          FilteringTextInputFormatter.allow(
-            RegExp(r'[a-zA-Z0-9\s\.,\-_!?@#%&\(\)\+=/]'),
-          ),
-          LengthLimitingTextInputFormatter(maxLength ?? 100),
-        ];
+        return [LengthLimitingTextInputFormatter(maxLength ?? 100)];
     }
   }
 
@@ -87,10 +85,10 @@ class NeoInput extends StatelessWidget {
           keyboardType: _keyboardType,
           inputFormatters: _formatters,
           onChanged: onChanged,
-          style: AppTextStyles.body,
+          style: _fieldStyle,
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: AppTextStyles.body.copyWith(color: AppColors.textDim),
+            hintStyle: _fieldStyle.copyWith(color: AppColors.textSecondary),
             filled: true,
             fillColor: AppColors.surfaceHigh,
             border: OutlineInputBorder(

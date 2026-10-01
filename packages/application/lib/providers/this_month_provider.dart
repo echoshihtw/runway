@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'clock_provider.dart';
 import 'package:domain/domain.dart';
 import 'transaction_provider.dart';
-import 'subscription_provider.dart';
 
 class ThisMonthFlow {
   final double income;
@@ -15,7 +15,7 @@ class ThisMonthFlow {
 
 final thisMonthFlowProvider = Provider<ThisMonthFlow>((ref) {
   final txs = ref.watch(transactionsProvider).value ?? [];
-  final now = DateTime.now();
+  final now = ref.watch(clockProvider)();
   final thisMonth = txs.where(
     (t) => t.date.year == now.year && t.date.month == now.month,
   );
@@ -26,13 +26,11 @@ final thisMonthFlowProvider = Provider<ThisMonthFlow>((ref) {
       .where(
         (t) =>
             t.type == TransactionType.expense ||
-            t.type == TransactionType.repayment,
+            t.type == TransactionType.repayment ||
+            t.type == TransactionType.subscriptionCharge,
       )
       .fold(0.0, (sum, t) => sum + t.amount.value);
-  final activeSubs =
-      (ref.watch(subscriptionsProvider).value ?? [])
-          .where((s) => s.isActive)
-          .toList();
-  final subCost = totalSubscriptionMonthlyCost(activeSubs);
-  return ThisMonthFlow(income: income, expenses: txExpenses + subCost);
+  // Subscription charges are entries now, so they are already in txExpenses.
+  // Adding the reminder's monthly figure on top counted the same money twice.
+  return ThisMonthFlow(income: income, expenses: txExpenses);
 });
