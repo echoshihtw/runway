@@ -104,9 +104,6 @@ class AppDatabase extends _$AppDatabase {
   );
 }
 
-/// Retrieves or creates a secure encryption key
-/// Stored in iOS Secure Enclave / Android Keystore
-/// Never stored in plain text or SharedPreferences
 /// Thrown when a database exists but the key for it does not.
 ///
 /// The key is stored `first_unlock_this_device`, which a device restore does
@@ -165,7 +162,7 @@ LazyDatabase _openConnection() {
       await applyWorkaroundToOpenSqlCipherOnOldAndroidVersions();
     }
 
-    final dir  = await getApplicationDocumentsDirectory();
+    final dir = await getApplicationDocumentsDirectory();
     final file = File(p.join(dir.path, kDatabaseFileName));
     final dbKey = await getOrCreateDatabaseKey(databaseFile: file);
     if (await isPlaintextSqliteFile(file)) {

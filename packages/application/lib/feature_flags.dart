@@ -1,8 +1,5 @@
-/// Feature flags — toggle features for launch readiness
+/// Build-time switches.
 abstract final class FeatureFlags {
-  /// Scenario simulator
-  static const scenarioSim = true;
-
   /// Local development override for paid features.
   ///
   /// Enable with:

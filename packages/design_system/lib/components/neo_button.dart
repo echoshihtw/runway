@@ -105,11 +105,8 @@ class _NeoButtonState extends State<NeoButton>
   @override
   Widget build(BuildContext context) {
     final disabled = widget.onPressed == null;
-    // Every control in this app was a GestureDetector, which carries no role.
-    // A screen reader announced the label as static text with nothing to say
-    // it could be activated, and a disabled button sounded identical to a
-    // live one. The label is a plain string, so the children can be excluded
-    // and the button says itself once.
+    // A role, so a screen reader calls this a button and says when it is
+    // disabled. The children are excluded so the label is read once, not twice.
     return Semantics(
       button: true,
       enabled: !disabled,
@@ -134,10 +131,8 @@ class _NeoButtonState extends State<NeoButton>
           scale: _scale,
           child: AnimatedOpacity(
             duration: const Duration(milliseconds: 150),
-            // Disabled is a state of its own, not a faded copy of the live one.
-            // At 0.4 a primary fill read as broken rather than as not-yet, which
-            // is why the Plan screen deleted its only button rather than show it
-            // (#108). Colour carries it now, at full opacity.
+            // Never faded. A faded button looks broken rather than
+            // unavailable, so colour shows the state instead.
             opacity: 1.0,
             child: Container(
               width: widget.fullWidth ? double.infinity : null,

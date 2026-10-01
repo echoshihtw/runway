@@ -78,10 +78,6 @@ abstract final class AppColors {
     stops: [0.0, 0.5],
   );
 
-  // ── Legacy aliases ────────────────────────────
-  static const primaryGreen = neonGreen;
-  static const dimGreen = textDim;
-  static const danger = hotPink;
+  // Still used in three places; cardBorder is the name to use.
   static const panelBorder = cardBorder;
-  static const scanline = Color(0x00000000);
 }

@@ -11,8 +11,6 @@ import '../features/scenarios/scenarios_screen.dart';
 import 'nav_metrics.dart';
 import 'page_indicator.dart';
 
-// Global keys for coach mark tour
-
 final appRouter = GoRouter(
   initialLocation: '/boot',
   routes: [

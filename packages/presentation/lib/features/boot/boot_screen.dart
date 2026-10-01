@@ -10,12 +10,7 @@ const kFirstLaunchBrandMoment = Duration(milliseconds: 1000);
 
 /// The first screen. It decides where to go and gets out of the way.
 ///
-/// It used to play seven lines of faux-terminal narration at 400 ms each,
-/// then a cursor, then wait again — 4.3 seconds before reading the one
-/// preference that decided the route (#117). The core loop is "open the app,
-/// read one number", plausibly daily; a fixed delay was the largest friction
-/// in the product and entirely self-inflicted. The narration was also the
-/// drama the tone disowns.
+/// A returning user waits for nothing. The route comes from one saved setting.
 class BootScreen extends StatefulWidget {
   const BootScreen({super.key});
 

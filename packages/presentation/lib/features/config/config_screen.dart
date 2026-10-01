@@ -249,13 +249,9 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                               ),
                             ],
                             const SizedBox(height: AppSpacing.md),
-                            // Wrap, not Row: these buttons are laid out at
-                            // their own width, so at large text sizes they ran
-                            // past the edge of the screen. Wrap puts them on a
-                            // second line instead, and still aligns them right
-                            // when they fit on one. A Flexible would not do —
-                            // it hands each button an equal share of the row,
-                            // so they would sit left of where they belong.
+                            // Wrap, not Row: these buttons size themselves, so
+                            // at large text they overflow. Flexible would
+                            // equalise them and pull them left.
                             Wrap(
                               alignment: WrapAlignment.end,
                               spacing: AppSpacing.sm,
@@ -393,13 +389,6 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                               AppColors.red,
                             ),
                             const SizedBox(height: AppSpacing.md),
-                            // Wrap, not Row: these buttons are laid out at
-                            // their own width, so at large text sizes they ran
-                            // past the edge of the screen. Wrap puts them on a
-                            // second line instead, and still aligns them right
-                            // when they fit on one. A Flexible would not do —
-                            // it hands each button an equal share of the row,
-                            // so they would sit left of where they belong.
                             Wrap(
                               alignment: WrapAlignment.end,
                               spacing: AppSpacing.sm,
@@ -488,13 +477,6 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                               style: AppTextStyles.caption,
                             ),
                             const SizedBox(height: AppSpacing.md),
-                            // Wrap, not Row: these buttons are laid out at
-                            // their own width, so at large text sizes they ran
-                            // past the edge of the screen. Wrap puts them on a
-                            // second line instead, and still aligns them right
-                            // when they fit on one. A Flexible would not do —
-                            // it hands each button an equal share of the row,
-                            // so they would sit left of where they belong.
                             Wrap(
                               alignment: WrapAlignment.end,
                               spacing: AppSpacing.sm,

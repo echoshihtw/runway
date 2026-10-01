@@ -151,16 +151,6 @@ class _TransactionFormState extends State<TransactionForm> {
     if (picked != null) setState(() => _date = picked);
   }
 
-  /// What CONFIRM is enabled by, and the only statement of it.
-  ///
-  /// The amount used to be checked only inside the handler, which returned
-  /// early while the button stayed live: the tap did nothing, the sheet sat
-  /// there, and nothing said why.
-  ///
-  /// The loan branch is defensive rather than reachable. `_loanChoices` always
-  /// offers the loan an existing entry names, even a closed one, and with no
-  /// loans at all `_effectiveOutKind` falls back to living before the type can
-  /// resolve to a repayment. It mirrors the handler so the two cannot drift.
   /// Fills the amount with the rent budget when RENT is chosen, and takes it
   /// back when it is not.
   ///
@@ -181,6 +171,8 @@ class _TransactionFormState extends State<TransactionForm> {
     }
   }
 
+  /// The only place CONFIRM's enabled state is decided. The loan branch never
+  /// runs in practice: with no loans, the type cannot resolve to a repayment.
   bool get _valid {
     final amount = double.tryParse(_amountCtrl.text.trim());
     if (amount == null || amount <= 0) return false;

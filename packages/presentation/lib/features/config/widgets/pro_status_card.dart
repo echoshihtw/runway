@@ -9,18 +9,9 @@ import '../../paywall/paywall_screen.dart';
 
 /// Says whether the owner has Pro, and offers the two ways to get it back.
 ///
-/// Pro was only ever read to hide something: the free-allowance caption is
-/// shown when `!isProOwner`, and the gates call `showPaywall` when the
-/// allowance runs out. Nothing anywhere said "you have Pro", so someone who
-/// had just paid had no way to confirm it landed, which is the state that
-/// makes a person email asking whether they were charged twice.
-///
-/// Reaching the paywall matters more than the badge. `showPaywall` had exactly
-/// one caller, the gate in pro_gate.dart, so it opened only once an allowance
-/// was spent — and Restore purchase lives on it. An owner on a new phone starts
-/// with an empty Keychain and a full allowance, so restoring a purchase they
-/// had already made meant first logging five entries they did not want, to be
-/// offered the button. This card opens the same sheet with nothing spent.
+/// Confirms Pro landed, and carries Restore purchase. Everywhere else the
+/// paywall opens only once an allowance is spent, so an owner on a new phone
+/// would have to log five entries to reach the button.
 class ProStatusCard extends ConsumerWidget {
   const ProStatusCard({super.key});
 

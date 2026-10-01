@@ -7,13 +7,7 @@ import 'package:uuid/uuid.dart';
 
 import 'widgets/transaction_form.dart';
 
-/// The one way to open the entry form.
-///
-/// This existed in three near-identical copies — `_showForm` and
-/// `_showFormWithType` in `transactions_screen`, and `_showForm` in
-/// `app_router` — each carrying its own copy of the loan-choice logic, and
-/// those two copies had already drifted apart in how they recover the loan an
-/// existing repayment names. The preset grid would have been a fourth.
+/// The one way to open the entry form, so the loan-choice logic has one home.
 Future<void> showEntrySheet(
   BuildContext context,
   WidgetRef ref, {
