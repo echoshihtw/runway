@@ -8,14 +8,21 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   const empty = BudgetBucket(budget: 0, spentThisMonth: 0, typicalSpending: 0);
 
-  test('an empty ledger has no run out month', () {
+  /// A budget is set, so hasCostBasis is true and only the missing balance can
+  /// withhold the runway. Without it the first clause does the work and this
+  /// says nothing about cashIsStated.
+  test('a budget without a stated balance has no run out month', () {
     final model = computeModel(
       currentCash: 0,
       burn: MonthlyBurn(
         month: LedgerMonth(DateTime(2026, 10, 1)),
         fractionOfMonthLeft: 1,
         rent: empty,
-        living: empty,
+        living: const BudgetBucket(
+          budget: 50000,
+          spentThisMonth: 0,
+          typicalSpending: 0,
+        ),
         subscriptions: 0,
         loanPayments: 0,
         loanPaymentsLeftThisMonth: 0,

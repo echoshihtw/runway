@@ -5,9 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:presentation/features/dashboard/widgets/runway_card.dart';
 
-/// Entering a balance must not push everything below the card down the screen.
-/// The run out line stays mounted with an empty string until there is a date,
-/// which holds its line of height at any text size.
+/// The run out line holds its height before there is a month to name, so
+/// entering a balance does not add a line to the card. The status badge still
+/// mounts on the same transition, so the card does grow, by that much and no
+/// more.
 ModelState _model({required bool stated}) => ModelState(
   currentCash: stated ? 600000 : 0,
   burnRate: 50000,
