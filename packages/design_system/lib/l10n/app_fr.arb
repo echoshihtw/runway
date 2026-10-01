@@ -23,7 +23,7 @@
   "clear": "EFFACER",
   "transactionLog": "JOURNAL DES TRANSACTIONS",
   "newEntry": "+ NOUVEAU",
-  "noEntries": "No entries yet\nTap + ADD to log your first entry",
+  "noEntries": "Aucune entrée pour l'instant\nCommencez par votre solde",
   "newLogEntry": "Nouvelle entrée",
   "modifyEntry": "MODIFIER L'ENTRÉE",
   "type": "TYPE",

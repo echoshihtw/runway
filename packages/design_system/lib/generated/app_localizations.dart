@@ -247,7 +247,7 @@ abstract class AppLocalizations {
   /// No description provided for @noEntries.
   ///
   /// In en, this message translates to:
-  /// **'No entries yet\nTap + ADD to log your first entry'**
+  /// **'No entries yet\nStart with your cash balance'**
   String get noEntries;
 
   /// No description provided for @newLogEntry.
