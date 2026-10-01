@@ -80,9 +80,11 @@ void main() {
       lessThan(1),
       reason: 'the two read as one line, so their centres line up',
     );
+    // Against the content edge, not against the month: any left-to-right order
+    // satisfies that, so spaceBetween could become start and go unnoticed.
     expect(
       total.right,
-      greaterThan(month.right),
+      closeTo(390 - AppSpacing.lg, 1),
       reason: 'the total stays pushed to the far side',
     );
   });
