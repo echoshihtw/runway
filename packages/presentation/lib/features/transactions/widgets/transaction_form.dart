@@ -171,9 +171,8 @@ class _TransactionFormState extends State<TransactionForm> {
     }
   }
 
-  /// What CONFIRM is enabled by, and the only statement of it. The loan branch
-  /// is defensive: with no loans, `_effectiveOutKind` falls back to living
-  /// before the type can resolve to a repayment.
+  /// The only place CONFIRM's enabled state is decided. The loan branch never
+  /// runs in practice: with no loans, the type cannot resolve to a repayment.
   bool get _valid {
     final amount = double.tryParse(_amountCtrl.text.trim());
     if (amount == null || amount <= 0) return false;

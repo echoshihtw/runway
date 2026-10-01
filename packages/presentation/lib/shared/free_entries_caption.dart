@@ -8,8 +8,8 @@ import 'pro_gate.dart';
 
 /// How much of the free allowance is gone, wherever spending one is a tap away.
 ///
-/// The paywall must never arrive unannounced, so every door that can spend one
-/// shows the count.
+/// The paywall must never arrive unannounced, so every screen that can use up
+/// a free entry shows how many are left.
 ///
 /// Nothing is shown before the first is spent, or to an owner with Pro.
 class FreeEntriesCaption extends ConsumerWidget {
