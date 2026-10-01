@@ -50,8 +50,12 @@ class _Subscriptions implements SubscriptionRepository {
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
+/// A real clock would make this test pass or fail depending on the date.
+final _now = DateTime(2026, 6, 15);
+
 Transaction _tx(String id, TransactionType type, double amount) {
-  final date = DateTime.now().subtract(const Duration(days: 40));
+  // Day 1 exists in every month. The 29th to 31st would not.
+  final date = DateTime(_now.year, _now.month - 1, 1);
   return Transaction(
     id: id,
     date: date,
@@ -82,6 +86,7 @@ void main() {
         loanRepositoryProvider.overrideWithValue(_Loans()),
         subscriptionRepositoryProvider.overrideWithValue(_Subscriptions()),
         usageCountStoreProvider.overrideWithValue(_MemoryStore()),
+        clockProvider.overrideWithValue(() => _now),
       ],
     );
     addTearDown(container.dispose);
