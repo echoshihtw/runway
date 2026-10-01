@@ -323,9 +323,9 @@ class _MonthSectionHeader extends StatelessWidget {
           bottom: BorderSide(color: AppColors.cardBorder, width: 1),
         ),
       ),
-      // Wrap, not Row. At 2x text on a 320pt screen the month needs 202pt and
-      // the total up to 303pt of a 288pt line, so they cannot share one. The
-      // total moves below instead of being clipped.
+      // Wrap, not Row. At large text on a narrow screen the month and the total
+      // cannot share a line, so the total moves below instead of being clipped.
+      // It lands left there: a lone child in a run start-aligns.
       child: Wrap(
         alignment: WrapAlignment.spaceBetween,
         crossAxisAlignment: WrapCrossAlignment.center,
