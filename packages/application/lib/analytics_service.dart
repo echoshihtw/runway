@@ -1,8 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Analytics service — behavior tracking only
-/// Injected as a provider so presentation layer can call it
-/// without depending on firebase directly
+/// Wired but unread: nothing calls these yet.
 abstract class AnalyticsService {
   Future<void> logScreen(String name);
   Future<void> logAddTransaction(String type);
@@ -18,7 +16,7 @@ abstract class AnalyticsService {
   Future<void> logChangeCurrency(String code);
 }
 
-/// No-op implementation — used in tests and free builds
+/// The default, and what tests use.
 class NoOpAnalytics implements AnalyticsService {
   const NoOpAnalytics();
   @override

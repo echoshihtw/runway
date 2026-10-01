@@ -3,9 +3,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../database/database_files.dart';
 
-/// Keeps the usage counts in the iOS Keychain, which survives deleting and
-/// reinstalling the app. Delete all data only removes the database key, so
-/// these counts stay. On Android, uninstalling clears them.
+/// Counts live in secure storage, which Delete all data does not touch and an
+/// iOS reinstall keeps. An Android uninstall clears them.
 class KeychainUsageCountStore implements UsageCountStore {
   const KeychainUsageCountStore({
     FlutterSecureStorage storage = kDatabaseKeyStorage,

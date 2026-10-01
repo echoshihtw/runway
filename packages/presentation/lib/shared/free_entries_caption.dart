@@ -8,10 +8,8 @@ import 'pro_gate.dart';
 
 /// How much of the free allowance is gone, wherever spending one is a tap away.
 ///
-/// The rule is already written in daily_spend_sheet: the paywall must never
-/// arrive unannounced, and a count nobody can see reads as arbitrary. It was
-/// implemented in that one place, so tapping a loan met the wall with no
-/// warning at all.
+/// The paywall must never arrive unannounced, so every door that can spend one
+/// shows the count.
 ///
 /// Nothing is shown before the first is spent, or to an owner with Pro.
 class FreeEntriesCaption extends ConsumerWidget {

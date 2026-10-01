@@ -244,9 +244,7 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
             NeoInput(
               label: l10n.subscriptionPaymentAmount,
               controller: _amountCtrl,
-              // Decimal, not numeric: numeric is digitsOnly, so 9.99 could
-              // not be typed at all and every price with cents was
-              // unenterable. The 1990 hint dated from yen.
+              // Decimal, not numeric: digitsOnly cannot type 9.99.
               inputType: NeoInputType.decimal,
               onChanged: (_) => setState(() {}),
             ),
