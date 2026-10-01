@@ -28,16 +28,13 @@ class NeoInput extends StatelessWidget {
     this.maxLength,
   });
 
-  /// Numbers are set in the mono face, words in the label face.
-  ///
-  /// Every figure the owner typed used to come out in Inter while the figures
-  /// the app printed beside it were mono — most visibly on the Plan screen,
-  /// where a typed amount sat directly above a mono one inside the same card.
-  /// A name or a note is words, and stays in the reading face.
+  /// Numbers are set in the mono face, words in the label face, so a typed
+  /// figure matches the ones printed beside it.
   TextStyle get _fieldStyle => switch (inputType) {
     NeoInputType.numeric || NeoInputType.decimal => AppTextStyles.metricSmall,
-    NeoInputType.name || NeoInputType.note || NeoInputType.text =>
-      AppTextStyles.body,
+    NeoInputType.name ||
+    NeoInputType.note ||
+    NeoInputType.text => AppTextStyles.body,
   };
 
   List<TextInputFormatter> get _formatters {
@@ -52,14 +49,8 @@ class NeoInput extends StatelessWidget {
           FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
           LengthLimitingTextInputFormatter(maxLength ?? 15),
         ];
-      // No allow-list on the three fields that hold words. These used to
-      // permit ASCII letters and a handful of punctuation, which meant a
-      // lender, a subscription or a note could not be written in six of the
-      // seven languages this app is translated into: the characters were
-      // dropped as they were typed, the field stayed empty, and the form's
-      // own validity gate never opened, with nothing on screen to say why.
-      // Nothing downstream needs the restriction — the database is
-      // parameterised and every one of these is displayed as text.
+      // No allow-list on the fields that hold words: six of the seven locales
+      // are not ASCII. Nothing downstream needs the restriction.
       case NeoInputType.name:
         return [LengthLimitingTextInputFormatter(maxLength ?? 50)];
       case NeoInputType.note:

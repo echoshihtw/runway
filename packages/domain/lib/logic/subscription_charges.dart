@@ -23,21 +23,12 @@ DateTime _startOfDay(DateTime d) => DateTime(d.year, d.month, d.day);
 /// - Before the app knew the subscription, nothing is known: a plan started in
 ///   2019 must not suddenly produce six years of rows.
 ///
-/// The last edit is deliberately **not** a bound. It was, while charges were
-/// written without asking: an amount changed mid-month made the earlier
-/// period unknowable, so writing it would have baked a wrong figure into the
-/// ledger. Now that every charge is confirmed first, the question itself is
-/// the safeguard — the owner reads the amount and says no if it is wrong. As a
-/// bound it was actively harmful, because `updatedAt` moves on *any* edit, so
-/// correcting a name silently dropped every unanswered charge for good.
+/// `updatedAt` is deliberately not a bound: it moves on any edit, so renaming a
+/// plan would drop its unanswered charges. Confirming each charge is the
+/// safeguard instead.
 ///
-/// Every bound is compared by day, because a billing date is a day and the
-/// dates it is compared against are timestamps. Someone adding a subscription
-/// at half past two whose bill falls today was read as "midnight is before half
-/// past two" and the charge was dropped, so the question never came. Whether it
-/// came at all depended on something invisible: the form leaves the start date
-/// at DateTime.now(), which carries the time and slipped past, while opening
-/// the date picker and choosing the same day returns midnight, which did not.
+/// Every bound is compared by day, because a billing date is a day while
+/// `createdAt` and `startDate` carry a time.
 DateTime _earliestWritableDate(Subscription s, DateTime? openingBalanceDate) {
   final startDate = _startOfDay(s.startDate);
   final createdAt = _startOfDay(s.createdAt);
