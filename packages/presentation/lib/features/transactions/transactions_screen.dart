@@ -333,9 +333,16 @@ class _MonthSectionHeader extends StatelessWidget {
         runSpacing: AppSpacing.xs,
         children: [
           Text(label, style: AppTextStyles.sectionTitle),
-          Text(
-            '$sign$symbol $amount',
-            style: AppTextStyles.metricSmall.copyWith(color: color),
+          // Shrinks rather than breaks. Wider than its line, the text would
+          // wrap anywhere, including between the currency sign and the digits.
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              '$sign$symbol $amount',
+              maxLines: 1,
+              softWrap: false,
+              style: AppTextStyles.metricSmall.copyWith(color: color),
+            ),
           ),
         ],
       ),

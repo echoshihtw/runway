@@ -25,7 +25,12 @@ class _Loans implements LoanRepository {
   dynamic noSuchMethod(Invocation i) => super.noSuchMethod(i);
 }
 
-Future<void> _pump(WidgetTester tester, double width, double scale) async {
+Future<void> _pump(
+  WidgetTester tester,
+  double width,
+  double scale, {
+  double amount = 1250,
+}) async {
   SharedPreferences.setMockInitialValues({});
   tester.view.physicalSize = Size(width * 3, 900 * 3);
   tester.view.devicePixelRatio = 3;
@@ -40,7 +45,7 @@ Future<void> _pump(WidgetTester tester, double width, double scale) async {
               id: 'a',
               date: d,
               type: TransactionType.expense,
-              amount: Money(1250),
+              amount: Money(amount),
               createdAt: d,
               updatedAt: d,
             ),
@@ -85,5 +90,18 @@ void main() {
   testWidgets('NET is gone', (tester) async {
     await _pump(tester, 390, 1);
     expect(find.text('NET'), findsNothing);
+  });
+
+  testWidgets('the total never breaks across lines', (tester) async {
+    // A six figure month at double text on the smallest screen. Wider than its
+    // line, the text would otherwise wrap anywhere, sign from digits included.
+    await _pump(tester, 320, 2, amount: 125000);
+
+    final total = tester.getRect(find.textContaining('125,000').first);
+    expect(
+      total.height,
+      lessThan(50),
+      reason: 'one line: it shrinks to fit rather than breaking',
+    );
   });
 }
