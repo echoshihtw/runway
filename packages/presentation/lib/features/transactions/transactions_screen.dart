@@ -323,17 +323,20 @@ class _MonthSectionHeader extends StatelessWidget {
           bottom: BorderSide(color: AppColors.cardBorder, width: 1),
         ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      // Wrap, not Row: at large text sizes the month and its total cannot
+      // share a line on a narrow screen, and a truncated figure is no use.
+      // The total drops to a second line instead.
+      child: Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        spacing: AppSpacing.sm,
+        runSpacing: AppSpacing.xs,
         children: [
           Text(label, style: AppTextStyles.sectionTitle),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
+          Wrap(
+            spacing: AppSpacing.xs,
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               Text(context.l10n.netLabel, style: AppTextStyles.caption),
-              const SizedBox(width: AppSpacing.xs),
               Text(
                 '$sign$symbol $amount',
                 style: AppTextStyles.metricSmall.copyWith(color: color),
