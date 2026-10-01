@@ -323,26 +323,19 @@ class _MonthSectionHeader extends StatelessWidget {
           bottom: BorderSide(color: AppColors.cardBorder, width: 1),
         ),
       ),
-      // Wrap, not Row. At 2x text on a 320pt screen nothing here fits one
-      // line: the month alone measures 353pt against 288pt of usable width, and
-      // a five figure total measures 303pt. Wrapping lets the header grow tall
-      // and keep every character, which is the only alternative to clipping.
+      // Wrap, not Row. At 2x text on a 320pt screen the month needs 202pt and
+      // the total up to 303pt of a 288pt line, so they cannot share one. The
+      // total moves below instead of being clipped.
       child: Wrap(
         alignment: WrapAlignment.spaceBetween,
+        crossAxisAlignment: WrapCrossAlignment.center,
         spacing: AppSpacing.sm,
         runSpacing: AppSpacing.xs,
         children: [
           Text(label, style: AppTextStyles.sectionTitle),
-          Wrap(
-            spacing: AppSpacing.xs,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              Text(context.l10n.netLabel, style: AppTextStyles.caption),
-              Text(
-                '$sign$symbol $amount',
-                style: AppTextStyles.metricSmall.copyWith(color: color),
-              ),
-            ],
+          Text(
+            '$sign$symbol $amount',
+            style: AppTextStyles.metricSmall.copyWith(color: color),
           ),
         ],
       ),
