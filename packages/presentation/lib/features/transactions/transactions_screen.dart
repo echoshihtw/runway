@@ -112,7 +112,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
                                 borderRadius: BorderRadius.circular(50),
                               ),
                               child: Text(
-                                '+ ADD OPENING BALANCE',
+                                l10n.addOpeningBalance,
                                 style: AppTextStyles.caption.copyWith(
                                   color: AppColors.background,
                                   fontWeight: FontWeight.w700,

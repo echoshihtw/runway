@@ -112,21 +112,21 @@ class RunwayCard extends ConsumerWidget {
             textAlign: TextAlign.center,
             style: AppTextStyles.bodySmall,
           ),
-          // Twelve months from today is a date, so RUN OUT was the hero
-          // number said again in a different unit. It sat in the row of
-          // balances as though it were a third independent fact, where it
-          // centred itself under the gap between the two and lined up with
-          // neither. It belongs to the line that explains the number.
-          if (model.runOutDate != null)
-            Text(
-              l10n.runsOut(fmtDate(model.runOutDate)),
-              textAlign: TextAlign.center,
-              // Bigger than the sentence above it, which is the order of
-              // importance: that line explains the basis, this one restates
-              // the number. At caption size it read as a footnote to the
-              // footnote.
-              style: AppTextStyles.metricSmall.copyWith(color: SC.captionColor),
-            ),
+          // Belongs with the line that explains the number, not the row of
+          // balances. Always drawn, empty when there is no date, so the card
+          // does not grow by a line the moment a balance is entered.
+          Text(
+            key: const Key('run-out-line'),
+            model.runOutDate == null
+                ? ''
+                : l10n.runsOut(fmtDate(model.runOutDate)),
+            textAlign: TextAlign.center,
+            // Bigger than the sentence above it, which is the order of
+            // importance: that line explains the basis, this one restates
+            // the number. At caption size it read as a footnote to the
+            // footnote.
+            style: AppTextStyles.metricSmall.copyWith(color: SC.captionColor),
+          ),
           if (known) ...[
             const SizedBox(height: AppSpacing.md),
             PixelBadge(label: statusLabel, color: color),

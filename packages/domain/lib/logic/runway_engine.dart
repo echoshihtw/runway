@@ -96,7 +96,7 @@ ModelState modelForMonthlyBurn({
     runwayDays: runway.months.isInfinite
         ? _unlimitedDays
         : math.min((runway.months * 30).floor(), _unlimitedDays),
-    runOutDate: runway.runOutMonth,
+    runOutMonth: runway.runOutMonth,
     hasCostBasis: hasCostBasis,
     basis: basis,
     cashIsKnown: cashIsKnown,
