@@ -112,7 +112,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
                                 borderRadius: BorderRadius.circular(50),
                               ),
                               child: Text(
-                                '+ ADD OPENING BALANCE',
+                                l10n.addOpeningBalance,
                                 style: AppTextStyles.caption.copyWith(
                                   color: AppColors.background,
                                   fontWeight: FontWeight.w700,
@@ -323,22 +323,26 @@ class _MonthSectionHeader extends StatelessWidget {
           bottom: BorderSide(color: AppColors.cardBorder, width: 1),
         ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      // Wrap, not Row. At large text on a narrow screen the month and the total
+      // cannot share a line, so the total moves below instead of being clipped.
+      // It lands left there: a lone child in a run start-aligns.
+      child: Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: AppSpacing.sm,
+        runSpacing: AppSpacing.xs,
         children: [
           Text(label, style: AppTextStyles.sectionTitle),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              Text(context.l10n.netLabel, style: AppTextStyles.caption),
-              const SizedBox(width: AppSpacing.xs),
-              Text(
-                '$sign$symbol $amount',
-                style: AppTextStyles.metricSmall.copyWith(color: color),
-              ),
-            ],
+          // Shrinks rather than breaks. Wider than its line, the text would
+          // wrap anywhere, including between the currency sign and the digits.
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              '$sign$symbol $amount',
+              maxLines: 1,
+              softWrap: false,
+              style: AppTextStyles.metricSmall.copyWith(color: color),
+            ),
           ),
         ],
       ),

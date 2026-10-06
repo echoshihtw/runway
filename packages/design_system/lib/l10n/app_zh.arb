@@ -23,7 +23,7 @@
   "clear": "清除",
   "transactionLog": "交易紀錄",
   "newEntry": "+ 新增",
-  "noEntries": "還沒有任何紀錄\n點 + 新增你的第一筆資料",
+  "noEntries": "先輸入你的餘額",
   "newLogEntry": "新增一筆",
   "modifyEntry": "編輯紀錄",
   "type": "類型",

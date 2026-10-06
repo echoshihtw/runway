@@ -23,7 +23,7 @@
   "clear": "CANCELLA",
   "transactionLog": "REGISTRO TRANSAZIONI",
   "newEntry": "+ NUOVO",
-  "noEntries": "No entries yet\nTap + ADD to log your first entry",
+  "noEntries": "Inizia dal tuo saldo",
   "newLogEntry": "Nuova voce",
   "modifyEntry": "MODIFICA VOCE",
   "type": "TIPO",
