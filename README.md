@@ -5,7 +5,7 @@
 One number, counted from today, and the month it runs out. No account, no bank
 connection, nothing leaves your phone.
 
-[**Try it on TestFlight**](https://testflight.apple.com/join/FjpzWmat) · [App Store](https://apps.apple.com/app/id6778675088)
+[**Get it on the App Store**](https://apps.apple.com/app/id6778675088) · [Website](https://echoshihtw.github.io/runway/)
 
 <p align="center">
   <img src="docs/screenshots/01-runway.png" width="24%" alt="Dashboard: how many months your money covers, cash and run-out month">
