@@ -1,6 +1,6 @@
 # Deployment Guide
 
-**Project:** Runway (`survival_optimizer`) · **App version:** `1.0.1+2`
+**Project:** Runway (`survival_optimizer`)
 **Generated:** 2026-08-04 · Deep scan
 
 ---

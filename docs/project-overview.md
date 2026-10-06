@@ -1,6 +1,6 @@
 # Project Overview — Runway
 
-**Repository:** `survival_optimizer` · **Product name:** Runway · **Version:** `1.0.1+2`
+**Repository:** `survival_optimizer` · **Product name:** Runway
 **Generated:** 2026-08-04 · Deep scan · 6 parts
 
 ---
@@ -58,7 +58,7 @@ presentation → application → domain ← data
 | Charts | fl_chart 0.68 |
 | Fonts | JetBrains Mono (numbers) + Inter (labels) via `google_fonts` |
 | Analytics | Firebase Analytics (optional, behavior-only) |
-| Purchases | RevenueCat `purchases_flutter` 10 (in flight) |
+| Purchases | RevenueCat `purchases_flutter` 10 |
 | CI/CD | GitHub Actions → TestFlight + Play Store internal |
 
 ## Privacy & Security Posture
@@ -74,18 +74,6 @@ presentation → application → domain ← data
 Free tier: five entries and three simulations, then Pro; loans, subscriptions, budget and sharing are free without limit. Pro: unlimited entries and simulations (#80, decided 2026-09-16; the entry limit added 2026-09-18).
 
 The numbers live in `presentation/lib/product_config.dart` (`ProductConfig.freeEntries`, `freeSimulations`), beside the daily-spend presets — one place for every product decision. The rule is one function, `needsPro` (`application`); enforcement is one helper, `shared/pro_gate.dart` (`allowsNewEntry`, `allowsSimulation`), asked at every door. Both counts live in one Keychain-backed `UsageCountStore` and survive reinstall; the Plan screen and the add sheet show the count once the first is spent. Entitlement resolution is offline-first — a cached `is_pro` flag wins, and a network failure never revokes Pro.
-
-## Current State (as of this scan)
-
-The working tree carries **substantial uncommitted changes** on top of `ac4738e`:
-
-- RevenueCat integration (`purchases_flutter` v10, `revenuecat_service.dart`, config) — scaffolded across `b87943b`/`ac4738e` with further uncommitted work on top.
-- Regenerated app icons (iOS 19 sizes + Android 5 densities) and `Info.plist` changes.
-- `CONTRACTS.md`, `main.dart`, `app_database.dart`, and several `pubspec.yaml` edits.
-
-Docs describe the **working tree**, not the last commit. Treat the RevenueCat/monetization surface as in-flight.
-
-**RevenueCat is not yet live:** `kRevenueCatGoogleKey` is still a placeholder, and `isRevenueCatConfigured` requires both keys — so purchases are disabled on iOS and Android alike.
 
 ## Known Gaps
 

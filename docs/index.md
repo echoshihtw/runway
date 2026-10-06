@@ -12,7 +12,6 @@
 - **Primary language:** Dart 3.11.5 / Flutter 3.41.7
 - **Architecture:** Clean Architecture + DDD — `presentation → application → domain ← data`, boundaries enforced by package separation
 - **Product:** Offline-first personal financial runway app. One question: how long can my money last?
-- **App version:** `1.0.1+2`
 
 ## Quick Reference by Part
 
@@ -81,7 +80,6 @@ Reading order for a new contributor:
 
 ## Caveats
 
-- Documentation reflects the **working tree** at scan time, which has substantial uncommitted changes (RevenueCat integration, icons, `Info.plist`) on top of commit `ac4738e`.
 - Deep scan reads critical directories, not every file. Generated `*.g.dart` files are described but not enumerated.
 - Known deviations between `CONTRACTS.md` and the code are called out in the relevant docs and summarized under [Known Gaps](./project-overview.md#known-gaps).
 
