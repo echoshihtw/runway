@@ -4,7 +4,6 @@ import 'package:uuid/uuid.dart';
 import 'package:design_system/design_system.dart';
 import 'package:application/application.dart';
 import 'package:domain/domain.dart';
-import 'package:intl/intl.dart';
 import '../../shared/add_strip.dart';
 import '../../shared/ledger_glyphs.dart';
 import '../../shared/free_entries_caption.dart';
@@ -12,6 +11,7 @@ import '../../shared/pro_gate.dart';
 import '../../shared/money_field.dart';
 import 'loan_card.dart';
 import 'start_loan_creation.dart';
+import '../../shared/formats.dart';
 
 class LiabilitiesPanel extends ConsumerWidget {
   const LiabilitiesPanel({super.key});
@@ -20,7 +20,7 @@ class LiabilitiesPanel extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
-    final nf = NumberFormat('#,##0', 'en_US');
+    final nf = amountFormat(context);
     final total = ref.watch(totalMonthlyLoanPaymentProvider);
     final active = ref.watch(activeLoanSummariesProvider);
 

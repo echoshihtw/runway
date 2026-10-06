@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../subscription_form.dart';
+import '../../../shared/formats.dart';
 
 /// Asks before recording a subscription charge.
 ///
@@ -45,7 +46,7 @@ class _SubscriptionPromptCardState
 
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
     final amount =
-        '$symbol ${NumberFormat('#,##0', 'en_US').format(charge.amount.value)}';
+        '$symbol ${amountFormat(context).format(charge.amount.value)}';
     // Dates elsewhere in the app are mono uppercase labels, where one pattern
     // for every language is a design choice. This one is inside a sentence, so
     // it takes the reader's own order: "Sep 3", "9月3日", "3 sept.". Passing
@@ -102,7 +103,7 @@ class _SubscriptionPromptCardState
     final l10n = context.l10n;
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
     final total = pending.fold<double>(0, (sum, c) => sum + c.amount.value);
-    final amount = '$symbol ${NumberFormat('#,##0', 'en_US').format(total)}';
+    final amount = '$symbol ${amountFormat(context).format(total)}';
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.cardGap),

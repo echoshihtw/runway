@@ -4,6 +4,7 @@ import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import '../../../shared/formats.dart';
 
 void showLivingSheet(BuildContext context) {
   showModalBottomSheet(
@@ -31,7 +32,7 @@ class LivingSheet extends ConsumerWidget {
     final burn = ref.watch(monthlyBurnProvider);
     final living = burn.living;
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
-    final nf = NumberFormat('#,##0', 'en_US');
+    final nf = amountFormat(context);
     String fmt(double v) => '$symbol ${nf.format(v.abs())}';
 
     final expenses =
@@ -132,7 +133,10 @@ class _ExpenseLine extends StatelessWidget {
           SizedBox(
             width: 56,
             child: Text(
-              DateFormat('dd MMM').format(transaction.date).toUpperCase(),
+              DateFormat(
+                'dd MMM',
+                intlLocale(context),
+              ).format(transaction.date).toUpperCase(),
               style: AppTextStyles.caption,
             ),
           ),

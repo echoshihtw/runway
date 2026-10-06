@@ -5,6 +5,7 @@ import 'package:domain/domain.dart';
 import 'package:application/application.dart';
 import 'package:intl/intl.dart';
 import '../../../shared/status_color.dart';
+import '../../../shared/formats.dart';
 
 class RunwayCard extends ConsumerWidget {
   final ModelState model;
@@ -14,7 +15,7 @@ class RunwayCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
-    final nf = NumberFormat('#,##0', 'en_US');
+    final nf = amountFormat(context);
     final status = model.runwayStatus;
 
     // Without both a stated balance and a cost the runway cannot be stated, so
@@ -49,8 +50,9 @@ class RunwayCard extends ConsumerWidget {
       );
     }
 
-    String fmtDate(DateTime? d) =>
-        d == null ? '—' : DateFormat('MMM yyyy').format(d).toUpperCase();
+    String fmtDate(DateTime? d) => d == null
+        ? '—'
+        : DateFormat('MMM yyyy', intlLocale(context)).format(d).toUpperCase();
 
     // The most important card on the screen was also the plainest (#114).
     // Every card below it earns a solid border, a 3pt accent bar and a

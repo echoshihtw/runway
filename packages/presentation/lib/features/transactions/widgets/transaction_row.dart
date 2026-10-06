@@ -6,6 +6,7 @@ import 'package:application/application.dart';
 import 'package:intl/intl.dart';
 
 import '../../../shared/ledger_glyphs.dart';
+import '../../../shared/formats.dart';
 
 class TransactionRow extends ConsumerWidget {
   final Transaction transaction;
@@ -66,12 +67,12 @@ class TransactionRow extends ConsumerWidget {
     final l10n = context.l10n;
     final isPlanned = _isPlannedAt(ref.watch(clockProvider)());
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
-    final amount = NumberFormat(
-      '#,##0',
-      'en_US',
-    ).format(transaction.amount.value);
+    final amount = amountFormat(context).format(transaction.amount.value);
     final sign = transaction.type.isInflow ? '+' : '-';
-    final dateStr = DateFormat('dd MMM').format(transaction.date).toUpperCase();
+    final dateStr = DateFormat(
+      'dd MMM',
+      intlLocale(context),
+    ).format(transaction.date).toUpperCase();
     final color = _typeColor;
 
     return GestureDetector(

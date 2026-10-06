@@ -9,6 +9,7 @@ import 'package:domain/domain.dart';
 import 'widgets/transaction_row.dart';
 import 'daily_spend_sheet.dart';
 import 'show_entry_sheet.dart';
+import '../../shared/formats.dart';
 
 class TransactionsScreen extends ConsumerStatefulWidget {
   const TransactionsScreen({super.key});
@@ -212,7 +213,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
   ) async {
     final l10n = context.l10n;
     final symbol = ref.read(currencyProvider).value?.symbol ?? '¥';
-    final amount = NumberFormat('#,##0', 'en_US').format(tx.amount.value);
+    final amount = amountFormat(context).format(tx.amount.value);
     final sign = tx.type.isInflow ? '+' : '-';
 
     final confirmed = await showDialog<bool>(
@@ -304,13 +305,16 @@ class _MonthSectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final parts = monthKey.split('-');
     final dt = DateTime(int.parse(parts[0]), int.parse(parts[1]));
-    final label = DateFormat('MMM yyyy').format(dt).toUpperCase();
+    final label = DateFormat(
+      'MMM yyyy',
+      intlLocale(context),
+    ).format(dt).toUpperCase();
 
     final net = transactions.fold(0.0, (sum, t) => sum + t.signedAmount);
     final isPositive = net >= 0;
     final color = isPositive ? SC.txIncome : SC.txExpense;
     final sign = isPositive ? '+' : '-';
-    final amount = NumberFormat('#,##0').format(net.abs());
+    final amount = amountFormat(context).format(net.abs());
 
     return Container(
       padding: const EdgeInsets.symmetric(
