@@ -163,13 +163,14 @@ class _GettingStartedCardState extends ConsumerState<GettingStartedCard> {
                   ],
                 ),
                 const Spacer(),
-                GestureDetector(
-                  onTap: () async {
+                IconButton(
+                  onPressed: () async {
                     setState(() => _dismissed = true);
                     final prefs = await SharedPreferences.getInstance();
                     await prefs.setBool(_kDismissedKey, true);
                   },
-                  child: const Icon(
+                  tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
+                  icon: const Icon(
                     Icons.close_rounded,
                     color: AppColors.textDim,
                     size: 18,

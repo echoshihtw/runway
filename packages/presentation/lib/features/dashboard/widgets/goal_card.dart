@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:design_system/design_system.dart';
-import 'package:intl/intl.dart';
 import 'package:domain/domain.dart';
 import 'package:application/application.dart';
+import '../../../shared/formats.dart';
 
 class GoalCard extends ConsumerWidget {
   const GoalCard({super.key, required this.model});
@@ -35,7 +35,7 @@ class GoalCard extends ConsumerWidget {
     // than zero — the same reason the runway itself reads as unknown without
     // a cost basis.
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
-    final nf = NumberFormat('#,##0', 'en_US');
+    final nf = amountFormat(context);
 
     // What a month actually costs, not what the Forecast card is currently
     // assuming it might.

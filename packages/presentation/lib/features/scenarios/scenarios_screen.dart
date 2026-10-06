@@ -8,7 +8,7 @@ import '../../shared/status_color.dart';
 import '../../shared/money_field.dart';
 import '../transactions/show_entry_sheet.dart';
 import 'package:domain/domain.dart';
-import 'package:intl/intl.dart';
+import '../../shared/formats.dart';
 
 /// Matches the engine's unlimited sentinel.
 const _unlimitedMonths = 9999;
@@ -25,7 +25,7 @@ class ScenariosScreen extends ConsumerWidget {
     final burn = ref.watch(monthlyBurnProvider);
     final simModel = ref.watch(scenarioModelProvider);
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
-    final nf = NumberFormat('#,##0', 'en_US');
+    final nf = amountFormat(context);
 
     // No abs(): a negative balance is an overdraft, and showing it unsigned
     // told the owner they had money they did not have.

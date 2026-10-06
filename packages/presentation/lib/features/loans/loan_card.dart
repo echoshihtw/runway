@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:design_system/design_system.dart';
 import 'package:application/application.dart';
 import 'package:domain/domain.dart';
-import 'package:intl/intl.dart';
+import '../../shared/formats.dart';
 
 class LoanCard extends ConsumerWidget {
   final LoanSummary summary;
@@ -27,7 +27,7 @@ class LoanCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final nf = NumberFormat('#,##0', 'en_US');
+    final nf = amountFormat(context);
     final loan = summary.loan;
     final pct = (summary.repaidRatio * 100).toStringAsFixed(0);
     // Repaid principal does not mean the payments stopped: with a term set the
