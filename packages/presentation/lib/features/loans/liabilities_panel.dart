@@ -8,7 +8,6 @@ import 'package:intl/intl.dart';
 import '../../shared/add_strip.dart';
 import '../../shared/ledger_glyphs.dart';
 import '../../shared/free_entries_caption.dart';
-import '../../shared/pro_gate.dart';
 import '../../shared/money_field.dart';
 import 'loan_card.dart';
 import 'start_loan_creation.dart';
@@ -202,8 +201,6 @@ class LiabilitiesPanel extends ConsumerWidget {
   }
 
   void _showRepay(BuildContext context, WidgetRef ref, LoanSummary summary) {
-    // A repayment writes an entry, so it meets the entry wall.
-    if (!allowsNewEntry(context, ref)) return;
     showModalBottomSheet(
       context: context,
       useRootNavigator: true,
