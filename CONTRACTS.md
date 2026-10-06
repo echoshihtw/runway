@@ -177,7 +177,7 @@ No new top-level tabs without strong justification.
 ## 5. Data Contracts
 
 ### 5.1 Schema Versioning
-Current schema version: **6**
+Current schema version: **7**
 
 | Version | Change |
 |---|---|
@@ -187,6 +187,7 @@ Current schema version: **6**
 | 4 | Added: originalTermMonths to loans |
 | 5 | Added: category to transactions |
 | 6 | Added: financial_settings table (single row: budget, forecast assumptions, runway goal) |
+| 7 | Charge ids from the stepping schedule renamed to the counted one; dropped nextBillingDate from subscriptions |
 
 Every schema change requires a migration in `MigrationStrategy`.
 

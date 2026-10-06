@@ -41,7 +41,6 @@ Subscription _netflix(double amount) => Subscription(
   amount: amount,
   cycle: BillingCycle.monthly,
   startDate: DateTime(2026, 9, 1),
-  nextBillingDate: DateTime(2026, 10, 1),
   createdAt: DateTime(2026, 9, 1),
   updatedAt: DateTime(2026, 9, 1),
 );

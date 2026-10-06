@@ -56,21 +56,7 @@ List<Transaction> dueSubscriptionCharges({
   final charges = <Transaction>[];
   for (final s in subscriptions.where((s) => s.isActive)) {
     final earliest = _earliestWritableDate(s, openingBalanceDate);
-    // From period 0, so the index is the period a legacy id matches on.
-    final dates = billingDatesUpTo(s, endOfToday);
-    final legacy = legacyBillingDates(s, endOfToday);
-    for (var period = 0; period < dates.length; period++) {
-      final date = dates[period];
-      if (date.isBefore(earliest)) continue;
-      if (chargeAlreadyRecorded(
-        s: s,
-        period: period,
-        date: date,
-        legacy: legacy,
-        recorded: recorded,
-      )) {
-        continue;
-      }
+    for (final date in billingDatesInRange(s, from: earliest, to: endOfToday)) {
       final id = subscriptionChargeId(s.id, date);
       if (!recorded.add(id)) continue;
       charges.add(

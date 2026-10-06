@@ -43,8 +43,8 @@ const _plans = <_Plan>[
   (name: 'Netflix', amount: 15.49, billingDay: 12),
 ];
 
-/// The question is driven by the start date walked forward by the cycle, not
-/// by the stored nextBillingDate, so the start date is the billing day itself.
+/// The question is driven by the start date walked forward by the cycle, so
+/// the start date is the billing day itself.
 Subscription _subscription(int index, _Plan plan) {
   final billedOn = DateTime(_capturedAt.year, _capturedAt.month, plan.billingDay);
   return Subscription(
@@ -54,7 +54,6 @@ Subscription _subscription(int index, _Plan plan) {
     amount: plan.amount,
     cycle: BillingCycle.monthly,
     startDate: billedOn,
-    nextBillingDate: DateTime(billedOn.year, billedOn.month + 1, billedOn.day),
     isActive: true,
     createdAt: _openingBalanceDate,
     updatedAt: _openingBalanceDate,

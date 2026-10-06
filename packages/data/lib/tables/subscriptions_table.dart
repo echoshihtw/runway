@@ -7,7 +7,6 @@ class Subscriptions extends Table {
   RealColumn get amount => real()();
   TextColumn get cycle => text()();
   DateTimeColumn get startDate => dateTime()();
-  DateTimeColumn get nextBillingDate => dateTime()();
   TextColumn get note => text().nullable()();
   BoolColumn get isActive => boolean().withDefault(const Constant(true))();
   DateTimeColumn get createdAt => dateTime()();

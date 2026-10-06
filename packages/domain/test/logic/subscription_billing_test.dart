@@ -14,7 +14,6 @@ Subscription _sub({
   amount: amount,
   cycle: cycle,
   startDate: startDate,
-  nextBillingDate: startDate,
   isActive: isActive,
   createdAt: startDate,
   updatedAt: startDate,
@@ -360,9 +359,7 @@ void _countdownTests() {
   final now = DateTime(2026, 9, 17, 10);
 
   group('daysUntilNextBilling', () {
-    test('a stored date long past still counts forward', () {
-      // The whole of #85: nothing advances nextBillingDate, so reading it left
-      // the countdown clamped at 0 for ever once its date went by.
+    test('a start date long past still counts forward', () {
       final stale = Subscription(
         id: 'sub-1',
         name: 'Music',
@@ -370,7 +367,6 @@ void _countdownTests() {
         amount: 980,
         cycle: BillingCycle.monthly,
         startDate: DateTime(2026, 1, 3),
-        nextBillingDate: DateTime(2026, 1, 3),
         createdAt: DateTime(2026, 1, 3),
         updatedAt: DateTime(2026, 1, 3),
       );
@@ -387,7 +383,6 @@ void _countdownTests() {
         amount: 980,
         cycle: BillingCycle.monthly,
         startDate: DateTime(2026, 1, 25),
-        nextBillingDate: DateTime(2026, 1, 25),
         createdAt: DateTime(2026, 1, 25),
         updatedAt: DateTime(2026, 1, 25),
       );
@@ -417,7 +412,6 @@ void _monthEnd() {
     amount: 10,
     cycle: cycle,
     startDate: DateTime(2026, 1, day),
-    nextBillingDate: DateTime(2026, 1, day),
     createdAt: DateTime(2026, 1, day),
     updatedAt: DateTime(2026, 1, day),
   );
@@ -495,7 +489,6 @@ void _monthEnd() {
           amount: 1,
           cycle: BillingCycle.yearly,
           startDate: DateTime(2028, 2, 29),
-          nextBillingDate: DateTime(2028, 2, 29),
           createdAt: DateTime(2028, 2, 29),
           updatedAt: DateTime(2028, 2, 29),
         ),
