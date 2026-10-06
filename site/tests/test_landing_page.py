@@ -46,6 +46,9 @@ class LandingPageTest(unittest.TestCase):
         self.assertNotIn("In App Store review", HTML)
         self.assertIn('href="#how-it-works"', HTML)
 
+    def test_safari_offers_the_same_listing(self):
+        self.assertIn('<meta name="apple-itunes-app" content="app-id=6778675088" />', HTML)
+
     def test_life_chapter_line_is_inclusive_not_segmented(self):
         self.assertIn(
             "A study plan, a new direction, something you are building, "
