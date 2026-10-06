@@ -23,7 +23,10 @@ class ModelState {
   final double? expectedMonthlyBurnOverride;
   final int runwayMonths;
   final int runwayDays;
-  final DateTime? runOutDate;
+
+  /// Set by the engines. Read [runOutDate], which withholds it in the same
+  /// cases the runway itself is withheld.
+  final DateTime? runOutMonth;
 
   /// Whether a monthly cost is known at all.
   ///
@@ -63,7 +66,7 @@ class ModelState {
     this.expectedMonthlyBurnOverride,
     required this.runwayMonths,
     required this.runwayDays,
-    this.runOutDate,
+    this.runOutMonth,
     this.hasCostBasis = true,
     this.basis = RunwayBasis.budget,
     this.cashIsKnown = true,
@@ -79,11 +82,17 @@ class ModelState {
       hasSustainableProjection && sustainableNetMonthlyFlow >= 0;
   double get sustainableMonthlyShortfall =>
       sustainableNetMonthlyFlow < 0 ? sustainableNetMonthlyFlow.abs() : 0.0;
+
   /// Whether the runway can be stated at all. When no cost is known the
   /// number is unknown, which is different from unlimited: a scenario whose
   /// simulated income covers its costs is genuinely unlimited and keeps a
   /// cost basis.
   bool get runwayIsKnown => hasCostBasis && cashIsKnown && cashIsStated;
+
+  /// The month the money runs out, or null when the runway is unknown. An
+  /// empty ledger has no cash, so the engines date the run out to this month:
+  /// naming it would tell a new owner their money ends now.
+  DateTime? get runOutDate => runwayIsKnown ? runOutMonth : null;
 
   /// Three to six months of cover is the widely used adequacy range, so
   /// caution sits there and anything above six reads as stable.
@@ -103,6 +112,6 @@ class ModelState {
     expectedMonthlyBurnOverride: null,
     runwayMonths: 0,
     runwayDays: 0,
-    runOutDate: null,
+    runOutMonth: null,
   );
 }

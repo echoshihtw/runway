@@ -23,7 +23,7 @@
   "clear": "LIMPIAR",
   "transactionLog": "REGISTRO DE TRANSACCIONES",
   "newEntry": "+ NUEVO",
-  "noEntries": "No entries yet\nTap + ADD to log your first entry",
+  "noEntries": "Empieza por tu saldo",
   "newLogEntry": "Nueva entrada",
   "modifyEntry": "MODIFICAR ENTRADA",
   "type": "TIPO",

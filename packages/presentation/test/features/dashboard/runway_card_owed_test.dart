@@ -19,7 +19,7 @@ ModelState _model() => ModelState(
   runwayMonths: 12,
   runwayDays: 365,
   hasCostBasis: true,
-  runOutDate: DateTime(2027, 9, 1),
+  runOutMonth: DateTime(2027, 9, 1),
 );
 
 Future<void> _pump(WidgetTester tester, double owed) async {
