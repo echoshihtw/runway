@@ -31,10 +31,6 @@ class Subscription {
   /// Normalized monthly cost
   double get monthlyEquivalent => cycle.monthlyEquivalent(amount);
 
-  /// Days until next billing
-  int get daysUntilNextBilling =>
-      nextBillingDate.difference(DateTime.now()).inDays.clamp(0, 9999);
-
   Subscription copyWith({
     String? id,
     String? name,

@@ -22,7 +22,7 @@ totalMonthlyBurn = budgetBurnRate + subscriptions + debtPayments
 budgetBurnRate   = max(actualSpending, budgetEstimate)
 ```
 
-Budget is a **floor**, never a ceiling — when actual spending exceeds the budget, reality wins. Implemented in `application/lib/providers/model_provider.dart` (the `max`) and `domain/lib/logic/survival_engine.dart` (`computeModel`).
+Budget is a **floor**, never a ceiling — when actual spending exceeds the budget, reality wins. Implemented in `application/lib/providers/model_provider.dart` (the `max`) and `domain/lib/logic/burn_engine.dart`.
 
 Status thresholds: `≥24 months → STABLE`, `≥12 → CAUTION`, else `CRITICAL`.
 
@@ -71,10 +71,9 @@ presentation → application → domain ← data
 
 ## Monetization
 
-Free tier: transactions, basic runway, budget, sharing, one loan, one simulation.
-Pro tier: subscriptions, multiple loans, timeline, unlimited simulations.
+Free tier: five entries and three simulations, then Pro; loans, subscriptions, budget and sharing are free without limit. Pro: unlimited entries and simulations (#80, decided 2026-09-16; the entry limit added 2026-09-18).
 
-Policy lives in `EntitlementState` (`application`); enforcement is currently inline at three presentation call sites (`loan_limit`, `subscriptions`, `simulation`). Entitlement resolution is offline-first — a cached `is_pro` flag wins, and a network failure never revokes Pro.
+The numbers live in `presentation/lib/product_config.dart` (`ProductConfig.freeEntries`, `freeSimulations`), beside the daily-spend presets — one place for every product decision. The rule is one function, `needsPro` (`application`); enforcement is one helper, `shared/pro_gate.dart` (`allowsNewEntry`, `allowsSimulation`), asked at every door. Both counts live in one Keychain-backed `UsageCountStore` and survive reinstall; the Plan screen and the add sheet show the count once the first is spent. Entitlement resolution is offline-first — a cached `is_pro` flag wins, and a network failure never revokes Pro.
 
 ## Current State (as of this scan)
 
@@ -96,14 +95,11 @@ Measured against `CONTRACTS.md`, which is binding on both humans and AI agents i
 |---|---|
 | Color contract drift | 287 raw `AppColors.*` references vs 38 `SC.*` in `presentation`, against CONTRACTS §4.1 / §4.4 |
 | Contract out of date | §5.1 declares schema version **4**; the code is at **5** (`transactions.category`) |
-| Specified-but-unimplemented | §3.3 investable / safety-fund model has no engine in `domain/lib/logic/` |
-| Contract vs. code | §3.4/§5.3 say `investment` is excluded from burn rate; in code it lands in `grossOutflow` and *does* feed burn |
 | Dead melos config | `melos.yaml` scripts (`test:all`, `test:integration:*`) are not loaded — melos reads the `melos:` block in the root `pubspec.yaml`, which has only `test`/`analyze`/`gen` |
 | Test coverage | `design_system` and `presentation` have zero tests; CI runs only the domain suite, so the data and application tests never run in CI |
 | Missing token | §4.2 specifies a 72px hero; no style above 42px exists in `app_text_styles.dart` |
 | Identifier mismatch | iOS `com.silverfern.survivaloptimizer` vs Android `com.survival.app`; `make db-reset-android` targets the wrong one |
 | Hardcoded strings | §6.3 forbids hardcoded user-facing strings; `app_router.dart`'s action sheet uses literal `'ENTRY'`/`'LOAN'`/`'SUBSCRIPTIONS'` |
-| Duplicated logic | `_computeBurnRate` exists in both `survival_engine.dart` and `model_provider.dart` |
 | Duplicated file | `app_input_formatters.dart` in both `components/` and `utils/` |
 | No migration tests | Drift schema snapshots / migration verification are absent |
 
@@ -124,7 +120,7 @@ Conventional Commits (`feat/fix/refactor/style/test/chore`). Branches: `main` = 
 1. `CONTRACTS.md` — the binding rules.
 2. [Source Tree Analysis](./source-tree-analysis.md) — the annotated map.
 3. [Integration Architecture](./integration-architecture.md) — how the parts talk.
-4. `packages/domain/lib/logic/survival_engine.dart` — the product, in one function.
+4. `packages/domain/lib/logic/burn_engine.dart` and `runway_engine.dart` — the product, in two functions.
 
 ## See Also
 

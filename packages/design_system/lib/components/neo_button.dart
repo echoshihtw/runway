@@ -32,6 +32,7 @@ class _NeoButtonState extends State<NeoButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _ctrl;
   late Animation<double> _scale;
+  bool _fired = false;
 
   @override
   void initState() {
@@ -52,12 +53,35 @@ class _NeoButtonState extends State<NeoButton>
     super.dispose();
   }
 
-  Color get _bgColor => switch (widget.variant) {
-    NeoButtonVariant.primary => widget.color ?? AppColors.neonGreen,
-    NeoButtonVariant.secondary => AppColors.surfaceHigh,
-    NeoButtonVariant.ghost => Colors.transparent,
-    NeoButtonVariant.danger => AppColors.hotPink.withAlpha(20),
-  };
+  bool get _disabled => widget.onPressed == null;
+
+  /// One press, whichever way it arrives: a pointer tap-up and a screen
+  /// reader's tap both land here, so neither can walk around the other.
+  ///
+  /// onPressed is captured at build time and setState only schedules a
+  /// rebuild, so a caller that disables itself is still live until a frame
+  /// renders: two presses in one frame both landed and wrote twice (#277).
+  /// A frame is 16ms, below any gap a person meant as two presses.
+  void _press() {
+    if (_fired) return;
+    _fired = true;
+    // The callback runs only if a frame is produced, so ask for one:
+    // otherwise a press that changes nothing leaves the button dead for good.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fired = false;
+    });
+    WidgetsBinding.instance.ensureVisualUpdate();
+    widget.onPressed?.call();
+  }
+
+  Color get _bgColor => _disabled
+      ? AppColors.surfaceHigh
+      : switch (widget.variant) {
+          NeoButtonVariant.primary => widget.color ?? AppColors.neonGreen,
+          NeoButtonVariant.secondary => AppColors.surfaceHigh,
+          NeoButtonVariant.ghost => Colors.transparent,
+          NeoButtonVariant.danger => AppColors.hotPink.withAlpha(20),
+        };
 
   Color get _borderColor => switch (widget.variant) {
     NeoButtonVariant.primary => Colors.transparent,
@@ -69,65 +93,90 @@ class _NeoButtonState extends State<NeoButton>
     NeoButtonVariant.danger => AppColors.red.withAlpha(80),
   };
 
-  Color get _textColor => switch (widget.variant) {
-    NeoButtonVariant.primary => AppColors.background,
-    NeoButtonVariant.secondary => AppColors.textPrimary,
-    NeoButtonVariant.ghost => AppColors.textSecondary,
-    NeoButtonVariant.danger => AppColors.hotPink,
-  };
+  Color get _textColor => _disabled
+      ? AppColors.textSecondary
+      : switch (widget.variant) {
+          NeoButtonVariant.primary => AppColors.background,
+          NeoButtonVariant.secondary => AppColors.textPrimary,
+          NeoButtonVariant.ghost => AppColors.textSecondary,
+          NeoButtonVariant.danger => AppColors.hotPink,
+        };
 
   @override
   Widget build(BuildContext context) {
     final disabled = widget.onPressed == null;
-    return GestureDetector(
-      onTapDown: disabled
-          ? null
-          : (_) {
-              HapticFeedback.selectionClick();
-              _ctrl.forward();
-            },
-      onTapUp: disabled
-          ? null
-          : (_) {
-              _ctrl.reverse();
-              widget.onPressed?.call();
-            },
-      onTapCancel: () => _ctrl.reverse(),
-      child: ScaleTransition(
-        scale: _scale,
-        child: AnimatedOpacity(
-          duration: const Duration(milliseconds: 150),
-          opacity: disabled ? 0.4 : 1.0,
-          child: Container(
-            width: widget.fullWidth ? double.infinity : null,
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.lg,
-              vertical: AppSpacing.sm + 2,
-            ),
-            decoration: BoxDecoration(
-              color: _bgColor,
-              // Pill shape — Kraken style
-              borderRadius: BorderRadius.circular(50),
-              border: Border.all(color: _borderColor, width: 1),
-            ),
-            child: Row(
-              mainAxisSize: widget.fullWidth
-                  ? MainAxisSize.max
-                  : MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (widget.icon != null) ...[
-                  Text(
-                    widget.icon!,
-                    style: TextStyle(color: _textColor, fontSize: 14),
+    // A role, so a screen reader calls this a button and says when it is
+    // disabled. The children are excluded so the label is read once, not twice.
+    return Semantics(
+      button: true,
+      enabled: !disabled,
+      label: widget.label,
+      onTap: disabled ? null : _press,
+      excludeSemantics: true,
+      child: GestureDetector(
+        onTapDown: disabled
+            ? null
+            : (_) {
+                HapticFeedback.selectionClick();
+                _ctrl.forward();
+              },
+        onTapUp: disabled
+            ? null
+            : (_) {
+                _ctrl.reverse();
+                _press();
+              },
+        onTapCancel: () => _ctrl.reverse(),
+        child: ScaleTransition(
+          scale: _scale,
+          child: AnimatedOpacity(
+            duration: const Duration(milliseconds: 150),
+            // Never faded. A faded button looks broken rather than
+            // unavailable, so colour shows the state instead.
+            opacity: 1.0,
+            child: Container(
+              width: widget.fullWidth ? double.infinity : null,
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.lg,
+                vertical: AppSpacing.sm + 2,
+              ),
+              decoration: BoxDecoration(
+                color: _bgColor,
+                // Pill shape — Kraken style
+                borderRadius: BorderRadius.circular(50),
+                border: Border.all(color: _borderColor, width: 1),
+              ),
+              child: Row(
+                mainAxisSize: widget.fullWidth
+                    ? MainAxisSize.max
+                    : MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (widget.icon != null) ...[
+                    Text(
+                      widget.icon!,
+                      style: TextStyle(color: _textColor, fontSize: 14),
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                  ],
+                  // The label yields rather than pushing the button past its
+                  // own edge at large text sizes. This only bites where the
+                  // button is given a width to fit inside: a non-fullWidth
+                  // NeoButton laid out as a plain child of a Row gets unbounded
+                  // constraints, the Flexible below is then treated as non-flex,
+                  // and the label lays out at its intrinsic width regardless.
+                  // Those callers have to bound the button themselves (#178).
+                  Flexible(
+                    child: Text(
+                      widget.label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.button.copyWith(color: _textColor),
+                    ),
                   ),
-                  const SizedBox(width: AppSpacing.xs),
                 ],
-                Text(
-                  widget.label,
-                  style: AppTextStyles.button.copyWith(color: _textColor),
-                ),
-              ],
+              ),
             ),
           ),
         ),

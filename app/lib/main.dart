@@ -8,9 +8,13 @@ import 'package:design_system/design_system.dart';
 import 'package:presentation/router/app_router.dart';
 import 'package:application/application.dart';
 import 'package:data/data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
 import 'firebase_analytics_service.dart';
+import 'erase_user_data.dart';
+import 'in_app_review_prompter.dart';
 import 'revenuecat_service.dart';
+import 'runway_root.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,28 +33,46 @@ void main() async {
     debugPrint('Firebase init failed: $e');
   }
 
-  final db = AppDatabase();
-  final txRepo = DriftTransactionRepository(db);
-  final loanRepo = DriftLoanRepository(db);
-  final subRepo = DriftSubscriptionRepository(db);
+  await recordAppLaunch(await SharedPreferences.getInstance());
+
   final rcService = await RevenueCatService.init();
+  final analytics = FirebaseAnalyticsService();
+  late AppDatabase database;
 
   runApp(
-    ProviderScope(
-      overrides: [
-        analyticsProvider.overrideWithValue(FirebaseAnalyticsService()),
-        transactionRepositoryProvider.overrideWithValue(txRepo),
-        loanRepositoryProvider.overrideWithValue(loanRepo),
-        subscriptionRepositoryProvider.overrideWithValue(subRepo),
-        purchaseServiceProvider.overrideWithValue(rcService),
-      ],
-      child: const SurvivalApp(),
+    RunwayRoot(
+      openSession: () {
+        final db = database = AppDatabase();
+        return [
+          analyticsProvider.overrideWithValue(analytics),
+          transactionRepositoryProvider.overrideWithValue(
+            DriftTransactionRepository(db),
+          ),
+          loanRepositoryProvider.overrideWithValue(DriftLoanRepository(db)),
+          subscriptionRepositoryProvider.overrideWithValue(
+            DriftSubscriptionRepository(db),
+          ),
+          financialSettingsRepositoryProvider.overrideWithValue(
+            DriftFinancialSettingsRepository(db),
+          ),
+          purchaseServiceProvider.overrideWithValue(rcService),
+          usageCountStoreProvider.overrideWithValue(
+            const KeychainUsageCountStore(),
+          ),
+          reviewPrompterProvider.overrideWithValue(
+            const InAppReviewPrompter(),
+          ),
+        ];
+      },
+      eraseAllData: () => eraseAllUserData(database),
+      onRestarted: () => appRouter.go('/boot'),
+      child: const FinancialRunwayApp(),
     ),
   );
 }
 
-class SurvivalApp extends ConsumerWidget {
-  const SurvivalApp({super.key});
+class FinancialRunwayApp extends ConsumerWidget {
+  const FinancialRunwayApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

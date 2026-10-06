@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../tokens/app_colors.dart';
 
-/// Scaffold with Kraken-style teal gradient at top
+/// Dark navy fading down from the top, the ground every screen sits on.
 class GradientScaffold extends StatelessWidget {
   final Widget body;
   final bool safeArea;

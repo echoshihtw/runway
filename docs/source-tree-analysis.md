@@ -29,9 +29,9 @@ survival_optimizer/
 │   │   └── lib/
 │   │       ├── entities/       # Transaction, Loan, Subscription, ModelState, ...
 │   │       ├── enums/          # TransactionType, ExpenseCategory, BillingCycle, ...
-│   │       ├── logic/          # ★ survival_engine.dart — computeModel()
+│   │       ├── logic/          # ★ burn_engine.dart, runway_engine.dart
 │   │       ├── repositories/   # abstract interfaces (implemented by data/)
-│   │       ├── value_objects/  # Money, SurvivalMonth
+│   │       ├── value_objects/  # Money, LedgerMonth
 │   │       └── failures/       # sealed DomainFailure
 │   │
 │   ├── data/                   # Drift + SQLCipher — implements domain interfaces
@@ -90,7 +90,7 @@ survival_optimizer/
 | Application `main()` | `app/lib/main.dart` |
 | First screen | `packages/presentation/lib/features/boot/boot_screen.dart` (route `/boot`) |
 | Routing table | `packages/presentation/lib/router/app_router.dart` |
-| The core calculation | `packages/domain/lib/logic/survival_engine.dart` → `computeModel()` |
+| The core calculation | `packages/domain/lib/logic/burn_engine.dart` → `computeMonthlyBurn()`, then `runway_engine.dart` → `computeModel()` |
 | The composition of that calculation | `packages/application/lib/providers/model_provider.dart` → `modelProvider` |
 | Database + schema | `packages/data/lib/database/app_database.dart` |
 | Color/typography rules | `packages/design_system/lib/tokens/app_semantic_colors.dart` |

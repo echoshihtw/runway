@@ -8,3 +8,10 @@ final transactionRepositoryProvider = Provider<TransactionRepository>((ref) {
     'transactionRepositoryProvider must be overridden in main.dart',
   );
 });
+
+final financialSettingsRepositoryProvider =
+    Provider<FinancialSettingsRepository>((ref) {
+      throw UnimplementedError(
+        'financialSettingsRepositoryProvider must be overridden in main.dart',
+      );
+    });

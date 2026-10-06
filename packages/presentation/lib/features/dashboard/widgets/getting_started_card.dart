@@ -6,6 +6,8 @@ import 'package:application/application.dart';
 import 'package:domain/domain.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../config/config_screen.dart';
+import '../../transactions/daily_spend_sheet.dart';
+import '../../transactions/show_entry_sheet.dart';
 
 const _kDismissedKey = 'getting_started_dismissed';
 
@@ -37,30 +39,39 @@ class _GettingStartedCardState extends ConsumerState<GettingStartedCard> {
 
     final txns = ref.watch(transactionsProvider).value ?? [];
     final budget = ref.watch(budgetProvider).value ?? const Budget();
-    final scenario = ref.watch(scenarioProvider);
 
     final hasBalance = txns.any(
       (t) => t.type == TransactionType.openingBalance,
     );
     final hasBudget = budget.isSet;
     final hasExpense = txns.any((t) => t.type == TransactionType.expense);
-    final hasSim = scenario.hasRunSimulation;
+    final hasSim = (ref.watch(simulationCountProvider).value ?? 0) > 0;
 
+    final l10n = context.l10n;
     final steps = [
       _Step(
         icon: Icons.account_balance_wallet_rounded,
-        label: 'Add your cash balance',
-        hint: 'How much do you have right now?',
+        label: l10n.stepBalanceLabel,
+        shortLabel: l10n.stepBalanceShort,
+        hint: l10n.stepBalanceHint,
         done: hasBalance,
-        onTap: () => context.go('/transactions'),
+        // The step is the instruction; tapping it does the thing. Going to
+        // the Log tab and stopping left a new user to find the door alone.
+        onTap: () => showEntrySheet(
+          context,
+          ref,
+          preselectedType: TransactionType.openingBalance,
+        ),
       ),
       _Step(
         icon: Icons.tune_rounded,
-        label: 'Set your monthly budget',
-        hint: 'Rent + living expenses',
+        label: l10n.stepBudgetLabel,
+        shortLabel: l10n.stepBudgetShort,
+        hint: l10n.stepBudgetHint,
         done: hasBudget,
         onTap: () => showModalBottomSheet(
           context: context,
+          useRootNavigator: true,
           isScrollControlled: true,
           useSafeArea: true,
           backgroundColor: Colors.transparent,
@@ -87,22 +98,28 @@ class _GettingStartedCardState extends ConsumerState<GettingStartedCard> {
       ),
       _Step(
         icon: Icons.receipt_long_rounded,
-        label: 'Log your first expense',
-        hint: 'Track where your money goes',
+        label: l10n.stepExpenseLabel,
+        shortLabel: l10n.stepExpenseShort,
+        hint: l10n.stepExpenseHint,
         done: hasExpense,
-        onTap: () => context.go('/transactions'),
+        // Opens the grid right here rather than on the Log tab, so the first
+        // entry is saved on the screen where the number then moves.
+        onTap: () => showDailySpendSheet(context, ref),
       ),
       _Step(
         icon: Icons.science_rounded,
-        label: 'Try the simulator',
-        hint: 'What if you cut expenses?',
+        label: l10n.stepSimLabel,
+        shortLabel: l10n.stepSimShort,
+        hint: l10n.stepSimHint,
         done: hasSim,
         isOptional: true,
         onTap: () => context.go('/scenarios'),
       ),
     ];
 
-    final completedCount = steps.where((s) => s.done).length;
+    final completed = steps.where((s) => s.done).toList();
+    final pending = steps.where((s) => !s.done).toList();
+    final completedCount = completed.length;
 
     return Container(
       margin: const EdgeInsets.only(bottom: AppSpacing.cardGap),
@@ -135,9 +152,12 @@ class _GettingStartedCardState extends ConsumerState<GettingStartedCard> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('GETTING STARTED', style: AppTextStyles.sectionTitle),
                     Text(
-                      '$completedCount of ${steps.length} complete',
+                      l10n.gettingStarted,
+                      style: AppTextStyles.sectionTitle,
+                    ),
+                    Text(
+                      l10n.stepsComplete(completedCount, steps.length),
                       style: AppTextStyles.caption,
                     ),
                   ],
@@ -175,7 +195,9 @@ class _GettingStartedCardState extends ConsumerState<GettingStartedCard> {
           ),
           const SizedBox(height: AppSpacing.sm),
 
-          ...steps.map((s) => _StepRow(step: s)),
+          // Completed tasks share one line so the card stays short.
+          if (completed.isNotEmpty) _CompletedSummary(steps: completed),
+          ...pending.map((s) => _StepRow(step: s)),
           const SizedBox(height: AppSpacing.sm),
         ],
       ),
@@ -186,6 +208,7 @@ class _GettingStartedCardState extends ConsumerState<GettingStartedCard> {
 class _Step {
   final IconData icon;
   final String label;
+  final String shortLabel;
   final String hint;
   final bool done;
   final bool isOptional;
@@ -194,11 +217,55 @@ class _Step {
   const _Step({
     required this.icon,
     required this.label,
+    required this.shortLabel,
     required this.hint,
     required this.done,
     required this.onTap,
     this.isOptional = false,
   });
+}
+
+/// One line listing every completed task, e.g. "Done: Cash balance · Budget".
+class _CompletedSummary extends StatelessWidget {
+  final List<_Step> steps;
+  const _CompletedSummary({required this.steps});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.cardPadding,
+        vertical: AppSpacing.xs,
+      ),
+      decoration: const BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: AppColors.cardBorder, width: 0.5),
+        ),
+      ),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.check_circle_rounded,
+            color: AppColors.neonGreen,
+            size: 16,
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Text(
+              context.l10n.stepsDone(
+                steps.map((s) => s.shortLabel).join(' · '),
+              ),
+              style: AppTextStyles.caption.copyWith(
+                color: AppColors.textSecondary,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _StepRow extends StatelessWidget {
@@ -249,15 +316,17 @@ class _StepRow extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text(
-                        step.label,
-                        style: AppTextStyles.body.copyWith(
-                          color: step.done
-                              ? AppColors.textSecondary
-                              : AppColors.textPrimary,
-                          decoration: step.done
-                              ? TextDecoration.lineThrough
-                              : null,
+                      Flexible(
+                        child: Text(
+                          step.label,
+                          style: AppTextStyles.body.copyWith(
+                            color: step.done
+                                ? AppColors.textSecondary
+                                : AppColors.textPrimary,
+                            decoration: step.done
+                                ? TextDecoration.lineThrough
+                                : null,
+                          ),
                         ),
                       ),
                       if (step.isOptional) ...[
@@ -272,7 +341,7 @@ class _StepRow extends StatelessWidget {
                             borderRadius: BorderRadius.circular(3),
                           ),
                           child: Text(
-                            'OPTIONAL',
+                            context.l10n.optionalBadge,
                             style: AppTextStyles.caption.copyWith(
                               color: AppColors.turkishBlue,
                               fontSize: 9,

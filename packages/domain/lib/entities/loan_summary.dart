@@ -17,10 +17,16 @@ class LoanSummary {
       ? (totalRepaid / loan.originalAmount).clamp(0.0, 1.0)
       : 0.0;
 
+  /// Whether the principal has been repaid. Display only: `remainingBalance`
+  /// ignores interest, so this can be true while the lender is still charging.
   bool get isFullyPaid => remainingBalance <= 0;
 
+  /// Months of payments left.
+  ///
+  /// The term is checked before repaid principal: a loan whose principal is
+  /// repaid inside its term is still being paid, and returning 0 there left
+  /// the card promising payments "to the end of the term" with no end on it.
   int get monthsRemaining {
-    if (isFullyPaid) return 0;
     if (loan.originalTermMonths > 0) {
       final now = DateTime.now();
       final start = loan.startDate;
@@ -30,6 +36,7 @@ class LoanSummary {
         loan.originalTermMonths,
       );
     }
+    if (isFullyPaid) return 0;
     return loan.monthlyPayment > 0
         ? (remainingBalance / loan.monthlyPayment).ceil().clamp(0, 9999)
         : 0;

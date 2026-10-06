@@ -15,8 +15,8 @@ Source: `packages/data/lib/tables/transactions_table.dart`
 | Column | Type | Null | Default | Notes |
 |---|---|---|---|---|
 | `id` | TEXT | no | — | **PK**, client-generated UUID |
-| `date` | DATETIME | no | — | Drives the derived `SurvivalMonth` |
-| `type` | TEXT | no | — | `TransactionType.name`: `expense`, `income`, `loan`, `investment`, `repayment`, `openingBalance` |
+| `date` | DATETIME | no | — | Drives the derived `LedgerMonth` |
+| `type` | TEXT | no | — | `TransactionType.name`: `expense`, `income`, `loan`, `repayment`, `openingBalance`. An unknown name, such as `investment` from a database written before that feature was removed, reads as `expense` |
 | `amount` | REAL | no | — | Always non-negative; sign derived from `type.isInflow` |
 | `note` | TEXT | yes | — | |
 | `loanId` | TEXT | yes | — | Links a `repayment` to `loans.id` (no FK constraint) |
@@ -54,7 +54,7 @@ Source: `packages/data/lib/tables/subscriptions_table.dart`
 | `amount` | REAL | no | — | In the billing cycle's own units, not monthly |
 | `cycle` | TEXT | no | — | `BillingCycle.name`: `weekly` \| `monthly` \| `quarterly` \| `yearly` |
 | `startDate` | DATETIME | no | — | |
-| `nextBillingDate` | DATETIME | no | — | Rolled forward by `computeNextBillingDate` |
+| `nextBillingDate` | DATETIME | no | — | Written once at creation and never advanced; nothing reads it. Every date shown or counted is derived from `startDate` + `cycle` |
 | `note` | TEXT | yes | — | |
 | `isActive` | BOOLEAN | no | `true` | |
 | `createdAt` | DATETIME | no | — | |
@@ -92,8 +92,7 @@ Defined in `AppDatabase.migration` (`packages/data/lib/database/app_database.dar
 ## Other Data Contracts (CONTRACTS §5)
 
 - **§5.2 Opening balance** — excluded from the monthly aggregation loop, summed as starting cash before regular transactions; if *only* an opening balance exists, a synthetic `MonthlyState` is returned. Implemented in `domain/lib/logic/monthly_aggregator.dart`.
-- **§5.3 Transaction types** — `expense` (counts in burn), `income`, `loan` (proceeds, inflow), `investment` (reduces cash, **excluded from burn rate**), `repayment` (counts in burn), `openingBalance` (sets starting cash).
-  > Note: the contract's stated treatment of `investment` — reduces cash but excluded from burn — is not separately implemented. `TransactionType.investment` is not in `isInflow`, so `aggregateMonths` counts it in `grossOutflow` like any other outflow, which *does* feed the burn rate. The code comment marks the value as retained only for backward compatibility with stored data.
+- **§5.3 Transaction types** — `expense` (counts in burn), `income`, `loan` (proceeds, inflow), `repayment` (counts in burn), `openingBalance` (sets starting cash).
 
 ## Persisted Outside SQLite
 
