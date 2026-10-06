@@ -92,46 +92,6 @@ double subscriptionsChargedInMonth({
   return total;
 }
 
-/// The dates the schedule produced before the drift fix, by period.
-///
-/// Charges confirmed on a device are recorded under ids derived from those
-/// dates. Without them the corrected dates read as unpaid, and answering the
-/// prompt again writes a second row for money already spent.
-///
-/// By period, not by value: the old walk skipped whole months.
-///
-/// Recognition only, never written. Empty where the dates never moved, which
-/// is every weekly plan and every start day up to the 28th. Delete once a
-/// migration has rewritten the stored ids.
-List<DateTime> legacyBillingDates(Subscription s, DateTime to) {
-  if (s.cycle == BillingCycle.weekly || s.startDate.day <= 28) return const [];
-  final dates = <DateTime>[];
-  var date = s.startDate;
-  for (var periods = 0; periods < _maxPeriods && !date.isAfter(to); periods++) {
-    dates.add(date);
-    date = switch (s.cycle) {
-      BillingCycle.weekly => date,
-      BillingCycle.monthly => DateTime(date.year, date.month + 1, date.day),
-      BillingCycle.quarterly => DateTime(date.year, date.month + 3, date.day),
-      BillingCycle.yearly => DateTime(date.year + 1, date.month, date.day),
-    };
-  }
-  return dates;
-}
-
-/// Whether [period] of [s] is in [recorded], under the id derived now or the
-/// one derived before the drift fix.
-bool chargeAlreadyRecorded({
-  required Subscription s,
-  required int period,
-  required DateTime date,
-  required List<DateTime> legacy,
-  required Set<String> recorded,
-}) =>
-    recorded.contains(subscriptionChargeId(s.id, date)) ||
-    (period < legacy.length &&
-        recorded.contains(subscriptionChargeId(s.id, legacy[period])));
-
 /// A charge's id is derived from its subscription and payment date, so a
 /// second copy collides with the primary key and a confirmed charge can be
 /// recognised without a column linking the two.
@@ -160,21 +120,8 @@ double subscriptionsUnpaidThisMonth({
   final recorded = transactions.map((t) => t.id).toSet();
   var owed = 0.0;
   for (final s in subscriptions.where((s) => s.isActive)) {
-    // From period 0, so the index is the period a legacy id matches on.
-    final dates = billingDatesUpTo(s, last);
-    final legacy = legacyBillingDates(s, last);
-    for (var period = 0; period < dates.length; period++) {
-      final date = dates[period];
-      if (date.isBefore(first)) continue;
-      if (chargeAlreadyRecorded(
-        s: s,
-        period: period,
-        date: date,
-        legacy: legacy,
-        recorded: recorded,
-      )) {
-        continue;
-      }
+    for (final date in billingDatesInRange(s, from: first, to: last)) {
+      if (recorded.contains(subscriptionChargeId(s.id, date))) continue;
       owed += s.amount;
     }
   }
@@ -183,9 +130,7 @@ double subscriptionsUnpaidThisMonth({
 
 /// Calendar days until the next bill.
 ///
-/// Derived, because the stored `nextBillingDate` is written once and never
-/// advanced: once its date passed, the countdown clamped to 0 and stayed there
-/// for good. Measured from the start of today, so a bill eight days away reads
+/// Measured from the start of today, so a bill eight days away reads
 /// as 8 rather than flooring a part-day to 7.
 int daysUntilNextBilling(Subscription s, DateTime now) {
   final startOfToday = DateTime(now.year, now.month, now.day);
@@ -198,13 +143,6 @@ int daysUntilNextBilling(Subscription s, DateTime now) {
 
 /// The first billing date of a plan starting [start] on [cycle] that is still
 /// ahead of [now].
-///
-/// The stored `nextBillingDate` is never advanced after creation, so once a
-/// date passes it stays in the past and the countdown sticks at 0. Deriving it
-/// cannot go stale.
-///
-/// Takes the two fields the schedule depends on rather than a Subscription, so
-/// the sheet that is still building one can ask the same question.
 DateTime nextBillingDateAfter(
   DateTime start,
   BillingCycle cycle,

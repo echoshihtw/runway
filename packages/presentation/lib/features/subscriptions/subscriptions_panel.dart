@@ -8,6 +8,7 @@ import '../../shared/add_strip.dart';
 import '../../shared/ledger_glyphs.dart';
 import 'add_subscription_sheet.dart';
 import 'subscription_form.dart';
+import '../../shared/formats.dart';
 
 class SubscriptionsPanel extends ConsumerWidget {
   const SubscriptionsPanel({super.key});
@@ -17,7 +18,7 @@ class SubscriptionsPanel extends ConsumerWidget {
     final l10n = context.l10n;
     final subs = ref.watch(subscriptionsProvider).value ?? [];
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
-    final nf = NumberFormat('#,##0', 'en_US');
+    final nf = amountFormat(context);
     final active = subs.where((s) => s.isActive).toList();
     final now = ref.watch(clockProvider)();
     final sorted = sortedByNextBilling(active, now: now);
@@ -173,7 +174,6 @@ class SubscriptionsPanel extends ConsumerWidget {
             amount: amount,
             cycle: cycle,
             startDate: startDate,
-            nextBillingDate: nextBillingDateAfter(startDate, cycle, now),
             note: note,
             isActive: subscription.isActive,
             createdAt: subscription.createdAt,

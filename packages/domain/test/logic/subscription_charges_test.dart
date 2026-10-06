@@ -23,7 +23,6 @@ Subscription _sub({
   amount: amount,
   cycle: cycle,
   startDate: startDate,
-  nextBillingDate: startDate,
   isActive: isActive,
   createdAt: createdAt ?? startDate,
   updatedAt: updatedAt ?? createdAt ?? startDate,
@@ -44,75 +43,6 @@ Transaction _tx(
 );
 
 void main() {
-  group('a charge confirmed before the drift fix', () {
-    // The old schedule stepped date to date, so a plan starting on the 31st
-    // billed the 3rd for ever after. Those charges are on devices now, under
-    // ids the corrected schedule no longer produces.
-    List<DateTime> oldWalk(DateTime start, DateTime to, int monthStep) {
-      final dates = <DateTime>[];
-      var d = start;
-      while (!d.isAfter(to)) {
-        dates.add(d);
-        d = DateTime(d.year, d.month + monthStep, d.day);
-      }
-      return dates;
-    }
-
-    test('is not asked about again, so it cannot be paid twice', () {
-      final now = DateTime(2026, 9, 23);
-      final s = _sub(
-        cycle: BillingCycle.quarterly,
-        startDate: DateTime(2025, 1, 31),
-      );
-      final confirmed = [
-        for (final date in oldWalk(s.startDate, now, 3))
-          Transaction(
-            id: subscriptionChargeId(s.id, date),
-            type: TransactionType.subscriptionCharge,
-            amount: Money(s.amount),
-            date: date,
-            createdAt: now,
-            updatedAt: now,
-          ),
-      ];
-
-      expect(
-        dueSubscriptionCharges(
-          subscriptions: [s],
-          transactions: confirmed,
-          now: now,
-        ),
-        isEmpty,
-        reason: 'every one of these was already answered and paid',
-      );
-      expect(
-        subscriptionsUnpaidThisMonth(
-          subscriptions: [s],
-          transactions: confirmed,
-          now: now,
-        ),
-        0,
-      );
-    });
-
-    test('a genuinely unpaid bill is still asked about', () {
-      final now = DateTime(2026, 9, 23);
-      final s = _sub(
-        cycle: BillingCycle.monthly,
-        startDate: DateTime(2026, 7, 31),
-      );
-      expect(
-        dueSubscriptionCharges(
-          subscriptions: [s],
-          transactions: const [],
-          now: now,
-        ),
-        isNotEmpty,
-        reason: 'recognising old ids must not suppress real questions',
-      );
-    });
-  });
-
   final now = DateTime(2026, 9, 17, 10);
   final opening = _tx(
     'open',

@@ -78,7 +78,6 @@ void main() {
 
     test('round-trips all Subscription fields including isActive and note', () async {
       final start = DateTime(2024, 1, 1);
-      final billing = DateTime(2025, 2, 1);
       final now = DateTime(2025, 1, 1);
       final sub = Subscription(
         id: 'sub-full',
@@ -87,7 +86,6 @@ void main() {
         amount: 490,
         cycle: BillingCycle.monthly,
         startDate: start,
-        nextBillingDate: billing,
         note: 'family plan',
         isActive: false,
         createdAt: now,
@@ -130,7 +128,6 @@ Subscription _sub({
     amount: amount,
     cycle: cycle,
     startDate: now,
-    nextBillingDate: now,
     createdAt: now,
     updatedAt: now,
   );

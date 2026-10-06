@@ -4,6 +4,7 @@ import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
 
 import '../../shared/money_field.dart';
+import '../../shared/formats.dart';
 
 class SubscriptionForm extends StatefulWidget {
   final Subscription? existing;
@@ -132,7 +133,10 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final dateStr = DateFormat('dd MMM yyyy').format(_startDate).toUpperCase();
+    final dateStr = DateFormat(
+      'dd MMM yyyy',
+      intlLocale(context),
+    ).format(_startDate).toUpperCase();
 
     return Container(
       // The sheet is as tall as this form and no taller. Unbounded, the

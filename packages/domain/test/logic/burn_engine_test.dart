@@ -50,7 +50,6 @@ Subscription _subscription(double monthly, {int billingDay = 1}) =>
       amount: monthly,
       cycle: BillingCycle.monthly,
       startDate: DateTime(2026, 1, billingDay),
-      nextBillingDate: DateTime(2026, 10, 1),
       createdAt: DateTime(2026, 1, 1),
       updatedAt: DateTime(2026, 1, 1),
     );

@@ -69,7 +69,7 @@ packages/domain/lib/
 | `Transaction` | `id, date, type, amount, note?, loanId?, category?, createdAt, updatedAt` | `month` auto-derived from `date`; `signedAmount` uses `type.isInflow` |
 | `Loan` | `originalAmount, monthlyPayment, originalTermMonths, startDate, isActive` | — |
 | `LoanSummary` | `loan, totalRepaid, remainingBalance, paidThisMonth` | `repaidRatio`, `isFullyPaid`, `monthsRemaining`, `isAheadThisMonth` |
-| `Subscription` | `amount, cycle, startDate, nextBillingDate, category, isActive` | `monthlyEquivalent`, `daysUntilNextBilling` |
+| `Subscription` | `amount, cycle, startDate, category, isActive` | `monthlyEquivalent`, `daysUntilNextBilling` |
 | `Budget` | `rent, living` | `subtotal`/`total`, `isSet` |
 | `FinancialAssumptions` | `expectedMonthlyInflow?, expectedMonthlyBurnOverride?` | presence guards |
 | `MonthlyState` | `month, netFlow, balance, grossOutflow` | — |
@@ -123,7 +123,7 @@ One schedule for every cycle: `billingDateAt(start, cycle, periods)` counts peri
 
 ### `subscription_engine.dart`
 
-Total/by-category/yearly cost over active subscriptions, and `sortedByNextBilling`, which orders by the derived date rather than the stored `nextBillingDate`.
+Total/by-category/yearly cost over active subscriptions, and `sortedByNextBilling`, which orders by the derived next bill.
 
 ### `runway_goal_progress.dart`
 
@@ -154,7 +154,6 @@ CI pins `TZ=Europe/Paris` for this suite. A billing date is a calendar day, and 
 
 - `DateTime.now()` is still called directly inside `loan_engine`, `monthly_aggregator` and `LoanSummary`, so those are not time-injectable; tests around month boundaries are date-sensitive. The subscription and runway engines take `now` as a parameter.
 - `Money`'s `+ - *` operators build through the private constructor, so they bypass the factory's non-negative guard (#92).
-- `subscription_billing.dart` carries `legacyBillingDates`, which reconstructs the pre-#244 schedule so a charge confirmed under an old id is still recognised. It comes out when #245 migrates the stored ids.
 - `RunwayGoal` is JSON-serialized rather than stored in SQLite (persisted via `shared_preferences` in the application layer).
 
 ## See Also

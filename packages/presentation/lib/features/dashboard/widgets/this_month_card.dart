@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:design_system/design_system.dart';
 import 'package:application/application.dart';
 import 'package:domain/domain.dart';
-import 'package:intl/intl.dart';
 import 'living_sheet.dart';
+import '../../../shared/formats.dart';
 
 class ThisMonthCard extends ConsumerWidget {
   const ThisMonthCard({super.key});
@@ -15,7 +15,7 @@ class ThisMonthCard extends ConsumerWidget {
     final flow = ref.watch(thisMonthFlowProvider);
     final burn = ref.watch(monthlyBurnProvider);
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
-    final nf = NumberFormat('#,##0', 'en_US');
+    final nf = amountFormat(context);
 
     String fmt(double v) => '$symbol ${nf.format(v.abs())}';
 

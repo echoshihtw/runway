@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:design_system/design_system.dart';
 import 'package:application/application.dart';
 import 'package:domain/domain.dart';
-import 'package:intl/intl.dart';
 
 import 'widgets/delete_all_data_card.dart';
 import 'widgets/pro_status_card.dart';
 import '../../shared/money_field.dart';
+import '../../shared/formats.dart';
 
 class ConfigScreen extends ConsumerStatefulWidget {
   const ConfigScreen({super.key});
@@ -156,7 +156,7 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
     final currentCurr = currAsync.value;
     final budget = budgetAsync.value;
     final symbol = currentCurr?.symbol ?? '¥';
-    final nf = NumberFormat('#,##0', 'en_US');
+    final nf = amountFormat(context);
 
     return Container(
       decoration: const BoxDecoration(gradient: AppColors.gradientBackground),

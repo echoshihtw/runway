@@ -91,7 +91,6 @@ Subscription _yearlyPlan(DateTime now) {
     amount: 12000,
     cycle: BillingCycle.yearly,
     startDate: started,
-    nextBillingDate: started,
     createdAt: started,
     updatedAt: started,
   );

@@ -54,7 +54,6 @@ Source: `packages/data/lib/tables/subscriptions_table.dart`
 | `amount` | REAL | no | — | In the billing cycle's own units, not monthly |
 | `cycle` | TEXT | no | — | `BillingCycle.name`: `weekly` \| `monthly` \| `quarterly` \| `yearly` |
 | `startDate` | DATETIME | no | — | |
-| `nextBillingDate` | DATETIME | no | — | Written once at creation and never advanced; nothing reads it. Every date shown or counted is derived from `startDate` + `cycle` |
 | `note` | TEXT | yes | — | |
 | `isActive` | BOOLEAN | no | `true` | |
 | `createdAt` | DATETIME | no | — | |
@@ -85,9 +84,7 @@ Defined in `AppDatabase.migration` (`packages/data/lib/database/app_database.dar
 
 `onCreate` simply runs `m.createAll()` for fresh installs.
 
-**When adding a migration:** bump `schemaVersion`, append a new `if (from < n)` block, run `make gen`, **and update the table in `CONTRACTS.md` §5.1** — the contract is the declared source of truth for schema history. There are no generated schema snapshots / `drift_dev schema` verification tests in the repo, so migrations are not automatically regression-tested.
-
-> ⚠️ **CONTRACTS §5.1 is out of date.** It declares "Current schema version: **4**" and lists only migrations 1–4. The code is at **v5** (the `transactions.category` column). Reconcile the contract.
+**When adding a migration:** bump `schemaVersion`, append a new `if (from < n)` block, run `make gen`, **and update the table in `CONTRACTS.md` §5.1** — the contract is the declared source of truth for schema history. There are no generated schema snapshots / `drift_dev schema` verification tests; a migration is tested by hand in `packages/data/test/database/`.
 
 ## Other Data Contracts (CONTRACTS §5)
 

@@ -114,7 +114,7 @@ All use `AsyncNotifier` + `SharedPreferences`:
 
 `PurchaseService` is an abstract port with `fetchOffering`, `purchasePackage`, `restorePurchases`, `checkProEntitlement`, plus provider-agnostic `ProOffering` / `ProPackage` / `ProPackageType` / `PurchaseException` types. `ProPackage.nativePackage` is an `Object` — the RevenueCat SDK type is deliberately not leaked into this layer.
 
-> **In flight:** the RevenueCat implementation (`app/lib/revenuecat_service.dart`, `purchases_flutter` v10) is present in the working tree but not yet committed. See [architecture-app.md](./architecture-app.md).
+The RevenueCat implementation is `app/lib/revenuecat_service.dart`. See [architecture-app.md](./architecture-app.md).
 
 ## Use Cases
 

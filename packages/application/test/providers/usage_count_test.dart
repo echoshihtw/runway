@@ -144,7 +144,7 @@ void main() {
 
       final add = container.read(addTransactionUseCaseProvider);
       await add.execute(_entry(TransactionType.expense));
-      await add.execute(_entry(TransactionType.repayment));
+      await add.execute(_entry(TransactionType.income));
 
       expect(ledger.items, hasLength(2));
       expect(device.counts[UsageKind.entries.key], 2);
@@ -180,6 +180,24 @@ void main() {
       await container
           .read(addTransactionUseCaseProvider)
           .execute(_entry(TransactionType.subscriptionCharge));
+
+      expect(ledger.items, hasLength(1));
+      expect(device.counts[UsageKind.entries.key], 5, reason: 'unchanged');
+    });
+
+    test('a repayment on a tracked loan is written but not counted', () async {
+      // The money has already left; refusing to record it leaves the runway
+      // reading longer than it is.
+      final device = _MemoryStore()..counts[UsageKind.entries.key] = 5;
+      final ledger = _Ledger();
+      final container = _container(device, ledger: ledger);
+      final keepAlive = container.listen(entryCountProvider, (_, _) {});
+      addTearDown(keepAlive.close);
+      await container.read(entryCountProvider.future);
+
+      await container
+          .read(addTransactionUseCaseProvider)
+          .execute(_entry(TransactionType.repayment));
 
       expect(ledger.items, hasLength(1));
       expect(device.counts[UsageKind.entries.key], 5, reason: 'unchanged');

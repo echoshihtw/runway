@@ -117,9 +117,10 @@ class _DashboardHeader extends StatelessWidget {
           const RunwayBadge(),
           const SizedBox(width: AppSpacing.sm),
           const Spacer(),
-          GestureDetector(
-            onTap: onConfig,
-            child: const Icon(
+          IconButton(
+            onPressed: onConfig,
+            tooltip: context.l10n.config,
+            icon: const Icon(
               Icons.tune_rounded,
               color: AppColors.textSecondary,
               size: 22,

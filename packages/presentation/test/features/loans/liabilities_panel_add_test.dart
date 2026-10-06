@@ -283,12 +283,11 @@ void main() {
     );
   });
 
-  testWidgets('repaying is gated too, because it writes an entry', (
+  testWidgets('repaying is never gated, because the money already left', (
     tester,
   ) async {
-    // The third door. A repayment writes an entry like any other, so it meets
-    // the same wall. It reached the wrong wall once, when it was given the
-    // loan trigger: a repayment is money leaving, not arriving.
+    // Blocking it leaves the runway reading longer than it is, and more so
+    // each month the repayment cannot be recorded.
     await _pump(tester, [_loan()], entriesUsed: ProductConfig.freeEntries);
     final l10n = await AppLocalizations.delegate.load(const Locale('en'));
 
@@ -301,8 +300,9 @@ void main() {
 
     expect(
       find.text(l10n.paywallTitleEntries(ProductConfig.freeEntries)),
-      findsOneWidget,
+      findsNothing,
     );
+    expect(find.text(l10n.repayLoan), findsOneWidget, reason: 'the sheet opens');
   });
 
   testWidgets('the count follows the entitlement in both directions', (

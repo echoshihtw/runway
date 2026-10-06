@@ -3,7 +3,7 @@ import 'package:design_system/design_system.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
+import '../../../shared/formats.dart';
 
 /// Expected income against monthly costs, and what the month leaves behind.
 ///
@@ -29,7 +29,7 @@ class EveryMonthCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final symbol = ref.watch(currencyProvider).value?.symbol ?? '¥';
-    final nf = NumberFormat('#,##0', 'en_US');
+    final nf = amountFormat(context);
     String money(double v) => '$symbol ${nf.format(v.abs())}';
 
     // Nothing to say while there is no cost to say it against. Without a

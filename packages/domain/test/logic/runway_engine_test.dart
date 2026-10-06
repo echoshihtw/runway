@@ -145,7 +145,6 @@ void main() {
           amount: 10000,
           cycle: BillingCycle.monthly,
           startDate: DateTime(2026, 1, 1),
-          nextBillingDate: DateTime(2026, 10, 1),
           createdAt: DateTime(2026, 1, 1),
           updatedAt: DateTime(2026, 1, 1),
         ),
