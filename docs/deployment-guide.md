@@ -1,6 +1,6 @@
 # Deployment Guide
 
-**Project:** Runway (`survival_optimizer`) · **App version:** `1.0.1+2`
+**Project:** Runway (`survival_optimizer`)
 **Generated:** 2026-08-04 · Deep scan
 
 ---
@@ -96,7 +96,7 @@ IOS_EXPORT_METHOD=ad-hoc make build-testflight
 - [ ] `CONTRACTS.md` §5.1 schema-version table updated if the schema changed (it currently says v4; the code is at v5)
 - [ ] `make l10n-check` — all 7 `.arb` files valid
 - [ ] `make gen-all` run and no stale `.g.dart` committed (CONTRACTS §2.4)
-- [ ] **`kRevenueCatGoogleKey` replaced** — while it is a placeholder, `isRevenueCatConfigured` is false and purchases are disabled on *both* platforms
+- [ ] **`kRevenueCatGoogleKey` replaced** — while it is a placeholder, purchases are disabled on Android (iOS needs only its own key)
 - [ ] Version bumped in `app/pubspec.yaml`
 - [ ] Firebase `google-services.json` / `GoogleService-Info.plist` present for the correct bundle ids
 - [ ] Icons regenerated from the master (`make gen-icons`) if the brand asset changed

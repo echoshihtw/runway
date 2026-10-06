@@ -1,7 +1,7 @@
 # Architecture — `app` (Shell, DI Wiring, Platform Integrations)
 
 **Part ID:** `app` · **Path:** `app/` · **Type:** mobile (Flutter application)
-**Version:** `1.0.1+2` · **Generated:** 2026-08-04 · Deep scan
+**Generated:** 2026-08-04 · Deep scan
 
 ---
 
@@ -19,7 +19,7 @@ It is also where all platform-specific concerns live: iOS/Android projects, scre
 | Language | Dart | `^3.11.5` | |
 | DI / state | `flutter_riverpod` | `^3.0.3` | `ProviderScope` overrides |
 | Analytics | `firebase_core`, `firebase_analytics` | `^4.7.0`, `^12.3.0` | |
-| Purchases | `purchases_flutter` (RevenueCat) | `^10.0.0` | **uncommitted** |
+| Purchases | `purchases_flutter` (RevenueCat) | `^10.0.0` | |
 | DB runtime | `sqlcipher_flutter_libs`, `path_provider` | `^0.6.0`, `^2.1.5` | Encrypted SQLite |
 | Screen security | `flutter_windowmanager_plus` | `^1.0.1` | Android `FLAG_SECURE` |
 | Sharing | `share_plus`, `screenshot` | `^12.0.2`, `^3.0.0` | Share the runway card |
@@ -67,7 +67,7 @@ Watches `localeProvider`. While it has no value, it renders a bare themed `Scaff
 
 `localeResolutionCallback` prefers the user's saved locale; otherwise it matches the device locale by language+country, then by language alone, and finally falls back to `en`.
 
-## Monetization — RevenueCat (in flight)
+## Monetization — RevenueCat
 
 `RevenueCatService implements PurchaseService` (`lib/revenuecat_service.dart`):
 
@@ -75,9 +75,7 @@ Watches `localeProvider`. While it has no value, it renders a bare themed `Scaff
 - `fetchOffering()` maps `Offerings.current` to the layer-agnostic `ProOffering`/`ProPackage`; returns `null` on any error.
 - `purchasePackage()` casts `ProPackage.nativePackage` back to RevenueCat's `Package`, calls `Purchases.purchase(...)`, and reports success by checking `customerInfo.entitlements.active` for `kProEntitlementId` (`'pro'`). `PurchasesErrorCode.purchaseCancelledError` becomes `PurchaseException(userCancelled: true)`.
 
-**Configuration status (`revenuecat_config.dart`):** the Apple public SDK key is filled in; `kRevenueCatGoogleKey` is still `REVENUECAT_GOOGLE_KEY_PLACEHOLDER`. Because `isRevenueCatConfigured` requires *both* keys to be non-placeholder, **RevenueCat is currently disabled on iOS as well as Android**. Filling in the Android key enables both.
-
-> **Uncommitted work:** `purchases_flutter` v10, `revenuecat_service.dart`, and the RevenueCat config are present in the working tree but not committed as of this scan. The last commits (`ac4738e`, `b87943b`) scaffolded the integration; the current tree carries further changes on top.
+**Configuration status (`revenuecat_config.dart`):** each platform needs only its own key (`isRevenueCatConfiguredFor`). The Apple key is set, so purchases run on iOS; `kRevenueCatGoogleKey` is still a placeholder, so Android has none.
 
 ## Analytics
 
