@@ -65,7 +65,7 @@ monthlyBurn = max(rentBudget, typicalRent)
 ```
 - Expenses with the RENT category count as rent. Every other expense, including uncategorized ones, counts as living.
 - A logged expense uses up its budget and never adds on top of it. Burn only rises when a bucket goes over budget.
-- `typicalRent` and `typicalLiving` = average logged spending per completed month in that bucket, or this month's spending when there is no earlier month.
+- `typicalRent` and `typicalLiving` = a bucket's spending in completed months divided by the completed months since the earliest spending entry in either bucket, or this month's spending when no month has completed since then. A month with nothing logged counts as zero. Only spending sets that start, so a backdated balance, income or loan does not stretch the average.
 - Loan repayments count only against their loan's scheduled payment. Income, loans received and opening balances are not burn.
 - A loan with a term keeps costing its monthly payment until that term ends. Repaid principal does not end it, because `remainingBalance` ignores interest and stopping there would raise the runway while the user is still paying. A loan with no term falls back to repaid principal, which is correct for an interest-free loan. (Loans are free at every tier — #80, #139; there is no slot.)
 - An entry dated after today is a plan. It counts in no bucket and moves no cash until its date arrives; a repayment dated later this month has not paid this month.
