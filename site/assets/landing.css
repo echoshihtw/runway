@@ -110,23 +110,6 @@ html {
   object-fit: cover;
   clip-path: inset(2% round 24%);
 }
-.review-badge,
-.store-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  color: var(--muted);
-  font-size: 0.83rem;
-  white-space: nowrap;
-}
-.review-badge i,
-.store-status i {
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 50%;
-  background: var(--gold);
-  box-shadow: 0 0 0 0.25rem rgba(203, 154, 62, 0.11);
-}
 .eyebrow,
 .step {
   margin: 0 0 1rem;
@@ -371,9 +354,6 @@ html {
   color: var(--muted);
   line-height: 1.65;
 }
-.price-intro .store-status {
-  margin-top: 1rem;
-}
 .plans {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -546,7 +526,7 @@ body.landing .wrap {
 }
 
 /* A plain header. It floated, with two colour states and a blur, to keep a
-   wordmark, three links and a status badge in reach: nothing to act on, over
+   wordmark and three links in reach: nothing to act on, over
    the section showing the product. It earns the sticky back when it has an
    App Store link to carry. */
 .landing header.site {
@@ -559,9 +539,6 @@ body.landing .wrap {
 }
 .landing header.site .brand > span:last-child {
   color: var(--mint);
-}
-.landing header.site .review-badge {
-  color: #b8c3d1;
 }
 
 .hero {
@@ -626,10 +603,6 @@ body.landing .wrap {
   outline: 2px solid var(--ink);
   outline-offset: 4px;
 }
-.hero .store-status {
-  color: #657087;
-}
-
 .hero-field {
   position: relative;
   min-height: 43rem;
@@ -1660,8 +1633,8 @@ body.landing .wrap {
   body.landing .wrap {
     padding-inline: 0.75rem;
   }
-  /* Below 48rem the nav links are hidden, which leaves a sticky bar holding a
-     wordmark and a review badge: no navigation and nothing to act on, for
+  /* Below 48rem the nav links are hidden, which leaves a sticky bar holding
+     only a wordmark: no navigation and nothing to act on, for
      about a tenth of the viewport on every screen of a very long page. So on
      a phone it is a normal header and scrolls away. It earns the sticky back
      when it has the App Store link to carry. */
@@ -1670,12 +1643,6 @@ body.landing .wrap {
   }
   .landing header.site nav {
     display: none;
-  }
-  /* The header wraps here, and margin-left:auto sent the badge to the far
-     right of its own row, under a brand sitting at the far left. Once it has
-     wrapped it is a second line, so it starts where the first line starts. */
-  .review-badge {
-    margin-left: 0;
   }
   .hero {
     grid-template-columns: 1fr;
@@ -1890,15 +1857,14 @@ body.landing .wrap {
   }
   /* The closing block collapsed to one column, which gave the mark a whole
      row to itself with the width beside it empty. It sits next to the words
-     it belongs to, and the store line takes the row under both. */
+     it belongs to, and the button takes the row under both. */
   .final-cta {
     grid-template-columns: auto 1fr;
     gap: 1rem 1.1rem;
     align-items: center;
   }
-  /* The button replaced the store line here, and inherits its full-width row:
-     without this it lands in the mark's column and leaves the text's empty. */
-  .final-cta .store-status,
+  /* Without this the button lands in the mark's column and leaves the
+     text's empty. */
   .final-cta .button {
     grid-column: 1 / -1;
     justify-self: stretch;

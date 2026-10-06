@@ -39,10 +39,12 @@ class LandingPageTest(unittest.TestCase):
         positions = [HTML.index(f'id="{section}"') for section in expected]
         self.assertEqual(positions, sorted(positions))
 
-    def test_pending_review_is_honest_and_cta_scrolls_on_page(self):
-        self.assertIn("Coming soon to the App Store", HTML)
+    def test_every_store_link_is_the_app_store_listing(self):
+        self.assertIn('href="https://apps.apple.com/app/id6778675088"', HTML)
+        self.assertNotIn("testflight", HTML.lower())
+        self.assertNotIn("Coming soon", HTML)
+        self.assertNotIn("In App Store review", HTML)
         self.assertIn('href="#how-it-works"', HTML)
-        self.assertNotRegex(HTML, r'href="[^"]*apps\.apple\.com')
 
     def test_life_chapter_line_is_inclusive_not_segmented(self):
         self.assertIn(
@@ -226,9 +228,9 @@ class LandingPageTest(unittest.TestCase):
         self.assertRegex(CSS, r"\.hero-field\s*\{[^}]*overflow:\s*hidden")
 
     def test_navigation_is_a_plain_header(self):
-        # It floated, with two colour states and a blur, to keep a wordmark,
-        # three links and a status badge in reach over the section showing the
-        # product. Nothing in it was actionable. It earns the sticky back when
+        # It floated, with two colour states and a blur, to keep a wordmark
+        # and three links in reach over the section showing the product.
+        # Nothing in it was actionable. It earns the sticky back when
         # it has an App Store link to carry.
         header_rules = re.findall(r"\.landing header\.site\s*\{([^}]*)\}", CSS)
         self.assertTrue(header_rules)
