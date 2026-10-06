@@ -49,7 +49,7 @@ void main() {
     final version = await upgraded
         .customSelect('PRAGMA user_version;')
         .getSingle();
-    expect(version.data.values.first, 6);
+    expect(version.data.values.first, upgraded.schemaVersion);
     expect((await settings.getBudget()).rent, 1000);
     final entries = await DriftTransactionRepository(upgraded).getAll();
     expect(entries.single.id, 'tx-1');

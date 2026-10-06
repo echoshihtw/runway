@@ -8,7 +8,6 @@ class Subscription {
   final double amount;
   final BillingCycle cycle;
   final DateTime startDate;
-  final DateTime nextBillingDate;
   final String? note;
   final bool isActive;
   final DateTime createdAt;
@@ -21,7 +20,6 @@ class Subscription {
     required this.amount,
     required this.cycle,
     required this.startDate,
-    required this.nextBillingDate,
     this.note,
     this.isActive = true,
     required this.createdAt,
@@ -38,7 +36,6 @@ class Subscription {
     double? amount,
     BillingCycle? cycle,
     DateTime? startDate,
-    DateTime? nextBillingDate,
     String? note,
     bool? isActive,
     DateTime? createdAt,
@@ -51,7 +48,6 @@ class Subscription {
       amount: amount ?? this.amount,
       cycle: cycle ?? this.cycle,
       startDate: startDate ?? this.startDate,
-      nextBillingDate: nextBillingDate ?? this.nextBillingDate,
       note: note ?? this.note,
       isActive: isActive ?? this.isActive,
       createdAt: createdAt ?? this.createdAt,

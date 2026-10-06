@@ -3,6 +3,8 @@ import 'dart:io';
 import 'dart:isolate';
 import 'dart:math';
 import 'dart:convert';
+import 'package:domain/domain.dart'
+    show BillingCycle, billingDateAt, subscriptionChargeId;
 import 'package:drift/drift.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/foundation.dart';
@@ -18,6 +20,7 @@ import '../tables/transactions_table.dart';
 import '../tables/loans_table.dart';
 import '../tables/subscriptions_table.dart';
 import '../tables/financial_settings_table.dart';
+import '../mappers/subscription_mapper.dart';
 import '../daos/transaction_dao.dart';
 import '../daos/loan_dao.dart';
 import '../daos/subscription_dao.dart';
@@ -38,7 +41,7 @@ class AppDatabase extends _$AppDatabase {
   final bool _verifyCipher;
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   /// Whether [table] exists. Names come from drift rather than from string
   /// literals, so a renamed table cannot leave a check quietly looking for
@@ -57,6 +60,53 @@ class AppDatabase extends _$AppDatabase {
       'PRAGMA table_info("${table.actualTableName}")',
     ).get();
     return rows.any((r) => r.read<String>('name') == column.name);
+  }
+
+  /// Moves charges recorded under the stepping schedule to the ids the
+  /// counted one derives.
+  ///
+  /// The old walk stepped date to date, so DateTime(2026, 2, 31) became 3 March
+  /// and the 3rd stuck. Only start days 29 to 31 on a month-based cycle moved.
+  /// Every plan, active or not, because a paused one can be resumed. The row's
+  /// date is kept, so no charge moves between months.
+  Future<void> _renameDriftedChargeIds() async {
+    final now = DateTime.now();
+    final ids = {
+      for (final r in await customSelect(
+        "SELECT id FROM transactions WHERE id LIKE 'subchg-%'",
+      ).get())
+        r.read<String>('id'),
+    };
+    for (final s in (await select(
+      subscriptions,
+    ).get()).map((r) => r.toDomain())) {
+      if (s.cycle == BillingCycle.weekly || s.startDate.day <= 28) continue;
+      var old = s.startDate;
+      // The old walk skipped months, so it is never behind the counted one.
+      for (var period = 0; !old.isAfter(now); period++) {
+        final oldId = subscriptionChargeId(s.id, old);
+        final newId = subscriptionChargeId(
+          s.id,
+          billingDateAt(s.startDate, s.cycle, period),
+        );
+        if (oldId != newId && ids.contains(oldId)) {
+          // The same bill answered twice; keep the one answered first.
+          await customStatement('DELETE FROM transactions WHERE id = ?', [
+            newId,
+          ]);
+          await customStatement('UPDATE transactions SET id = ? WHERE id = ?', [
+            newId,
+            oldId,
+          ]);
+        }
+        old = switch (s.cycle) {
+          BillingCycle.weekly => old,
+          BillingCycle.monthly => DateTime(old.year, old.month + 1, old.day),
+          BillingCycle.quarterly => DateTime(old.year, old.month + 3, old.day),
+          BillingCycle.yearly => DateTime(old.year + 1, old.month, old.day),
+        };
+      }
+    }
   }
 
   @override
@@ -95,6 +145,18 @@ class AppDatabase extends _$AppDatabase {
       if (from < 6) {
         if (!await _hasTable(financialSettings)) {
           await m.createTable(financialSettings);
+        }
+      }
+      if (from < 7) {
+        // Renamed rows no longer match an old id, so a rerun finds nothing.
+        await transaction(_renameDriftedChargeIds);
+        final columns = await customSelect(
+          'PRAGMA table_info("subscriptions")',
+        ).get();
+        if (columns.any((r) => r.read<String>('name') == 'next_billing_date')) {
+          await customStatement(
+            'ALTER TABLE "subscriptions" DROP COLUMN "next_billing_date";',
+          );
         }
       }
     },

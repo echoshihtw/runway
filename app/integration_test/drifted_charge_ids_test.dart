@@ -2,15 +2,14 @@
 //
 // The schedule used to step date to date, so a clamp into a short month became
 // permanent: a plan starting 31 January billed 31 Jan, then the 3rd of every
-// month. Those charges are on real devices now, recorded under ids the
-// corrected schedule no longer derives. If the app does not recognise them it
-// asks again, and answering writes a second row for money already gone.
+// month. Those charges are on real devices, under ids the corrected schedule
+// no longer derives. The version 7 migration renames them; if it did not, the
+// app would ask again and answering would write a second row.
 //
-// subscription_charges_test.dart proves the recognition in isolation. This
-// proves the whole stack does it: the real SQLCipher database, the real
-// repositories and providers, the real dashboard, on a simulator.
+// schema_v7_migration_test.dart proves the rename on plain SQLite. This proves
+// it on the real SQLCipher database, through to the dashboard, on a simulator.
 //
-//   flutter test integration_test/legacy_charge_ids_test.dart -d <id>
+//   flutter test integration_test/drifted_charge_ids_test.dart -d <id>
 import 'package:data/data.dart'
     show
         AppDatabase,
@@ -29,10 +28,10 @@ final _now = DateTime(2026, 9, 23, 10, 30);
 /// Bills on the 31st, which is the start day that drifts.
 final _startDate = DateTime(2026, 1, 31);
 
-/// What the old stepping walk produced, written out rather than derived, so
+/// What the stepping walk produced, written out rather than derived, so
 /// this states what is on a device instead of trusting the code under test.
 /// DateTime(2026, 2, 31) is 3 March, and the 3rd never went back to the 31st.
-final _legacyDates = <DateTime>[
+final _steppedDates = <DateTime>[
   DateTime(2026, 1, 31),
   DateTime(2026, 3, 3),
   DateTime(2026, 4, 3),
@@ -44,7 +43,7 @@ final _legacyDates = <DateTime>[
 ];
 
 /// What the corrected schedule derives for the same eight periods. Every one
-/// is a different day from the legacy date beside it except the first.
+/// is a different day from the stepped date beside it except the first.
 final _correctedDates = <DateTime>[
   DateTime(2026, 1, 31),
   DateTime(2026, 2, 28),
@@ -63,7 +62,6 @@ final _subscription = Subscription(
   amount: 300,
   cycle: BillingCycle.monthly,
   startDate: _startDate,
-  nextBillingDate: _startDate,
   isActive: true,
   // Before the first bill, so nothing is bounded out by the writable date.
   createdAt: _startDate,
@@ -89,7 +87,7 @@ Future<void> _seed(AppDatabase db, {required bool alreadyPaid}) async {
   );
   await DriftSubscriptionRepository(db).add(_subscription);
   if (!alreadyPaid) return;
-  for (final date in _legacyDates) {
+  for (final date in _steppedDates) {
     await transactions.add(
       Transaction(
         id: subscriptionChargeId(_subscription.id, date),
@@ -117,10 +115,17 @@ Future<AppDatabase> _boot(
   });
   // The real encrypted database, not an in-memory one: this is about rows that
   // are already on a device.
+  final seeded = AppDatabase();
+  await seeded.customStatement('DELETE FROM transactions;');
+  await seeded.customStatement('DELETE FROM subscriptions;');
+  await _seed(seeded, alreadyPaid: alreadyPaid);
+  // Back to version 6, so reopening runs the migration a device would.
+  await seeded.customStatement(
+    'ALTER TABLE subscriptions ADD COLUMN next_billing_date INTEGER NOT NULL DEFAULT 0;',
+  );
+  await seeded.customStatement('PRAGMA user_version = 6;');
+  await seeded.close();
   final database = AppDatabase();
-  await database.customStatement('DELETE FROM transactions;');
-  await database.customStatement('DELETE FROM subscriptions;');
-  await _seed(database, alreadyPaid: alreadyPaid);
   await tester.pumpWidget(buildTestApp(database: database, now: _now));
   await pumpRealTime(tester, seconds: 7);
   return database;
@@ -133,8 +138,8 @@ void main() {
     // If the two schedules agreed, both tests below would pass for the wrong
     // reason. Seven of the eight have to differ.
     var differ = 0;
-    for (var i = 0; i < _legacyDates.length; i++) {
-      if (_legacyDates[i] != _correctedDates[i]) differ++;
+    for (var i = 0; i < _steppedDates.length; i++) {
+      if (_steppedDates[i] != _correctedDates[i]) differ++;
     }
     expect(differ, 7, reason: 'the drift this test exists for is not present');
   });
@@ -152,23 +157,19 @@ void main() {
     );
     expect(find.text('Yes, log it'), findsNothing);
 
-    // And nothing was written on top of what the device already held.
+    // Each moved to its corrected id, and nothing was written on top.
     final rows = await DriftTransactionRepository(db).getAll();
     final charges = rows
         .where((t) => t.type == TransactionType.subscriptionCharge)
         .toList();
     expect(
       charges,
-      hasLength(_legacyDates.length),
+      hasLength(_steppedDates.length),
       reason: 'a duplicate row means the same money left the account twice',
     );
-    for (final date in _correctedDates.skip(1)) {
-      expect(
-        charges.any((c) => c.id == subscriptionChargeId('gym', date)),
-        isFalse,
-        reason: 'a charge was written under the corrected id for $date',
-      );
-    }
+    expect(charges.map((c) => c.id).toSet(), {
+      for (final d in _correctedDates) subscriptionChargeId('gym', d),
+    });
   });
 
   testWidgets('a bill that was never paid is still asked about', (
@@ -182,7 +183,7 @@ void main() {
     expect(
       find.text('Confirm all'),
       findsOneWidget,
-      reason: 'recognising old ids must not suppress a real question',
+      reason: 'the migration must not suppress a real question',
     );
   });
 }

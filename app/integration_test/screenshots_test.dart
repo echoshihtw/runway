@@ -301,7 +301,6 @@ Future<void> _seed(AppDatabase database) async {
         amount: amount,
         cycle: cycle,
         startDate: startDate,
-        nextBillingDate: nextBillingDateAfter(startDate, cycle, now),
         createdAt: now,
         updatedAt: now,
       ),

@@ -81,7 +81,6 @@ Subscription _sub(double monthly) => Subscription(
   cycle: BillingCycle.monthly,
   category: SubscriptionCategory.personal,
   startDate: _when,
-  nextBillingDate: DateTime.now().add(const Duration(days: 20)),
   createdAt: _when,
   updatedAt: _when,
 );

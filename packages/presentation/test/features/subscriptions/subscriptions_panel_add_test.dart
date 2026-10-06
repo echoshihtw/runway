@@ -44,7 +44,6 @@ Subscription _sub() => Subscription(
   amount: 980,
   cycle: BillingCycle.monthly,
   startDate: DateTime(2026, 6, 3),
-  nextBillingDate: DateTime(2026, 6, 3),
   createdAt: DateTime(2026, 6, 3),
   updatedAt: DateTime(2026, 6, 3),
 );

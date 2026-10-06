@@ -95,24 +95,19 @@ void main() {
   group('sortedByNextBilling', () {
     final now = DateTime(2025, 6, 1);
 
-    test('orders by the bill that comes next, derived not stored', () {
-      // The stored date is deliberately misleading here: it is never advanced
-      // in the app, so ordering by it froze the list in creation order.
+    test('orders by the bill that comes next', () {
       final subs = [
         _sub(
           id: '3',
           startDate: DateTime(2025, 6, 15),
-          nextBillingDate: DateTime(2025, 6, 2),
         ),
         _sub(
           id: '1',
           startDate: DateTime(2025, 6, 3),
-          nextBillingDate: DateTime(2025, 6, 20),
         ),
         _sub(
           id: '2',
           startDate: DateTime(2025, 6, 8),
-          nextBillingDate: DateTime(2025, 6, 9),
         ),
       ];
       expect(sortedByNextBilling(subs, now: now).map((s) => s.id).toList(), [
@@ -145,7 +140,6 @@ Subscription _sub({
   BillingCycle cycle = BillingCycle.monthly,
   SubscriptionCategory category = SubscriptionCategory.personal,
   bool isActive = true,
-  DateTime? nextBillingDate,
   DateTime? startDate,
 }) {
   final anchor = DateTime(2025, 6, 1);
@@ -156,7 +150,6 @@ Subscription _sub({
     amount: amount,
     cycle: cycle,
     startDate: startDate ?? anchor,
-    nextBillingDate: nextBillingDate ?? anchor.add(const Duration(days: 30)),
     isActive: isActive,
     createdAt: anchor,
     updatedAt: anchor,

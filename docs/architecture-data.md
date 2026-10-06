@@ -60,7 +60,7 @@ packages/data/lib/
 
 See [data-models-data.md](./data-models-data.md) for the full column-level schema and migration history.
 
-Current `schemaVersion` is **5**, with a cumulative `onUpgrade` ladder (v2 loans + `loanId`, v3 subscriptions, v4 `originalTermMonths`, v5 `transactions.category` via `customStatement`).
+`onUpgrade` is a cumulative ladder of `if (from < n)` steps. The current version and each step are listed in `CONTRACTS.md` §5.1.
 
 ## Repository Implementations
 

@@ -40,7 +40,6 @@ final _subscription = Subscription(
   amount: 980,
   cycle: BillingCycle.monthly,
   startDate: DateTime(2026, 9, 3),
-  nextBillingDate: DateTime(2026, 9, 3),
   createdAt: DateTime(2026, 9, 3),
   updatedAt: DateTime(2026, 9, 3),
 );

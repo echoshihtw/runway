@@ -25,10 +25,6 @@ double totalSubscriptionYearlyCost(List<Subscription> subscriptions) {
 }
 
 /// Subscriptions sorted by the bill that comes next.
-///
-/// Ordered by the derived date, not the stored one. Nothing advances
-/// `nextBillingDate` after a subscription is created, so sorting by it put the
-/// list in the order the plans were first saved and left it there.
 List<Subscription> sortedByNextBilling(
   List<Subscription> subscriptions, {
   required DateTime now,
