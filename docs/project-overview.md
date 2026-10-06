@@ -1,6 +1,6 @@
 # Project Overview — Runway
 
-**Repository:** `survival_optimizer` · **Product name:** Runway
+**Repository:** `runway` · **Product name:** Financial Runway
 **Generated:** 2026-08-04 · Deep scan · 6 parts
 
 ---

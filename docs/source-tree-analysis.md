@@ -1,6 +1,6 @@
 # Source Tree Analysis
 
-**Repository:** `survival_optimizer` (product name: **Runway**)
+**Repository:** `runway` (product name: **Financial Runway**)
 **Generated:** 2026-08-04 · Deep scan
 
 ---
@@ -8,7 +8,7 @@
 ## Annotated Tree
 
 ```
-survival_optimizer/
+runway/
 ├── melos.yaml                  # Melos scripts: test, test:integration:*, analyze, gen
 ├── pubspec.yaml                # Pub workspace root — lists all 6 packages
 ├── Makefile                    # ★ The real developer entry point (40+ targets)
