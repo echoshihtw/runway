@@ -8,10 +8,10 @@ connection, nothing leaves your phone.
 [**Get it on the App Store**](https://apps.apple.com/app/apple-store/id6778675088?pt=128981651&ct=readme&mt=8) · [Website](https://echoshihtw.github.io/runway/)
 
 <p align="center">
-  <img src="docs/screenshots/01-runway.png" width="24%" alt="Dashboard: how many months your money covers, cash and run-out month">
-  <img src="docs/screenshots/02-living.png" width="24%" alt="Living budget: spent against budget, what is left, and the daily amount">
-  <img src="docs/screenshots/03-log.png" width="24%" alt="Log: pick the occasion, then type the amount">
-  <img src="docs/screenshots/04-plan.png" width="24%" alt="Plan: a lower monthly cost and the months it adds">
+  <img src="site/assets/device/01-runway.png" width="24%" alt="Dashboard: how many months your money covers, cash and run-out month">
+  <img src="site/assets/device/02-living.png" width="24%" alt="Living budget: spent against budget, what is left, and the daily amount">
+  <img src="site/assets/device/03-log.png" width="24%" alt="Log: pick the occasion, then type the amount">
+  <img src="site/assets/device/04-plan.png" width="24%" alt="Plan: a lower monthly cost and the months it adds">
 </p>
 
 ## Most money apps tell you where it went

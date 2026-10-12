@@ -1,6 +1,6 @@
 // Captures the bare app screens for the App Store slides, from the real app
 // running on an in-memory database seeded with the demo figures below. The
-// captions and the frame around each screen live in assets/store/screenshot.html.
+// slides around them are made locally, outside the repo (assets/marketing).
 //
 //   SCREENSHOT_DIR=<dir> flutter drive \
 //     --driver=test_driver/screenshots.dart \
