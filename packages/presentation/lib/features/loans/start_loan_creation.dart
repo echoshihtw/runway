@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:application/application.dart';
 import 'package:design_system/design_system.dart';
 import 'package:domain/domain.dart';
@@ -47,6 +49,7 @@ Future<void> startLoanCreation(BuildContext context, WidgetRef ref) async {
             final addLoan = ref.read(addLoanUseCaseProvider);
             final addTransaction = ref.read(addTransactionUseCaseProvider);
             final deleteLoan = ref.read(deleteLoanUseCaseProvider);
+            final analytics = ref.read(analyticsProvider);
             final openingBalanceDate = latestOpeningBalanceDate(
               ref.read(transactionsProvider).value ?? const [],
             );
@@ -80,6 +83,7 @@ Future<void> startLoanCreation(BuildContext context, WidgetRef ref) async {
               date,
               openingBalanceDate: openingBalanceDate,
             )) {
+              unawaited(analytics.logAddLoan(source));
               return true;
             }
 
@@ -113,6 +117,7 @@ Future<void> startLoanCreation(BuildContext context, WidgetRef ref) async {
               }
               return false;
             }
+            unawaited(analytics.logAddLoan(source));
             return true;
           },
     ),

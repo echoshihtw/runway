@@ -356,6 +356,22 @@ class LinkPreviewTest(unittest.TestCase):
         self.assertEqual(declared, expected)
 
 
+class PrivacyPolicyTest(unittest.TestCase):
+    """The event list itself is matched to the code by
+    app/test/firebase_analytics_service_test.dart, which runs on every pull
+    request. This keeps the promise made about all of them."""
+
+    HTML_FLAT = re.sub(
+        r"\s+", " ", (ROOT / "privacy" / "index.html").read_text(encoding="utf-8")
+    )
+
+    def test_the_page_says_no_event_carries_money_or_text(self):
+        self.assertIn(
+            "No event carries an amount, balance, name, note or anything you type.",
+            self.HTML_FLAT,
+        )
+
+
 def _png_size(data):
     return (int.from_bytes(data[16:20], "big"), int.from_bytes(data[20:24], "big"))
 

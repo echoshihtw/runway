@@ -1,18 +1,25 @@
+import 'dart:ui';
+
+import 'package:domain/domain.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Nothing calls any of these yet.
+/// Which features get used, never what anyone has: every parameter is a
+/// category, a flag or a locale, and app/test/analytics_parameters_guard_test
+/// fails if one could carry an amount or typed text.
+///
+/// Implementations never throw. Callers log after the user's action has
+/// landed and do not await, so an event can neither fail nor slow it.
 abstract class AnalyticsService {
   Future<void> logScreen(String name);
-  Future<void> logAddTransaction(String type);
-  Future<void> logDeleteTransaction(String type);
+  Future<void> logAddTransaction(TransactionType type);
+  Future<void> logDeleteTransaction(TransactionType type);
   Future<void> logAddLoan(String source);
   Future<void> logRepayLoan();
-  Future<void> logAddSubscription(String cycle);
+  Future<void> logAddSubscription(BillingCycle cycle);
   Future<void> logDeleteSubscription();
   Future<void> logSetBudget();
   Future<void> logRunSimulation({bool hasBurnOverride, bool hasIncome});
-  Future<void> logShare(String surface);
-  Future<void> logChangeLanguage(String locale);
+  Future<void> logChangeLanguage(Locale locale);
   Future<void> logChangeCurrency(String code);
 }
 
@@ -22,15 +29,15 @@ class NoOpAnalytics implements AnalyticsService {
   @override
   Future<void> logScreen(String name) async {}
   @override
-  Future<void> logAddTransaction(String type) async {}
+  Future<void> logAddTransaction(TransactionType type) async {}
   @override
-  Future<void> logDeleteTransaction(String type) async {}
+  Future<void> logDeleteTransaction(TransactionType type) async {}
   @override
   Future<void> logAddLoan(String source) async {}
   @override
   Future<void> logRepayLoan() async {}
   @override
-  Future<void> logAddSubscription(String cycle) async {}
+  Future<void> logAddSubscription(BillingCycle cycle) async {}
   @override
   Future<void> logDeleteSubscription() async {}
   @override
@@ -41,9 +48,7 @@ class NoOpAnalytics implements AnalyticsService {
     bool hasIncome = false,
   }) async {}
   @override
-  Future<void> logShare(String surface) async {}
-  @override
-  Future<void> logChangeLanguage(String locale) async {}
+  Future<void> logChangeLanguage(Locale locale) async {}
   @override
   Future<void> logChangeCurrency(String code) async {}
 }

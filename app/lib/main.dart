@@ -37,6 +37,7 @@ void main() async {
 
   final rcService = await RevenueCatService.init();
   final analytics = FirebaseAnalyticsService();
+  reportScreenViews(appRouter, analytics);
   late AppDatabase database;
 
   runApp(

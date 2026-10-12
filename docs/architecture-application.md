@@ -126,7 +126,7 @@ Validation lives here. `AddTransactionUseCase.execute` rejects zero amounts and 
 
 ## Analytics
 
-`AnalyticsService` is a 12-method behavioral port (`logScreen`, `logAddTransaction`, `logRunSimulation({hasBurnOverride, hasIncome})`, `logShare`, `logChangeCurrency`, …). Only behavior is tracked — no financial values are passed to any method. `NoOpAnalytics` is the default, used in tests and when Firebase is unavailable.
+`AnalyticsService` is a behavioral port (`logScreen`, `logAddTransaction(TransactionType)`, `logRunSimulation({hasBurnOverride, hasIncome})`, `logChangeCurrency`, …). Its parameters are categories, flags and locales only, never a financial value or typed text. Events fire after the action lands: entries, simulations, language and currency from this package's providers (`addTransactionUseCaseProvider`'s `onAdded`, `ScenarioNotifier.activate`, `LocaleNotifier`, `CurrencyNotifier`), the rest from the presentation call site that knows the action succeeded. `NoOpAnalytics` is the default, used in tests and when Firebase is unavailable.
 
 ## Testing Strategy
 

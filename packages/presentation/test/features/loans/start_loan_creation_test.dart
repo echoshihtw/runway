@@ -36,6 +36,7 @@ class _Loans implements LoanRepository {
 
 class _Transactions implements TransactionRepository {
   final items = <Transaction>[];
+  bool refuses = false;
 
   @override
   Stream<List<Transaction>> watchAll() => Stream.value(items);
@@ -44,7 +45,10 @@ class _Transactions implements TransactionRepository {
   Future<List<Transaction>> getAll() async => items;
 
   @override
-  Future<void> add(Transaction transaction) async => items.add(transaction);
+  Future<void> add(Transaction transaction) async {
+    if (refuses) throw Exception('disk is full');
+    items.add(transaction);
+  }
 
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
@@ -75,6 +79,58 @@ class _FreeTier implements PurchaseService {
 
   @override
   Future<bool> restorePurchases() async => false;
+}
+
+class _Analytics extends NoOpAnalytics {
+  final events = <String>[];
+
+  @override
+  Future<void> logAddLoan(String source) async =>
+      events.add('add_loan:$source');
+}
+
+/// Opens the wizard and confirms a loan whose write lands at once.
+Future<void> _createLoan(
+  WidgetTester tester, {
+  required _Transactions transactions,
+  required _Analytics analytics,
+}) async {
+  SharedPreferences.setMockInitialValues({});
+  final loans = _Loans()..landed.complete();
+  await tester.pumpWidget(
+    ProviderScope(
+      overrides: [
+        loanRepositoryProvider.overrideWithValue(loans),
+        transactionRepositoryProvider.overrideWithValue(transactions),
+        purchaseServiceProvider.overrideWithValue(_FreeTier()),
+        usageCountStoreProvider.overrideWithValue(_EntryCount()),
+        analyticsProvider.overrideWithValue(analytics),
+      ],
+      child: MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: const Scaffold(body: _Opener()),
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('OPEN'));
+  await tester.pumpAndSettle();
+
+  await tester.enterText(find.byType(TextField).at(0), 'Fubon');
+  await tester.enterText(find.byType(TextField).at(1), '120000');
+  await tester.pump();
+  await tester.ensureVisible(find.textContaining('NEXT'));
+  await tester.tap(find.textContaining('NEXT'));
+  await tester.pumpAndSettle();
+  await tester.enterText(find.byType(TextField).at(1), '36');
+  await tester.pump();
+  await tester.ensureVisible(find.textContaining('NEXT'));
+  await tester.tap(find.textContaining('NEXT'));
+  await tester.pumpAndSettle();
+  await tester.ensureVisible(find.text('CONFIRM'));
+  await tester.tap(find.text('CONFIRM'));
+  await tester.pumpAndSettle();
 }
 
 class _Opener extends ConsumerWidget {
@@ -154,5 +210,30 @@ void main() {
       loans.items.isEmpty ? findsOneWidget : findsNothing,
       reason: 'the wizard says it failed only when nothing was kept',
     );
+  });
+
+  testWidgets('a saved loan is counted once, by its source', (tester) async {
+    final analytics = _Analytics();
+    await _createLoan(
+      tester,
+      transactions: _Transactions(),
+      analytics: analytics,
+    );
+
+    expect(analytics.events, ['add_loan:BANK']);
+  });
+
+  testWidgets('a loan taken back out after its money failed is not counted', (
+    tester,
+  ) async {
+    final analytics = _Analytics();
+    await _createLoan(
+      tester,
+      transactions: _Transactions()..refuses = true,
+      analytics: analytics,
+    );
+
+    expect(find.byType(LoanWizard), findsOneWidget);
+    expect(analytics.events, isEmpty);
   });
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:application/application.dart';
 import 'package:design_system/design_system.dart';
 import 'package:domain/domain.dart';
@@ -33,6 +35,7 @@ Future<void> showAddSubscriptionSheet(BuildContext context, WidgetRef ref) {
       onSubmit: (name, category, amount, cycle, startDate, note) async {
         // One clock for the whole record, so a frozen clock stays frozen.
         final now = ref.read(clockProvider)();
+        final analytics = ref.read(analyticsProvider);
         try {
           await ref
               .read(addSubscriptionUseCaseProvider)
@@ -54,6 +57,7 @@ Future<void> showAddSubscriptionSheet(BuildContext context, WidgetRef ref) {
           // dismiss it as though the subscription existed.
           return false;
         }
+        unawaited(analytics.logAddSubscription(cycle));
         return true;
       },
     ),

@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../state/scenario_state.dart';
+import '../analytics_service.dart';
 import 'usage_count_provider.dart';
 
 class ScenarioNotifier extends Notifier<ScenarioState> {
@@ -24,6 +27,14 @@ class ScenarioNotifier extends Notifier<ScenarioState> {
     } catch (_) {
       // Counting failed; the simulation did not.
     }
+    unawaited(
+      ref
+          .read(analyticsProvider)
+          .logRunSimulation(
+            hasBurnOverride: state.burnRateOverride != null,
+            hasIncome: state.simulatedIncome != null,
+          ),
+    );
   }
 
   void setBurnRateOverride(double? value) {

@@ -146,9 +146,12 @@ class _SubscriptionPromptCardState
   }
 
   Future<void> _confirmAll(List<Transaction> pending) async {
+    // Read once: the card can leave the tree mid-loop, and a ref read after
+    // that throws.
+    final add = ref.read(addTransactionUseCaseProvider);
     await _write(() async {
       for (final charge in pending) {
-        await ref.read(addTransactionUseCaseProvider).execute(charge);
+        await add.execute(charge);
       }
     });
   }

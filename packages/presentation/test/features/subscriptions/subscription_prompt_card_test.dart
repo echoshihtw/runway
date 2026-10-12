@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:application/application.dart';
 import 'package:design_system/design_system.dart';
 import 'package:domain/domain.dart';
@@ -13,10 +15,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 class _FakeTransactionRepository implements TransactionRepository {
   final List<Transaction> added = [];
   Object? failWith;
+  Future<void>? hold;
 
   @override
   Future<void> add(Transaction transaction) async {
     if (failWith != null) throw failWith!;
+    await hold;
     added.add(transaction);
   }
 
@@ -65,7 +69,9 @@ Future<_FakeTransactionRepository> _pump(
     ProviderScope(
       overrides: [
         transactionRepositoryProvider.overrideWithValue(repository),
-        subscriptionsProvider.overrideWith((ref) => Stream.value([_subscription])),
+        subscriptionsProvider.overrideWith(
+          (ref) => Stream.value([_subscription]),
+        ),
         pendingSubscriptionChargesProvider.overrideWithValue(pending),
       ],
       child: MaterialApp(
@@ -122,6 +128,52 @@ void _batchTests() {
     ]);
   });
 
+  testWidgets('confirm all finishes the queue if the card goes away', (
+    tester,
+  ) async {
+    // The card leaves the tree as the ledger catches up, which can happen
+    // while the loop is still writing. A ref read after that throws, and the
+    // rest of the queue was dropped without a word.
+    SharedPreferences.setMockInitialValues({});
+    final repository = _FakeTransactionRepository();
+    final firstLands = Completer<void>();
+    repository.hold = firstLands.future;
+    final showCard = ValueNotifier(true);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          transactionRepositoryProvider.overrideWithValue(repository),
+          subscriptionsProvider.overrideWith(
+            (ref) => Stream.value([_subscription]),
+          ),
+          pendingSubscriptionChargesProvider.overrideWithValue(queue),
+        ],
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: ValueListenableBuilder<bool>(
+              valueListenable: showCard,
+              builder: (_, show, _) => show
+                  ? const SingleChildScrollView(child: SubscriptionPromptCard())
+                  : const SizedBox(),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Confirm all'));
+    await tester.pump();
+    showCard.value = false;
+    await tester.pump();
+    firstLands.complete();
+    await tester.pumpAndSettle();
+
+    expect(repository.added, hasLength(3));
+  });
+
   testWidgets('review each falls through to one question at a time', (
     tester,
   ) async {
@@ -160,7 +212,9 @@ void main() {
     // id colliding. AddTransactionUseCase also rejects a zero amount, so a
     // reminder saved at zero made Yes do nothing, for ever, without a word.
     final repository = await _pump(tester, pending: [_charge]);
-    repository.failWith = const InvalidTransactionFailure('Amount cannot be zero');
+    repository.failWith = const InvalidTransactionFailure(
+      'Amount cannot be zero',
+    );
 
     await tester.tap(find.text('Yes, log it'));
     await tester.pumpAndSettle();
@@ -173,7 +227,6 @@ void main() {
       findsOneWidget,
     );
   });
-
 
   testWidgets('asks before recording, naming the amount, plan and date', (
     tester,
