@@ -9,7 +9,7 @@
 ## Project Overview
 
 - **Repository type:** Monorepo (Melos + Dart pub workspace), **6 parts**
-- **Primary language:** Dart 3.11.5 / Flutter 3.41.7
+- **Primary language:** Dart / Flutter (version pinned in `.fvmrc`)
 - **Architecture:** Clean Architecture + DDD — `presentation → application → domain ← data`, boundaries enforced by package separation
 - **Product:** Offline-first personal financial runway app. One question: how long can my money last?
 

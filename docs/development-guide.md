@@ -10,7 +10,7 @@ The `Makefile` is the canonical entry point — `make help` lists every target. 
 
 | Tool | Version | Notes |
 |---|---|---|
-| Flutter | **3.41.7** | Pinned in CI; managed locally via FVM |
+| Flutter | pinned in `.fvmrc` | Read by fvm locally and by CI |
 | Dart | `^3.11.5` | Ships with Flutter |
 | Melos | `^7.5.1` | `dart pub global activate melos` |
 | FVM | latest | `brew tap leoafarias/fvm && brew install fvm` |
@@ -26,7 +26,7 @@ make setup       # melos bootstrap
 make doctor      # flutter doctor
 ```
 
-> `make install` runs `fvm global stable`, not `fvm install 3.41.7`. If stable has moved past 3.41.7 you may drift from the CI-pinned version — pin explicitly if builds diverge.
+> `.fvmrc` pins the Flutter version for fvm and for both workflows; `make install` installs it, and fvm fetches it on first use if missing.
 
 ## Daily Commands
 
@@ -54,8 +54,7 @@ make gen-all     # both
 ## Testing
 
 ```bash
-make test            # domain unit tests (dart test) — fast, no device
-melos run test       # flutter test in every package
+make test            # every package's tests
 make test-coverage   # domain coverage → packages/domain/coverage
 
 # data-layer integration tests (in-memory SQLite, no device):
@@ -65,34 +64,21 @@ cd packages/data && flutter test test/integration/
 cd app && flutter test integration_test/ -d <DEVICE_ID>
 ```
 
-⚠️ **`melos.yaml` is dead config.** Melos resolves its scripts from the `melos:` block in the **root `pubspec.yaml`**, which declares only `test`, `analyze`, and `gen`. The richer script set in `melos.yaml` (`test:integration:data`, `test:integration:e2e`, `test:all`, plus a `test/`-scoped `test`) is **not loaded** — `melos run test:all` fails with "unknown script". Either fold those scripts into the root `pubspec.yaml` or run the underlying commands directly as shown above.
+⚠️ **`melos.yaml` is dead config.** Melos resolves its scripts from the `melos:` block in the **root `pubspec.yaml`**, which declares only `test`, `analyze`, and `gen`. The richer script set in `melos.yaml` (`test:integration:data`, `test:integration:e2e`, `test:all`, plus a `test/`-scoped `test`) is **not loaded**: `melos run test:all` fails with "unknown script". Use `make test` and the commands above instead.
 
-**Current coverage reality:**
-
-| Package | Tests |
-|---|---|
-| `domain` | 6 unit test files |
-| `data` | 3 integration tests (real Drift, in-memory) |
-| `application` | 2 use-case tests (mocktail) |
-| `app` | 1 widget test + 2 E2E files |
-| `design_system` | **none** |
-| `presentation` | **none** |
-
-Note `make test` runs **domain only** — it does not cover the data integration tests, the application use-case tests, or the app widget test.
-
-**CONTRACTS §7** requires: every domain logic change ships with a test in `packages/domain/test/`; the aggregator, runway math and loan edge cases are always covered; and all tests must pass before any commit (`cd packages/domain && dart test`).
+**CONTRACTS §7** requires: every domain logic change ships with a test in `packages/domain/test/`; the aggregator, runway math and loan edge cases are always covered; and all tests must pass before any commit (`make test`).
 
 ## Quality
 
 ```bash
 make format      # dart format across all packages
-make analyze     # flutter/dart analyze across all packages
+make analyze     # every package, with --fatal-infos
 make lint        # format + analyze
 make precommit   # lint + test
 make l10n-check  # validate every .arb parses as JSON
 ```
 
-CI runs `analyze --fatal-infos`, which is stricter than local `make analyze`. Run `make lint` before pushing.
+After `make gen`, which CI also runs first, `make analyze` and `make test` run the same analysis and tests as CI, as strictly.
 
 ## Adding a Feature — the usual path
 

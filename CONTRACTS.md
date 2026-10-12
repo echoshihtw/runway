@@ -243,9 +243,9 @@ All domain logic changes require corresponding tests in `packages/domain/test/`.
 
 ### 7.3 Test Command
 ```bash
-cd packages/domain && dart test
+make test
 ```
-All 39+ tests must pass before any commit.
+Every package's tests must pass before any commit.
 
 ---
 
