@@ -9,18 +9,6 @@ class AppLocalizationsIt extends AppLocalizations {
   AppLocalizationsIt([String locale = 'it']) : super(locale);
 
   @override
-  String get appTitle => 'Runway';
-
-  @override
-  String get hudTitle => 'Runway';
-
-  @override
-  String get sysOnline => 'SIS: ONLINE';
-
-  @override
-  String get lifeForce => 'PREPARAZIONE RUNWAY';
-
-  @override
   String get statusLabel => 'STATO';
 
   @override
@@ -51,19 +39,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get runway => 'AUTONOMIA';
 
   @override
-  String get runOut => 'ESAURIMENTO';
-
-  @override
-  String get cashTimeline => 'CRONOLOGIA';
-
-  @override
   String get config => 'CONFIG';
-
-  @override
-  String get monthlyLoanPayment => 'PAGAMENTO MENSILE PRESTITO';
-
-  @override
-  String get tapToSet => 'TOCCA PER IMPOSTARE';
 
   @override
   String get edit => 'MODIFICA';
@@ -76,9 +52,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get transactionLog => 'REGISTRO TRANSAZIONI';
-
-  @override
-  String get newEntry => '+ NUOVO';
 
   @override
   String get noEntries => 'Inizia dal tuo saldo';
@@ -94,9 +67,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get date => 'DATA';
-
-  @override
-  String get calcMonth => 'CALC';
 
   @override
   String get amount => 'IMPORTO';
@@ -117,28 +87,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get scenarioSimulator => 'SIMULATORE DI SCENARI';
 
   @override
-  String get overrideInputs => 'INPUT DI SOSTITUZIONE';
-
-  @override
   String get burnRateOverride => 'Affitto + spese quotidiane / mese';
 
   @override
   String get simulatedIncome => 'REDDITO SIMULATO/MESE';
 
   @override
-  String get simResults => 'RISULTATI SIM';
-
-  @override
   String get simRunway => 'AUTONOMIA SIM';
-
-  @override
-  String get simRunOut => 'ESAURIMENTO SIM';
-
-  @override
-  String get deltaVsActual => 'DELTA vs REALE';
-
-  @override
-  String get deltaRunway => 'DELTA AUTONOMIA';
 
   @override
   String get resetSim => 'REIMPOSTA SIM';
@@ -159,12 +114,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get low => 'BASSO';
 
   @override
-  String get moderate => 'MODERATO';
-
-  @override
-  String get highLoad => 'CARICO ELEVATO';
-
-  @override
   String get language => 'Lingua';
 
   @override
@@ -173,9 +122,6 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get currencySymbolOnly =>
       'Modifica solo il simbolo. I tuoi importi non vengono convertiti.';
-
-  @override
-  String get daysShort => 'g';
 
   @override
   String get gettingStarted => 'INIZIA ORA';
@@ -361,9 +307,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settled => 'SALDATO';
 
   @override
-  String get totalDebtPerMonth => 'DEBITO TOTALE/MESE';
-
-  @override
   String get remaining => 'RIMANENTE';
 
   @override
@@ -393,13 +336,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get repay => 'PAGA';
 
   @override
-  String get repayTitle => 'RIMBORSA';
-
-  @override
   String get extra => 'EXTRA';
-
-  @override
-  String get configButton => 'CFG';
 
   @override
   String get loanWizardTitle => 'Procedura prestito';
@@ -462,13 +399,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get subscriptionName => 'NOME';
 
   @override
-  String get subscriptionAmount => 'IMPORTO';
-
-  @override
   String get subscriptionPaymentAmount => 'IMPORTO PAGATO';
-
-  @override
-  String get subscriptionCycle => 'CICLO DI FATTURAZIONE';
 
   @override
   String get subscriptionCoveragePeriod => 'PERIODO COPERTO';
@@ -480,16 +411,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get subscriptionPaymentDate => 'DATA DI PAGAMENTO';
 
   @override
-  String get subscriptionNextBilling => 'PROSSIMA FATTURAZIONE';
-
-  @override
-  String get subscriptionDaysLeft => 'GIORNI';
-
-  @override
   String get totalPerMonth => 'TOTALE/MESE';
-
-  @override
-  String get totalPerYear => 'TOTALE/ANNO';
 
   @override
   String get newSubscription => '+ ABBONAMENTO';
@@ -543,29 +465,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get remove => 'RIMUOVI';
 
   @override
-  String monthsProjected(int count) {
-    return '$count MESI PROIETTATI';
-  }
-
-  @override
-  String get budgetPerMonth => 'BUDGET/MESE';
-
-  @override
-  String get breakdown => 'RIEPILOGO';
-
-  @override
-  String get safetyFund => 'FONDO DI SICUREZZA';
-
-  @override
-  String get safety => 'SICUREZZA';
-
-  @override
-  String get historyEntries => 'STORICO & VOCI';
-
-  @override
-  String get addEntry => '+ AGGIUNGI';
-
-  @override
   String get willRemoveLoan => 'VERRÀ RIMOSSO ANCHE DAI DEBITI';
 
   @override
@@ -615,9 +514,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get perMonth => '/ MESE';
-
-  @override
-  String get prefsBudget => 'PREFERENZE & BUDGET';
 
   @override
   String get close => 'CHIUDI';
@@ -716,10 +612,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get usingCurrentBurn => 'Uso della spesa attuale';
 
   @override
-  String get assumptionsProjectionOnly =>
-      'Le ipotesi influenzano solo le proiezioni future. Non creano transazioni.';
-
-  @override
   String get setAssumptions => 'IMPOSTA PREVISIONE';
 
   @override
@@ -816,63 +708,9 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String goalTargetProgress(int months) {
-    return 'Obiettivo di $months mesi. Progresso verso il tuo obiettivo, non un punteggio.';
-  }
-
-  @override
-  String get availableCash => 'Liquidità disponibile';
-
-  @override
-  String get notEnoughHistory => 'Storico insufficiente';
-
-  @override
-  String get projectionSource => 'Fonte proiezione';
-
-  @override
-  String get usingAssumptions => 'Uso delle ipotesi';
-
-  @override
-  String get fixedPressure => 'Costi fissi';
-
-  @override
-  String get plannedEssentials => 'Essenziali pianificati';
-
-  @override
-  String get recurringCosts => 'Costi ricorrenti';
-
-  @override
-  String get debtCommitments => 'Rate del prestito';
-
-  @override
-  String get daysUpper => 'GIORNI';
-
-  @override
-  String get yourRunway => 'Il tuo runway';
-
-  @override
-  String get higherExpenses => 'Spese più alte';
-
-  @override
   String deltaDays(int days) {
     return '$days giorni';
   }
-
-  @override
-  String get shareSafe => 'CONDIVISIONE SICURA';
-
-  @override
-  String get shareSafeHint =>
-      'Niente risparmi. Niente spese. Solo il tuo runway.';
-
-  @override
-  String get preparing => 'PREPARAZIONE...';
-
-  @override
-  String get shareImage => 'CONDIVIDI IMMAGINE';
-
-  @override
-  String get shareAsText => 'CONDIVIDI TESTO';
 
   @override
   String get goalReached => 'Obiettivo raggiunto';

@@ -106,30 +106,6 @@ abstract class AppLocalizations {
     Locale('zh'),
   ];
 
-  /// No description provided for @appTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Runway'**
-  String get appTitle;
-
-  /// No description provided for @hudTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Runway'**
-  String get hudTitle;
-
-  /// No description provided for @sysOnline.
-  ///
-  /// In en, this message translates to:
-  /// **'Ready'**
-  String get sysOnline;
-
-  /// No description provided for @lifeForce.
-  ///
-  /// In en, this message translates to:
-  /// **'RUNWAY READINESS'**
-  String get lifeForce;
-
   /// No description provided for @statusLabel.
   ///
   /// In en, this message translates to:
@@ -184,35 +160,11 @@ abstract class AppLocalizations {
   /// **'RUNWAY'**
   String get runway;
 
-  /// No description provided for @runOut.
-  ///
-  /// In en, this message translates to:
-  /// **'RUN OUT'**
-  String get runOut;
-
-  /// No description provided for @cashTimeline.
-  ///
-  /// In en, this message translates to:
-  /// **'CASH TIMELINE'**
-  String get cashTimeline;
-
   /// No description provided for @config.
   ///
   /// In en, this message translates to:
   /// **'Settings'**
   String get config;
-
-  /// No description provided for @monthlyLoanPayment.
-  ///
-  /// In en, this message translates to:
-  /// **'MONTHLY LOAN PAYMENT'**
-  String get monthlyLoanPayment;
-
-  /// No description provided for @tapToSet.
-  ///
-  /// In en, this message translates to:
-  /// **'TAP TO SET'**
-  String get tapToSet;
 
   /// No description provided for @edit.
   ///
@@ -237,12 +189,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'TRANSACTION LOG'**
   String get transactionLog;
-
-  /// No description provided for @newEntry.
-  ///
-  /// In en, this message translates to:
-  /// **'+ NEW'**
-  String get newEntry;
 
   /// No description provided for @noEntries.
   ///
@@ -273,12 +219,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'DATE'**
   String get date;
-
-  /// No description provided for @calcMonth.
-  ///
-  /// In en, this message translates to:
-  /// **'CALC'**
-  String get calcMonth;
 
   /// No description provided for @amount.
   ///
@@ -316,12 +256,6 @@ abstract class AppLocalizations {
   /// **'Scenario planning'**
   String get scenarioSimulator;
 
-  /// No description provided for @overrideInputs.
-  ///
-  /// In en, this message translates to:
-  /// **'Planning inputs'**
-  String get overrideInputs;
-
   /// No description provided for @burnRateOverride.
   ///
   /// In en, this message translates to:
@@ -334,35 +268,11 @@ abstract class AppLocalizations {
   /// **'Income change / month'**
   String get simulatedIncome;
 
-  /// No description provided for @simResults.
-  ///
-  /// In en, this message translates to:
-  /// **'Projected impact'**
-  String get simResults;
-
   /// No description provided for @simRunway.
   ///
   /// In en, this message translates to:
   /// **'Projected runway'**
   String get simRunway;
-
-  /// No description provided for @simRunOut.
-  ///
-  /// In en, this message translates to:
-  /// **'Projected run-out'**
-  String get simRunOut;
-
-  /// No description provided for @deltaVsActual.
-  ///
-  /// In en, this message translates to:
-  /// **'Change from today'**
-  String get deltaVsActual;
-
-  /// No description provided for @deltaRunway.
-  ///
-  /// In en, this message translates to:
-  /// **'Runway change'**
-  String get deltaRunway;
 
   /// No description provided for @resetSim.
   ///
@@ -400,18 +310,6 @@ abstract class AppLocalizations {
   /// **'LOW'**
   String get low;
 
-  /// No description provided for @moderate.
-  ///
-  /// In en, this message translates to:
-  /// **'MODERATE'**
-  String get moderate;
-
-  /// No description provided for @highLoad.
-  ///
-  /// In en, this message translates to:
-  /// **'HIGH LOAD'**
-  String get highLoad;
-
   /// No description provided for @language.
   ///
   /// In en, this message translates to:
@@ -429,12 +327,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Changes the display symbol only. Your amounts are not converted.'**
   String get currencySymbolOnly;
-
-  /// No description provided for @daysShort.
-  ///
-  /// In en, this message translates to:
-  /// **'d'**
-  String get daysShort;
 
   /// No description provided for @gettingStarted.
   ///
@@ -772,12 +664,6 @@ abstract class AppLocalizations {
   /// **'SETTLED'**
   String get settled;
 
-  /// No description provided for @totalDebtPerMonth.
-  ///
-  /// In en, this message translates to:
-  /// **'TOTAL DEBT/MO'**
-  String get totalDebtPerMonth;
-
   /// No description provided for @remaining.
   ///
   /// In en, this message translates to:
@@ -832,23 +718,11 @@ abstract class AppLocalizations {
   /// **'REPAY'**
   String get repay;
 
-  /// No description provided for @repayTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'REPAY'**
-  String get repayTitle;
-
   /// No description provided for @extra.
   ///
   /// In en, this message translates to:
   /// **'EXTRA'**
   String get extra;
-
-  /// No description provided for @configButton.
-  ///
-  /// In en, this message translates to:
-  /// **'CFG'**
-  String get configButton;
 
   /// No description provided for @loanWizardTitle.
   ///
@@ -970,23 +844,11 @@ abstract class AppLocalizations {
   /// **'NAME'**
   String get subscriptionName;
 
-  /// No description provided for @subscriptionAmount.
-  ///
-  /// In en, this message translates to:
-  /// **'AMOUNT'**
-  String get subscriptionAmount;
-
   /// No description provided for @subscriptionPaymentAmount.
   ///
   /// In en, this message translates to:
   /// **'PAYMENT AMOUNT'**
   String get subscriptionPaymentAmount;
-
-  /// No description provided for @subscriptionCycle.
-  ///
-  /// In en, this message translates to:
-  /// **'BILLING CYCLE'**
-  String get subscriptionCycle;
 
   /// No description provided for @subscriptionCoveragePeriod.
   ///
@@ -1006,29 +868,11 @@ abstract class AppLocalizations {
   /// **'PAYMENT DATE'**
   String get subscriptionPaymentDate;
 
-  /// No description provided for @subscriptionNextBilling.
-  ///
-  /// In en, this message translates to:
-  /// **'NEXT BILLING'**
-  String get subscriptionNextBilling;
-
-  /// No description provided for @subscriptionDaysLeft.
-  ///
-  /// In en, this message translates to:
-  /// **'DAYS'**
-  String get subscriptionDaysLeft;
-
   /// No description provided for @totalPerMonth.
   ///
   /// In en, this message translates to:
   /// **'TOTAL/MO'**
   String get totalPerMonth;
-
-  /// No description provided for @totalPerYear.
-  ///
-  /// In en, this message translates to:
-  /// **'TOTAL/YR'**
-  String get totalPerYear;
 
   /// No description provided for @newSubscription.
   ///
@@ -1132,48 +976,6 @@ abstract class AppLocalizations {
   /// **'REMOVE'**
   String get remove;
 
-  /// No description provided for @monthsProjected.
-  ///
-  /// In en, this message translates to:
-  /// **'{count} months ahead'**
-  String monthsProjected(int count);
-
-  /// No description provided for @budgetPerMonth.
-  ///
-  /// In en, this message translates to:
-  /// **'BUDGET/MO'**
-  String get budgetPerMonth;
-
-  /// No description provided for @breakdown.
-  ///
-  /// In en, this message translates to:
-  /// **'BREAKDOWN'**
-  String get breakdown;
-
-  /// No description provided for @safetyFund.
-  ///
-  /// In en, this message translates to:
-  /// **'SAFETY FUND'**
-  String get safetyFund;
-
-  /// No description provided for @safety.
-  ///
-  /// In en, this message translates to:
-  /// **'SAFETY'**
-  String get safety;
-
-  /// No description provided for @historyEntries.
-  ///
-  /// In en, this message translates to:
-  /// **'HISTORY & ENTRIES'**
-  String get historyEntries;
-
-  /// No description provided for @addEntry.
-  ///
-  /// In en, this message translates to:
-  /// **'+ ADD'**
-  String get addEntry;
-
   /// No description provided for @willRemoveLoan.
   ///
   /// In en, this message translates to:
@@ -1269,12 +1071,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'/ MONTH'**
   String get perMonth;
-
-  /// No description provided for @prefsBudget.
-  ///
-  /// In en, this message translates to:
-  /// **'PREFERENCES & BUDGET'**
-  String get prefsBudget;
 
   /// No description provided for @close.
   ///
@@ -1431,12 +1227,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Using current costs'**
   String get usingCurrentBurn;
-
-  /// No description provided for @assumptionsProjectionOnly.
-  ///
-  /// In en, this message translates to:
-  /// **'Assumptions affect future projections only. They do not create transactions.'**
-  String get assumptionsProjectionOnly;
 
   /// No description provided for @setAssumptions.
   ///
@@ -1600,113 +1390,11 @@ abstract class AppLocalizations {
   /// **'Short by {amount} / month'**
   String shortByPerMonth(String amount);
 
-  /// No description provided for @goalTargetProgress.
-  ///
-  /// In en, this message translates to:
-  /// **'{months} month target. Progress toward your goal, not a score.'**
-  String goalTargetProgress(int months);
-
-  /// No description provided for @availableCash.
-  ///
-  /// In en, this message translates to:
-  /// **'Available cash'**
-  String get availableCash;
-
-  /// No description provided for @notEnoughHistory.
-  ///
-  /// In en, this message translates to:
-  /// **'Not enough history'**
-  String get notEnoughHistory;
-
-  /// No description provided for @projectionSource.
-  ///
-  /// In en, this message translates to:
-  /// **'Projection source'**
-  String get projectionSource;
-
-  /// No description provided for @usingAssumptions.
-  ///
-  /// In en, this message translates to:
-  /// **'Using assumptions'**
-  String get usingAssumptions;
-
-  /// No description provided for @fixedPressure.
-  ///
-  /// In en, this message translates to:
-  /// **'Fixed costs'**
-  String get fixedPressure;
-
-  /// No description provided for @plannedEssentials.
-  ///
-  /// In en, this message translates to:
-  /// **'Planned essentials'**
-  String get plannedEssentials;
-
-  /// No description provided for @recurringCosts.
-  ///
-  /// In en, this message translates to:
-  /// **'Recurring costs'**
-  String get recurringCosts;
-
-  /// No description provided for @debtCommitments.
-  ///
-  /// In en, this message translates to:
-  /// **'Loan payments'**
-  String get debtCommitments;
-
-  /// No description provided for @daysUpper.
-  ///
-  /// In en, this message translates to:
-  /// **'DAYS'**
-  String get daysUpper;
-
-  /// No description provided for @yourRunway.
-  ///
-  /// In en, this message translates to:
-  /// **'Your runway'**
-  String get yourRunway;
-
-  /// No description provided for @higherExpenses.
-  ///
-  /// In en, this message translates to:
-  /// **'Higher expenses'**
-  String get higherExpenses;
-
   /// No description provided for @deltaDays.
   ///
   /// In en, this message translates to:
   /// **'{days} days'**
   String deltaDays(int days);
-
-  /// No description provided for @shareSafe.
-  ///
-  /// In en, this message translates to:
-  /// **'SHARE SAFE'**
-  String get shareSafe;
-
-  /// No description provided for @shareSafeHint.
-  ///
-  /// In en, this message translates to:
-  /// **'No savings. No expenses. Just your runway.'**
-  String get shareSafeHint;
-
-  /// No description provided for @preparing.
-  ///
-  /// In en, this message translates to:
-  /// **'PREPARING...'**
-  String get preparing;
-
-  /// No description provided for @shareImage.
-  ///
-  /// In en, this message translates to:
-  /// **'SHARE IMAGE'**
-  String get shareImage;
-
-  /// No description provided for @shareAsText.
-  ///
-  /// In en, this message translates to:
-  /// **'SHARE AS TEXT'**
-  String get shareAsText;
 
   /// No description provided for @goalReached.
   ///
