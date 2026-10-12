@@ -19,9 +19,9 @@ Two GitHub Actions workflows, both pinned to **Flutter 3.41.7**. CD's Android jo
 
 Concurrency is grouped per workflow+ref with `cancel-in-progress: true`.
 
-**`quality` (ubuntu):** checkout → Flutter setup (cached) → cache `~/.pub-cache` keyed on `**/pubspec.yaml` → `melos bootstrap` → `melos run gen` → `analyze --fatal-infos` for all six packages individually → `dart test` in `domain`.
+**`quality` (ubuntu):** checkout → Flutter setup (cached) → cache `~/.pub-cache` keyed on `**/pubspec.yaml` → `melos bootstrap` → `melos run gen` → `analyze --fatal-infos` for all six packages individually → tests in all six packages (`domain` runs in `TZ=Europe/Paris` to catch daylight-saving bugs).
 
-> `--fatal-infos` is stricter than local `make analyze`. Also note CI's test step covers **domain only** — the data integration tests (`cd packages/data && flutter test test/integration/`) and the application use-case tests are not run in CI, despite needing no device.
+> `--fatal-infos` is stricter than local `make analyze`.
 
 **`build-ios` (macos):** pod install → `flutter build ios --release --no-codesign --dart-define=FLUTTER_BUILD_NUMBER=${{ github.run_number }}`. It runs only before a release is tagged, so a broken native build stops the release before CD starts. Nothing builds Android in CI until the Play release (#56).
 
