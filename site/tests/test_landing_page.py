@@ -366,3 +366,12 @@ def _jpeg_size(data):
             continue
         i += 2 + int.from_bytes(data[i + 2:i + 4], "big")
     raise AssertionError("no JPEG dimensions found")
+
+
+class PrivacyPageTest(unittest.TestCase):
+    """The app collects no analytics, so the policy must not describe any."""
+
+    def test_privacy_page_names_no_analytics_provider(self):
+        html = (ROOT / "privacy" / "index.html").read_text(encoding="utf-8")
+        for name in ("firebase", "google analytics"):
+            self.assertFalse(name in html.lower(), f"privacy page names {name}")

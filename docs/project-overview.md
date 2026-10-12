@@ -57,7 +57,6 @@ presentation → application → domain ← data
 | Routing | go_router 14.6 |
 | Charts | fl_chart 0.68 |
 | Fonts | JetBrains Mono (numbers) + Inter (labels) via `google_fonts` |
-| Analytics | Firebase Analytics (optional, behavior-only) |
 | Purchases | RevenueCat `purchases_flutter` 10 |
 | CI/CD | GitHub Actions → TestFlight + Play Store internal |
 
@@ -66,7 +65,6 @@ presentation → application → domain ← data
 - **Fully offline.** No backend, no API, no sync. All financial data stays on the device.
 - Database encrypted at rest with a 256-bit key generated on-device and stored in the Keychain/Keystore, never in preferences.
 - Android sets `FLAG_SECURE` (no screenshots, no app-switcher preview). No iOS equivalent is applied.
-- Analytics events carry **behavior only** — no amounts, balances, or runway values.
 - Consequence of the above: losing the Keychain entry (e.g. uninstall) makes the database unrecoverable, and there is no export/backup path.
 
 ## Monetization

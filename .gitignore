@@ -25,7 +25,6 @@ build/
 **/ios/Flutter/Flutter.framework
 **/ios/Flutter/Flutter.podspec
 **/ios/.symlinks/
-**/ios/GoogleService-Info.plist
 
 # macOS
 **/macos/Flutter/ephemeral/

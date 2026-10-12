@@ -3,14 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_windowmanager_plus/flutter_windowmanager_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:design_system/design_system.dart';
 import 'package:presentation/router/app_router.dart';
 import 'package:application/application.dart';
 import 'package:data/data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'firebase_options.dart';
-import 'firebase_analytics_service.dart';
 import 'erase_user_data.dart';
 import 'in_app_review_prompter.dart';
 import 'revenuecat_service.dart';
@@ -24,19 +21,9 @@ void main() async {
     await FlutterWindowManagerPlus.addFlags(FlutterWindowManagerPlus.FLAG_SECURE);
   }
 
-  // Firebase init — non-blocking, app works without it
-  try {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-  } catch (e) {
-    debugPrint('Firebase init failed: $e');
-  }
-
   await recordAppLaunch(await SharedPreferences.getInstance());
 
   final rcService = await RevenueCatService.init();
-  final analytics = FirebaseAnalyticsService();
   late AppDatabase database;
 
   runApp(
@@ -44,7 +31,6 @@ void main() async {
       openSession: () {
         final db = database = AppDatabase();
         return [
-          analyticsProvider.overrideWithValue(analytics),
           transactionRepositoryProvider.overrideWithValue(
             DriftTransactionRepository(db),
           ),

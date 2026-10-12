@@ -28,7 +28,7 @@ app ──▶ (all five, wires them together)
 | `application` | `domain` | `flutter_riverpod`, `riverpod_annotation` |
 | `design_system` | — | `google_fonts`, `intl`, `flutter_localizations` |
 | `presentation` | `application`, `design_system`, `domain` | `go_router`, `fl_chart`, `intl`, `uuid`, `share_plus` |
-| `app` | all five | `firebase_*`, `purchases_flutter`, `path_provider`, `flutter_windowmanager_plus`, `share_plus`, `screenshot` |
+| `app` | all five | `purchases_flutter`, `path_provider`, `flutter_windowmanager_plus`, `share_plus`, `screenshot` |
 
 Note that `presentation` does **not** depend on `data`, and `application` does **not** depend on `data`. Only `app` sees both.
 
@@ -36,7 +36,7 @@ Note that `presentation` does **not** depend on `data`, and `application` does *
 
 | # | From | To | Mechanism | Details |
 |---|---|---|---|---|
-| 1 | `app` | `application` | Riverpod `ProviderScope(overrides:)` | Injects `DriftTransactionRepository`, `DriftLoanRepository`, `DriftSubscriptionRepository`, `RevenueCatService`, `FirebaseAnalyticsService` into placeholder providers that otherwise throw `UnimplementedError` |
+| 1 | `app` | `application` | Riverpod `ProviderScope(overrides:)` | Injects `DriftTransactionRepository`, `DriftLoanRepository`, `DriftSubscriptionRepository`, `RevenueCatService` into placeholder providers that otherwise throw `UnimplementedError` |
 | 2 | `data` | `domain` | Interface implementation | `Drift*Repository implements domain.*Repository`; Drift row classes are converted at the boundary by mapper extensions — no ORM types leak inward |
 | 3 | `application` | `domain` | Direct function calls | `modelProvider` composes `aggregateMonths` + `computeModel`; loan/subscription providers call the corresponding engines |
 | 4 | `presentation` | `application` | `ref.watch` / `ref.read` | Reads providers for display; writes via `*UseCaseProvider.execute(...)` |
@@ -68,7 +68,6 @@ Four abstractions in `application` are deliberately unimplemented there and boun
 |---|---|---|
 | `TransactionRepository` / `LoanRepository` / `SubscriptionRepository` | `domain/repositories/` | `data`'s Drift implementations |
 | `PurchaseService` | `application/services/purchase_service.dart` | `app`'s `RevenueCatService` |
-| `AnalyticsService` | `application/analytics_service.dart` | `app`'s `FirebaseAnalyticsService` (defaults to `NoOpAnalytics`) |
 
 This is what makes the layers independently testable: swapping in `AppDatabase.forTesting` or a `mocktail` double needs no change outside the test.
 
@@ -81,7 +80,6 @@ This is what makes the layers independently testable: swapping in `AppDatabase.f
 | Localization | `design_system` | 6 locales, 230 keys; consumed via `context.l10n` |
 | Theming | `design_system` | Dark-only |
 | Entitlements | `application` (`EntitlementState`) | Enforced ad-hoc at `presentation` call sites |
-| Analytics | port in `application`, impl in `app` | Behavior only, no financial values |
 | Screen security | `app` | Android `FLAG_SECURE` only |
 
 ## Shared State That Crosses Boundaries

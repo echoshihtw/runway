@@ -20,7 +20,6 @@ Widget buildTestApp({AppDatabase? database, DateTime? now}) {
   final db = database ?? AppDatabase.forTesting(NativeDatabase.memory());
   return ProviderScope(
     overrides: [
-      analyticsProvider.overrideWithValue(const NoOpAnalytics()),
       transactionRepositoryProvider.overrideWithValue(
         DriftTransactionRepository(db),
       ),

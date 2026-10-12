@@ -42,8 +42,8 @@ post_install do |installer|
   end
 end
 
-# FirebaseAnalytics links the system libsqlite3 (-l"sqlite3"), which CocoaPods
-# lists before the SQLCipher framework. dyld then resolves sqlite3_* symbols
+# A pod that links the system libsqlite3 (-l"sqlite3") is listed by CocoaPods
+# before the SQLCipher framework. dyld then resolves sqlite3_* symbols
 # from the system copy, so PRAGMA key is ignored and the database is written
 # in plaintext. Link SQLCipher first. The app checks PRAGMA cipher_version on
 # every open (packages/data/lib/database/sqlcipher_check.dart).

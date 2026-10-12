@@ -51,7 +51,6 @@ Future<void> _pumpDashboard(
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
-        analyticsProvider.overrideWithValue(const NoOpAnalytics()),
         transactionRepositoryProvider.overrideWithValue(transactions),
         loanRepositoryProvider.overrideWithValue(DriftLoanRepository(db)),
         subscriptionRepositoryProvider.overrideWithValue(

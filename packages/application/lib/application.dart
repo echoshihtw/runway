@@ -29,7 +29,6 @@ export 'providers/financial_assumptions_provider.dart';
 export 'providers/legacy_financial_preferences.dart';
 export 'providers/this_month_provider.dart';
 export 'feature_flags.dart';
-export 'analytics_service.dart';
 export 'providers/entitlement_provider.dart';
 export 'providers/purchase_provider.dart';
 export 'services/purchase_service.dart';

@@ -9,7 +9,7 @@
 
 `application` is the bridge layer. It composes domain engines with persisted state and exposes everything to the UI as Riverpod providers. Per CONTRACTS §2.1 it depends **only on `domain`** — it never imports `data`. The concrete Drift repositories are injected at runtime by overriding placeholder providers in `app/lib/main.dart`.
 
-It also owns the two abstract service ports the app shell implements: `AnalyticsService` and `PurchaseService`.
+It also owns the abstract service port the app shell implements: `PurchaseService`.
 
 ## Technology Stack
 
@@ -28,7 +28,6 @@ It also owns the two abstract service ports the app shell implements: `Analytics
 packages/application/lib/
 ├── application.dart              # barrel
 ├── feature_flags.dart
-├── analytics_service.dart        # port + NoOpAnalytics + analyticsProvider
 ├── providers/                    # 14 provider files
 ├── services/purchase_service.dart # port + ProOffering/ProPackage/PurchaseException
 ├── state/                        # ScenarioState, TransactionState
@@ -45,8 +44,6 @@ Three providers deliberately throw until overridden in `main.dart`:
 | `loanRepositoryProvider` | `providers/loan_provider.dart` | `DriftLoanRepository` |
 | `subscriptionRepositoryProvider` | `providers/subscription_provider.dart` | `DriftSubscriptionRepository` |
 | `purchaseServiceProvider` | `providers/purchase_provider.dart` | `RevenueCatService` |
-
-`analyticsProvider` differs — it *defaults* to `const NoOpAnalytics()` and is overridden with `FirebaseAnalyticsService`, so the app still runs without Firebase.
 
 ## Provider Graph
 
@@ -123,10 +120,6 @@ Nine thin classes, one per mutation, each holding a repository and exposing `exe
 `Add/Edit/DeleteTransactionUseCase`, `Add/Edit/DeleteLoanUseCase`, `Add/Edit/DeleteSubscriptionUseCase` — each wired to a `*UseCaseProvider`.
 
 Validation lives here. `AddTransactionUseCase.execute` rejects zero amounts and amounts over `1e12`, throwing `InvalidTransactionFailure` (from `domain/failures`). Note these are **thrown**, not returned as an `Either`.
-
-## Analytics
-
-`AnalyticsService` is a 12-method behavioral port (`logScreen`, `logAddTransaction`, `logRunSimulation({hasBurnOverride, hasIncome})`, `logShare`, `logChangeCurrency`, …). Only behavior is tracked — no financial values are passed to any method. `NoOpAnalytics` is the default, used in tests and when Firebase is unavailable.
 
 ## Testing Strategy
 

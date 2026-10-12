@@ -48,7 +48,6 @@ runway/
 │   │       ├── use_cases/      # 9 CRUD use cases with validation
 │   │       ├── services/       # PurchaseService port
 │   │       ├── state/          # ScenarioState, TransactionState
-│   │       ├── analytics_service.dart   # AnalyticsService port + NoOp
 │   │       └── feature_flags.dart
 │   │
 │   ├── design_system/          # Tokens, theme, components, localizations
@@ -74,7 +73,6 @@ runway/
 └── app/                        # ★ COMPOSITION ROOT (the Flutter application)
     ├── lib/
     │   ├── main.dart           # ★ ProviderScope overrides — wires everything
-    │   ├── firebase_options.dart · firebase_analytics_service.dart
     │   └── revenuecat_config.dart · revenuecat_service.dart
     ├── test/ · integration_test/
     ├── ios/ · android/         # native projects, icons, signing

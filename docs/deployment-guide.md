@@ -87,7 +87,7 @@ IOS_EXPORT_METHOD=ad-hoc make build-testflight
 | Play Store `packageName` (cd.yml) | `com.survival.app` |
 | `Makefile` `APP_ID` | `com.silverfern.survivaloptimizer` |
 
-⚠️ iOS and Android ship under **different identifiers**. Intentional or not, this affects RevenueCat app configuration, Firebase project registration, and deep links — confirm both are registered correctly in each dashboard before release.
+⚠️ iOS and Android ship under **different identifiers**. Intentional or not, this affects RevenueCat app configuration and deep links. Confirm both are registered correctly in each dashboard before release.
 
 ## Pre-Release Checklist
 
@@ -98,7 +98,6 @@ IOS_EXPORT_METHOD=ad-hoc make build-testflight
 - [ ] `make gen-all` run and no stale `.g.dart` committed (CONTRACTS §2.4)
 - [ ] **`kRevenueCatGoogleKey` replaced** — while it is a placeholder, purchases are disabled on Android (iOS needs only its own key)
 - [ ] Version bumped in `app/pubspec.yaml`
-- [ ] Firebase `google-services.json` / `GoogleService-Info.plist` present for the correct bundle ids
 - [ ] Icons regenerated from the master (`make gen-icons`) if the brand asset changed
 
 ## Runtime Configuration
@@ -108,7 +107,6 @@ There is no `.env` mechanism. Configuration is compile-time:
 | Setting | Where |
 |---|---|
 | RevenueCat keys + entitlement id | `app/lib/revenuecat_config.dart` (source-committed constants) |
-| Firebase | `app/lib/firebase_options.dart` (flutterfire-generated) |
 | Dev Pro unlock | `--dart-define=DEV_PRO_ENTITLEMENT=true` (non-release builds only) |
 | Version / build number | CD passes `--build-name` from the tag (`v1.0.0` → `1.0.0`) and `--build-number` as the commit count. `make build-testflight` resolves both the same way without being told: the version from the open release PR's title (which is `release-pr.yml`'s own computation) or, with no release PR open, the newest `v*` tag; the build number from the same commit count CD uses, so local and pipeline builds share one increasing sequence. It refuses to build when neither source exists rather than guess, because a build attaches to an App Store Connect version record by `CFBundleShortVersionString` and a mismatch is refused at upload |
 
@@ -116,7 +114,7 @@ The RevenueCat keys in `revenuecat_config.dart` are *public SDK keys*, which are
 
 ## Infrastructure
 
-**None.** Runway is a fully offline, local-only app: no backend, no API, no hosted database. The only external services are Firebase Analytics (optional — init failure is caught and ignored) and RevenueCat (optional — disabled when keys are placeholders). All user data lives in the on-device encrypted SQLite file.
+**None.** Runway is a fully offline, local-only app: no backend, no API, no hosted database. The only external service is RevenueCat (optional, disabled when keys are placeholders). All user data lives in the on-device encrypted SQLite file.
 
 ## See Also
 

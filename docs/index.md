@@ -22,7 +22,7 @@
 | **application** | `packages/application` | Flutter library | Riverpod 3.0.3 | [architecture](./architecture-application.md) |
 | **design_system** | `packages/design_system` | Flutter library | google_fonts, intl, gen-l10n | [architecture](./architecture-design_system.md) · [components](./component-inventory-design_system.md) |
 | **presentation** | `packages/presentation` | Flutter library | go_router, fl_chart | [architecture](./architecture-presentation.md) · [components](./component-inventory-presentation.md) |
-| **app** | `app/` | Flutter application | Firebase, RevenueCat, native projects | [architecture](./architecture-app.md) |
+| **app** | `app/` | Flutter application | RevenueCat, native projects | [architecture](./architecture-app.md) |
 
 ## Generated Documentation
 
