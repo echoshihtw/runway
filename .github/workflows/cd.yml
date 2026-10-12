@@ -131,8 +131,8 @@ jobs:
   # RELEASE Android → Play Store
   # ============================================================
   # Turned off until the Google Play release (#56). None of the Android
-  # secrets are set, so the job would fail on every iOS release. CI still
-  # builds Android on pushes to staging. Remove this `if` to turn it back on.
+  # secrets are set, so the job would fail on every iOS release. Nothing builds
+  # Android in CI either. Remove this `if` to turn it back on.
   release-android:
     name: Release Android → Play Store
     if: ${{ false }}
