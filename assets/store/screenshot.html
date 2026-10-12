@@ -1,0 +1,160 @@
+<!--
+  Source for the App Store screenshots, in the look of the Shipaton artwork and
+  the link preview (site/assets/og-source/final.html): cream ground, a serif
+  headline, the real app in a phone, one shape behind it.
+
+  The slide is picked by the URL hash, e.g. screenshot.html#01-runway.
+  render.sh renders every slide at 1320x2868 (6.9-inch) into docs/screenshots.
+  App screens come from site/assets/device, the bare captures the screenshot
+  test writes. Fonts come from site/assets/fonts, so the render needs no network.
+-->
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @font-face {
+        font-family: "Newsreader";
+        src: url("../../site/assets/fonts/newsreader-500.woff2") format("woff2");
+        font-weight: 500;
+      }
+      @font-face {
+        font-family: "Inter";
+        src: url("../../site/assets/fonts/inter.woff2") format("woff2");
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1320px;
+        height: 2868px;
+        margin: 0;
+      }
+      body {
+        position: relative;
+        overflow: hidden;
+        background: #f7f4ec;
+        color: #08142b;
+      }
+      h1 {
+        position: absolute;
+        left: 104px;
+        top: 190px;
+        width: 1110px;
+        margin: 0;
+        font-family: "Newsreader", Georgia, serif;
+        font-size: 136px;
+        font-weight: 500;
+        line-height: 0.95;
+        letter-spacing: -0.045em;
+      }
+      p {
+        position: absolute;
+        left: 108px;
+        top: 500px;
+        width: 1120px;
+        margin: 0;
+        color: #536279;
+        font-family: "Inter", system-ui, sans-serif;
+        font-size: 50px;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+      }
+      .slab,
+      .ridge,
+      .star {
+        position: absolute;
+      }
+      .slab {
+        right: -60px;
+        top: 1020px;
+        width: 1180px;
+        height: 1500px;
+        background: #6327d4;
+        clip-path: polygon(30% 0, 100% 8%, 100% 92%, 0 100%);
+      }
+      .ridge {
+        left: -60px;
+        bottom: -40px;
+        width: 1500px;
+        height: 520px;
+        background: #8fddaa;
+        clip-path: polygon(0 55%, 22% 20%, 46% 48%, 70% 8%, 100% 40%, 100% 100%, 0 100%);
+      }
+      .star {
+        right: 70px;
+        top: 600px;
+        width: 210px;
+        height: 210px;
+        background: #f28a6e;
+        clip-path: polygon(
+          50% 0,
+          60% 32%,
+          92% 18%,
+          72% 46%,
+          100% 62%,
+          66% 66%,
+          70% 100%,
+          50% 74%,
+          26% 98%,
+          32% 64%,
+          0 56%,
+          30% 44%,
+          10% 14%,
+          42% 30%
+        );
+      }
+      .phone {
+        position: absolute;
+        left: 50%;
+        top: 800px;
+        width: 930px;
+        transform: translateX(-50%) rotate(-4deg);
+        padding: 22px;
+        border-radius: 132px;
+        background: #0b1424;
+        box-shadow:
+          0 0 0 7px #a9bfdc,
+          0 60px 120px rgba(8, 20, 43, 0.28);
+      }
+      .phone img {
+        display: block;
+        width: 100%;
+        border-radius: 112px;
+      }
+      .island {
+        position: absolute;
+        left: 50%;
+        top: 52px;
+        width: 250px;
+        height: 72px;
+        transform: translateX(-50%);
+        border-radius: 40px;
+        background: #000;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slab"></div>
+    <div class="ridge"></div>
+    <div class="star" hidden></div>
+    <h1></h1>
+    <p></p>
+    <div class="phone"><img alt="" /><span class="island"></span></div>
+    <script>
+      const slides = {
+        "01-runway": ["How long will your money last?", "One number, counted from today. No account, no bank login.", true],
+        "02-living": ["Know what you can spend today", "What is left this month, and what that is per day.", false],
+        "03-log": ["Log a spend in seconds", "Pick the occasion, type the amount.", false],
+        "04-plan": ["Try a change before you make it", "See how many months a lower cost buys.", false],
+      };
+      const name = location.hash.slice(1) || "01-runway";
+      const [title, line, star] = slides[name];
+      document.querySelector("h1").textContent = title;
+      document.querySelector("p").textContent = line;
+      document.querySelector(".star").hidden = !star;
+      document.querySelector(".phone img").src = `../../site/assets/device/${name}.png`;
+    </script>
+  </body>
+</html>
