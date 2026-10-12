@@ -7,7 +7,7 @@
 
 ## Pipelines
 
-Two GitHub Actions workflows, both pinned to **Flutter 3.41.7 / Java 17**.
+Two GitHub Actions workflows, both pinned to **Flutter 3.41.7**. CD's Android job also pins **Java 17**.
 
 ### CI — `.github/workflows/ci.yml`
 
