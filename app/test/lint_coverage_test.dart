@@ -9,8 +9,9 @@ import 'package:flutter_test/flutter_test.dart';
 /// stood. Two were real: `application` imported shared_preferences from a dev
 /// dependency and used uuid without declaring it.
 ///
-/// Checked against ci.yml, not the Makefile. CI enumerates its own steps, so a
-/// package added to the Makefile alone is never analysed on a pull request.
+/// CI runs `make analyze` and `make test`, so the package list lives once, in
+/// the Makefile. Both are checked: CI must call the targets, and the targets
+/// must reach every package, analyse it with --fatal-infos and test it.
 void main() {
   final root = Directory('..');
 
@@ -40,26 +41,39 @@ void main() {
     }
   });
 
-  test('CI analyses every package', () {
+  /// The commands of one Makefile target, up to the next blank line.
+  String target(String makefile, String name) {
+    final start = makefile.indexOf(RegExp('^$name:', multiLine: true));
+    expect(start, isNot(-1), reason: 'the Makefile has no $name target');
+    final end = makefile.indexOf('\n\n', start);
+    return makefile.substring(start, end == -1 ? makefile.length : end);
+  }
+
+  test('CI analyses and tests every package', () {
     final ci = File('${root.path}/.github/workflows/ci.yml').readAsStringSync();
     // Comments do not run, so a step commented out must not satisfy this.
     final steps = ci
         .split('\n')
         .where((l) => !l.trimLeft().startsWith('#'))
         .join('\n');
+    expect(steps, contains('make analyze'), reason: 'ci.yml never analyses');
+    expect(steps, contains('make test'), reason: 'ci.yml never tests');
 
+    final makefile = File('${root.path}/Makefile').readAsStringSync();
+    final analyze = target(makefile, 'analyze');
+    final tests = target(makefile, 'test');
     for (final package in packages()) {
       final name = package.path.split('/').last;
-      final dir = name == 'app' ? 'app' : 'packages/$name';
+      final dir = name == 'app' ? r'(app|\$\(APP_DIR\))' : 'packages/$name';
       expect(
-        steps,
-        contains('cd $dir && '),
-        reason: 'ci.yml never runs anything in $dir',
+        RegExp('cd $dir && \\S+(?: flutter)? analyze --fatal-infos'),
+        predicate<RegExp>((r) => r.hasMatch(analyze)),
+        reason: 'make analyze never analyses $name with --fatal-infos',
       );
       expect(
-        RegExp('cd ${RegExp.escape(dir)} && (dart|flutter) analyze'),
-        predicate<RegExp>((r) => r.hasMatch(steps)),
-        reason: 'ci.yml never analyses $dir',
+        RegExp('cd $dir && .*test'),
+        predicate<RegExp>((r) => r.hasMatch(tests)),
+        reason: 'make test never tests $name',
       );
     }
   });

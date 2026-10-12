@@ -7,7 +7,7 @@
 
 ## Pipelines
 
-Two GitHub Actions workflows, both pinned to **Flutter 3.41.7**. CD's Android job also pins **Java 17**.
+Two GitHub Actions workflows, both reading the Flutter version from `.fvmrc`. CD's Android job also pins **Java 17**.
 
 ### CI — `.github/workflows/ci.yml`
 
@@ -19,7 +19,7 @@ Two GitHub Actions workflows, both pinned to **Flutter 3.41.7**. CD's Android jo
 
 Concurrency is grouped per workflow+ref with `cancel-in-progress: true`.
 
-**`quality` (ubuntu):** checkout → Flutter setup (cached) → cache `~/.pub-cache` keyed on `**/pubspec.yaml` → `melos bootstrap` → `melos run gen` → `analyze --fatal-infos` for all six packages individually → tests in all six packages (`domain` runs in `TZ=Europe/Paris` to catch daylight-saving bugs).
+**`quality` (ubuntu):** checkout → Flutter setup (cached) → cache `~/.pub-cache` keyed on `**/pubspec.yaml` → `melos bootstrap` → `melos run gen` → `make analyze` → `make test`, the same targets as locally, so the package list and strictness live only in the `Makefile` (`domain` runs in `TZ=Europe/Paris` to catch daylight-saving bugs).
 
 > Locally, `make gen` then `make analyze` and `make test` run the same checks.
 

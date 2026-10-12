@@ -16,7 +16,6 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  FLUTTER_VERSION: '3.41.7'
 
 jobs:
   # ============================================================
@@ -29,6 +28,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Read the Flutter version
+        # One pin for every workflow and for local fvm: .fvmrc.
+        run: echo "FLUTTER_VERSION=$(jq -r .flutter .fvmrc)" >> "$GITHUB_ENV"
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -53,45 +56,13 @@ jobs:
       - name: Code generation
         run: melos run gen
 
-      - name: Analyze — domain
-        run: cd packages/domain && dart analyze --fatal-infos
+      # The package list and the strictness live in the Makefile, so local
+      # runs and CI cannot drift apart. CI has its own flutter, not fvm.
+      - name: Analyze
+        run: make analyze FVM=flutter
 
-      - name: Analyze — data
-        run: cd packages/data && flutter analyze --fatal-infos
-
-      - name: Analyze — application
-        run: cd packages/application && flutter analyze --fatal-infos
-
-      - name: Analyze — design_system
-        run: cd packages/design_system && flutter analyze --fatal-infos
-
-      - name: Analyze — presentation
-        run: cd packages/presentation && flutter analyze --fatal-infos
-
-      - name: Analyze — app
-        run: cd app && flutter analyze --fatal-infos
-
-      - name: Test — domain
-        # A zone with daylight saving. Date arithmetic that is wrong by an hour
-        # is invisible in UTC, and four of the six shipped locales observe it.
-        env:
-          TZ: Europe/Paris
-        run: cd packages/domain && dart test --reporter=github
-
-      - name: Test — data
-        run: cd packages/data && flutter test --reporter=github
-
-      - name: Test — application
-        run: cd packages/application && flutter test --reporter=github
-
-      - name: Test — design_system
-        run: cd packages/design_system && flutter test --reporter=github
-
-      - name: Test — presentation
-        run: cd packages/presentation && flutter test --reporter=github
-
-      - name: Test — app
-        run: cd app && flutter test --reporter=github
+      - name: Test
+        run: make test FVM=flutter TEST_FLAGS=--reporter=github
 
   # ============================================================
   # BUILD iOS: the release on main, before the tag is cut
@@ -106,6 +77,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Read the Flutter version
+        # One pin for every workflow and for local fvm: .fvmrc.
+        run: echo "FLUTTER_VERSION=$(jq -r .flutter .fvmrc)" >> "$GITHUB_ENV"
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2

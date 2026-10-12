@@ -15,7 +15,7 @@ It is also where all platform-specific concerns live: iOS/Android projects, scre
 
 | Category | Technology | Version | Purpose |
 |---|---|---|---|
-| Framework | Flutter | 3.41.7 (CI-pinned) | |
+| Framework | Flutter | pinned in `.fvmrc` | |
 | Language | Dart | `^3.11.5` | |
 | DI / state | `flutter_riverpod` | `^3.0.3` | `ProviderScope` overrides |
 | Analytics | `firebase_core`, `firebase_analytics` | `^4.7.0`, `^12.3.0` | |

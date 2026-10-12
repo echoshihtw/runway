@@ -10,7 +10,7 @@ The `Makefile` is the canonical entry point — `make help` lists every target. 
 
 | Tool | Version | Notes |
 |---|---|---|
-| Flutter | **3.41.7** | Pinned in CI; managed locally via FVM |
+| Flutter | pinned in `.fvmrc` | Read by fvm locally and by CI |
 | Dart | `^3.11.5` | Ships with Flutter |
 | Melos | `^7.5.1` | `dart pub global activate melos` |
 | FVM | latest | `brew tap leoafarias/fvm && brew install fvm` |
@@ -26,7 +26,7 @@ make setup       # melos bootstrap
 make doctor      # flutter doctor
 ```
 
-> `make install` runs `fvm global stable`, not `fvm install 3.41.7`. If stable has moved past 3.41.7 you may drift from the CI-pinned version — pin explicitly if builds diverge.
+> `.fvmrc` pins the Flutter version for fvm and for both workflows; `make install` installs it, and fvm fetches it on first use if missing.
 
 ## Daily Commands
 

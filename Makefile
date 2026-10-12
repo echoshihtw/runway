@@ -7,6 +7,7 @@ SHELL         := /bin/bash
 APP_DIR       := app
 APP_ID        := com.silverfern.survivaloptimizer
 FVM           := fvm flutter
+TEST_FLAGS    ?=
 ICON_SRC      := assets/brand/runway-icon-1024.png
 APP_ICON_ASSET := $(APP_DIR)/assets/brand/runway-icon-1024.png
 IOS_ICON_DIR  := $(APP_DIR)/ios/Runner/Assets.xcassets/AppIcon.appiconset
@@ -61,8 +62,8 @@ help: ## Show this help
 install: ## Install all tools (fvm, melos, cocoapods)
 	@echo "→ Installing FVM..."
 	brew tap leoafarias/fvm && brew install fvm
-	@echo "→ Installing Flutter stable..."
-	fvm install stable && fvm global stable
+	@echo "→ Installing the Flutter pinned in .fvmrc..."
+	fvm install
 	@echo "→ Installing Melos..."
 	dart pub global activate melos
 	@echo "→ Installing CocoaPods..."
@@ -227,17 +228,17 @@ test: ## Run every package's tests, as CI does
 # day, and the arithmetic that gets that wrong is invisible in UTC: the weekly
 # schedule slipped an hour, and so a day, only across a DST change. Four of the
 # six shipped locales are in such a zone. The whole suite passes under it.
-	@cd packages/domain && TZ=Europe/Paris dart test
+	@cd packages/domain && TZ=Europe/Paris dart test $(TEST_FLAGS)
 	@echo "→ data"
-	@cd packages/data && $(FVM) test
+	@cd packages/data && $(FVM) test $(TEST_FLAGS)
 	@echo "→ application"
-	@cd packages/application && $(FVM) test
+	@cd packages/application && $(FVM) test $(TEST_FLAGS)
 	@echo "→ design_system"
-	@cd packages/design_system && $(FVM) test
+	@cd packages/design_system && $(FVM) test $(TEST_FLAGS)
 	@echo "→ presentation"
-	@cd packages/presentation && $(FVM) test
+	@cd packages/presentation && $(FVM) test $(TEST_FLAGS)
 	@echo "→ app"
-	@cd app && $(FVM) test
+	@cd app && $(FVM) test $(TEST_FLAGS)
 	@echo "✓ All tests passed"
 
 .PHONY: test-verbose

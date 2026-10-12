@@ -49,7 +49,7 @@ presentation → application → domain ← data
 
 | Layer | Technology |
 |---|---|
-| Framework / language | Flutter 3.41.7 · Dart 3.11.5 |
+| Framework / language | Flutter and Dart, pinned in `.fvmrc` |
 | Monorepo | Melos 7.5.1 + Dart pub workspaces |
 | State | Riverpod 3.0.3 |
 | Persistence | Drift 2.26 over SQLCipher-encrypted SQLite |
