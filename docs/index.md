@@ -30,6 +30,7 @@
 - [Project Overview](./project-overview.md) — purpose, model, stack, current state, known gaps
 - [Source Tree Analysis](./source-tree-analysis.md) — annotated tree, entry points, "where do I look for X"
 - [Integration Architecture](./integration-architecture.md) — how the six parts communicate
+- [Brand voice](./brand-voice.md): how copy and store assets sound and look; check new copy against it
 
 ### Per-part architecture
 - [Architecture — domain](./architecture-domain.md)
