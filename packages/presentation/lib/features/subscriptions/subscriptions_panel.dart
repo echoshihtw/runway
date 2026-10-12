@@ -155,6 +155,8 @@ class SubscriptionsPanel extends ConsumerWidget {
     WidgetRef ref,
     Subscription subscription,
   ) {
+    // Before the sheet opens: its builder reruns after the opener may be gone.
+    final today = ref.read(clockProvider)();
     showModalBottomSheet(
       context: context,
       useRootNavigator: true,
@@ -167,6 +169,7 @@ class SubscriptionsPanel extends ConsumerWidget {
       ),
       builder: (_) => SubscriptionForm(
         existing: subscription,
+        today: today,
         onSubmit: (name, category, amount, cycle, startDate, note) async {
           // One clock for the whole record, read at submit rather than build,
           // so a sheet left open overnight still stamps today.

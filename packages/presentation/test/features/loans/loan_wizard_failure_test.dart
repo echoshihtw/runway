@@ -20,6 +20,7 @@ Future<void> _pump(
       home: Scaffold(
         body: SingleChildScrollView(
           child: LoanWizard(
+            today: DateTime(2026, 9, 15),
             onSubmit: (_, _, _, _, _, _, _) async => onSubmit(),
           ),
         ),

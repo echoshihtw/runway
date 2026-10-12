@@ -26,6 +26,7 @@ Future<List<_Submitted>> _openForm(
               isScrollControlled: true,
               builder: (_) => TransactionForm(
                 existing: existing,
+                today: DateTime(2026, 9, 15),
                 onSubmit: (type, amount, date, note, category, loanId) =>
                     submitted.add((type: type, category: category)),
               ),

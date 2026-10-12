@@ -21,6 +21,8 @@ Future<void> showEntrySheet(
   // is handed the loans.
   final rentBudget = ref.read(budgetProvider).value?.rent ?? 0;
 
+  // Before the sheet opens: its builder reruns after the opener may be gone.
+  final today = ref.read(clockProvider)();
   return showModalBottomSheet<void>(
     context: context,
     useRootNavigator: true,
@@ -37,8 +39,9 @@ Future<void> showEntrySheet(
       preselectedType: preselectedType,
       loans: loans,
       rentBudget: rentBudget,
+      today: today,
       onSubmit: (type, amount, date, note, category, loanId) async {
-        final now = DateTime.now();
+        final now = ref.read(clockProvider)();
         if (existing == null) {
           await ref
               .read(addTransactionUseCaseProvider)

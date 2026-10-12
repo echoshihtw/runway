@@ -21,6 +21,7 @@ Future<void> _pump(WidgetTester tester, {Transaction? existing}) async {
               existing: existing,
               rentBudget: 1450,
               loans: const [],
+              today: DateTime(2026, 9, 15),
               onSubmit: (_, _, _, _, _, _) async => true,
             ),
           ),
