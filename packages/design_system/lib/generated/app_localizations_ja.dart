@@ -9,18 +9,6 @@ class AppLocalizationsJa extends AppLocalizations {
   AppLocalizationsJa([String locale = 'ja']) : super(locale);
 
   @override
-  String get appTitle => 'Runway';
-
-  @override
-  String get hudTitle => 'Runway';
-
-  @override
-  String get sysOnline => 'システム：オンライン';
-
-  @override
-  String get lifeForce => 'ランウェイ準備度';
-
-  @override
   String get statusLabel => 'ステータス';
 
   @override
@@ -50,19 +38,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get runway => '生存期間';
 
   @override
-  String get runOut => '枯渇日';
-
-  @override
-  String get cashTimeline => '現金タイムライン';
-
-  @override
   String get config => '設定';
-
-  @override
-  String get monthlyLoanPayment => '月間ローン返済';
-
-  @override
-  String get tapToSet => 'タップして設定';
 
   @override
   String get edit => '編集';
@@ -75,9 +51,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get transactionLog => '取引ログ';
-
-  @override
-  String get newEntry => '+ 新規';
 
   @override
   String get noEntries => 'まずは残高を入力';
@@ -93,9 +66,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get date => '日付';
-
-  @override
-  String get calcMonth => '計算月';
 
   @override
   String get amount => '金額';
@@ -116,28 +86,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get scenarioSimulator => 'シナリオシミュレーター';
 
   @override
-  String get overrideInputs => 'オーバーライド入力';
-
-  @override
   String get burnRateOverride => '家賃＋生活費 / 月';
 
   @override
   String get simulatedIncome => 'シミュレート収入/月';
 
   @override
-  String get simResults => 'シム結果';
-
-  @override
   String get simRunway => 'シム生存期間';
-
-  @override
-  String get simRunOut => 'シム枯渇日';
-
-  @override
-  String get deltaVsActual => '実際との差分';
-
-  @override
-  String get deltaRunway => '生存期間差分';
 
   @override
   String get resetSim => 'シムリセット';
@@ -158,12 +113,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get low => '低';
 
   @override
-  String get moderate => '中程度';
-
-  @override
-  String get highLoad => '高負荷';
-
-  @override
   String get language => '言語';
 
   @override
@@ -171,9 +120,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get currencySymbolOnly => '表示記号のみ変更されます。金額は換算されません。';
-
-  @override
-  String get daysShort => '日';
 
   @override
   String get gettingStarted => 'はじめに';
@@ -354,9 +300,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get settled => '完済';
 
   @override
-  String get totalDebtPerMonth => '月間債務合計';
-
-  @override
   String get remaining => '残高';
 
   @override
@@ -385,13 +328,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get repay => '返済';
 
   @override
-  String get repayTitle => '返済';
-
-  @override
   String get extra => '追加';
-
-  @override
-  String get configButton => '設定';
 
   @override
   String get loanWizardTitle => 'ローンウィザード';
@@ -454,13 +391,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get subscriptionName => '名前';
 
   @override
-  String get subscriptionAmount => '金額';
-
-  @override
   String get subscriptionPaymentAmount => '支払金額';
-
-  @override
-  String get subscriptionCycle => '請求サイクル';
 
   @override
   String get subscriptionCoveragePeriod => '対象期間';
@@ -472,16 +403,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get subscriptionPaymentDate => '支払日';
 
   @override
-  String get subscriptionNextBilling => '次回請求日';
-
-  @override
-  String get subscriptionDaysLeft => '日';
-
-  @override
   String get totalPerMonth => '月合計';
-
-  @override
-  String get totalPerYear => '年合計';
 
   @override
   String get newSubscription => '+ サブスク';
@@ -535,29 +457,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get remove => '削除';
 
   @override
-  String monthsProjected(int count) {
-    return '$countヶ月予測';
-  }
-
-  @override
-  String get budgetPerMonth => '予算/月';
-
-  @override
-  String get breakdown => '明細';
-
-  @override
-  String get safetyFund => '安全資金';
-
-  @override
-  String get safety => '安全';
-
-  @override
-  String get historyEntries => '履歴 & 入力';
-
-  @override
-  String get addEntry => '+ 追加';
-
-  @override
   String get willRemoveLoan => '負債からも削除されます';
 
   @override
@@ -606,9 +505,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get perMonth => '/ 月';
-
-  @override
-  String get prefsBudget => '設定 & 予算';
 
   @override
   String get close => '閉じる';
@@ -705,9 +601,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get usingCurrentBurn => '現在の支出を使用';
 
   @override
-  String get assumptionsProjectionOnly => '前提は将来予測だけに影響します。取引記録は作成されません。';
-
-  @override
   String get setAssumptions => '予測を設定';
 
   @override
@@ -796,62 +689,9 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String goalTargetProgress(int months) {
-    return '$monthsか月目標。これは目標への進捗であり、スコアではありません。';
-  }
-
-  @override
-  String get availableCash => '利用可能な現金';
-
-  @override
-  String get notEnoughHistory => '履歴が不足しています';
-
-  @override
-  String get projectionSource => '予測ソース';
-
-  @override
-  String get usingAssumptions => '前提を使用';
-
-  @override
-  String get fixedPressure => '固定費';
-
-  @override
-  String get plannedEssentials => '計画上の必需支出';
-
-  @override
-  String get recurringCosts => '定期コスト';
-
-  @override
-  String get debtCommitments => 'ローン支払い';
-
-  @override
-  String get daysUpper => '日';
-
-  @override
-  String get yourRunway => 'あなたのランウェイ';
-
-  @override
-  String get higherExpenses => '支出増加';
-
-  @override
   String deltaDays(int days) {
     return '$days日';
   }
-
-  @override
-  String get shareSafe => '安全に共有';
-
-  @override
-  String get shareSafeHint => '貯金額も支出も出しません。ランウェイだけ。';
-
-  @override
-  String get preparing => '準備中...';
-
-  @override
-  String get shareImage => '画像を共有';
-
-  @override
-  String get shareAsText => 'テキストで共有';
 
   @override
   String get goalReached => '目標達成';
