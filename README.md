@@ -3,7 +3,7 @@
 ### How many months does your money cover?
 
 One number, counted from today, and the month it runs out. No account, no bank
-connection, nothing leaves your phone.
+connection, and your records never leave your phone.
 
 [**Get it on the App Store**](https://apps.apple.com/app/apple-store/id6778675088?pt=128981651&ct=readme&mt=8) · [Website](https://echoshihtw.github.io/runway/)
 
