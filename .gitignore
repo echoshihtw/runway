@@ -83,8 +83,8 @@ _bmad/render/
 # meant the rule below read as "ignore marketing" while the repo carried 6 MB of
 # it, and any new final dropped in here went missing from `git status` in
 # silence. Both are out of the repo now and live on disk and in the places they
-# were made for: the App Store screenshots regenerate from
-# `integration_test/screenshots_test.dart`, and the gallery is on Devpost.
+# were made for: the App Store screenshots regenerate with
+# `assets/store/render.sh`, and the gallery is on Devpost.
 #
 # `assets/brand/runway-icon-1024.png` stays tracked and is the one exception. It
 # is declared in `app/pubspec.yaml`, loaded at runtime by `dashboard_screen`, and

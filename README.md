@@ -10,7 +10,7 @@ connection, nothing leaves your phone.
 <p align="center">
   <img src="docs/screenshots/01-runway.png" width="24%" alt="Dashboard: how many months your money covers, cash and run-out month">
   <img src="docs/screenshots/02-living.png" width="24%" alt="Living budget: spent against budget, what is left, and the daily amount">
-  <img src="docs/screenshots/03-log.png" width="24%" alt="Log: every entry with the budget it counts against">
+  <img src="docs/screenshots/03-log.png" width="24%" alt="Log: pick the occasion, then type the amount">
   <img src="docs/screenshots/04-plan.png" width="24%" alt="Plan: a lower monthly cost and the months it adds">
 </p>
 
