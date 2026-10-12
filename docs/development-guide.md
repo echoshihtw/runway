@@ -54,7 +54,7 @@ make gen-all     # both
 ## Testing
 
 ```bash
-make test            # every package's tests, as CI runs them
+make test            # every package's tests
 make test-coverage   # domain coverage → packages/domain/coverage
 
 # data-layer integration tests (in-memory SQLite, no device):
@@ -64,21 +64,21 @@ cd packages/data && flutter test test/integration/
 cd app && flutter test integration_test/ -d <DEVICE_ID>
 ```
 
-⚠️ **`melos.yaml` is dead config.** Melos resolves its scripts from the `melos:` block in the **root `pubspec.yaml`**, which declares only `test`, `analyze`, and `gen`. The richer script set in `melos.yaml` (`test:integration:data`, `test:integration:e2e`, `test:all`, plus a `test/`-scoped `test`) is **not loaded** — `melos run test:all` fails with "unknown script". Either fold those scripts into the root `pubspec.yaml` or run the underlying commands directly as shown above.
+⚠️ **`melos.yaml` is dead config.** Melos resolves its scripts from the `melos:` block in the **root `pubspec.yaml`**, which declares only `test`, `analyze`, and `gen`. The richer script set in `melos.yaml` (`test:integration:data`, `test:integration:e2e`, `test:all`, plus a `test/`-scoped `test`) is **not loaded**: `melos run test:all` fails with "unknown script". Use `make test` and the commands above instead.
 
-**CONTRACTS §7** requires: every domain logic change ships with a test in `packages/domain/test/`; the aggregator, runway math and loan edge cases are always covered; and all tests must pass before any commit (`cd packages/domain && dart test`).
+**CONTRACTS §7** requires: every domain logic change ships with a test in `packages/domain/test/`; the aggregator, runway math and loan edge cases are always covered; and all tests must pass before any commit (`make test`).
 
 ## Quality
 
 ```bash
 make format      # dart format across all packages
-make analyze     # every package, with --fatal-infos as CI runs it
+make analyze     # every package, with --fatal-infos
 make lint        # format + analyze
 make precommit   # lint + test
 make l10n-check  # validate every .arb parses as JSON
 ```
 
-`make analyze` and `make test` run the same analysis and tests as CI, as strictly.
+After `make gen`, which CI also runs first, `make analyze` and `make test` run the same analysis and tests as CI, as strictly.
 
 ## Adding a Feature — the usual path
 

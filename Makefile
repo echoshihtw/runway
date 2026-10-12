@@ -229,20 +229,20 @@ test: ## Run every package's tests, as CI does
 # six shipped locales are in such a zone. The whole suite passes under it.
 	@cd packages/domain && TZ=Europe/Paris dart test
 	@echo "→ data"
-	@cd packages/data && flutter test
+	@cd packages/data && $(FVM) test
 	@echo "→ application"
-	@cd packages/application && flutter test
+	@cd packages/application && $(FVM) test
 	@echo "→ design_system"
-	@cd packages/design_system && flutter test
+	@cd packages/design_system && $(FVM) test
 	@echo "→ presentation"
-	@cd packages/presentation && flutter test
+	@cd packages/presentation && $(FVM) test
 	@echo "→ app"
-	@cd app && flutter test
+	@cd app && $(FVM) test
 	@echo "✓ All tests passed"
 
 .PHONY: test-verbose
-test-verbose: ## Run all tests with verbose output
-	@cd packages/domain && dart test --reporter=expanded
+test-verbose: ## Run the domain tests with verbose output
+	@cd packages/domain && TZ=Europe/Paris dart test --reporter=expanded
 
 .PHONY: test-coverage
 test-coverage: ## Run tests with coverage report
