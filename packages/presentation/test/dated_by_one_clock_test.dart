@@ -16,8 +16,9 @@ void main() {
       for (var i = 0; i < lines.length; i++) {
         final line = lines[i].trimLeft();
         if (line.startsWith('//')) continue;
-        if (line.contains('DateTime.now()'))
+        if (line.contains('DateTime.now()')) {
           offending.add('${file.path}:${i + 1}');
+        }
       }
     }
     expect(
