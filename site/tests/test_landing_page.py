@@ -40,7 +40,16 @@ class LandingPageTest(unittest.TestCase):
         self.assertEqual(positions, sorted(positions))
 
     def test_every_store_link_is_the_app_store_listing(self):
-        self.assertIn('href="https://apps.apple.com/app/id6778675088"', HTML)
+        # Each button carries its own campaign, so App Store Connect can tell
+        # which one brought a download without the page tracking anyone.
+        links = re.findall(r'href="(https://apps\.apple\.com/[^"]*)"', HTML)
+        self.assertEqual(
+            links,
+            [
+                "https://apps.apple.com/app/apple-store/id6778675088?pt=128981651&amp;ct=landing-hero&amp;mt=8",
+                "https://apps.apple.com/app/apple-store/id6778675088?pt=128981651&amp;ct=landing-footer&amp;mt=8",
+            ],
+        )
         self.assertNotIn("testflight", HTML.lower())
         self.assertNotIn("Coming soon", HTML)
         self.assertNotIn("In App Store review", HTML)
