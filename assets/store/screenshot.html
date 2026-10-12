@@ -1,7 +1,9 @@
 <!--
-  Source for the App Store screenshots, in the look of the Shipaton artwork and
-  the link preview (site/assets/og-source/final.html): cream ground, a serif
-  headline, the real app in a phone, one shape behind it.
+  Source for the App Store screenshots, in the Shipaton look from
+  assets/marketing: cream ground, a serif headline under a wordmark, the real
+  app in a titanium phone tilted right, a deep violet slab behind it, a mint
+  ridge along the bottom and, on the first slide, a coral star. creative.html
+  uses the same palette and shapes for the header and search assets.
 
   The slide is picked by the URL hash, e.g. screenshot.html#01-runway.
   render.sh renders every slide at 1320x2868 (6.9-inch) into docs/screenshots.
@@ -38,105 +40,80 @@
       body {
         position: relative;
         overflow: hidden;
-        background: #f2efe7;
+        background: #fefbf4;
         color: #08142b;
       }
-      h1 {
+      .shape,
+      .mark,
+      h1,
+      p,
+      .star,
+      .phone {
         position: absolute;
+      }
+      /* Shapes run past the canvas on purpose; nothing that carries meaning does. */
+      .slab {
+        inset: 0;
+        background: #3a1f80;
+        clip-path: polygon(520px 1420px, 1520px 1060px, 1520px 2080px, 260px 2330px);
+      }
+      .ridge {
+        inset: 0;
+        background: #a7e9b7;
+        clip-path: polygon(-100px 2640px, 230px 2500px, 420px 2610px, 700px 2420px, 900px 2560px, 1120px 2380px, 1500px 2960px, -100px 2960px);
+      }
+      .mark {
         left: 104px;
-        top: 190px;
-        width: 1110px;
+        top: 150px;
+        margin: 0;
+        font: 34px "JetBrains Mono", monospace;
+        letter-spacing: 0.14em;
+      }
+      h1 {
+        left: 98px;
+        top: 230px;
+        width: 1120px;
         margin: 0;
         font-family: "Newsreader", Georgia, serif;
-        font-size: 136px;
+        font-size: 138px;
         font-weight: 500;
-        line-height: 0.95;
+        line-height: 0.94;
         letter-spacing: -0.045em;
       }
-      p {
-        position: absolute;
-        left: 108px;
-        top: 500px;
-        width: 1120px;
+      p.line {
+        left: 104px;
+        top: 560px;
+        width: 1060px;
         margin: 0;
         color: #536279;
         font-family: "Inter", system-ui, sans-serif;
-        font-size: 50px;
-        line-height: 1.2;
+        font-size: 48px;
+        line-height: 1.25;
         letter-spacing: -0.02em;
       }
-      /* The landing hero's right column, below the headline: violet field,
-         mint blob and yellow shard, with the same values as site/assets/landing.css. */
-      .field {
-        position: absolute;
-        left: 0;
-        top: 720px;
-        width: 1320px;
-        height: 2148px;
-        overflow: hidden;
-        background: #6327d4;
-        isolation: isolate;
+      .star {
+        right: 96px;
+        top: 640px;
+        width: 190px;
+        height: 190px;
+        background: #ed8871;
+        transform: rotate(14deg);
+        clip-path: polygon(50% 0, 60% 32%, 92% 18%, 72% 46%, 100% 62%, 66% 66%, 70% 100%, 50% 74%, 26% 98%, 32% 64%, 0 56%, 30% 44%, 10% 14%, 42% 30%);
       }
-      .blob {
-        position: absolute;
-        z-index: -2;
-        inset: 13% -24% auto -11%;
-        height: 72%;
-        border-radius: 52% 35% 47% 41%;
-        background: #8fddaa;
-        transform: rotate(-8deg);
-      }
-      .shard {
-        position: absolute;
-        z-index: -1;
-        right: -120px;
-        bottom: -160px;
-        width: 760px;
-        height: 760px;
-        background: #f4d84b;
-        clip-path: polygon(0 48%, 100% 0, 77% 100%);
-      }
-      .card {
-        position: absolute;
-        right: 70px;
-        top: 1640px;
-        display: grid;
-        gap: 14px;
-        width: 600px;
-        padding: 44px 48px;
-        border-radius: 36px;
-        color: #08142b;
-        background: #f8f7f2;
-        box-shadow: 0 60px 140px rgba(3, 7, 22, 0.34);
-        transform: rotate(5deg);
-      }
-      .card[hidden] {
+      .star[hidden] {
         display: none;
       }
-      .card span {
-        color: #657087;
-        font: 30px "JetBrains Mono", monospace;
-        letter-spacing: 0.12em;
-      }
-      .card strong {
-        font: 800 150px/1 "JetBrains Mono", monospace;
-        letter-spacing: -0.08em;
-      }
-      .card small {
-        color: #657087;
-        font: 32px "Inter", system-ui, sans-serif;
-      }
       .phone {
-        position: absolute;
-        left: 50%;
-        top: 800px;
-        width: 930px;
-        transform: translateX(-50%) rotate(-4deg);
-        padding: 22px;
-        border-radius: 132px;
+        left: 46%;
+        top: 840px;
+        width: 820px;
+        padding: 24px;
+        border-radius: 136px;
         background: #0b1424;
-        border: 3px solid rgba(255, 255, 255, 0.13);
-        box-shadow: 0 60px 120px rgba(3, 7, 22, 0.34);
+        transform: translateX(-50%) rotate(5deg);
+        box-shadow:
+          0 0 0 12px #c8d8ea,
+          24px 70px 130px rgba(8, 20, 43, 0.28);
       }
       /* The app is dark by design; a store thumbnail needs it lifted to read. */
       .phone img {
@@ -148,21 +125,36 @@
       .island {
         position: absolute;
         left: 50%;
-        top: 52px;
-        width: 250px;
-        height: 72px;
+        top: 56px;
+        width: 230px;
+        height: 66px;
         transform: translateX(-50%);
-        border-radius: 40px;
+        border-radius: 36px;
         background: #000;
+      }
+      .key {
+        position: absolute;
+        left: -22px;
+        width: 11px;
+        border-radius: 8px;
+        background: #b4c6dc;
       }
     </style>
   </head>
   <body>
-    <div class="field"><div class="blob"></div><div class="shard"></div></div>
+    <div class="shape slab"></div>
+    <div class="shape ridge"></div>
+    <p class="mark">FINANCIAL RUNWAY</p>
     <h1></h1>
-    <p></p>
-    <div class="phone"><img alt="" /><span class="island"></span></div>
-    <div class="card" hidden><span>YOUR RUNWAY</span><strong>12 mo</strong><small>Running out September 2027</small></div>
+    <p class="line"></p>
+    <div class="star" hidden></div>
+    <div class="phone">
+      <img alt="" />
+      <span class="island"></span>
+      <span class="key" style="top: 200px; height: 90px"></span>
+      <span class="key" style="top: 330px; height: 150px"></span>
+      <span class="key" style="top: 510px; height: 150px"></span>
+    </div>
     <script>
       const slides = {
         "01-runway": ["How long will your money last?", "One number, counted from today. No account, no bank login.", true],
@@ -171,10 +163,10 @@
         "04-plan": ["Try a change before you make it", "See how many months a lower cost buys.", false],
       };
       const name = location.hash.slice(1) || "01-runway";
-      const [title, line, card] = slides[name];
+      const [title, line, star] = slides[name];
       document.querySelector("h1").textContent = title;
-      document.querySelector("p").textContent = line;
-      document.querySelector(".card").hidden = !card;
+      document.querySelector("p.line").textContent = line;
+      document.querySelector(".star").hidden = !star;
       document.querySelector(".phone img").src = `../../site/assets/device/${name}.png`;
     </script>
   </body>

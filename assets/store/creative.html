@@ -1,0 +1,173 @@
+<!--
+  Source for the App Store creative assets (iOS 27 product page header and
+  search results), in the Shipaton look from assets/marketing.
+
+  The size is picked by the URL hash: #universal (5244x2950, serves both
+  placements), #search (3840x2560) or #header (3840x1646). The art safe areas
+  are Apple's, read from the Creative Assets Templates Figma file; everything
+  that carries meaning sits inside them, the shapes may be cropped.
+  Add "-guide" to the hash (e.g. #search-guide) to outline the safe area.
+-->
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @font-face {
+        font-family: "Newsreader";
+        src: url("../../site/assets/fonts/newsreader-500.woff2") format("woff2");
+        font-weight: 500;
+      }
+      @font-face {
+        font-family: "JetBrains Mono";
+        src: url("../../site/assets/fonts/jetbrains-mono.woff2") format("woff2");
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        position: relative;
+        overflow: hidden;
+        background: #fefbf4;
+        color: #08142b;
+      }
+      .shape,
+      .mark,
+      h1,
+      .star,
+      .phone,
+      .guide {
+        position: absolute;
+      }
+      .slab {
+        background: #3a1f80;
+      }
+      .ridge {
+        background: #a7e9b7;
+      }
+      .mark {
+        margin: 0;
+        font-family: "JetBrains Mono", monospace;
+        letter-spacing: 0.14em;
+      }
+      h1 {
+        margin: 0;
+        font-family: "Newsreader", Georgia, serif;
+        font-weight: 500;
+        line-height: 0.92;
+        letter-spacing: -0.045em;
+        white-space: pre;
+      }
+      .star {
+        background: #ed8871;
+        clip-path: polygon(50% 0, 60% 32%, 92% 18%, 72% 46%, 100% 62%, 66% 66%, 70% 100%, 50% 74%, 26% 98%, 32% 64%, 0 56%, 30% 44%, 10% 14%, 42% 30%);
+      }
+      .phone {
+        background: #0b1424;
+        transform-origin: 50% 50%;
+      }
+      .phone img {
+        display: block;
+        width: 100%;
+        /* The app is dark by design; a store image needs it lifted to read. */
+        filter: brightness(1.3) contrast(1.15) saturate(1.15);
+      }
+      .phone .island,
+      .phone .key {
+        position: absolute;
+      }
+      .phone .island {
+        left: 50%;
+        transform: translateX(-50%);
+        background: #000;
+      }
+      .phone .key {
+        background: #b4c6dc;
+      }
+      .guide {
+        outline: 6px dashed rgba(0, 160, 0, 0.8);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shape slab"></div>
+    <div class="shape ridge"></div>
+    <p class="mark">FINANCIAL RUNWAY</p>
+    <h1>How long
+will your
+money last?</h1>
+    <div class="star"></div>
+    <div class="phone">
+      <img src="../../site/assets/device/01-runway.png" alt="" />
+      <span class="island"></span>
+      <span class="key"></span><span class="key"></span><span class="key"></span>
+    </div>
+    <div class="guide" hidden></div>
+    <script>
+      // Apple's sizes and art safe areas: [width, height, safeX, safeY, safeW, safeH].
+      const sizes = {
+        universal: [5244, 2950, 1921, 660, 1402, 962],
+        search: [3840, 2560, 836, 765, 2168, 1030],
+        header: [3840, 1646, 1097, 493, 1646, 661],
+      };
+      const [name, guide] = location.hash.slice(1).split("-");
+      const [W, H, sx, sy, sw, sh] = sizes[name] || sizes.universal;
+      const $ = (q) => document.querySelector(q);
+      const px = (el, o) => Object.entries(o).forEach(([k, v]) => (el.style[k] = typeof v === "number" ? v + "px" : v));
+      px(document.body, { width: W, height: H });
+
+      // Grid: the safe height in 24 rows. Every measure below is in units of u.
+      const u = sh / 24;
+
+      // Phone: right column, top on the grid, tilted right as in the Shipaton art.
+      const pw = Math.min(sw * 0.36, sh * 0.62);
+      const pad = pw * 0.028, sw2 = pw - pad * 2, ph = (sw2 * 1956) / 900 + pad * 2;
+      const phx = sx + sw - pw - 2 * u, phy = sy + 1 * u;
+      const phone = $(".phone");
+      px(phone, { left: phx, top: phy, width: pw, padding: pad, borderRadius: pw * 0.15, transform: "rotate(6deg)",
+        boxShadow: `0 0 0 ${pw * 0.014}px #c8d8ea, ${u * 0.8}px ${u * 2.4}px ${u * 4.5}px rgba(8, 20, 43, 0.28)` });
+      px($(".phone img"), { borderRadius: pw * 0.125 });
+      px($(".island"), { top: pad + pw * 0.035, width: pw * 0.25, height: pw * 0.074, borderRadius: pw * 0.04 });
+      const keys = document.querySelectorAll(".key");
+      [[pw * 0.22, pw * 0.1], [pw * 0.36, pw * 0.17], [pw * 0.56, pw * 0.17]].forEach(([top, h], i) =>
+        px(keys[i], { left: -pw * 0.022, top, width: pw * 0.012, height: h, borderRadius: pw * 0.01 }));
+      const cx = phx + pw / 2;
+
+      // Violet slab: near-parallel edges at about -12 degrees, beginning behind the
+      // phone so its end never shows beside the text, running off the right edge.
+      const t = Math.tan((13 * Math.PI) / 180);
+      const top0 = phy + ph * 0.26, thick = ph * 0.6, x0 = cx - pw * 0.1, x1 = W + 200, xl = x0 - pw * 0.38;
+      const slab = [[x0, top0], [x1, top0 - (x1 - x0) * t], [x1, top0 - (x1 - x0) * t + thick * 1.15], [xl, top0 + thick]];
+      const clip = (pts) => "polygon(" + pts.map(([x, y]) => `${x}px ${y}px`).join(", ") + ")";
+      px($(".slab"), { left: 0, top: 0, width: W, height: H, clipPath: clip(slab) });
+
+      // Mint ridge: off the canvas left and bottom, peaks stepping up toward the
+      // phone, then falling away off the bottom edge, never a hard cut.
+      const base = Math.max(sy + sh + 2 * u, H - sh * 0.36), xr = cx + pw * 0.1;
+      const ridge = [[-200, base + 4 * u], [xr * 0.18, base - 1 * u], [xr * 0.34, base + 3 * u], [xr * 0.58, base - 4 * u],
+        [xr * 0.76, base + 1 * u], [xr, base - 6 * u], [xr + (H - base + 6 * u) * 0.9, H + 200], [-200, H + 200]];
+      px($(".ridge"), { left: 0, top: 0, width: W, height: H, clipPath: clip(ridge) });
+
+      // Wordmark and headline: left column, the wordmark on the phone's top line.
+      const colW = phx - sx - 3 * u;
+      const mark = $(".mark"), h1 = $("h1");
+      px(mark, { left: sx, top: sy + 2 * u, fontSize: u * 0.95 });
+      const size = Math.min(5.4 * u, colW * 0.22);
+      px(h1, { left: sx - size * 0.04, top: sy + 2 * u + u * 0.95 + 1.6 * u, fontSize: size });
+
+      // Star: on the gap between headline and phone, above the first line.
+      const st = 3.6 * u;
+      px($(".star"), { left: Math.min(sx + colW - st * 0.2, phx - st - 0.6 * u), top: sy - 0.8 * u, width: st, height: st, transform: "rotate(14deg)" });
+
+      if (guide) {
+        const g = $(".guide");
+        g.hidden = false;
+        px(g, { left: sx, top: sy, width: sw, height: sh });
+      }
+    </script>
+  </body>
+</html>
