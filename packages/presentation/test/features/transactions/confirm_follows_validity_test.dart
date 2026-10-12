@@ -28,6 +28,7 @@ void main() {
     await tester.pumpWidget(
       _wrap(
         TransactionForm(
+          today: DateTime(2026, 9, 15),
           onSubmit: (_, _, _, _, _, _) => submitted++,
         ),
       ),
@@ -56,6 +57,7 @@ void main() {
     await tester.pumpWidget(
       _wrap(
         LoanWizard(
+          today: DateTime(2026, 9, 15),
           onSubmit: (_, _, _, _, _, _, _) async => true,
         ),
       ),

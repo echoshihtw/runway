@@ -22,7 +22,6 @@ on:
 
 env:
   TAG: ${{ inputs.tag }}
-  FLUTTER_VERSION: '3.41.7'
   JAVA_VERSION: '17'
 
 jobs:
@@ -39,6 +38,10 @@ jobs:
         with:
           ref: ${{ inputs.tag }}
           fetch-depth: 0 # the build number counts commits
+
+      - name: Read the Flutter version
+        # One pin for every workflow and for local fvm: .fvmrc.
+        run: echo "FLUTTER_VERSION=$(jq -r .flutter .fvmrc)" >> "$GITHUB_ENV"
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -131,8 +134,8 @@ jobs:
   # RELEASE Android → Play Store
   # ============================================================
   # Turned off until the Google Play release (#56). None of the Android
-  # secrets are set, so the job would fail on every iOS release. CI still
-  # builds Android on pushes to staging. Remove this `if` to turn it back on.
+  # secrets are set, so the job would fail on every iOS release. Nothing builds
+  # Android in CI either. Remove this `if` to turn it back on.
   release-android:
     name: Release Android → Play Store
     if: ${{ false }}
@@ -150,6 +153,10 @@ jobs:
         with:
           distribution: temurin
           java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Read the Flutter version
+        # One pin for every workflow and for local fvm: .fvmrc.
+        run: echo "FLUTTER_VERSION=$(jq -r .flutter .fvmrc)" >> "$GITHUB_ENV"
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2

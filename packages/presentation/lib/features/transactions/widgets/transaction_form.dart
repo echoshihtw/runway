@@ -20,6 +20,11 @@ class TransactionForm extends StatefulWidget {
   /// and focused.
   final String? prefillNote;
   final List<Loan> loans;
+
+  /// The app's today, from the clock. A new entry is dated this unless the
+  /// owner picks another day.
+  final DateTime today;
+
   final void Function(
     TransactionType type,
     double amount,
@@ -37,6 +42,7 @@ class TransactionForm extends StatefulWidget {
     this.rentBudget = 0,
     this.prefillNote,
     this.loans = const [],
+    required this.today,
     required this.onSubmit,
   });
 
@@ -75,7 +81,7 @@ class _TransactionFormState extends State<TransactionForm> {
         widget.preselectedType ??
         TransactionType.expense;
     _isInflow = type.isInflow;
-    _date = widget.existing?.date ?? DateTime.now();
+    _date = widget.existing?.date ?? widget.today;
     _amountCtrl.text = moneyField(widget.existing?.amount.value);
     _noteCtrl.text = widget.existing?.note ?? widget.prefillNote ?? '';
     _selectedLoanId = widget.existing?.loanId;
@@ -136,6 +142,7 @@ class _TransactionFormState extends State<TransactionForm> {
     final picked = await showDatePicker(
       context: context,
       initialDate: _date,
+      currentDate: widget.today,
       firstDate: DateTime(2020),
       lastDate: DateTime(2030),
       builder: (ctx, child) => Theme(

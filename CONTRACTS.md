@@ -243,9 +243,9 @@ All domain logic changes require corresponding tests in `packages/domain/test/`.
 
 ### 7.3 Test Command
 ```bash
-cd packages/domain && dart test
+make test
 ```
-All 39+ tests must pass before any commit.
+Every package's tests must pass before any commit.
 
 ---
 
@@ -328,3 +328,5 @@ Answer these questions:
 | 2026-09 | Budget, forecast assumptions and runway goal moved from `SharedPreferences` into the encrypted database (schema 6) | They are financial values and `NSUserDefaults` is a plaintext plist. Existing values move on first launch, then the old keys are removed |
 | 2026-09 | `PRAGMA cipher_version` checked every time the database opens | If plain SQLite is loaded instead of SQLCipher, `PRAGMA key` silently does nothing. The check throws in debug builds and reports the error in release builds |
 | 2026-09 | "Delete all data" keeps only the cached Pro flag | It holds no financial data, and keeping it avoids locking a paying user out while offline |
+| 2026-10 | Downloads are counted in App Store Connect, by campaign link | Every published App Store link carries the provider token and its own `ct=` campaign, so App Store Connect shows which link brought a download. The site itself tracks nothing (#283) |
+| 2026-10 | The screens date everything by the app's clock (`clockProvider`) | Every date a screen writes, the money's date and `createdAt`/`updatedAt` alike, comes from one `clockProvider` read, so a pinned clock (tests, store captures) sees one day per record. `packages/presentation/test/dated_by_one_clock_test.dart` fails on a direct `DateTime.now()` in `lib`. The domain still defaults to `DateTime.now()` in `loan_engine`, `monthly_aggregator` and `LoanSummary` (#318) |

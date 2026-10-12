@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:application/application.dart';
 import 'package:go_router/go_router.dart';
 import 'package:design_system/design_system.dart';
 import '../features/boot/boot_screen.dart';
@@ -135,4 +136,17 @@ class _ScaffoldWithNavState extends ConsumerState<_ScaffoldWithNav> {
       ),
     );
   }
+}
+
+/// Logs a screen view each time the visible route changes, named by its route
+/// path. It listens to the router rather than a NavigatorObserver because
+/// switching back to a tab pushes no route.
+void reportScreenViews(GoRouter router, AnalyticsService analytics) {
+  String? last;
+  router.routerDelegate.addListener(() {
+    final path = router.routerDelegate.currentConfiguration.fullPath;
+    if (path.isEmpty || path == last) return;
+    last = path;
+    analytics.logScreen(path);
+  });
 }

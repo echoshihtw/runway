@@ -1120,7 +1120,7 @@ body.landing .wrap {
   position: relative;
   z-index: 2;
   width: min(46%, 21rem);
-  aspect-ratio: 720/1564;
+  aspect-ratio: 900/1956;
   filter: drop-shadow(0 2.2rem 2.5rem rgba(0, 0, 0, 0.42));
   transform: rotate(-2deg);
 }

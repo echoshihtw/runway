@@ -40,7 +40,16 @@ class LandingPageTest(unittest.TestCase):
         self.assertEqual(positions, sorted(positions))
 
     def test_every_store_link_is_the_app_store_listing(self):
-        self.assertIn('href="https://apps.apple.com/app/id6778675088"', HTML)
+        # Each button carries its own campaign, so App Store Connect can tell
+        # which one brought a download without the page tracking anyone.
+        links = re.findall(r'href="(https://apps\.apple\.com/[^"]*)"', HTML)
+        self.assertEqual(
+            links,
+            [
+                "https://apps.apple.com/app/apple-store/id6778675088?pt=128981651&amp;ct=landing-hero&amp;mt=8",
+                "https://apps.apple.com/app/apple-store/id6778675088?pt=128981651&amp;ct=landing-footer&amp;mt=8",
+            ],
+        )
         self.assertNotIn("testflight", HTML.lower())
         self.assertNotIn("Coming soon", HTML)
         self.assertNotIn("In App Store review", HTML)
@@ -345,6 +354,22 @@ class LinkPreviewTest(unittest.TestCase):
         url = self._meta(html, "og:image")
         expected = "image/jpeg" if url.endswith((".jpg", ".jpeg")) else "image/png"
         self.assertEqual(declared, expected)
+
+
+class PrivacyPolicyTest(unittest.TestCase):
+    """The event list itself is matched to the code by
+    app/test/firebase_analytics_service_test.dart, which runs on every pull
+    request. This keeps the promise made about all of them."""
+
+    HTML_FLAT = re.sub(
+        r"\s+", " ", (ROOT / "privacy" / "index.html").read_text(encoding="utf-8")
+    )
+
+    def test_the_page_says_no_event_carries_money_or_text(self):
+        self.assertIn(
+            "No event carries an amount, balance, name, note or anything you type.",
+            self.HTML_FLAT,
+        )
 
 
 def _png_size(data):

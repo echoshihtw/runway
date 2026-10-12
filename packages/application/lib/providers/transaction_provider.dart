@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:domain/domain.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../use_cases/add_transaction_use_case.dart';
 import '../use_cases/edit_transaction_use_case.dart';
 import '../use_cases/delete_transaction_use_case.dart';
+import '../analytics_service.dart';
 import 'repository_provider.dart';
 import 'usage_count_provider.dart';
 
@@ -34,8 +37,18 @@ final addTransactionUseCaseProvider = Provider<AddTransactionUseCase>((ref) {
         TransactionType.subscriptionCharge,
         TransactionType.repayment,
       };
-      if (uncounted.contains(transaction.type)) return;
-      await ref.read(entryCountProvider.notifier).increment();
+      if (!uncounted.contains(transaction.type)) {
+        await ref.read(entryCountProvider.notifier).increment();
+      }
+
+      // Every door that saves an entry passes here, so each is logged once,
+      // after the count and unawaited: analytics never holds a save.
+      final analytics = ref.read(analyticsProvider);
+      unawaited(
+        transaction.type == TransactionType.repayment
+            ? analytics.logRepayLoan()
+            : analytics.logAddTransaction(transaction.type),
+      );
     },
   );
 });

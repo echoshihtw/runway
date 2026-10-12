@@ -25,6 +25,9 @@ class _Subscriptions implements SubscriptionRepository {
   Future<void> add(Subscription subscription) async => items.add(subscription);
 
   @override
+  Future<void> delete(String id) async => items.removeWhere((s) => s.id == id);
+
+  @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
@@ -35,6 +38,18 @@ class _FailingSubscriptions extends _Subscriptions {
   @override
   Future<void> add(Subscription subscription) async =>
       throw Exception('the write failed');
+}
+
+class _Analytics extends NoOpAnalytics {
+  final events = <String>[];
+
+  @override
+  Future<void> logAddSubscription(BillingCycle cycle) async =>
+      events.add('add_subscription:${cycle.name}');
+
+  @override
+  Future<void> logDeleteSubscription() async =>
+      events.add('delete_subscription');
 }
 
 Subscription _sub() => Subscription(
@@ -53,6 +68,7 @@ Future<void> _pump(
   List<Subscription> subs, {
   double textScale = 1.0,
   SubscriptionRepository? repository,
+  AnalyticsService analytics = const NoOpAnalytics(),
 }) async {
   SharedPreferences.setMockInitialValues({});
   await tester.pumpWidget(
@@ -61,6 +77,7 @@ Future<void> _pump(
         subscriptionRepositoryProvider.overrideWithValue(
           repository ?? _Subscriptions(subs.toList()),
         ),
+        analyticsProvider.overrideWithValue(analytics),
       ],
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -133,7 +150,8 @@ void main() {
     expect(
       tester.takeException(),
       isNull,
-      reason: 'the empty state must lay out on the smallest screen we support '
+      reason:
+          'the empty state must lay out on the smallest screen we support '
           'at the largest text size, not overflow',
     );
     expect(find.text('+ SUBSCRIPTION'), findsOneWidget);
@@ -168,19 +186,14 @@ void main() {
     // sheet exactly like a successful one: the subscription was silently not
     // created, and the only place that would have shown it is the card the
     // sheet just closed over.
-    await _pump(tester, const [], repository: _FailingSubscriptions());
-
-    await tester.tap(find.text('+ SUBSCRIPTION'));
-    await tester.pumpAndSettle();
-
-    await tester.enterText(find.byType(TextField).at(0), 'Netflix');
-    await tester.enterText(find.byType(TextField).at(1), '1990');
-    // CONFIRM is disabled until the form has something to save, and the
-    // rebuild that enables it lands a frame after the typing.
-    await tester.pump();
-    await tester.ensureVisible(find.text('CONFIRM'));
-    await tester.tap(find.text('CONFIRM'));
-    await tester.pumpAndSettle();
+    final analytics = _Analytics();
+    await _pump(
+      tester,
+      const [],
+      repository: _FailingSubscriptions(),
+      analytics: analytics,
+    );
+    await _addNetflix(tester);
 
     expect(
       find.byType(SubscriptionForm),
@@ -190,9 +203,61 @@ void main() {
     expect(
       find.textContaining("Couldn't save"),
       findsOneWidget,
-      reason: 'and the failure has to be said out loud. It used to be a '
+      reason:
+          'and the failure has to be said out loud. It used to be a '
           'SnackBar, which needed a Scaffold, which stretched the sheet to '
           'full height; the form says it inline now, beside the typing',
     );
+    expect(analytics.events, isEmpty, reason: 'nothing was added');
   });
+
+  testWidgets('a saved subscription is counted once, by its cycle', (
+    tester,
+  ) async {
+    final analytics = _Analytics();
+    await _pump(tester, const [], analytics: analytics);
+    await _addNetflix(tester);
+
+    expect(find.byType(SubscriptionForm), findsNothing);
+    expect(analytics.events, ['add_subscription:monthly']);
+  });
+
+  testWidgets('a deletion is counted once it is confirmed, never on abort', (
+    tester,
+  ) async {
+    final analytics = _Analytics();
+    await _pump(tester, [_sub()], analytics: analytics);
+    await tester.tap(find.text('SUBSCRIPTIONS'));
+    await tester.pumpAndSettle();
+
+    Future<void> deleteThenAnswer(String answer) async {
+      await tester.tap(find.text('SPOTIFY'));
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('Delete subscription'));
+      await tester.tap(find.text('Delete subscription'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(answer));
+      await tester.pumpAndSettle();
+    }
+
+    await deleteThenAnswer('ABORT');
+    expect(analytics.events, isEmpty);
+
+    await deleteThenAnswer('DELETE SUBSCRIPTION');
+    expect(analytics.events, ['delete_subscription']);
+  });
+}
+
+Future<void> _addNetflix(WidgetTester tester) async {
+  await tester.tap(find.text('+ SUBSCRIPTION'));
+  await tester.pumpAndSettle();
+
+  await tester.enterText(find.byType(TextField).at(0), 'Netflix');
+  await tester.enterText(find.byType(TextField).at(1), '1990');
+  // CONFIRM is disabled until the form has something to save, and the
+  // rebuild that enables it lands a frame after the typing.
+  await tester.pump();
+  await tester.ensureVisible(find.text('CONFIRM'));
+  await tester.tap(find.text('CONFIRM'));
+  await tester.pumpAndSettle();
 }

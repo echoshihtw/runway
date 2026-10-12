@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:application/application.dart';
 import 'package:design_system/design_system.dart';
 import 'package:domain/domain.dart';
@@ -17,6 +19,8 @@ import '../transactions/widgets/loan_wizard.dart';
 Future<void> startLoanCreation(BuildContext context, WidgetRef ref) async {
   if (!allowsNewEntry(context, ref)) return;
 
+  // Before the sheet opens: its builder reruns after the opener may be gone.
+  final today = ref.read(clockProvider)();
   showModalBottomSheet(
     context: context,
     useRootNavigator: true,
@@ -28,6 +32,7 @@ Future<void> startLoanCreation(BuildContext context, WidgetRef ref) async {
       ),
     ),
     builder: (_) => LoanWizard(
+      today: today,
       onSubmit:
           (
             loanAmount,
@@ -38,7 +43,7 @@ Future<void> startLoanCreation(BuildContext context, WidgetRef ref) async {
             name,
             note,
           ) async {
-            final now = DateTime.now();
+            final now = ref.read(clockProvider)();
             final loanId = const Uuid().v4();
             // Everything from ref is read before the first await. The sheet
             // sits on the root navigator, so the widget that opened it can be
@@ -47,6 +52,7 @@ Future<void> startLoanCreation(BuildContext context, WidgetRef ref) async {
             final addLoan = ref.read(addLoanUseCaseProvider);
             final addTransaction = ref.read(addTransactionUseCaseProvider);
             final deleteLoan = ref.read(deleteLoanUseCaseProvider);
+            final analytics = ref.read(analyticsProvider);
             final openingBalanceDate = latestOpeningBalanceDate(
               ref.read(transactionsProvider).value ?? const [],
             );
@@ -80,6 +86,7 @@ Future<void> startLoanCreation(BuildContext context, WidgetRef ref) async {
               date,
               openingBalanceDate: openingBalanceDate,
             )) {
+              unawaited(analytics.logAddLoan(source));
               return true;
             }
 
@@ -113,6 +120,7 @@ Future<void> startLoanCreation(BuildContext context, WidgetRef ref) async {
               }
               return false;
             }
+            unawaited(analytics.logAddLoan(source));
             return true;
           },
     ),

@@ -20,7 +20,7 @@ runway/
 │   └── D-Design-System/  E-Development/
 ├── _bmad/ · _bmad-output/      # BMad module config + planning/research artifacts
 ├── .github/
-│   ├── workflows/ci.yml        # analyze + test + build iOS/Android on push
+│   ├── workflows/ci.yml        # analyze + test; iOS build before a release
 │   ├── workflows/cd.yml        # tag v*.*.* → TestFlight + Play Store internal
 │   └── SECRETS.md              # required GitHub secrets
 │

@@ -43,6 +43,7 @@ Future<List<_Submitted>> _openForm(
               builder: (_) => TransactionForm(
                 existing: existing,
                 loans: loans,
+                today: DateTime(2026, 9, 15),
                 onSubmit: (type, amount, date, note, category, loanId) =>
                     submitted.add((
                       type: type,

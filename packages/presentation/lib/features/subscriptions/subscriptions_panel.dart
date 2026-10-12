@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:design_system/design_system.dart';
@@ -117,6 +119,7 @@ class SubscriptionsPanel extends ConsumerWidget {
     Subscription subscription,
   ) async {
     final l10n = context.l10n;
+    final analytics = ref.read(analyticsProvider);
     final confirmed = await showDialog<bool>(
       context: context,
       useRootNavigator: true,
@@ -144,6 +147,7 @@ class SubscriptionsPanel extends ConsumerWidget {
     );
     if (confirmed != true) return;
     await ref.read(deleteSubscriptionUseCaseProvider).execute(subscription.id);
+    unawaited(analytics.logDeleteSubscription());
   }
 
   void _showEditSubscription(
@@ -151,6 +155,8 @@ class SubscriptionsPanel extends ConsumerWidget {
     WidgetRef ref,
     Subscription subscription,
   ) {
+    // Before the sheet opens: its builder reruns after the opener may be gone.
+    final today = ref.read(clockProvider)();
     showModalBottomSheet(
       context: context,
       useRootNavigator: true,
@@ -163,6 +169,7 @@ class SubscriptionsPanel extends ConsumerWidget {
       ),
       builder: (_) => SubscriptionForm(
         existing: subscription,
+        today: today,
         onSubmit: (name, category, amount, cycle, startDate, note) async {
           // One clock for the whole record, read at submit rather than build,
           // so a sheet left open overnight still stamps today.

@@ -22,9 +22,14 @@ class SubscriptionForm extends StatefulWidget {
   /// to delete yet.
   final VoidCallback? onDelete;
 
+  /// The app's today, from the clock. A new subscription is dated this unless
+  /// the owner picks another day.
+  final DateTime today;
+
   const SubscriptionForm({
     super.key,
     this.existing,
+    required this.today,
     required this.onSubmit,
     this.onDelete,
   });
@@ -60,7 +65,7 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
     super.initState();
     _category = widget.existing?.category ?? SubscriptionCategory.personal;
     _cycle = widget.existing?.cycle ?? BillingCycle.monthly;
-    _startDate = widget.existing?.startDate ?? DateTime.now();
+    _startDate = widget.existing?.startDate ?? widget.today;
     _nameCtrl.text = widget.existing?.name ?? '';
     _amountCtrl.text = moneyField(widget.existing?.amount);
     _noteCtrl.text = widget.existing?.note ?? '';
@@ -78,6 +83,7 @@ class _SubscriptionFormState extends State<SubscriptionForm> {
     final picked = await showDatePicker(
       context: context,
       initialDate: _startDate,
+      currentDate: widget.today,
       firstDate: DateTime(2020),
       lastDate: DateTime(2030),
       builder: (ctx, child) => Theme(

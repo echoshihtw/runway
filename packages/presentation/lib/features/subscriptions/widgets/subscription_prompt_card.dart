@@ -146,9 +146,12 @@ class _SubscriptionPromptCardState
   }
 
   Future<void> _confirmAll(List<Transaction> pending) async {
+    // Read once: the card can leave the tree mid-loop, and a ref read after
+    // that throws.
+    final add = ref.read(addTransactionUseCaseProvider);
     await _write(() async {
       for (final charge in pending) {
-        await ref.read(addTransactionUseCaseProvider).execute(charge);
+        await add.execute(charge);
       }
     });
   }
@@ -261,7 +264,10 @@ class _SubscriptionPromptCardState
         await ref
             .read(editSubscriptionUseCaseProvider)
             .execute(
-              subscription.copyWith(isActive: false, updatedAt: DateTime.now()),
+              subscription.copyWith(
+                isActive: false,
+                updatedAt: ref.read(clockProvider)(),
+              ),
             );
       case _NotPaidReason.priceChanged:
         if (!context.mounted) return;
@@ -279,6 +285,8 @@ class _SubscriptionPromptCardState
     BuildContext context,
     Subscription subscription,
   ) {
+    // Before the sheet opens: its builder reruns after the opener may be gone.
+    final today = ref.read(clockProvider)();
     return showModalBottomSheet<void>(
       context: context,
       useRootNavigator: true,
@@ -291,6 +299,7 @@ class _SubscriptionPromptCardState
       ),
       builder: (_) => SubscriptionForm(
         existing: subscription,
+        today: today,
         onSubmit: (name, category, amount, cycle, startDate, note) async {
           await ref
               .read(editSubscriptionUseCaseProvider)
@@ -302,7 +311,7 @@ class _SubscriptionPromptCardState
                   cycle: cycle,
                   startDate: startDate,
                   note: note,
-                  updatedAt: DateTime.now(),
+                  updatedAt: ref.read(clockProvider)(),
                 ),
               );
           return true;

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:application/application.dart';
 import 'package:design_system/design_system.dart';
 import 'package:domain/domain.dart';
@@ -13,6 +15,8 @@ import 'subscription_form.dart';
 /// action sheet and the subscriptions card — and each reported success whether
 /// the write landed or not, so a refused write said nothing at all.
 Future<void> showAddSubscriptionSheet(BuildContext context, WidgetRef ref) {
+  // Before the sheet opens: its builder reruns after the opener may be gone.
+  final today = ref.read(clockProvider)();
   return showModalBottomSheet<void>(
     context: context,
     useRootNavigator: true,
@@ -30,9 +34,11 @@ Future<void> showAddSubscriptionSheet(BuildContext context, WidgetRef ref) {
     // of the screen. The form reports its own failure inline now, next to the
     // typing, which needs no Scaffold and reads better besides.
     builder: (_) => SubscriptionForm(
+      today: today,
       onSubmit: (name, category, amount, cycle, startDate, note) async {
         // One clock for the whole record, so a frozen clock stays frozen.
         final now = ref.read(clockProvider)();
+        final analytics = ref.read(analyticsProvider);
         try {
           await ref
               .read(addSubscriptionUseCaseProvider)
@@ -54,6 +60,7 @@ Future<void> showAddSubscriptionSheet(BuildContext context, WidgetRef ref) {
           // dismiss it as though the subscription existed.
           return false;
         }
+        unawaited(analytics.logAddSubscription(cycle));
         return true;
       },
     ),
