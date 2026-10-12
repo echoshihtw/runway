@@ -188,19 +188,19 @@ gen-icons-android: ## Generate Android mipmap launcher icons from master icon
 # ============================================================================
 
 .PHONY: analyze
-analyze: ## Analyze all packages
+analyze: ## Analyze all packages, as strictly as CI
 	@echo "→ Analyzing domain..."
-	@cd packages/domain && dart analyze
+	@cd packages/domain && dart analyze --fatal-infos
 	@echo "→ Analyzing data..."
-	@cd packages/data && $(FVM) analyze
+	@cd packages/data && $(FVM) analyze --fatal-infos
 	@echo "→ Analyzing application..."
-	@cd packages/application && $(FVM) analyze
+	@cd packages/application && $(FVM) analyze --fatal-infos
 	@echo "→ Analyzing design_system..."
-	@cd packages/design_system && $(FVM) analyze
+	@cd packages/design_system && $(FVM) analyze --fatal-infos
 	@echo "→ Analyzing presentation..."
-	@cd packages/presentation && $(FVM) analyze
+	@cd packages/presentation && $(FVM) analyze --fatal-infos
 	@echo "→ Analyzing app..."
-	@cd $(APP_DIR) && $(FVM) analyze
+	@cd $(APP_DIR) && $(FVM) analyze --fatal-infos
 	@echo "✓ All packages analyzed"
 
 .PHONY: format
@@ -221,7 +221,7 @@ lint: format analyze ## Format + analyze all packages
 # ============================================================================
 
 .PHONY: test
-test: ## Run all tests
+test: ## Run every package's tests, as CI does
 	@echo "→ domain"
 # Pinned to a zone that observes daylight saving. A billing date is a calendar
 # day, and the arithmetic that gets that wrong is invisible in UTC: the weekly
@@ -232,6 +232,8 @@ test: ## Run all tests
 	@cd packages/data && flutter test
 	@echo "→ application"
 	@cd packages/application && flutter test
+	@echo "→ design_system"
+	@cd packages/design_system && flutter test
 	@echo "→ presentation"
 	@cd packages/presentation && flutter test
 	@echo "→ app"
