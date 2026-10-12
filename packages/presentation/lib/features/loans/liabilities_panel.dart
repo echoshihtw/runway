@@ -196,7 +196,10 @@ class LiabilitiesPanel extends ConsumerWidget {
     await ref
         .read(editLoanUseCaseProvider)
         .execute(
-          summary.loan.copyWith(isActive: false, updatedAt: DateTime.now()),
+          summary.loan.copyWith(
+            isActive: false,
+            updatedAt: ref.read(clockProvider)(),
+          ),
         );
   }
 
@@ -257,12 +260,11 @@ class _RepaySheetState extends ConsumerState<_RepaySheet> {
 
     final l10n = context.l10n;
     final loan = widget.summary.loan;
-    // The money is dated by the app's clock; the record times stay real.
-    final today = ref.read(clockProvider)();
-    final now = DateTime.now();
+    // One clock for the whole record, so a pinned clock stays pinned.
+    final now = ref.read(clockProvider)();
     final tx = Transaction(
       id: const Uuid().v4(),
-      date: today,
+      date: now,
       type: TransactionType.repayment,
       amount: Money(amount),
       loanId: loan.id,

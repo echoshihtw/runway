@@ -19,6 +19,8 @@ import '../transactions/widgets/loan_wizard.dart';
 Future<void> startLoanCreation(BuildContext context, WidgetRef ref) async {
   if (!allowsNewEntry(context, ref)) return;
 
+  // Before the sheet opens: its builder reruns after the opener may be gone.
+  final today = ref.read(clockProvider)();
   showModalBottomSheet(
     context: context,
     useRootNavigator: true,
@@ -30,7 +32,7 @@ Future<void> startLoanCreation(BuildContext context, WidgetRef ref) async {
       ),
     ),
     builder: (_) => LoanWizard(
-      today: ref.read(clockProvider)(),
+      today: today,
       onSubmit:
           (
             loanAmount,
@@ -41,7 +43,7 @@ Future<void> startLoanCreation(BuildContext context, WidgetRef ref) async {
             name,
             note,
           ) async {
-            final now = DateTime.now();
+            final now = ref.read(clockProvider)();
             final loanId = const Uuid().v4();
             // Everything from ref is read before the first await. The sheet
             // sits on the root navigator, so the widget that opened it can be
