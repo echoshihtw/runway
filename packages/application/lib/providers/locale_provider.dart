@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,6 +18,7 @@ class LocaleNotifier extends AsyncNotifier<Locale?> {
   }
 
   Future<void> setLocale(Locale? locale) async {
+    final changed = locale != state.value;
     final prefs = await SharedPreferences.getInstance();
     if (locale == null) {
       await prefs.remove(_localeKey);
@@ -27,7 +29,9 @@ class LocaleNotifier extends AsyncNotifier<Locale?> {
       await prefs.setString(_localeKey, key);
     }
     state = AsyncData(locale);
-    await ref.read(analyticsProvider).logChangeLanguage(locale);
+    if (changed && locale != null) {
+      unawaited(ref.read(analyticsProvider).logChangeLanguage(locale));
+    }
   }
 }
 

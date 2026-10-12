@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -269,7 +271,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
     if (tx.type == TransactionType.loan && tx.loanId != null) {
       await ref.read(deleteLoanUseCaseProvider).execute(tx.loanId!);
     }
-    await analytics.logDeleteTransaction(tx.type);
+    unawaited(analytics.logDeleteTransaction(tx.type));
   }
 }
 

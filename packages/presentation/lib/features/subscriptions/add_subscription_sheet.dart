@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:application/application.dart';
 import 'package:design_system/design_system.dart';
 import 'package:domain/domain.dart';
@@ -55,7 +57,7 @@ Future<void> showAddSubscriptionSheet(BuildContext context, WidgetRef ref) {
           // dismiss it as though the subscription existed.
           return false;
         }
-        await analytics.logAddSubscription(cycle);
+        unawaited(analytics.logAddSubscription(cycle));
         return true;
       },
     ),

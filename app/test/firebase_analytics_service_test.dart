@@ -34,6 +34,14 @@ class _Throws extends Fake implements FirebaseAnalytics {
     List<AnalyticsEventItem>? items,
     AnalyticsCallOptions? callOptions,
   }) async => throw StateError('offline');
+
+  @override
+  Future<void> logScreenView({
+    String? screenClass,
+    String? screenName,
+    Map<String, Object>? parameters,
+    AnalyticsCallOptions? callOptions,
+  }) async => throw StateError('offline');
 }
 
 /// Logs every event the service can send, with the widest arguments.
@@ -52,7 +60,6 @@ Future<void> _logEverything(FirebaseAnalyticsService analytics) async {
   await analytics.logSetBudget();
   await analytics.logRunSimulation(hasBurnOverride: true, hasIncome: true);
   await analytics.logChangeLanguage(const Locale('zh', 'TW'));
-  await analytics.logChangeLanguage(null);
   await analytics.logChangeCurrency('TWD');
 }
 

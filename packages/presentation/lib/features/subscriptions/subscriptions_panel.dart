@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:design_system/design_system.dart';
@@ -145,7 +147,7 @@ class SubscriptionsPanel extends ConsumerWidget {
     );
     if (confirmed != true) return;
     await ref.read(deleteSubscriptionUseCaseProvider).execute(subscription.id);
-    await analytics.logDeleteSubscription();
+    unawaited(analytics.logDeleteSubscription());
   }
 
   void _showEditSubscription(

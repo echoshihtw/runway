@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:application/application.dart';
@@ -25,7 +26,7 @@ class _Analytics extends NoOpAnalytics {
   }) async => events.add('run_simulation:$hasBurnOverride,$hasIncome');
 
   @override
-  Future<void> logChangeLanguage(Locale? locale) async =>
+  Future<void> logChangeLanguage(Locale locale) async =>
       events.add('change_language:$locale');
 
   @override
@@ -67,18 +68,41 @@ Transaction _entry(TransactionType type, {double amount = 980}) {
   );
 }
 
-(ProviderContainer, _Analytics) _container({_Ledger? ledger}) {
-  final analytics = _Analytics();
+/// Never answers: a slow network, or a call that hangs.
+class _Hangs extends NoOpAnalytics {
+  final _never = Completer<void>().future;
+
+  @override
+  Future<void> logAddTransaction(TransactionType type) => _never;
+
+  @override
+  Future<void> logRunSimulation({
+    bool hasBurnOverride = false,
+    bool hasIncome = false,
+  }) => _never;
+
+  @override
+  Future<void> logChangeLanguage(Locale locale) => _never;
+
+  @override
+  Future<void> logChangeCurrency(String code) => _never;
+}
+
+(ProviderContainer, _Analytics) _container({
+  _Ledger? ledger,
+  AnalyticsService? analytics,
+}) {
+  final recorder = _Analytics();
   final container = ProviderContainer(
     retry: (_, _) => null,
     overrides: [
-      analyticsProvider.overrideWithValue(analytics),
+      analyticsProvider.overrideWithValue(analytics ?? recorder),
       transactionRepositoryProvider.overrideWithValue(ledger ?? _Ledger()),
       usageCountStoreProvider.overrideWithValue(_MemoryStore()),
     ],
   );
   addTearDown(container.dispose);
-  return (container, analytics);
+  return (container, recorder);
 }
 
 void main() {
@@ -182,4 +206,66 @@ void main() {
 
     expect(analytics.events, ['change_currency:TWD']);
   });
+
+  group('analytics that never answers', () {
+    // Analytics is ours; the save, the count and the setting are the user's.
+    const soon = Duration(seconds: 1);
+
+    test('neither holds a save nor skips its count', () async {
+      final (container, _) = _container(analytics: _Hangs());
+
+      await container
+          .read(addTransactionUseCaseProvider)
+          .execute(_entry(TransactionType.expense))
+          .timeout(soon);
+
+      expect(await container.read(entryCountProvider.future), 1);
+    });
+
+    test('neither holds a simulation nor skips its count', () async {
+      final (container, _) = _container(analytics: _Hangs());
+      final scenario = container.read(scenarioProvider.notifier);
+
+      scenario.setSimulatedIncome(3000);
+      await scenario.activate().timeout(const Duration(seconds: 2));
+
+      expect(await container.read(simulationCountProvider.future), 1);
+    });
+
+    test('holds neither a language nor a currency choice', () async {
+      final (container, _) = _container(analytics: _Hangs());
+      await container.read(localeProvider.future);
+      await container.read(currencyProvider.future);
+
+      await container
+          .read(localeProvider.notifier)
+          .setLocale(const Locale('ja'))
+          .timeout(soon);
+      await container
+          .read(currencyProvider.notifier)
+          .setCurrency(supportedCurrencies[2])
+          .timeout(soon);
+    });
+  });
+
+  test(
+    'choosing the language or currency already in use is not a change',
+    () async {
+      final (container, analytics) = _container();
+      await container.read(localeProvider.future);
+      await container.read(currencyProvider.future);
+      final locale = container.read(localeProvider.notifier);
+      final currency = container.read(currencyProvider.notifier);
+
+      await locale.setLocale(const Locale('zh', 'TW'));
+      await locale.setLocale(const Locale('zh', 'TW'));
+      await currency.setCurrency(supportedCurrencies[1]);
+      await currency.setCurrency(supportedCurrencies[1]);
+
+      expect(analytics.events, [
+        'change_language:zh_TW',
+        'change_currency:TWD',
+      ]);
+    },
+  );
 }

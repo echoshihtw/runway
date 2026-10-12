@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:design_system/design_system.dart';
@@ -61,7 +63,7 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
     final analytics = ref.read(analyticsProvider);
     await ref.read(budgetProvider.notifier).setRent(rent);
     await ref.read(budgetProvider.notifier).setLiving(living);
-    await analytics.logSetBudget();
+    unawaited(analytics.logSetBudget());
     if (!mounted) return;
     setState(() => _editingBudget = false);
     FocusScope.of(context).unfocus();

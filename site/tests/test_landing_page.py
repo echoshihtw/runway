@@ -357,21 +357,13 @@ class LinkPreviewTest(unittest.TestCase):
 
 
 class PrivacyPolicyTest(unittest.TestCase):
-    """The privacy page says which events the app sends. Whether the names
-    match the code is checked by app/test/firebase_analytics_service_test.dart,
-    which runs on every pull request."""
+    """The event list itself is matched to the code by
+    app/test/firebase_analytics_service_test.dart, which runs on every pull
+    request. This keeps the promise made about all of them."""
 
     HTML_FLAT = re.sub(
         r"\s+", " ", (ROOT / "privacy" / "index.html").read_text(encoding="utf-8")
     )
-
-    def test_the_page_lists_the_events_the_app_sends(self):
-        listed = re.search(r'<ul id="analytics-events">(.*?)</ul>', self.HTML_FLAT)
-        self.assertIsNotNone(listed, "no list of analytics events")
-        names = re.findall(r"<li><code>([a-z_]+)</code>", listed.group(1))
-        self.assertIn("screen_view", names)
-        self.assertIn("add_transaction", names)
-        self.assertNotIn("does not send any custom analytics events", self.HTML_FLAT)
 
     def test_the_page_says_no_event_carries_money_or_text(self):
         self.assertIn(

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -62,10 +63,13 @@ class CurrencyNotifier extends AsyncNotifier<CurrencyConfig> {
   }
 
   Future<void> setCurrency(CurrencyConfig currency) async {
+    final changed = currency.code != state.value?.code;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_currencyKey, currency.code);
     state = AsyncData(currency);
-    await ref.read(analyticsProvider).logChangeCurrency(currency.code);
+    if (changed) {
+      unawaited(ref.read(analyticsProvider).logChangeCurrency(currency.code));
+    }
   }
 }
 

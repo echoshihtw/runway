@@ -6,6 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Which features get used, never what anyone has: every parameter is a
 /// category, a flag or a locale, and app/test/analytics_parameters_guard_test
 /// fails if one could carry an amount or typed text.
+///
+/// Implementations never throw. Callers log after the user's action has
+/// landed and do not await, so an event can neither fail nor slow it.
 abstract class AnalyticsService {
   Future<void> logScreen(String name);
   Future<void> logAddTransaction(TransactionType type);
@@ -16,7 +19,7 @@ abstract class AnalyticsService {
   Future<void> logDeleteSubscription();
   Future<void> logSetBudget();
   Future<void> logRunSimulation({bool hasBurnOverride, bool hasIncome});
-  Future<void> logChangeLanguage(Locale? locale);
+  Future<void> logChangeLanguage(Locale locale);
   Future<void> logChangeCurrency(String code);
 }
 
@@ -45,7 +48,7 @@ class NoOpAnalytics implements AnalyticsService {
     bool hasIncome = false,
   }) async {}
   @override
-  Future<void> logChangeLanguage(Locale? locale) async {}
+  Future<void> logChangeLanguage(Locale locale) async {}
   @override
   Future<void> logChangeCurrency(String code) async {}
 }

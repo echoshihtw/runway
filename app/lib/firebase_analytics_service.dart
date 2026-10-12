@@ -7,7 +7,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 
 /// The one place event names and parameter keys are written. The privacy
-/// page lists these names, and site/tests checks it still does.
+/// page lists these names, and app/test/firebase_analytics_service_test.dart
+/// fails if the two differ.
 class FirebaseAnalyticsService implements AnalyticsService {
   FirebaseAnalyticsService([this._instance]);
 
@@ -25,30 +26,32 @@ class FirebaseAnalyticsService implements AnalyticsService {
     if (_instance != null) return _instance;
     try {
       if (Firebase.apps.isEmpty) return null;
-      return _instance ??= FirebaseAnalytics.instance;
+      return _instance = FirebaseAnalytics.instance;
     } catch (_) {
       return null;
     }
   }
 
-  /// Every event is logged after the user's write has landed, so a failure
-  /// here must never reach the caller and read as a failed save.
-  Future<void> _log(String name, [Map<String, Object>? parameters]) async {
+  /// The port promises never to throw: a failure here must not reach the
+  /// caller and read as a failed action.
+  Future<void> _send(
+    String name,
+    Future<void> Function(FirebaseAnalytics fa) send,
+  ) async {
     try {
-      await _fa?.logEvent(name: name, parameters: parameters);
+      final fa = _fa;
+      if (fa != null) await send(fa);
     } catch (e) {
       debugPrint('Analytics event $name failed: $e');
     }
   }
 
+  Future<void> _log(String name, [Map<String, Object>? parameters]) =>
+      _send(name, (fa) => fa.logEvent(name: name, parameters: parameters));
+
   @override
-  Future<void> logScreen(String name) async {
-    try {
-      await _fa?.logScreenView(screenName: name);
-    } catch (e) {
-      debugPrint('Analytics screen view failed: $e');
-    }
-  }
+  Future<void> logScreen(String name) =>
+      _send('screen_view', (fa) => fa.logScreenView(screenName: name));
 
   @override
   Future<void> logAddTransaction(TransactionType type) =>
@@ -85,10 +88,9 @@ class FirebaseAnalyticsService implements AnalyticsService {
     'has_income': hasIncome ? 1 : 0,
   });
 
-  /// Null is "follow the device", the choice that clears the saved language.
   @override
-  Future<void> logChangeLanguage(Locale? locale) =>
-      _log('change_language', {'locale': locale?.toLanguageTag() ?? 'system'});
+  Future<void> logChangeLanguage(Locale locale) =>
+      _log('change_language', {'locale': locale.toLanguageTag()});
 
   @override
   Future<void> logChangeCurrency(String code) =>

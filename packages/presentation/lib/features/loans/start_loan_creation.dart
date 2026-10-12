@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:application/application.dart';
 import 'package:design_system/design_system.dart';
 import 'package:domain/domain.dart';
@@ -81,7 +83,7 @@ Future<void> startLoanCreation(BuildContext context, WidgetRef ref) async {
               date,
               openingBalanceDate: openingBalanceDate,
             )) {
-              await analytics.logAddLoan(source);
+              unawaited(analytics.logAddLoan(source));
               return true;
             }
 
@@ -115,7 +117,7 @@ Future<void> startLoanCreation(BuildContext context, WidgetRef ref) async {
               }
               return false;
             }
-            await analytics.logAddLoan(source);
+            unawaited(analytics.logAddLoan(source));
             return true;
           },
     ),
