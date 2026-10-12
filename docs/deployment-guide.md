@@ -21,7 +21,7 @@ Concurrency is grouped per workflow+ref with `cancel-in-progress: true`.
 
 **`quality` (ubuntu):** checkout → Flutter setup (cached) → cache `~/.pub-cache` keyed on `**/pubspec.yaml` → `melos bootstrap` → `melos run gen` → `analyze --fatal-infos` for all six packages individually → tests in all six packages (`domain` runs in `TZ=Europe/Paris` to catch daylight-saving bugs).
 
-> `--fatal-infos` is stricter than local `make analyze`.
+> `make analyze` and `make test` run the same checks locally.
 
 **`build-ios` (macos):** pod install → `flutter build ios --release --no-codesign --dart-define=FLUTTER_BUILD_NUMBER=${{ github.run_number }}`. It runs only before a release is tagged, so a broken native build stops the release before CD starts. Nothing builds Android in CI until the Play release (#56).
 
