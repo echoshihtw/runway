@@ -1,6 +1,6 @@
-// Captures the App Store and Devpost screenshots from the real app, running on
-// an in-memory database seeded with the demo figures below. Each frame carries
-// a caption band above the app, the way the store listing presents it.
+// Captures the bare app screens for the App Store slides, from the real app
+// running on an in-memory database seeded with the demo figures below. The
+// captions and the frame around each screen live in assets/store/screenshot.html.
 //
 //   SCREENSHOT_DIR=<dir> flutter drive \
 //     --driver=test_driver/screenshots.dart \
@@ -12,15 +12,11 @@ import 'package:data/data.dart'
         DriftLoanRepository,
         DriftSubscriptionRepository,
         DriftTransactionRepository;
-import 'package:design_system/design_system.dart';
 import 'package:domain/domain.dart';
 import 'package:drift/native.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:presentation/features/loans/liabilities_panel.dart';
-import 'package:presentation/features/subscriptions/subscriptions_panel.dart';
 import 'package:presentation/router/page_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -57,103 +53,46 @@ void main() {
     final database = AppDatabase.forTesting(NativeDatabase.memory());
     await _seed(database);
 
-    final caption = ValueNotifier<_Caption?>(null);
     await tester.pumpWidget(
-      _Captioned(
-        caption: caption,
+      // Reduce-motion for the whole captured tree. The dashboard's one looping
+      // animation sits still under it, so two captures of a frame match.
+      MediaQuery(
+        data: MediaQueryData.fromView(
+          tester.view,
+        ).copyWith(disableAnimations: true),
         child: buildTestApp(database: database, now: _capturedAt),
       ),
     );
     // The boot sequence runs on real timers, then routes to the dashboard.
     await pumpRealTime(tester, seconds: 7);
 
-    Future<void> capture(String name, _Caption text) async {
-      caption.value = text;
+    Future<void> capture(String name) async {
       await pumpRealTime(tester, seconds: 1);
       await binding.takeScreenshot(name);
     }
 
-    // No caption band, so the app fills the frame at its own size. This is the
-    // frame that has to be a plain screenshot, not a store slide.
-    Future<void> captureBare(String name) async {
-      caption.value = null;
-      await pumpRealTime(tester, seconds: 1);
-      await binding.takeScreenshot(name);
-    }
-
-    await capture(
-      '01-runway',
-      const _Caption(
-        'Stop guessing how long your money lasts',
-        'No account. No bank connection.',
-      ),
-    );
-
-    // Loans and subscriptions sit next to each other below the fold, so one
-    // frame carries both.
-    await tester.scrollUntilVisible(
-      find.byType(SubscriptionsPanel),
-      400,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await pumpRealTime(tester, seconds: 1);
-    // Both cards open, so the loan and the subscriptions are named rather than
-    // just counted. Subscriptions first: opening the loan above them pushes
-    // them off the frame, where a tap has nothing to hit.
-    await _expand(tester, find.byType(SubscriptionsPanel));
-    await _expand(tester, find.byType(LiabilitiesPanel));
-    await tester.scrollUntilVisible(
-      find.byType(SubscriptionsPanel),
-      200,
-      scrollable: find.byType(Scrollable).first,
-    );
-    // Come back up so the loan keeps its own heading in the frame.
-    await tester.ensureVisible(find.byType(LiabilitiesPanel));
-    await pumpRealTime(tester, seconds: 1);
-    await capture(
-      '05-commitments',
-      const _Caption(
-        'What is already decided',
-        'Loan payments and subscriptions, counted every month.',
-      ),
-    );
+    await capture('01-runway');
 
     await tester.scrollUntilVisible(
       find.text('LIVING EXPENSES'),
-      -400,
+      400,
       scrollable: find.byType(Scrollable).first,
     );
     await pumpRealTime(tester, seconds: 1);
     await tester.tap(find.text('LIVING EXPENSES'));
     await pumpRealTime(tester, seconds: 2);
-    await capture(
-      '02-living',
-      const _Caption(
-        'Know what you can spend today',
-        'What is left this month, and what that is per day.',
-      ),
-    );
+    await capture('02-living');
     // Dismiss the sheet by tapping outside it.
     await _dismissSheet(tester);
     await pumpRealTime(tester, seconds: 2);
 
     await _tapNav(tester, 'LOG');
-    // With the sheet open. The caption promises speed, and the presets are the
-    // thing that delivers it — a list of past entries shows the result rather
-    // than the mechanism.
+    // With the sheet open: the presets are what make logging fast.
     await tester.tap(find.byKey(const Key('add-fab')));
     await pumpRealTime(tester, seconds: 2);
-    await capture(
-      '03-log',
-      const _Caption(
-        'Log a spend in seconds',
-        'Pick the occasion, type the amount.',
-      ),
-    );
+    await capture('03-log');
     await _dismissSheet(tester);
     await pumpRealTime(tester, seconds: 2);
-    // The log itself, both sides of the month in one list.
-    await captureBare('06-log-full');
 
     await _tapNav(tester, 'PLAN');
     await tester.enterText(
@@ -166,28 +105,8 @@ void main() {
     await pumpRealTime(tester, seconds: 1);
     await tester.tap(find.text('RUN SIMULATION'));
     await pumpRealTime(tester, seconds: 2);
-    await capture(
-      '04-plan',
-      const _Caption(
-        'Model a change before you make it',
-        'See how many months a lower cost buys.',
-      ),
-    );
+    await capture('04-plan');
   });
-}
-
-/// Opens a panel that starts collapsed, so the frame names what is inside it
-/// rather than only counting it.
-Future<void> _expand(WidgetTester tester, Finder panel) async {
-  // Only the header toggles the card, so aim at its chevron. Tapping the card
-  // itself lands on the summary and silently does nothing.
-  await tester.tap(
-    find.descendant(
-      of: panel,
-      matching: find.byIcon(Icons.keyboard_arrow_down_rounded),
-    ),
-  );
-  await pumpRealTime(tester, seconds: 1);
 }
 
 Future<void> _dismissSheet(WidgetTester tester) async {
@@ -268,7 +187,7 @@ Future<void> _seed(AppDatabase database) async {
       note: 'Phone and utilities',
     ),
     _entry('t9', day(9), TransactionType.expense, 35, note: 'Coffee'),
-    // A fortnight of ordinary spending, so the log frame reads like a log
+    // A fortnight of ordinary spending, so the figures read like a log
     // somebody keeps rather than one they opened twice. Living stays well
     // inside its budget, which is the state the budget rows are there to show.
     _entry('t10', day(10), TransactionType.expense, 26, note: 'Dinner out'),
@@ -338,99 +257,3 @@ Transaction _entry(
   createdAt: date,
   updatedAt: date,
 );
-
-class _Caption {
-  final String headline;
-  final String detail;
-  const _Caption(this.headline, this.detail);
-}
-
-/// The app with a caption band above it, as the store listing presents it.
-///
-/// The app keeps the window's own size and is scaled down to fit what is left
-/// below the caption. Handing it a shorter box instead clips it, because
-/// MaterialApp measures itself against the window, not against its parent.
-class _Captioned extends StatelessWidget {
-  final ValueListenable<_Caption?> caption;
-  final Widget child;
-  const _Captioned({required this.caption, required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    final view = View.of(context);
-    final screen = view.physicalSize / view.devicePixelRatio;
-    // Reduce-motion for the whole captured tree. The dashboard's one looping
-    // animation sits still under it, and a pulse caught at a different phase
-    // is a different frame — the other half of why two captures never matched.
-    return MediaQuery(
-      data: MediaQueryData.fromView(view).copyWith(disableAnimations: true),
-      child: Directionality(
-        textDirection: TextDirection.ltr,
-        child: ColoredBox(
-          color: AppColors.background,
-          child: Column(
-            children: [
-              ValueListenableBuilder<_Caption?>(
-                valueListenable: caption,
-                builder: (context, value, _) {
-                  if (value == null) return const SizedBox.shrink();
-                  // The ~150px empty band in three of the four frames sat
-                  // *between* the caption and the app, so it comes off the
-                  // bottom of this padding and out of the FittedBox's
-                  // alignment below — not off the top margin, which the frame
-                  // still needs to breathe (#110).
-                  return Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      AppSpacing.xl,
-                      AppSpacing.xl,
-                      AppSpacing.xl,
-                      AppSpacing.md,
-                    ),
-                    child: Column(
-                      children: [
-                        Text(
-                          value.headline,
-                          textAlign: TextAlign.center,
-                          // Not pure white. The app's own palette tops out at
-                          // textPrimary, and a white caption at title weight
-                          // outranked the mint runway number in its own
-                          // screenshot — the number is the product's argument,
-                          // so it has to own the highest contrast (#110).
-                          style: AppTextStyles.title.copyWith(
-                            color: AppColors.textPrimary,
-                            height: 1.2,
-                          ),
-                        ),
-                        const SizedBox(height: AppSpacing.xs),
-                        Text(
-                          value.detail,
-                          textAlign: TextAlign.center,
-                          style: AppTextStyles.bodySmall.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-              Expanded(
-                child: FittedBox(
-                  fit: BoxFit.contain,
-                  // Any slack left by scaling goes below the app, not between
-                  // the caption and it, where it read as a gap in the layout.
-                  alignment: Alignment.topCenter,
-                  child: SizedBox(
-                    width: screen.width,
-                    height: screen.height,
-                    child: child,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
