@@ -47,6 +47,7 @@ Future<void> startLoanCreation(BuildContext context, WidgetRef ref) async {
             final addLoan = ref.read(addLoanUseCaseProvider);
             final addTransaction = ref.read(addTransactionUseCaseProvider);
             final deleteLoan = ref.read(deleteLoanUseCaseProvider);
+            final analytics = ref.read(analyticsProvider);
             final openingBalanceDate = latestOpeningBalanceDate(
               ref.read(transactionsProvider).value ?? const [],
             );
@@ -80,6 +81,7 @@ Future<void> startLoanCreation(BuildContext context, WidgetRef ref) async {
               date,
               openingBalanceDate: openingBalanceDate,
             )) {
+              await analytics.logAddLoan(source);
               return true;
             }
 
@@ -113,6 +115,7 @@ Future<void> startLoanCreation(BuildContext context, WidgetRef ref) async {
               }
               return false;
             }
+            await analytics.logAddLoan(source);
             return true;
           },
     ),

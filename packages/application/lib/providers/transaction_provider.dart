@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../use_cases/add_transaction_use_case.dart';
 import '../use_cases/edit_transaction_use_case.dart';
 import '../use_cases/delete_transaction_use_case.dart';
+import '../analytics_service.dart';
 import 'repository_provider.dart';
 import 'usage_count_provider.dart';
 
@@ -16,6 +17,14 @@ final addTransactionUseCaseProvider = Provider<AddTransactionUseCase>((ref) {
   return AddTransactionUseCase(
     ref.watch(transactionRepositoryProvider),
     onAdded: (transaction) async {
+      // Every door that saves an entry passes here, so each is counted once.
+      final analytics = ref.read(analyticsProvider);
+      if (transaction.type == TransactionType.repayment) {
+        await analytics.logRepayLoan();
+      } else {
+        await analytics.logAddTransaction(transaction.type);
+      }
+
       // Three kinds of entry do not count against the free allowance.
       //
       // The opening balance is where the ledger starts, not something logged,

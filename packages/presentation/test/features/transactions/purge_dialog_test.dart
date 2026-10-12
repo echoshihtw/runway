@@ -50,6 +50,14 @@ class _Loans implements LoanRepository {
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
+class _Analytics extends NoOpAnalytics {
+  final events = <String>[];
+
+  @override
+  Future<void> logDeleteTransaction(TransactionType type) async =>
+      events.add('delete_transaction:${type.name}');
+}
+
 Transaction _entry(TransactionType type, {String? loanId}) {
   final date = DateTime(2026, 9, 10);
   return Transaction(
@@ -63,18 +71,20 @@ Transaction _entry(TransactionType type, {String? loanId}) {
   );
 }
 
-Future<(_Transactions, _Loans)> _pump(
+Future<(_Transactions, _Loans, _Analytics)> _pump(
   WidgetTester tester,
   Transaction tx,
 ) async {
   SharedPreferences.setMockInitialValues({});
   final txs = _Transactions([tx]);
   final loans = _Loans();
+  final analytics = _Analytics();
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
         transactionRepositoryProvider.overrideWithValue(txs),
         loanRepositoryProvider.overrideWithValue(loans),
+        analyticsProvider.overrideWithValue(analytics),
       ],
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -84,7 +94,7 @@ Future<(_Transactions, _Loans)> _pump(
     ),
   );
   await tester.pumpAndSettle();
-  return (txs, loans);
+  return (txs, loans, analytics);
 }
 
 /// A long press on the row is the way in, as transaction_row wires onDelete.
@@ -95,27 +105,35 @@ Future<void> _openDialog(WidgetTester tester) async {
 
 void main() {
   testWidgets('confirming deletes the entry', (tester) async {
-    final (txs, _) = await _pump(tester, _entry(TransactionType.expense));
+    final (txs, _, analytics) = await _pump(
+      tester,
+      _entry(TransactionType.expense),
+    );
     await _openDialog(tester);
 
     await tester.tap(find.text('DELETE'));
     await tester.pumpAndSettle();
 
     expect(txs.deleted, ['tx-1']);
+    expect(analytics.events, ['delete_transaction:expense']);
   });
 
   testWidgets('cancelling deletes nothing', (tester) async {
-    final (txs, _) = await _pump(tester, _entry(TransactionType.expense));
+    final (txs, _, analytics) = await _pump(
+      tester,
+      _entry(TransactionType.expense),
+    );
     await _openDialog(tester);
 
     await tester.tap(find.text('CANCEL'));
     await tester.pumpAndSettle();
 
     expect(txs.deleted, isEmpty);
+    expect(analytics.events, isEmpty);
   });
 
   testWidgets('a loan entry takes its loan with it', (tester) async {
-    final (txs, loans) = await _pump(
+    final (txs, loans, _) = await _pump(
       tester,
       _entry(TransactionType.loan, loanId: 'loan-7'),
     );

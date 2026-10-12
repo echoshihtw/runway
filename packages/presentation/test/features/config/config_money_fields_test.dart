@@ -23,7 +23,17 @@ class _Settings implements FinancialSettingsRepository {
   Future<RunwayGoal?> getRunwayGoal() async => null;
 
   @override
+  Future<void> saveBudget(Budget budget) async {}
+
+  @override
   dynamic noSuchMethod(Invocation i) => super.noSuchMethod(i);
+}
+
+class _Analytics extends NoOpAnalytics {
+  final events = <String>[];
+
+  @override
+  Future<void> logSetBudget() async => events.add('set_budget');
 }
 
 class _NoSubs implements SubscriptionRepository {
@@ -53,7 +63,10 @@ class _NoTx implements TransactionRepository {
   dynamic noSuchMethod(Invocation i) => super.noSuchMethod(i);
 }
 
-Future<void> _pump(WidgetTester tester) async {
+Future<void> _pump(
+  WidgetTester tester, {
+  AnalyticsService analytics = const NoOpAnalytics(),
+}) async {
   SharedPreferences.setMockInitialValues({});
   await tester.pumpWidget(
     ProviderScope(
@@ -62,6 +75,7 @@ Future<void> _pump(WidgetTester tester) async {
         subscriptionRepositoryProvider.overrideWithValue(_NoSubs()),
         loanRepositoryProvider.overrideWithValue(_NoLoans()),
         transactionRepositoryProvider.overrideWithValue(_NoTx()),
+        analyticsProvider.overrideWithValue(analytics),
       ],
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -108,5 +122,28 @@ void main() {
       '1100.50',
       reason: 'toStringAsFixed(0) used to show 1101 and save it back',
     );
+  });
+
+  testWidgets('saving the budget is counted once; clearing it is not', (
+    tester,
+  ) async {
+    final analytics = _Analytics();
+    await _pump(tester, analytics: analytics);
+
+    Future<void> editThenTap(String label) async {
+      final editBudget = find.text('EDIT').last;
+      await tester.ensureVisible(editBudget);
+      await tester.tap(editBudget);
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text(label));
+      await tester.tap(find.text(label));
+      await tester.pumpAndSettle();
+    }
+
+    await editThenTap('SAVE');
+    expect(analytics.events, ['set_budget']);
+
+    await editThenTap('CLEAR');
+    expect(analytics.events, ['set_budget'], reason: 'clearing is not setting');
   });
 }

@@ -117,6 +117,7 @@ class SubscriptionsPanel extends ConsumerWidget {
     Subscription subscription,
   ) async {
     final l10n = context.l10n;
+    final analytics = ref.read(analyticsProvider);
     final confirmed = await showDialog<bool>(
       context: context,
       useRootNavigator: true,
@@ -144,6 +145,7 @@ class SubscriptionsPanel extends ConsumerWidget {
     );
     if (confirmed != true) return;
     await ref.read(deleteSubscriptionUseCaseProvider).execute(subscription.id);
+    await analytics.logDeleteSubscription();
   }
 
   void _showEditSubscription(

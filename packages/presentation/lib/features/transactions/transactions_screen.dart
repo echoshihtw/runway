@@ -264,10 +264,12 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
     );
 
     if (confirmed != true || !context.mounted) return;
+    final analytics = ref.read(analyticsProvider);
     await ref.read(deleteTransactionUseCaseProvider).execute(tx.id);
     if (tx.type == TransactionType.loan && tx.loanId != null) {
       await ref.read(deleteLoanUseCaseProvider).execute(tx.loanId!);
     }
+    await analytics.logDeleteTransaction(tx.type);
   }
 }
 

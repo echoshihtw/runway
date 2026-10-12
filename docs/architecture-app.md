@@ -79,7 +79,7 @@ Watches `localeProvider`. While it has no value, it renders a bare themed `Scaff
 
 ## Analytics
 
-`FirebaseAnalyticsService` implements the 12-method `AnalyticsService` port. Only behavioral events are sent — no amounts, balances, or runway values. `NoOpAnalytics` remains the default if the override is absent.
+`FirebaseAnalyticsService` implements the `AnalyticsService` port and is the one place event names and parameter keys are written. Events say which features get used, never an amount, balance, name, note or runway value; `app/test/analytics_parameters_guard_test.dart` fails if a port parameter could carry one. Screen views come from `reportScreenViews` in `presentation/router/app_router.dart`, which `main.dart` attaches to the router. The privacy page lists every event, and `app/test/firebase_analytics_service_test.dart` fails if the two differ. `NoOpAnalytics` remains the default if the override is absent.
 
 ## Platform Configuration
 

@@ -58,8 +58,10 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
   Future<void> _saveBudget() async {
     final rent = double.tryParse(_rentCtrl.text.trim()) ?? 0;
     final living = double.tryParse(_livingCtrl.text.trim()) ?? 0;
+    final analytics = ref.read(analyticsProvider);
     await ref.read(budgetProvider.notifier).setRent(rent);
     await ref.read(budgetProvider.notifier).setLiving(living);
+    await analytics.logSetBudget();
     if (!mounted) return;
     setState(() => _editingBudget = false);
     FocusScope.of(context).unfocus();

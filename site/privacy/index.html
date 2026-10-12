@@ -45,7 +45,7 @@
 
       <main>
         <h1>Privacy Policy</h1>
-        <p class="meta">Effective 15 September 2026</p>
+        <p class="meta">Effective 12 October 2026</p>
 
         <div class="card">
           <h2>The short version</h2>
@@ -85,9 +85,24 @@
           or other financial content.
         </p>
 
+        <p>Runway sends these events of its own, so we can see which features get used:</p>
+        <ul id="analytics-events">
+          <li><code>screen_view</code>: which screen is open</li>
+          <li><code>add_transaction</code>: an entry is saved, with its kind, such as expense or income</li>
+          <li><code>delete_transaction</code>: an entry is deleted, with its kind</li>
+          <li><code>add_loan</code>: a loan is added, with its source, bank or other</li>
+          <li><code>repay_loan</code>: a loan repayment is recorded</li>
+          <li><code>add_subscription</code>: a subscription is added, with its billing cycle</li>
+          <li><code>delete_subscription</code>: a subscription is deleted</li>
+          <li><code>set_budget</code>: the monthly budget is saved</li>
+          <li><code>run_simulation</code>: a simulation is run, with whether it changed costs or income</li>
+          <li><code>change_language</code>: the language is changed, with the language chosen</li>
+          <li><code>change_currency</code>: the currency is changed, with its currency code</li>
+        </ul>
+        <p>No event carries an amount, balance, name, note or anything you type.</p>
         <p>
-          Runway does not send any custom analytics events of its own. Firebase collects its standard usage events
-          automatically, such as the first time the app is opened, when a session starts and how long the app is in use.
+          Firebase itself records standard usage events, such as the first time the app is opened, when a session starts
+          and how long the app is in use.
         </p>
 
         <h3>Collected automatically by Firebase</h3>
