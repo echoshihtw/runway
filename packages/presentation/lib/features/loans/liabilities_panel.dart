@@ -264,7 +264,7 @@ class _RepaySheetState extends ConsumerState<_RepaySheet> {
       type: TransactionType.repayment,
       amount: Money(amount),
       loanId: loan.id,
-      note: '${l10n.repay} — ${loan.name}',
+      note: '${l10n.repay} · ${loan.name}',
       createdAt: now,
       updatedAt: now,
     );
