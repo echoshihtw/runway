@@ -19,6 +19,10 @@
         font-weight: 500;
       }
       @font-face {
+        font-family: "JetBrains Mono";
+        src: url("../../site/assets/fonts/jetbrains-mono.woff2") format("woff2");
+      }
+      @font-face {
         font-family: "Inter";
         src: url("../../site/assets/fonts/inter.woff2") format("woff2");
       }
@@ -34,7 +38,7 @@
       body {
         position: relative;
         overflow: hidden;
-        background: #f7f4ec;
+        background: #f2efe7;
         color: #08142b;
       }
       h1 {
@@ -61,49 +65,66 @@
         line-height: 1.2;
         letter-spacing: -0.02em;
       }
-      .slab,
-      .ridge,
-      .star {
+      /* The landing hero's right column, below the headline: violet field,
+         mint blob and yellow shard, with the same values as site/assets/landing.css. */
+      .field {
         position: absolute;
-      }
-      .slab {
-        right: -60px;
-        top: 1020px;
-        width: 1180px;
-        height: 1500px;
+        left: 0;
+        top: 720px;
+        width: 1320px;
+        height: 2148px;
+        overflow: hidden;
         background: #6327d4;
-        clip-path: polygon(30% 0, 100% 8%, 100% 92%, 0 100%);
+        isolation: isolate;
       }
-      .ridge {
-        left: -60px;
-        bottom: -40px;
-        width: 1500px;
-        height: 520px;
+      .blob {
+        position: absolute;
+        z-index: -2;
+        inset: 13% -24% auto -11%;
+        height: 72%;
+        border-radius: 52% 35% 47% 41%;
         background: #8fddaa;
-        clip-path: polygon(0 55%, 22% 20%, 46% 48%, 70% 8%, 100% 40%, 100% 100%, 0 100%);
+        transform: rotate(-8deg);
       }
-      .star {
+      .shard {
+        position: absolute;
+        z-index: -1;
+        right: -120px;
+        bottom: -160px;
+        width: 760px;
+        height: 760px;
+        background: #f4d84b;
+        clip-path: polygon(0 48%, 100% 0, 77% 100%);
+      }
+      .card {
+        position: absolute;
         right: 70px;
-        top: 600px;
-        width: 210px;
-        height: 210px;
-        background: #f28a6e;
-        clip-path: polygon(
-          50% 0,
-          60% 32%,
-          92% 18%,
-          72% 46%,
-          100% 62%,
-          66% 66%,
-          70% 100%,
-          50% 74%,
-          26% 98%,
-          32% 64%,
-          0 56%,
-          30% 44%,
-          10% 14%,
-          42% 30%
-        );
+        top: 1640px;
+        display: grid;
+        gap: 14px;
+        width: 600px;
+        padding: 44px 48px;
+        border-radius: 36px;
+        color: #08142b;
+        background: #f8f7f2;
+        box-shadow: 0 60px 140px rgba(3, 7, 22, 0.34);
+        transform: rotate(5deg);
+      }
+      .card[hidden] {
+        display: none;
+      }
+      .card span {
+        color: #657087;
+        font: 30px "JetBrains Mono", monospace;
+        letter-spacing: 0.12em;
+      }
+      .card strong {
+        font: 800 150px/1 "JetBrains Mono", monospace;
+        letter-spacing: -0.08em;
+      }
+      .card small {
+        color: #657087;
+        font: 32px "Inter", system-ui, sans-serif;
       }
       .phone {
         position: absolute;
@@ -114,9 +135,8 @@
         padding: 22px;
         border-radius: 132px;
         background: #0b1424;
-        box-shadow:
-          0 0 0 7px #a9bfdc,
-          0 60px 120px rgba(8, 20, 43, 0.28);
+        border: 3px solid rgba(255, 255, 255, 0.13);
+        box-shadow: 0 60px 120px rgba(3, 7, 22, 0.34);
       }
       /* The app is dark by design; a store thumbnail needs it lifted to read. */
       .phone img {
@@ -138,12 +158,11 @@
     </style>
   </head>
   <body>
-    <div class="slab"></div>
-    <div class="ridge"></div>
-    <div class="star" hidden></div>
+    <div class="field"><div class="blob"></div><div class="shard"></div></div>
     <h1></h1>
     <p></p>
     <div class="phone"><img alt="" /><span class="island"></span></div>
+    <div class="card" hidden><span>YOUR RUNWAY</span><strong>12 mo</strong><small>Running out September 2027</small></div>
     <script>
       const slides = {
         "01-runway": ["How long will your money last?", "One number, counted from today. No account, no bank login.", true],
@@ -152,10 +171,10 @@
         "04-plan": ["Try a change before you make it", "See how many months a lower cost buys.", false],
       };
       const name = location.hash.slice(1) || "01-runway";
-      const [title, line, star] = slides[name];
+      const [title, line, card] = slides[name];
       document.querySelector("h1").textContent = title;
       document.querySelector("p").textContent = line;
-      document.querySelector(".star").hidden = !star;
+      document.querySelector(".card").hidden = !card;
       document.querySelector(".phone img").src = `../../site/assets/device/${name}.png`;
     </script>
   </body>
