@@ -37,6 +37,7 @@ Future<void> showEntrySheet(
       preselectedType: preselectedType,
       loans: loans,
       rentBudget: rentBudget,
+      today: ref.read(clockProvider)(),
       onSubmit: (type, amount, date, note, category, loanId) async {
         final now = DateTime.now();
         if (existing == null) {

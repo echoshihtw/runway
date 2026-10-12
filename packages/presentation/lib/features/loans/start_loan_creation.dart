@@ -30,6 +30,7 @@ Future<void> startLoanCreation(BuildContext context, WidgetRef ref) async {
       ),
     ),
     builder: (_) => LoanWizard(
+      today: ref.read(clockProvider)(),
       onSubmit:
           (
             loanAmount,

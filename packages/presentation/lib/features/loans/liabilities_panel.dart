@@ -257,10 +257,12 @@ class _RepaySheetState extends ConsumerState<_RepaySheet> {
 
     final l10n = context.l10n;
     final loan = widget.summary.loan;
+    // The money is dated by the app's clock; the record times stay real.
+    final today = ref.read(clockProvider)();
     final now = DateTime.now();
     final tx = Transaction(
       id: const Uuid().v4(),
-      date: now,
+      date: today,
       type: TransactionType.repayment,
       amount: Money(amount),
       loanId: loan.id,

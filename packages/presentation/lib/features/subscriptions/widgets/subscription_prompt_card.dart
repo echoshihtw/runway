@@ -294,6 +294,7 @@ class _SubscriptionPromptCardState
       ),
       builder: (_) => SubscriptionForm(
         existing: subscription,
+        today: ref.read(clockProvider)(),
         onSubmit: (name, category, amount, cycle, startDate, note) async {
           await ref
               .read(editSubscriptionUseCaseProvider)

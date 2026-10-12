@@ -167,6 +167,7 @@ class SubscriptionsPanel extends ConsumerWidget {
       ),
       builder: (_) => SubscriptionForm(
         existing: subscription,
+        today: ref.read(clockProvider)(),
         onSubmit: (name, category, amount, cycle, startDate, note) async {
           // One clock for the whole record, read at submit rather than build,
           // so a sheet left open overnight still stamps today.

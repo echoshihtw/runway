@@ -32,6 +32,7 @@ Future<void> showAddSubscriptionSheet(BuildContext context, WidgetRef ref) {
     // of the screen. The form reports its own failure inline now, next to the
     // typing, which needs no Scaffold and reads better besides.
     builder: (_) => SubscriptionForm(
+      today: ref.read(clockProvider)(),
       onSubmit: (name, category, amount, cycle, startDate, note) async {
         // One clock for the whole record, so a frozen clock stays frozen.
         final now = ref.read(clockProvider)();

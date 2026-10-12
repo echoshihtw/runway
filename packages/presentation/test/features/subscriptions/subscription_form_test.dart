@@ -24,6 +24,7 @@ Future<void> _pump(
         body: SingleChildScrollView(
           child: SubscriptionForm(
             existing: existing,
+            today: DateTime(2026, 9, 15),
             onSubmit: (_, _, _, _, _, _) async =>
                 onSubmit == null ? true : await onSubmit(),
           ),

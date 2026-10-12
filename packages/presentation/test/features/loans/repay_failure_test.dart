@@ -98,6 +98,7 @@ Loan _loan() => Loan(
 Future<_Transactions> _pump(
   WidgetTester tester, {
   required bool refuseWrites,
+  DateTime Function()? clock,
 }) async {
   SharedPreferences.setMockInitialValues({});
   final transactions = _Transactions(refuseWrites: refuseWrites);
@@ -108,6 +109,7 @@ Future<_Transactions> _pump(
         transactionRepositoryProvider.overrideWithValue(transactions),
         purchaseServiceProvider.overrideWithValue(_FreeTier()),
         usageCountStoreProvider.overrideWithValue(_NoUsage()),
+        if (clock != null) clockProvider.overrideWithValue(clock),
       ],
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -169,6 +171,22 @@ void main() {
     expect(find.text(l10n.repaymentSaveFailed), findsNothing);
     expect(transactions.items, hasLength(1));
     expect(transactions.items.single.type, TransactionType.repayment);
+  });
+
+  testWidgets('a repayment is dated the app\'s today', (tester) async {
+    final today = DateTime(2026, 9, 15, 10);
+    final transactions = await _pump(
+      tester,
+      refuseWrites: false,
+      clock: () => today,
+    );
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+
+    await _openRepaySheet(tester);
+    await tester.tap(find.text(l10n.confirm.toUpperCase()));
+    await tester.pumpAndSettle();
+
+    expect(transactions.items.single.date, today);
   });
 
   testWidgets('two taps in one frame write one repayment', (tester) async {

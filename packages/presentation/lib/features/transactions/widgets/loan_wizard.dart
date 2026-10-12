@@ -18,7 +18,11 @@ class LoanWizard extends StatefulWidget {
   )
   onSubmit;
 
-  const LoanWizard({super.key, required this.onSubmit});
+  /// The app's today, from the clock. A new loan is dated this unless the
+  /// owner picks another day.
+  final DateTime today;
+
+  const LoanWizard({super.key, required this.today, required this.onSubmit});
 
   @override
   State<LoanWizard> createState() => _LoanWizardState();
@@ -39,7 +43,7 @@ class _LoanWizardState extends State<LoanWizard>
   final _paymentCtrl = TextEditingController();
   final _noteCtrl = TextEditingController();
 
-  DateTime _date = DateTime.now();
+  late DateTime _date = widget.today;
   bool _overridePayment = false;
   double? _computedPayment;
   String _source = 'BANK';
@@ -126,6 +130,7 @@ class _LoanWizardState extends State<LoanWizard>
     final picked = await showDatePicker(
       context: context,
       initialDate: _date,
+      currentDate: widget.today,
       firstDate: DateTime(2020),
       lastDate: DateTime(2030),
       builder: (ctx, child) => Theme(
