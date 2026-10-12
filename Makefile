@@ -131,7 +131,7 @@ gen-all: gen ## Deprecated alias for gen, which now includes localizations
 # ============================================================================
 
 .PHONY: gen-icons
-gen-icons: gen-icons-app gen-icons-ios gen-icons-android ## Generate app + native launcher icons from master icon
+gen-icons: gen-icons-app gen-icons-ios gen-icons-android gen-icons-site ## Generate app, native and site icons from master icon
 	@echo "✓ Launcher icons generated from $(ICON_SRC)"
 
 .PHONY: gen-icons-app
@@ -165,6 +165,12 @@ gen-icons-ios: ## Generate iOS AppIcon assets from master icon
 	@sips --resampleHeightWidth 167 167 "$(ICON_SRC)" --out "$(IOS_ICON_DIR)/Icon-167.png" >/dev/null
 	@sips --resampleHeightWidth 1024 1024 "$(ICON_SRC)" --out "$(IOS_ICON_DIR)/Icon-1024-simple.png" >/dev/null
 	@echo "✓ iOS launcher icons generated"
+
+.PHONY: gen-icons-site
+gen-icons-site: ## Generate the landing page icon from master icon
+	@test -f "$(ICON_SRC)" || (echo "✗ Missing $(ICON_SRC)" && exit 1)
+	@sips --resampleHeightWidth 180 180 "$(ICON_SRC)" --out site/assets/icon-180.png >/dev/null
+	@echo "✓ Site icon generated"
 
 .PHONY: gen-icons-android
 gen-icons-android: ## Generate Android mipmap launcher icons from master icon
