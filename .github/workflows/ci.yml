@@ -17,7 +17,6 @@ concurrency:
 
 env:
   FLUTTER_VERSION: '3.41.7'
-  JAVA_VERSION: '17'
 
 jobs:
   # ============================================================
@@ -94,21 +93,15 @@ jobs:
       - name: Test — app
         run: cd app && flutter test --reporter=github
 
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: packages/domain/test-results/
-
   # ============================================================
-  # BUILD iOS — push to staging, and the release on main
+  # BUILD iOS: the release on main, before the tag is cut
   # ============================================================
+  # cd.yml builds the IPA only after the tag exists, so this catches a broken
+  # native build while there is still nothing to roll back.
   build-ios:
     name: Build iOS
     runs-on: macos-latest
-    needs: quality
-    if: github.event_name == 'push'
+    if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout
@@ -142,71 +135,3 @@ jobs:
             --release \
             --no-codesign \
             --dart-define=FLUTTER_BUILD_NUMBER=${{ github.run_number }}
-
-      - name: Upload iOS build
-        uses: actions/upload-artifact@v4
-        with:
-          name: ios-build-${{ github.run_number }}
-          path: app/build/ios/iphoneos/Runner.app
-          retention-days: 7
-
-  # ============================================================
-  # BUILD Android — push to staging, and the release on main
-  # ============================================================
-  build-android:
-    name: Build Android
-    runs-on: ubuntu-latest
-    needs: quality
-    if: github.event_name == 'push'
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: ${{ env.JAVA_VERSION }}
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
-          cache: true
-
-      - name: Install Melos
-        run: dart pub global activate melos
-
-      - name: Bootstrap
-        run: melos bootstrap
-
-      - name: Code generation
-        run: melos run gen
-
-      - name: Build Android APK
-        run: |
-          cd app && flutter build apk \
-            --release \
-            --dart-define=FLUTTER_BUILD_NUMBER=${{ github.run_number }}
-
-      - name: Build Android AAB
-        run: |
-          cd app && flutter build appbundle \
-            --release \
-            --dart-define=FLUTTER_BUILD_NUMBER=${{ github.run_number }}
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-apk-${{ github.run_number }}
-          path: app/build/app/outputs/flutter-apk/app-release.apk
-          retention-days: 7
-
-      - name: Upload AAB
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-aab-${{ github.run_number }}
-          path: app/build/app/outputs/bundle/release/app-release.aab
-          retention-days: 7

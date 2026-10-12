@@ -14,18 +14,16 @@ Two GitHub Actions workflows, both pinned to **Flutter 3.41.7 / Java 17**.
 | Trigger | Jobs |
 |---|---|
 | PR to `staging`/`main` | `quality` only |
-| Push to `staging` | `quality` → `build-ios` + `build-android` |
-| Called by `release.yml` on `main` | `quality` → `build-ios` + `build-android` |
+| Push to `staging` | `quality` only |
+| Called by `release.yml` on `main` | `quality` + `build-ios`, in parallel |
 
 Concurrency is grouped per workflow+ref with `cancel-in-progress: true`.
 
-**`quality` (ubuntu):** checkout → Flutter setup (cached) → cache `~/.pub-cache` keyed on `**/pubspec.yaml` → `melos bootstrap` → `melos run gen` → `analyze --fatal-infos` for all six packages individually → `dart test` in `domain` → upload `packages/domain/test-results/`.
+**`quality` (ubuntu):** checkout → Flutter setup (cached) → cache `~/.pub-cache` keyed on `**/pubspec.yaml` → `melos bootstrap` → `melos run gen` → `analyze --fatal-infos` for all six packages individually → `dart test` in `domain`.
 
 > `--fatal-infos` is stricter than local `make analyze`. Also note CI's test step covers **domain only** — the data integration tests (`cd packages/data && flutter test test/integration/`) and the application use-case tests are not run in CI, despite needing no device.
 
-**`build-ios` (macos):** pod install → `flutter build ios --release --no-codesign --dart-define=FLUTTER_BUILD_NUMBER=${{ github.run_number }}` → upload `Runner.app` (7-day retention).
-
-**`build-android` (ubuntu):** builds both APK and AAB with the same build-number define → uploads both (7-day retention).
+**`build-ios` (macos):** pod install → `flutter build ios --release --no-codesign --dart-define=FLUTTER_BUILD_NUMBER=${{ github.run_number }}`. It runs only before a release is tagged, so a broken native build stops the release before CD starts. Nothing builds Android in CI until the Play release (#56).
 
 ### CD — `.github/workflows/cd.yml`
 
